@@ -1,14 +1,28 @@
 {
-  "name": "node-js-getting-started",
+  "name": "www.lacona.io",
   "version": "0.1.2",
-  "description": "A sample Node.js app using Express 4",
+  "description": "Lacona App",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "build:html": "babel-node render.jsx",
+    "build:style": "node-sass front/style.scss public/style.css",
+    "build:script": "browserify front/script.jsx -o public/script.js -g uglifyify -g browserify-shim",
+    "build:vendor": "cp node_modules/normalize-css/normalize.css public & cp node_modules/jquery/dist/jquery.min.js public & cp node_modules/react/dist/react.min.js public & browserify node_modules/lodash/ -g uglifyify -o public/lodash.min.js",
+    "build": "npm run build:html & npm run build:vendor & npm run build:style & npm run build:script & wait",
+    "open": "open public/index.html"
   },
   "dependencies": {
-    "cool-ascii-faces": "^1.3.3",
-    "express": "~4.9.x"
+    "jquery": "^2.1.3",
+    "lacona": "^0.25.0",
+    "lacona-phrase": "^0.7.0",
+    "lacona-phrase-email": "0.0.1",
+    "lacona-phrase-validator": "^0.10.2",
+    "lacona-util-fulltext": "^0.2.0",
+    "lodash": "^3.6.0",
+    "normalize-css": "^2.3.1",
+    "react": "^0.13.1",
+    "react-google-analytics": "^0.2.0",
+    "react-lacona": "^0.4.1"
   },
   "engines": {
     "node": "0.10.x"
@@ -22,5 +36,25 @@
     "heroku",
     "express"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "babel": "^5.1.9",
+    "babelify": "^6.0.2",
+    "browserify": "^9.0.8",
+    "browserify-shim": "^3.8.5",
+    "node-sass": "^2.1.1",
+    "preprocess": "^2.1.1",
+    "rimraf": "^2.3.2",
+    "uglifyify": "^3.0.1"
+  },
+  "browserify-shim": {
+    "react": {
+      "exports": "global:React"
+    }
+  },
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  }
 }
