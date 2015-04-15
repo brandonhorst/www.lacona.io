@@ -3,7 +3,7 @@ import preprocess from 'preprocess'
 import React from 'react'
 import {readFileSync, writeFileSync} from 'fs'
 
-const string = React.renderToString(<Page />)
+const string = React.renderToString(<Page isMobile={false} />)
 const template = readFileSync('./front/index.html', 'utf-8')
 const combined = template.replace('<!-- @include server -->', string)
 

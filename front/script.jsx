@@ -1,4 +1,5 @@
 import React from 'react'
 import Page from './page.jsx'
+import isMobile from './detect'
 
-React.render(<Page />, document.getElementById('page'))
+React.render(<Page isMobile={isMobile} />, document.getElementById('page'))

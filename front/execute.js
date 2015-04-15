@@ -1,7 +1,7 @@
 export function execute(result) {
   switch(result.action) {
     case 'learn':
-        $('html, body').animate({scrollTop: 515}, 400);
+        $('html, body').animate({scrollTop: $('content').offset().top - 90}, 400, 'swing')
       break;
     case 'subscribe':
       $.ajax({

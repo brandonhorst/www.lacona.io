@@ -21,9 +21,9 @@ export default class Page extends React.Component {
     this.state = {
       theme: 'theme-eighties-dark',
       input: '',
-      initialLoad: true,
       noteMessage: '',
       noteVisible: false,
+      initialLoad: true,
       noteType: ''
     }
   }
@@ -35,7 +35,9 @@ export default class Page extends React.Component {
     this.parser.grammar = sentenceFactory()
 
     //hook to global scroll
-    global.onscroll = this.checkScroll.bind(this)
+    if (!this.props.isMobile) {
+      global.onscroll = this.checkScroll.bind(this)
+    }
   }
 
   componentDidMount() {
@@ -45,6 +47,7 @@ export default class Page extends React.Component {
     ga('send', 'pageview')
 
     this.setState({initialLoad: false})
+
     this.update('')
   }
 
@@ -82,7 +85,9 @@ export default class Page extends React.Component {
 
   checkScroll(e) {
     const scrollAmount = window.pageYOffset || document.documentElement.scrollTop
-    if (scrollAmount > 250) { // must be changed if $header-height changes
+    const ref = $('.disclaimer, .keys')
+    const switchPoint = ref.offset().top + ref.height() + 10
+    if (scrollAmount > switchPoint) { // must be changed if $header-height changes
       if (!this.state.fixedMode) this.setState({fixedMode: true})
     } else {
       if (this.state.fixedMode) this.setState({fixedMode: false})
@@ -103,8 +108,7 @@ export default class Page extends React.Component {
 
   render() {
     return (
-      <div onscroll={this.checkScroll.bind(this)}
-        className={`page${this.state.fixedMode ? ' fixed' : ''}${this.state.initialLoad ? ' initial-load' : ''}${this.state.active ? '' : ' inactive'}`}>
+      <div className={`page${this.state.fixedMode ? ' fixed' : ''}${this.state.initialLoad ? ' initial-load' : ''}${this.state.active ? '' : ' inactive'} ${this.props.isMobile ? 'mobile' : 'desktop'}`}>
 
         <Notification type={this.state.noteType} message={this.state.noteMessage}
           hidden={!this.state.noteVisible} hide={this.hideNote.bind(this)} />
@@ -114,33 +118,39 @@ export default class Page extends React.Component {
             <h1>Lacona</h1>
           </a>
           <h2>Natural Language Command System</h2>
-          <div className='keys'>
+        </div>
+
+        <div className='lacona-demo'>
+          <div className='keys desktopOnly'>
             <div className='key'><div className='glyph'>↕</div><div className='explanation'>select</div></div>
             <div className='key'><div className='glyph'>⇥</div><div className='explanation'>complete</div></div>
             <div className='key'><div className='glyph'>↩</div><div className='explanation'>do</div></div>
           </div>
-        </div>
 
-        <div className={`bar ${this.state.theme}`}>
-          <Lacona update={this.update.bind(this)} execute={this.execute.bind(this)}
-            select={this.select.bind(this)} cancel={this.cancel.bind(this)}
-            outputs={this.state.outputs}
-            focus={this.focus.bind(this)} blur={this.blur.bind(this)}
-            placeholder='What would you like to do?' autoFocus={true}
-            userInput={this.state.input} ref='lacona' />
-          <div className='logo'>
-            <a href="javascript:$('html, body').animate({scrollTop:0}, 400, 'swing');" tabIndex="-1">
-              <img className='icon' src='logo.png' />
-            </a>
+          <div className='disclaimer mobileOnly'>
+            Lacona is a keyboard-driven application and is not designed to work on mobile devices. To get a full demo experience, please visit this page on your Desktop or Laptop.
+          </div>
+
+          <div className={`bar ${this.state.theme}`}>
+            <Lacona update={this.update.bind(this)} execute={this.execute.bind(this)}
+              select={this.select.bind(this)} cancel={this.cancel.bind(this)}
+              outputs={this.state.outputs}
+              focus={this.focus.bind(this)} blur={this.blur.bind(this)}
+              placeholder='What would you like to do?' autoFocus={true}
+              userInput={this.state.input} ref='lacona' />
+            <div className='logo'>
+              <a href="javascript:$('html, body').animate({scrollTop:0}, 400, 'swing');" tabIndex="-1">
+                <img className='icon' src='logo.png' />
+              </a>
+            </div>
           </div>
         </div>
 
         <content>
-          <h2>Your New Best Friend</h2>
           <p>Lacona is a revolutionary productivity tool for Mac that allows all of your interactions with your computer to be <em>quicker</em>, <em>simpler</em>, and <em>more focused</em>.</p>
           <h2>Speed</h2>
           <p>Pull up Lacona with a single hotkey, and it allows you to perform common tasks instantly, without any need to touch the mouse or switch applications. A sophisticated autocomplete system reduces the typing required to a bare minimum. Skip the mundanity and the RSI, and get back to work.</p>
-          <p>Press <em>tab</em> on this page to see how it feels.</p>
+          <p className='desktopOnly'>Press <em>tab</em> on this page to see how it feels.</p>
           <h2>Simplicity</h2>
           <p>There are no commands to learn or interface to master. Enter commands in the same way you think them, and let Lacona work out the details. There is no asking "how do you...?" The answer is always the same: just type.</p>
           <h2>Focus</h2>

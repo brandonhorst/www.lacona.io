@@ -1,8 +1,6 @@
 
-
 $bar-height: 80px;
-$header-height: 250px; //changing this, you need to change the scroll too
-$fixed-logo-width: 80px;
+$fixed-logo-width: 60px;
 
 html {
   font-family: Lora, serif;
@@ -46,23 +44,15 @@ a, a:active, a:hover, a:focus, a:visited {
 }
 
 content {
-  width: 550px;
-  margin: 180px auto 100px auto;
+  max-width: 550px;
+  margin: 40px auto 0 auto;
+  padding: 0 15px;
   display: block;
   line-height: 2em;
   font-size: 22px;
   text-align: left;
   word-wrap: break-word;
 
-  &:before {
-    content: url('dots.png');
-    text-align: center;
-    position: relative;
-    margin-left: -97.5px;
-    left: 50%;
-    z-index: -80;
-    top: -80px;
-  }
   a, a:visited, a:hover, a:active, a:focus {
     text-decoration: underline;
 
@@ -132,20 +122,31 @@ p {
   width: 72px;
 }
 
+
+.mobile .desktopOnly {
+  display: none;
+}
+
+.desktop .mobileOnly {
+  display: none;
+}
+
+
+.keys, .disclaimer {
+  margin: 45px auto 15px auto;
+  padding: 0 10px;
+  max-width: 550px;
+}
+
 .key {
   font-family: Lato, sans-serif;
   display: inline-block;
-  margin: 25px 40px 5px 40px;
+  margin: 0 40px;
   font-size: 125%;
 }
 
 .initialHeader {
-  height: $header-height;
   margin: 0;
-
-  .fixed & {
-    height: $header-height + $bar-height + 10px;
-  }
 
   h1 {
     display: inline-block;
@@ -156,25 +157,45 @@ p {
   }
 }
 
-.initial-load .bar {
-  opacity: 0;
-  margin-top: 10px;
-  margin-bottom: -10px;
+.lacona-demo {
+  background-image: url('dots.png');
+  background-repeat: no-repeat;
+  background-position: center 230px;
+  padding-bottom: 300px;
+
+  @media screen and (max-width: 420px) {
+    background-position: center 300px;
+    padding-bottom: 420px;
+  }
+
+  // @media screen and (min-width: 320px) and (max-width: 550px) {
+  // }
 }
 
+
+
+
 .bar {
-  height: $bar-height;
-  top: 0;
-  width: 700px;
+  height: 0;
   position: relative;
-  left: 50%;
-  margin: 0 0 0 -350px;
+  max-width: 700px;
+  margin: 0 auto;
+  top: 0;
 
   opacity: 1;
-  transition: opacity 0.5s ease-in-out 0.25s, margin 0.5s ease-in-out 0.25s;
+  transition: opacity 0.5s ease-in-out, top 0.5s ease-in-out;
+
+  .initial-load & {
+    opacity: 0;
+    top: 10px;
+  }
 
   .fixed & {
     position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
   }
 
   .logo {
@@ -207,8 +228,9 @@ footer {
 .lacona-view {
   font-family: Lato, sans-serif;
   font-size: 24px;
-  width: calc(100% - 80px);
-  margin: 10px 20px 0 20px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 
   top: 0;
   position: absolute;
@@ -219,9 +241,9 @@ footer {
   input {
     font-family: Lato, sans-serif;
     font-size: 24px;
-    width: 100%;
+    width: calc(100% - 70px);
     text-align: left;
-    margin: 0;
+    margin: 10px 20px 0 20px;
     padding: 7px 15px;
     height: 40px;
     outline: none;
@@ -231,14 +253,14 @@ footer {
 
 
   .fixed & {
-    width: calc(100% - 60px - #{$fixed-logo-width});
+    width: calc(100% - #{$fixed-logo-width});
     margin-left: $fixed-logo-width;
   }
 }
 
 .options {
-  width: calc(100% + 10px);
-  margin-left: 10px;
+  width: calc(100% - 60px);
+  margin: 0 30px;
   display: inline-block;
   text-align: left;
   border-bottom-right-radius: 4px;
@@ -285,6 +307,7 @@ footer {
 .hint {
   float: right;
   margin-top: 5px;
+  width: 20px;
 }
 
 @mixin category($name, $color) {
