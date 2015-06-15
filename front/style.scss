@@ -1,11 +1,15 @@
+@import 'lacona';
+@import 'theme';
 
-$bar-height: 80px;
-$fixed-logo-width: 60px;
+$page-background: #d8eff5;
 
 html {
-  font-family: Lora, serif;
-  font-size: 112.5%;
-  background-color: #d8eff5;
+  font-family: Lato, sans-serif;
+  font-size: 14pt;
+  // background-color: $page-background;
+}
+
+html, a {
   color: hsl(0, 0%, 34%);
 }
 
@@ -13,28 +17,120 @@ body {
   text-align: center;
 }
 
-.notification {
-  font-family: Lato, sans-serif;
-  position: fixed;
-  right: 40px;
-  padding: 15px;
-  top: 20px;
-  width: 300px;
-  background-color: #2d2d2d;
-  color: #d3d0c8;
-  border-radius: 4px;
-  cursor: pointer;
-
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 0s linear 0.5s, top 0.5s ease-in-out, opacity 0.5s ease-in-out;
+content {
+  // max-width: 940px;
+  margin: 0 auto;
+  display: block;
 }
 
-.notification:not(.hidden) {
-  visibility: visible;
+@mixin transform($transforms) {
+  -moz-transform: $transforms;
+  -o-transform: $transforms;
+  -ms-transform: $transforms;
+	-webkit-transform: $transforms;
+  transform: $transforms;
+}
+
+.lightbox-total {
+  position: fixed;
+  z-index: 10000;
+}
+
+.lightbox-cover {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+.lightbox {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  max-width: 640px;
+  padding: 40px;
+  border-radius: 4px;
+  @include transform(translate(-50%, -50%)) ;
+
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+
+  p {
+    border-radius: 4px;
+  }
+
+  h3 {
+    padding-bottom: 10px;
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  cursor: pointer;
+  line-height: 0;
+  padding: 10px;
+}
+
+.lightbox-enter {
+  opacity: 0.01;
+  transition: opacity .5s ease-in-out;
+}
+
+.lightbox-enter.lightbox-enter-active {
   opacity: 1;
-  top: 30px;
-  transition-delay: 0s;
+}
+.lightbox-leave {
+  opacity: 1;
+  transition: opacity .5s ease-in-out;
+}
+.lightbox-leave.lightbox-leave-active {
+  opacity: 0.01;
+}
+
+.share-sheet {
+  display: flex;
+  justify-content: space-around;
+  flex-flow: row wrap-reverse;
+
+  a img {
+    padding: 3px;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+    transition: box-shadow 0.1s ease-out;
+    margin: 2px;
+  }
+
+  a:hover img {
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+  }
+
+  a:active img {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  a.share-item {
+    display: block;
+  }
+
+  .share-icons {
+    height: 74px;
+  }
+
+  a, a:hover, a:visited, a:focus, a:active {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+.share-item.extend img {
+  margin: -2px;
+}
+
+.share-desc {
+  text-align: center;
+  font-weight: bold;
 }
 
 a, a:active, a:hover, a:focus, a:visited {
@@ -43,13 +139,8 @@ a, a:active, a:hover, a:focus, a:visited {
   background: none;
 }
 
-content {
-  max-width: 550px;
-  margin: 40px auto 0 auto;
-  padding: 0 15px;
-  display: block;
+body {
   line-height: 2em;
-  font-size: 22px;
   text-align: left;
   word-wrap: break-word;
 
@@ -68,32 +159,26 @@ content {
   }
 }
 
-.inactive .options {
-  visibility: hidden;
-}
-
 h1, h2, h3, h4, h5, h6 {
-  font-family: Lato, sans-serif;
   color: #4A4A4A;
-  font-weight: 100;
   margin: 0;
   padding: 0;
   text-align: center;
 }
 
 h1 {
-  font-size: 4.096rem;
+  font-size: 3.096rem;
   line-height: 5rem;
 }
 
 h2 {
-  font-size: 2.56rem;
-  line-height: 3rem;
+  font-size: 1.86rem;
+  line-height: 4rem;
 }
 
 h3 {
   font-size: 1.6rem;
-  line-height: 2rem;
+  line-height: 3rem;
 }
 
 h4 {
@@ -112,16 +197,139 @@ h6 {
 }
 
 p {
-  margin-bottom: 2rem;
+  // margin-bottom: 2rem;
+  padding: 0;
+  margin: 0 auto 1rem auto;
+}
+
+.well {
+  font-size: 80%;
+  width: calc(100% - 80px);
+  padding: 10px 20px;
+  border-radius: 4px;
+}
+
+.code {
+  font-family: monospace;
+}
+
+section {
+  padding: 40px 20px;
+}
+
+section.green {
+  padding: 20px 20px;
+}
+
+section.green p {
+  margin: 0;
   padding: 0;
 }
 
-.icon {
-  margin-bottom: -18px;
-  height: 72px;
-  width: 72px;
+.text {
+  width: 100%;
 }
 
+.textLeft, .textRight, .full {
+  width: calc(100% - 40px);
+  display: flex;
+
+  .lacona {
+    width: 100%;
+    height: 425px;
+  }
+}
+
+.full {
+  justify-content: center;
+
+  .text, .lacona {
+    max-width: 940px;
+  }
+
+  .lacona {
+    margin-top: -20px;
+  }
+}
+
+.textLeft, .textRight {
+  justify-content: space-between;
+  flex-flow: row wrap;
+
+  .text, .lacona {
+    flex: 0 0 48%;
+  }
+}
+
+.textLeft {
+  flex-direction: row;
+}
+
+.textRight {
+  flex-direction: row-reverse;
+}
+
+@media screen and (max-width: 960px) {
+  .textLeft, .textRight {
+    flex-direction: column;
+
+
+    .text, .lacona {
+      flex: 0 0 100%;
+    }
+  }
+}
+
+.examples {
+  list-style-type: none;
+  padding: 0;
+  font-family: $lacona-font;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 4px;
+}
+
+.examples li {
+  // box-shadow: 2px 2px 2px rgba(0,0,0,0.35);
+  // border: 1px solid #000;
+  // border-radius: 4px;
+  padding: 2px 17px;
+  margin: 1px 1px 0 0;
+  flex-grow: 1;
+}
+
+.examples li:hover {
+  // box-shadow: 1px 1px 1px rgba(0,0,0,0.35);
+}
+
+.examples li:active {
+  // box-shadow: none;
+
+}
+
+.examples:not(.inactive) li {
+  cursor: pointer;
+}
+
+.keys {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  line-height: normal;
+  margin-top: 10px;
+}
+
+.keys:not(.visible) {
+  visibility: hidden;
+}
+
+.key {
+  margin: 0 20px;
+}
+
+.keyDesc {
+  font-weight: 700;
+}
 
 .mobile .desktopOnly {
   display: none;
@@ -131,1215 +339,120 @@ p {
   display: none;
 }
 
-
-.keys, .disclaimer {
-  margin: 45px auto 15px auto;
-  padding: 0 10px;
-  max-width: 550px;
-}
-
-.key {
-  font-family: Lato, sans-serif;
-  display: inline-block;
-  margin: 0 40px;
-  font-size: 125%;
-}
-
-.initialHeader {
-  margin: 0;
+header {
+  width: 100%;
+  text-align:center;
 
   h1 {
+    font-size: 3.496rem;
     display: inline-block;
-    padding: 30px 67px 25px 0;
+    padding: 30px 65px 20px 0;
     margin-bottom: -25px;
     background: url('logo.png') no-repeat right center;
     background-size: 110px 110px;
-  }
-}
 
-.lacona-demo {
-  background-image: url('dots.png');
-  background-repeat: no-repeat;
-  background-position: center 230px;
-  padding-bottom: 300px;
-
-  @media screen and (max-width: 420px) {
-    background-position: center 300px;
-    padding-bottom: 420px;
-  }
-
-  // @media screen and (min-width: 320px) and (max-width: 550px) {
-  // }
-}
-
-
-
-
-.bar {
-  height: 0;
-  position: relative;
-  max-width: 700px;
-  margin: 0 auto;
-  top: 0;
-
-  opacity: 1;
-  transition: opacity 0.5s ease-in-out, top 0.5s ease-in-out;
-
-  .initial-load & {
-    opacity: 0;
-    top: 10px;
-  }
-
-  .fixed & {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 80px;
-  }
-
-  .logo {
-    position: absolute;
-    margin: 10px 0 0 0;
-    top: 0;
-    left: 20px;
-    text-align: left;
-    width: $fixed-logo-width;
-
-    .icon {
-      height: 48px;
-      width: 48px;
+    a, a:hover, a:active, a:focus, a:visited {
+      text-decoration: none;
+      color: inherit;
     }
+  }
+
+  h2 {
+    margin: -20px 0 0 0;
+    padding-bottom: 2rem;
+  }
+
+  p {
+    padding: 0 10px 10px 10px;
+    margin: -20px auto 0 auto;
+    font-size: 80%;
   }
 }
 
 footer {
-  font-family: Lato, sans-serif;
-  margin: 30px 0;
+  text-align: center;
+  padding: 30px 0;
 }
 
-
-
-.lacona-view input, .options, .notification {
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+.popover {
+  display: none;
 }
 
-
-.lacona-view {
-  font-family: Lato, sans-serif;
-  font-size: 24px;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-
-  top: 0;
-  position: absolute;
-  z-index: 20;
-
-  transition: width 0.2s, margin 0.2s;
-
-  input {
-    font-family: Lato, sans-serif;
-    font-size: 24px;
-    width: calc(100% - 70px);
-    text-align: left;
-    margin: 10px 20px 0 20px;
-    padding: 7px 15px;
-    height: 40px;
-    outline: none;
-    border: none;
-    border-radius: 4px;
-  }
-
-
-  .fixed & {
-    width: calc(100% - #{$fixed-logo-width});
-    margin-left: $fixed-logo-width;
-  }
-}
-
-.options {
-  width: calc(100% - 60px);
-  margin: 0 30px;
-  display: inline-block;
-  text-align: left;
-  border-bottom-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  max-height: 400px;
-  overflow-y: scroll;
-}
-
-.option {
-  display: block;
-  min-height: 30px;
-  padding: 5px 10px;
-  word-break: break-word;
-  cursor: pointer;
-}
-
-.words {
-  padding-right: 40px;
-}
-
-.suggestion {
-  padding: 1px;
-  margin: -1px;
-  border-radius: 4px;
-}
-
-
-.selected {
-  border-radius: 4px;
-  padding: 2px 5px;
-  margin: 3px 5px;
-  // box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-.option * {
-  display: inline;
-  white-space: pre-wrap;
-}
-
-.category-symbol {
-  font-style: italic;
-}
-
-.hint {
-  float: right;
-  margin-top: 5px;
-  width: 20px;
-}
-
-@mixin category($name, $color) {
-  .category-#{$name} {
-    color: $color;
-  }
-  .suggestion .category-#{$name}:not(.highlighted), .completion .category-#{$name} {
-    color: transparentize($color, 0.25);
-  }
-}
-
-@mixin input-placeholder {
-  ::-webkit-input-placeholder {@content}
-  :-moz-placeholder           {@content}
-  ::-moz-placeholder          {@content}
-  :-ms-input-placeholder      {@content}
-}
-
-.placeholder {
-  text-decoration: underline;
-  // background-size: 1px 1px;
-  // background-repeat: repeat-x;
-  // background-position-y: 90%;
-  // background-position-x: 0%;
-}
 
 @mixin theme($class, $theme) {
   .#{$class} {
-    @include category(action, map-get($theme, action));
-    @include category(argument, map-get($theme, argument));
-    @include category(actor, map-get($theme, actor));
-    @include category(addition, map-get($theme, addition));
-    @include category(conjunction, map-get($theme, conjunction));
-
-    .placeholder {
-      // text-shadow: 0.03em 0 map-get($theme, input-bg), -0.03em 0 map-get($theme, input-bg), 0 0.03em map-get($theme, input-bg), 0 -0.03em map-get($theme, input-bg), 0.06em 0 map-get($theme, input-bg), -0.06em 0 map-get($theme, input-bg), 0.09em 0 map-get($theme, input-bg), -0.09em 0 map-get($theme, input-bg), 0.12em 0 map-get($theme, input-bg), -0.12em 0 map-get($theme, input-bg), 0.16em 0 map-get($theme, input-bg), -0.16em 0 map-get($theme, input-bg);
+    .examples li {
+      background-color: map-get($theme, 'input-bg');
+      border-color: darken(map-get($theme, 'input-bg'), 10%);
+    }
+    .examples:not(.inactive) li:hover {
+      background-color: map-get($theme, 'selection-bg');
+    }
+    .examples:not(.inactive) li:active {
+      background-color: lighten(map-get($theme, 'selection-bg'), 10%);
     }
 
-    input {
-      background-color: map-get($theme, input-bg);
-      color: map-get($theme, input-text);
+    // .well {
+    //   background-color: map-get($theme, 'input-bg');
+    //   color: map-get($theme, 'input-text');
+    // }
+
+    .lightbox {
+      background-color: lighten(map-get($theme, 'argument3'), 20%);
+      border: 1px solid map-get($theme, 'argument3');
+      h3, a, a:visited {
+      }
+      a:hover {
+      }
+      a:active {
+      }
+      p {
+        background: map-get($theme, 'input-bg');
+        color: map-get($theme, 'input-text');
+        padding: 10px;
+      }
+
     }
 
-    .options {
-      background-color: map-get($theme, input-bg);
+    header {
+      background-color: map-get($theme, 'input-bg');
+      border-bottom: 1px solid darken(map-get($theme, 'input-bg'), 20%);
+      h1, h2, p {
+        color: map-get($theme, 'input-text');
+      }
     }
 
-    .selected {
-      background-color: map-get($theme, selection-bg);
+    section {
+      border-bottom: 1px solid map-get($theme, 'action');
     }
 
-    .selected .placeholder {
-      // text-shadow: 0.03em 0 map-get($theme, selection-bg), -0.03em 0 map-get($theme, selection-bg), 0 0.03em map-get($theme, selection-bg), 0 -0.03em map-get($theme, selection-bg), 0.06em 0 map-get($theme, selection-bg), -0.06em 0 map-get($theme, selection-bg), 0.09em 0 map-get($theme, selection-bg), -0.09em 0 map-get($theme, selection-bg), 0.12em 0 map-get($theme, selection-bg), -0.12em 0 map-get($theme, selection-bg), 0.16em 0 map-get($theme, selection-bg), -0.16em 0 map-get($theme, selection-bg);
-    }
-    .hint {
-      color: map-get($theme, input-text);
+    section:nth-child(odd) {
+      background-color: lighten(map-get($theme, 'action'), 30%);
     }
 
-    @include input-placeholder {
-      color: map-get($theme, conjunction);
+    section:nth-child(even) {
+      background-color: lighten(map-get($theme, 'action'), 20%);
     }
+
+    section.green {
+      background-color: lighten(map-get($theme, 'argument3'), 20%);
+      border-bottom: 1px solid map-get($theme, 'argument3');
+    }
+    .well {
+      background-color: lighten(map-get($theme, 'argument2'), 20%);
+      border: 1px solid map-get($theme, 'argument2');
+    }
+
+    footer {
+      background-color: lighten(map-get($theme, 'action'), 30%);
+
+      .text {
+        max-width: 940px;
+        margin: 0 auto;
+      }
+    }
+
   }
 }
 
-
-//
-// // Name:   Base16 3024 Dark
-// // Author: Jan T. Sott (http://github.com/idleberg)
-// $theme-3024-dark: (
-//   action: #01a0e4,
-//   actor: #db2d20,
-//   argument: #01a252,
-//   addition: #e8bbd0,
-//   conjunction: #5c5855,
-//   input-bg: #090300,
-//   selection-bg: #3a3432,
-//   input-text: #a5a2a2
-// );
-// // Name:   Base16 3024 Dark
-// // Author: Jan T. Sott (http://github.com/idleberg)
-// $theme-3024-light: (
-//   action: #01a0e4,
-//   actor: #db2d20,
-//   argument: #01a252,
-//   addition: #e8bbd0,
-//   conjunction: #5c5855,
-//   input-bg: #f7f7f7,
-//   selection-bg: #d6d5d4,
-//   input-text: #4a4543
-// );
-// // Name:   Base16 Apathy Dark
-// // Author: Jannik Siebert (https://github.com/janniks)
-// $theme-apathy-dark: (
-//   action: #96883E,
-//   actor: #3E9688,
-//   argument: #883E96,
-//   addition: #3E7996,
-//   conjunction: #2B685E,
-//   input-bg: #031A16,
-//   selection-bg: #0B342D,
-//   input-text: #81B5AC
-// );
-// // Name:   Base16 Apathy Dark
-// // Author: Jannik Siebert (https://github.com/janniks)
-// $theme-apathy-light: (
-//   action: #96883E,
-//   actor: #3E9688,
-//   argument: #883E96,
-//   addition: #3E7996,
-//   conjunction: #2B685E,
-//   input-bg: #D2E7E4,
-//   selection-bg: #A7CEC8,
-//   input-text: #184E45
-// );
-// // Name:   Base16 Ashes Dark
-// // Author: Jannik Siebert (https://github.com/janniks)
-// $theme-ashes-dark: (
-//   action: #AE95C7,
-//   actor: #C7AE95,
-//   argument: #95C7AE,
-//   addition: #C7C795,
-//   conjunction: #747C84,
-//   input-bg: #1C2023,
-//   selection-bg: #393F45,
-//   input-text: #C7CCD1
-// );
-// // Name:   Base16 Ashes Dark
-// // Author: Jannik Siebert (https://github.com/janniks)
-// $theme-ashes-light: (
-//   action: #AE95C7,
-//   actor: #C7AE95,
-//   argument: #95C7AE,
-//   addition: #C7C795,
-//   conjunction: #747C84,
-//   input-bg: #F3F4F5,
-//   selection-bg: #DFE2E5,
-//   input-text: #565E65
-// );
-// // Name:   Base16 Atelier Dune Dark
-// // Author: Bram de Haan (http://atelierbram.github.io/syntax-highlighting/atelier-schemes/dune)
-// $theme-atelier-dune-dark: (
-//   action: #6684e1,
-//   actor: #d73737,
-//   argument: #60ac39,
-//   addition: #b65611,
-//   conjunction: #7d7a68,
-//   input-bg: #20201d,
-//   selection-bg: #292824,
-//   input-text: #a6a28c
-// );
-// // Name:   Base16 Atelier Dune Dark
-// // Author: Bram de Haan (http://atelierbram.github.io/syntax-highlighting/atelier-schemes/dune)
-// $theme-atelier-dune-light: (
-//   action: #6684e1,
-//   actor: #d73737,
-//   argument: #60ac39,
-//   addition: #b65611,
-//   conjunction: #7d7a68,
-//   input-bg: #fefbec,
-//   selection-bg: #e8e4cf,
-//   input-text: #6e6b5e
-// );
-// // Name:   Base16 Atelier Forest Dark
-// // Author: Bram de Haan (http://atelierbram.github.io/syntax-highlighting/atelier-schemes/forest)
-// $theme-atelier-forest-dark: (
-//   action: #407ee7,
-//   actor: #f22c40,
-//   argument: #5ab738,
-//   addition: #df5320,
-//   conjunction: #766e6b,
-//   input-bg: #1b1918,
-//   selection-bg: #2c2421,
-//   input-text: #a8a19f
-// );
-// // Name:   Base16 Atelier Forest Dark
-// // Author: Bram de Haan (http://atelierbram.github.io/syntax-highlighting/atelier-schemes/forest)
-// $theme-atelier-forest-light: (
-//   action: #407ee7,
-//   actor: #f22c40,
-//   argument: #5ab738,
-//   addition: #df5320,
-//   conjunction: #766e6b,
-//   input-bg: #f1efee,
-//   selection-bg: #e6e2e0,
-//   input-text: #68615e
-// );
-// // Name:   Base16 Atelier Heath Dark
-// // Author: Bram de Haan (http://atelierbram.github.io/syntax-highlighting/atelier-schemes/heath)
-// $theme-atelier-heath-dark: (
-//   action: #516aec,
-//   actor: #ca402b,
-//   argument: #379a37,
-//   addition: #a65926,
-//   conjunction: #776977,
-//   input-bg: #1b181b,
-//   selection-bg: #292329,
-//   input-text: #ab9bab
-// );
-// // Name:   Base16 Atelier Heath Dark
-// // Author: Bram de Haan (http://atelierbram.github.io/syntax-highlighting/atelier-schemes/heath)
-// $theme-atelier-heath-light: (
-//   action: #516aec,
-//   actor: #ca402b,
-//   argument: #379a37,
-//   addition: #a65926,
-//   conjunction: #776977,
-//   input-bg: #f7f3f7,
-//   selection-bg: #d8cad8,
-//   input-text: #695d69
-// );
-// // Name:   Base16 Atelier Lakeside Dark
-// // Author: Bram de Haan (http://atelierbram.github.io/syntax-highlighting/atelier-schemes/lakeside/)
-// $theme-atelier-lakeside-dark: (
-//   action: #257fad,
-//   actor: #d22d72,
-//   argument: #568c3b,
-//   addition: #935c25,
-//   conjunction: #5a7b8c,
-//   input-bg: #161b1d,
-//   selection-bg: #1f292e,
-//   input-text: #7ea2b4
-// );
-// // Name:   Base16 Atelier Lakeside Dark
-// // Author: Bram de Haan (http://atelierbram.github.io/syntax-highlighting/atelier-schemes/lakeside/)
-// $theme-atelier-lakeside-light: (
-//   action: #257fad,
-//   actor: #d22d72,
-//   argument: #568c3b,
-//   addition: #935c25,
-//   conjunction: #5a7b8c,
-//   input-bg: #ebf8ff,
-//   selection-bg: #c1e4f6,
-//   input-text: #516d7b
-// );
-// // Name:   Base16 Atelier Seaside Dark
-// // Author: Bram de Haan (http://atelierbram.github.io/syntax-highlighting/atelier-schemes/seaside/)
-// $theme-atelier-seaside-dark: (
-//   action: #3d62f5,
-//   actor: #e6193c,
-//   argument: #29a329,
-//   addition: #87711d,
-//   conjunction: #687d68,
-//   input-bg: #131513,
-//   selection-bg: #242924,
-//   input-text: #8ca68c
-// );
-// // Name:   Base16 Atelier Seaside Dark
-// // Author: Bram de Haan (http://atelierbram.github.io/syntax-highlighting/atelier-schemes/seaside/)
-// $theme-atelier-seaside-light: (
-//   action: #3d62f5,
-//   actor: #e6193c,
-//   argument: #29a329,
-//   addition: #87711d,
-//   conjunction: #687d68,
-//   input-bg: #f0fff0,
-//   selection-bg: #cfe8cf,
-//   input-text: #5e6e5e
-// );
-// // Name:   Base16 Bespin Dark
-// // Author: Jan T. Sott
-// $theme-bespin-dark: (
-//   action: #5ea6ea,
-//   actor: #cf6a4c,
-//   argument: #54be0d,
-//   addition: #cf7d34,
-//   conjunction: #666666,
-//   input-bg: #28211c,
-//   selection-bg: #36312e,
-//   input-text: #8a8986
-// );
-// // Name:   Base16 Bespin Dark
-// // Author: Jan T. Sott
-// $theme-bespin-light: (
-//   action: #5ea6ea,
-//   actor: #cf6a4c,
-//   argument: #54be0d,
-//   addition: #cf7d34,
-//   conjunction: #666666,
-//   input-bg: #baae9e,
-//   selection-bg: #9d9b97,
-//   input-text: #5e5d5c
-// );
-// // Name:   Base16 Brewer Dark
-// // Author: Timothée Poisot (http://github.com/tpoisot)
-// $theme-brewer-dark: (
-//   action: #3182bd,
-//   actor: #e31a1c,
-//   argument: #31a354,
-//   addition: #e6550d,
-//   conjunction: #737475,
-//   input-bg: #0c0d0e,
-//   selection-bg: #2e2f30,
-//   input-text: #b7b8b9
-// );
-// // Name:   Base16 Brewer Dark
-// // Author: Timothée Poisot (http://github.com/tpoisot)
-// $theme-brewer-light: (
-//   action: #3182bd,
-//   actor: #e31a1c,
-//   argument: #31a354,
-//   addition: #e6550d,
-//   conjunction: #737475,
-//   input-bg: #fcfdfe,
-//   selection-bg: #dadbdc,
-//   input-text: #515253
-// );
-// // Name:   Base16 Bright Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-bright-dark: (
-//   action: #6fb3d2,
-//   actor: #fb0120,
-//   argument: #a1c659,
-//   addition: #fc6d24,
-//   conjunction: #b0b0b0,
-//   input-bg: #000000,
-//   selection-bg: #303030,
-//   input-text: #e0e0e0
-// );
-// // Name:   Base16 Bright Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-bright-light: (
-//   action: #6fb3d2,
-//   actor: #fb0120,
-//   argument: #a1c659,
-//   addition: #fc6d24,
-//   conjunction: #b0b0b0,
-//   input-bg: #ffffff,
-//   selection-bg: #f5f5f5,
-//   input-text: #505050
-// );
-// // Name:   Base16 Chalk Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-chalk-dark: (
-//   action: #6fc2ef,
-//   actor: #fb9fb1,
-//   argument: #acc267,
-//   addition: #eda987,
-//   conjunction: #505050,
-//   input-bg: #151515,
-//   selection-bg: #202020,
-//   input-text: #d0d0d0
-// );
-// // Name:   Base16 Chalk Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-chalk-light: (
-//   action: #6fc2ef,
-//   actor: #fb9fb1,
-//   argument: #acc267,
-//   addition: #eda987,
-//   conjunction: #505050,
-//   input-bg: #f5f5f5,
-//   selection-bg: #e0e0e0,
-//   input-text: #303030
-// );
-// // Name:   Base16 Codeschool Dark
-// // Author: brettof86
-// $theme-codeschool-dark: (
-//   action: #484d79,
-//   actor: #2a5491,
-//   argument: #237986,
-//   addition: #43820d,
-//   conjunction: #3f4944,
-//   input-bg: #232c31,
-//   selection-bg: #1c3657,
-//   input-text: #9ea7a6
-// );
-// // Name:   Base16 Codeschool Dark
-// // Author: brettof86
-// $theme-codeschool-light: (
-//   action: #484d79,
-//   actor: #2a5491,
-//   argument: #237986,
-//   addition: #43820d,
-//   conjunction: #3f4944,
-//   input-bg: #b5d8f6,
-//   selection-bg: #a7cfa3,
-//   input-text: #2a343a
-// );
-// // Name:   Base16 Colors Dark
-// // Author: mrmrs (http://clrs.cc)
-// $theme-colors-dark: (
-//   action: #0074d9,
-//   actor: #ff4136,
-//   argument: #2ecc40,
-//   addition: #ff851b,
-//   conjunction: #777777,
-//   input-bg: #111111,
-//   selection-bg: #333333,
-//   input-text: #bbbbbb
-// );
-// // Name:   Base16 Colors Dark
-// // Author: mrmrs (http://clrs.cc)
-// $theme-colors-light: (
-//   action: #0074d9,
-//   actor: #ff4136,
-//   argument: #2ecc40,
-//   addition: #ff851b,
-//   conjunction: #777777,
-//   input-bg: #ffffff,
-//   selection-bg: #dddddd,
-//   input-text: #555555
-// );
-// // Name:   Base16 Default Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-default-dark: (
-//   action: #7cafc2,
-//   actor: #ab4642,
-//   argument: #a1b56c,
-//   addition: #dc9656,
-//   conjunction: #585858,
-//   input-bg: #181818,
-//   selection-bg: #282828,
-//   input-text: #d8d8d8
-// );
-// // Name:   Base16 Default Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-default-light: (
-//   action: #7cafc2,
-//   actor: #ab4642,
-//   argument: #a1b56c,
-//   addition: #dc9656,
-//   conjunction: #585858,
-//   input-bg: #f8f8f8,
-//   selection-bg: #e8e8e8,
-//   input-text: #383838
-// );
-// // Name:   Base16 Eighties Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-$theme-eighties-dark: (
-  action: #6699cc,
-  actor: #f2777a,
-  argument: #99cc99,
-  addition: #f99157,
-  conjunction: #747369,
-  input-bg: #2d2d2d,
-  selection-bg: #393939,
-  input-text: #d3d0c8
-);
-// // Name:   Base16 Eighties Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-eighties-light: (
-//   action: #6699cc,
-//   actor: #f2777a,
-//   argument: #99cc99,
-//   addition: #f99157,
-//   conjunction: #747369,
-//   input-bg: #f2f0ec,
-//   selection-bg: #e8e6df,
-//   input-text: #515151
-// );
-// // Name:   Base16 Embers Dark
-// // Author: Jannik Siebert (https://github.com/janniks)
-// $theme-embers-dark: (
-//   action: #6D5782,
-//   actor: #826D57,
-//   argument: #57826D,
-//   addition: #828257,
-//   conjunction: #5A5047,
-//   input-bg: #16130F,
-//   selection-bg: #2C2620,
-//   input-text: #A39A90
-// );
-// // Name:   Base16 Embers Dark
-// // Author: Jannik Siebert (https://github.com/janniks)
-// $theme-embers-light: (
-//   action: #6D5782,
-//   actor: #826D57,
-//   argument: #57826D,
-//   addition: #828257,
-//   conjunction: #5A5047,
-//   input-bg: #DBD6D1,
-//   selection-bg: #BEB6AE,
-//   input-text: #433B32
-// );
-// // Name:   Base16 Flat Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-flat-dark: (
-//   action: #3498DB,
-//   actor: #E74C3C,
-//   argument: #2ECC71,
-//   addition: #E67E22,
-//   conjunction: #95A5A6,
-//   input-bg: #2C3E50,
-//   selection-bg: #34495E,
-//   input-text: #e0e0e0
-// );
-// // Name:   Base16 Flat Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-flat-light: (
-//   action: #3498DB,
-//   actor: #E74C3C,
-//   argument: #2ECC71,
-//   addition: #E67E22,
-//   conjunction: #95A5A6,
-//   input-bg: #ECF0F1,
-//   selection-bg: #f5f5f5,
-//   input-text: #7F8C8D
-// );
-// // Name:   Base16 Google Dark
-// // Author: Seth Wright (http://sethawright.com)
-// $theme-google-dark: (
-//   action: #3971ED,
-//   actor: #CC342B,
-//   argument: #198844,
-//   addition: #F96A38,
-//   conjunction: #969896,
-//   input-bg: #1d1f21,
-//   selection-bg: #282a2e,
-//   input-text: #c5c8c6
-// );
-// // Name:   Base16 Google Dark
-// // Author: Seth Wright (http://sethawright.com)
-// $theme-google-light: (
-//   action: #3971ED,
-//   actor: #CC342B,
-//   argument: #198844,
-//   addition: #F96A38,
-//   conjunction: #969896,
-//   input-bg: #ffffff,
-//   selection-bg: #e0e0e0,
-//   input-text: #373b41
-// );
-// // Name:   Base16 Grayscale Dark
-// // Author: Alexandre Gavioli (https://github.com/Alexx2/)
-// $theme-grayscale-dark: (
-//   action: #686868,
-//   actor: #7c7c7c,
-//   argument: #8e8e8e,
-//   addition: #999999,
-//   conjunction: #525252,
-//   input-bg: #101010,
-//   selection-bg: #252525,
-//   input-text: #b9b9b9
-// );
-// // Name:   Base16 Grayscale Dark
-// // Author: Alexandre Gavioli (https://github.com/Alexx2/)
-// $theme-grayscale-light: (
-//   action: #686868,
-//   actor: #7c7c7c,
-//   argument: #8e8e8e,
-//   addition: #999999,
-//   conjunction: #525252,
-//   input-bg: #f7f7f7,
-//   selection-bg: #e3e3e3,
-//   input-text: #464646
-// );
-// // Name:   Base16 Green Screen Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-greenscreen-dark: (
-//   action: #009900,
-//   actor: #007700,
-//   argument: #00bb00,
-//   addition: #009900,
-//   conjunction: #007700,
-//   input-bg: #001100,
-//   selection-bg: #003300,
-//   input-text: #00bb00
-// );
-// // Name:   Base16 Green Screen Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-greenscreen-light: (
-//   action: #009900,
-//   actor: #007700,
-//   argument: #00bb00,
-//   addition: #009900,
-//   conjunction: #007700,
-//   input-bg: #00ff00,
-//   selection-bg: #00dd00,
-//   input-text: #005500
-// );
-// // Name:   Base16 harmonic16 Dark
-// // Author: Jannik Siebert (https://github.com/janniks)
-// $theme-harmonic-dark: (
-//   action: #8b56bf,
-//   actor: #bf8b56,
-//   argument: #56bf8b,
-//   addition: #bfbf56,
-//   conjunction: #627e99,
-//   input-bg: #0b1c2c,
-//   selection-bg: #223b54,
-//   input-text: #cbd6e2
-// );
-// // Name:   Base16 harmonic16 Dark
-// // Author: Jannik Siebert (https://github.com/janniks)
-// $theme-harmonic-light: (
-//   action: #8b56bf,
-//   actor: #bf8b56,
-//   argument: #56bf8b,
-//   addition: #bfbf56,
-//   conjunction: #627e99,
-//   input-bg: #f7f9fb,
-//   selection-bg: #e5ebf1,
-//   input-text: #405c79
-// );
-// // Name:   Base16 Hopscotch Dark
-// // Author: Jan T. Sott
-// $theme-hopscotch-dark: (
-//   action: #1290bf,
-//   actor: #dd464c,
-//   argument: #8fc13e,
-//   addition: #fd8b19,
-//   conjunction: #797379,
-//   input-bg: #322931,
-//   selection-bg: #433b42,
-//   input-text: #b9b5b8
-// );
-// // Name:   Base16 Hopscotch Dark
-// // Author: Jan T. Sott
-// $theme-hopscotch-light: (
-//   action: #1290bf,
-//   actor: #dd464c,
-//   argument: #8fc13e,
-//   addition: #fd8b19,
-//   conjunction: #797379,
-//   input-bg: #ffffff,
-//   selection-bg: #d5d3d5,
-//   input-text: #5c545b
-// );
-// // Name:   Base16 Isotope Dark
-// // Author: Jan T. Sott
-// $theme-isotope-dark: (
-//   action: #0066ff,
-//   actor: #ff0000,
-//   argument: #33ff00,
-//   addition: #ff9900,
-//   conjunction: #808080,
-//   input-bg: #000000,
-//   selection-bg: #404040,
-//   input-text: #d0d0d0
-// );
-// // Name:   Base16 Isotope Dark
-// // Author: Jan T. Sott
-// $theme-isotope-light: (
-//   action: #0066ff,
-//   actor: #ff0000,
-//   argument: #33ff00,
-//   addition: #ff9900,
-//   conjunction: #808080,
-//   input-bg: #ffffff,
-//   selection-bg: #e0e0e0,
-//   input-text: #606060
-// );
-// // Name:   Base16 London Tube Dark
-// // Author: Jan T. Sott
-// $theme-london-tube-dark: (
-//   action: #009ddc,
-//   actor: #ee2e24,
-//   argument: #00853e,
-//   addition: #f386a1,
-//   conjunction: #737171,
-//   input-bg: #231f20,
-//   selection-bg: #1c3f95,
-//   input-text: #d9d8d8
-// );
-// // Name:   Base16 London Tube Dark
-// // Author: Jan T. Sott
-// $theme-london-tube-light: (
-//   action: #009ddc,
-//   actor: #ee2e24,
-//   argument: #00853e,
-//   addition: #f386a1,
-//   conjunction: #737171,
-//   input-bg: #ffffff,
-//   selection-bg: #e7e7e8,
-//   input-text: #5a5758
-// );
-// // Name:   Base16 Marrakesh Dark
-// // Author: Alexandre Gavioli (http://github.com/Alexx2/)
-// $theme-marrakesh-dark: (
-//   action: #477ca1,
-//   actor: #c35359,
-//   argument: #18974e,
-//   addition: #b36144,
-//   conjunction: #6c6823,
-//   input-bg: #201602,
-//   selection-bg: #302e00,
-//   input-text: #948e48
-// );
-// // Name:   Base16 Marrakesh Dark
-// // Author: Alexandre Gavioli (http://github.com/Alexx2/)
-// $theme-marrakesh-light: (
-//   action: #477ca1,
-//   actor: #c35359,
-//   argument: #18974e,
-//   addition: #b36144,
-//   conjunction: #6c6823,
-//   input-bg: #faf0a5,
-//   selection-bg: #ccc37a,
-//   input-text: #5f5b17
-// );
-// // Name:   Base16 Mocha Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-mocha-dark: (
-//   action: #8ab3b5,
-//   actor: #cb6077,
-//   argument: #beb55b,
-//   addition: #d28b71,
-//   conjunction: #7e705a,
-//   input-bg: #3B3228,
-//   selection-bg: #534636,
-//   input-text: #d0c8c6
-// );
-// // Name:   Base16 Mocha Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-mocha-light: (
-//   action: #8ab3b5,
-//   actor: #cb6077,
-//   argument: #beb55b,
-//   addition: #d28b71,
-//   conjunction: #7e705a,
-//   input-bg: #f5eeeb,
-//   selection-bg: #e9e1dd,
-//   input-text: #645240
-// );
-// // Name:   Base16 Monokai Dark
-// // Author: Wimer Hazenberg (http://www.monokai.nl)
-// $theme-monokai-dark: (
-//   action: #66d9ef,
-//   actor: #f92672,
-//   argument: #a6e22e,
-//   addition: #fd971f,
-//   conjunction: #75715e,
-//   input-bg: #272822,
-//   selection-bg: #383830,
-//   input-text: #f8f8f2
-// );
-// // Name:   Base16 Monokai Dark
-// // Author: Wimer Hazenberg (http://www.monokai.nl)
-// $theme-monokai-light: (
-//   action: #66d9ef,
-//   actor: #f92672,
-//   argument: #a6e22e,
-//   addition: #fd971f,
-//   conjunction: #75715e,
-//   input-bg: #f9f8f5,
-//   selection-bg: #f5f4f1,
-//   input-text: #49483e
-// );
-// // Name:   Base16 Ocean Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-ocean-dark: (
-//   action: #8fa1b3,
-//   actor: #bf616a,
-//   argument: #a3be8c,
-//   addition: #d08770,
-//   conjunction: #65737e,
-//   input-bg: #2b303b,
-//   selection-bg: #343d46,
-//   input-text: #c0c5ce
-// );
-// // Name:   Base16 Ocean Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-ocean-light: (
-//   action: #8fa1b3,
-//   actor: #bf616a,
-//   argument: #a3be8c,
-//   addition: #d08770,
-//   conjunction: #65737e,
-//   input-bg: #eff1f5,
-//   selection-bg: #dfe1e8,
-//   input-text: #4f5b66
-// );
-// // Name:   Base16 Paraiso Dark
-// // Author: Jan T. Sott
-// $theme-paraiso-dark: (
-//   action: #06b6ef,
-//   actor: #ef6155,
-//   argument: #48b685,
-//   addition: #f99b15,
-//   conjunction: #776e71,
-//   input-bg: #2f1e2e,
-//   selection-bg: #41323f,
-//   input-text: #a39e9b
-// );
-// // Name:   Base16 Paraiso Dark
-// // Author: Jan T. Sott
-// $theme-paraiso-light: (
-//   action: #06b6ef,
-//   actor: #ef6155,
-//   argument: #48b685,
-//   addition: #f99b15,
-//   conjunction: #776e71,
-//   input-bg: #e7e9db,
-//   selection-bg: #b9b6b0,
-//   input-text: #4f424c
-// );
-// // Name:   Base16 Pop Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-pop-dark: (
-//   action: #0e5a94,
-//   actor: #eb008a,
-//   argument: #37b349,
-//   addition: #f29333,
-//   conjunction: #505050,
-//   input-bg: #000000,
-//   selection-bg: #202020,
-//   input-text: #d0d0d0
-// );
-// // Name:   Base16 Pop Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-pop-light: (
-//   action: #0e5a94,
-//   actor: #eb008a,
-//   argument: #37b349,
-//   addition: #f29333,
-//   conjunction: #505050,
-//   input-bg: #ffffff,
-//   selection-bg: #e0e0e0,
-//   input-text: #303030
-// );
-// // Name:   Base16 Railscasts Dark
-// // Author: Ryan Bates (http://railscasts.com)
-// $theme-railscasts-dark: (
-//   action: #6d9cbe,
-//   actor: #da4939,
-//   argument: #a5c261,
-//   addition: #cc7833,
-//   conjunction: #5a647e,
-//   input-bg: #2b2b2b,
-//   selection-bg: #272935,
-//   input-text: #e6e1dc
-// );
-// // Name:   Base16 Railscasts Dark
-// // Author: Ryan Bates (http://railscasts.com)
-// $theme-railscasts-light: (
-//   action: #6d9cbe,
-//   actor: #da4939,
-//   argument: #a5c261,
-//   addition: #cc7833,
-//   conjunction: #5a647e,
-//   input-bg: #f9f7f3,
-//   selection-bg: #f4f1ed,
-//   input-text: #3a4055
-// );
-// // Name:   Base16 shapeshifter Dark
-// // Author: Tyler Benziger (http://tybenz.com)
-// $theme-shapeshifter-dark: (
-//   action: #3b48e3,
-//   actor: #e92f2f,
-//   argument: #0ed839,
-//   addition: #e09448,
-//   conjunction: #343434,
-//   input-bg: #000000,
-//   selection-bg: #040404,
-//   input-text: #ababab
-// );
-// // Name:   Base16 shapeshifter Dark
-// // Author: Tyler Benziger (http://tybenz.com)
-// $theme-shapeshifter-light: (
-//   action: #3b48e3,
-//   actor: #e92f2f,
-//   argument: #0ed839,
-//   addition: #e09448,
-//   conjunction: #343434,
-//   input-bg: #f9f9f9,
-//   selection-bg: #e0e0e0,
-//   input-text: #102015
-// );
-// // Name:   Base16 Solarized Dark
-// // Author: Ethan Schoonover (http://ethanschoonover.com/solarized)
-// $theme-solarized-dark: (
-//   action: #268bd2,
-//   actor: #dc322f,
-//   argument: #859900,
-//   addition: #cb4b16,
-//   conjunction: #657b83,
-//   input-bg: #002b36,
-//   selection-bg: #073642,
-//   input-text: #93a1a1
-// );
-// // Name:   Base16 Solarized Dark
-// // Author: Ethan Schoonover (http://ethanschoonover.com/solarized)
-// $theme-solarized-light: (
-//   action: #268bd2,
-//   actor: #dc322f,
-//   argument: #859900,
-//   addition: #cb4b16,
-//   conjunction: #657b83,
-//   input-bg: #fdf6e3,
-//   selection-bg: #eee8d5,
-//   input-text: #586e75
-// );
-// // Name:   Base16 Summerfruit Dark
-// // Author: Christopher Corley (http://cscorley.github.io/)
-// $theme-summerfruit-dark: (
-//   action: #3777E6,
-//   actor: #FF0086,
-//   argument: #00C918,
-//   addition: #FD8900,
-//   conjunction: #505050,
-//   input-bg: #151515,
-//   selection-bg: #202020,
-//   input-text: #D0D0D0
-// );
-// // Name:   Base16 Summerfruit Dark
-// // Author: Christopher Corley (http://cscorley.github.io/)
-// $theme-summerfruit-light: (
-//   action: #3777E6,
-//   actor: #FF0086,
-//   argument: #00C918,
-//   addition: #FD8900,
-//   conjunction: #505050,
-//   input-bg: #FFFFFF,
-//   selection-bg: #E0E0E0,
-//   input-text: #303030
-// );
-// // Name:   Base16 Tomorrow Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-tomorrow-dark: (
-//   action: #81a2be,
-//   actor: #cc6666,
-//   argument: #b5bd68,
-//   addition: #de935f,
-//   conjunction: #969896,
-//   input-bg: #1d1f21,
-//   selection-bg: #282a2e,
-//   input-text: #c5c8c6
-// );
-// // Name:   Base16 Tomorrow Dark
-// // Author: Chris Kempson (http://chriskempson.com)
-// $theme-tomorrow-light: (
-//   action: #81a2be,
-//   actor: #cc6666,
-//   argument: #b5bd68,
-//   addition: #de935f,
-//   conjunction: #969896,
-//   input-bg: #ffffff,
-//   selection-bg: #e0e0e0,
-//   input-text: #373b41
-// );
-// // Name:   Base16 Twilight Dark
-// // Author: David Hart (http://hart-dev.com)
-// $theme-twilight-dark: (
-//   action: #7587a6,
-//   actor: #cf6a4c,
-//   argument: #8f9d6a,
-//   addition: #cda869,
-//   conjunction: #5f5a60,
-//   input-bg: #1e1e1e,
-//   selection-bg: #323537,
-//   input-text: #a7a7a7
-// );
-// // Name:   Base16 Twilight Dark
-// // Author: David Hart (http://hart-dev.com)
-// $theme-twilight-light: (
-//   action: #7587a6,
-//   actor: #cf6a4c,
-//   argument: #8f9d6a,
-//   addition: #cda869,
-//   conjunction: #5f5a60,
-//   input-bg: #ffffff,
-//   selection-bg: #c3c3c3,
-//   input-text: #464b50
-// );
-//
-
-
-
-
-//
-// @include theme('theme-3024-light', $theme-3024-light);
-// @include theme('theme-apathy-light', $theme-apathy-light);
-// @include theme('theme-ashes-light', $theme-ashes-light);
-// @include theme('theme-atelier-dune-light', $theme-atelier-dune-light);
-// @include theme('theme-atelier-forest-light', $theme-atelier-forest-light);
-// @include theme('theme-atelier-heath-light', $theme-atelier-heath-light);
-// @include theme('theme-atelier-lakeside-light', $theme-atelier-lakeside-light);
-// @include theme('theme-atelier-seaside-light', $theme-atelier-seaside-light);
-// @include theme('theme-bespin-light', $theme-bespin-light);
-// @include theme('theme-brewer-light', $theme-brewer-light);
-// @include theme('theme-bright-light', $theme-bright-light);
-// @include theme('theme-chalk-light', $theme-chalk-light);
-// @include theme('theme-codeschool-light', $theme-codeschool-light);
-// @include theme('theme-colors-light', $theme-colors-light);
-// @include theme('theme-default-light', $theme-default-light);
-// @include theme('theme-eighties-light', $theme-eighties-light);
-// @include theme('theme-embers-light', $theme-embers-light);
-// @include theme('theme-flat-light', $theme-flat-light);
-// @include theme('theme-google-light', $theme-google-light);
-// @include theme('theme-grayscale-light', $theme-grayscale-light);
-// @include theme('theme-greenscreen-light', $theme-greenscreen-light);
-// @include theme('theme-harmonic-light', $theme-harmonic-light);
-// @include theme('theme-hopscotch-light', $theme-hopscotch-light);
-// @include theme('theme-isotope-light', $theme-isotope-light);
-// @include theme('theme-marrakesh-light', $theme-marrakesh-light);
-// @include theme('theme-mocha-light', $theme-mocha-light);
-// @include theme('theme-monokai-light', $theme-monokai-light);
-// @include theme('theme-ocean-light', $theme-ocean-light);
-// @include theme('theme-paraiso-light', $theme-paraiso-light);
-// @include theme('theme-pop-light', $theme-pop-light);
-// @include theme('theme-railscasts-light', $theme-railscasts-light);
-// @include theme('theme-shapeshifter-light', $theme-shapeshifter-light);
-// @include theme('theme-solarized-light', $theme-solarized-light);
-// @include theme('theme-summerfruit-light', $theme-summerfruit-light);
-// @include theme('theme-tomorrow-light', $theme-tomorrow-light);
-// @include theme('theme-london-tube-light', $theme-london-tube-light);
-// @include theme('theme-twilight-light', $theme-twilight-light);
-//
-// @include theme('theme-3024-dark', $theme-3024-dark);
-// @include theme('theme-apathy-dark', $theme-apathy-dark);
-// @include theme('theme-ashes-dark', $theme-ashes-dark);
-// @include theme('theme-atelier-dune-dark', $theme-atelier-dune-dark);
-// @include theme('theme-atelier-forest-dark', $theme-atelier-forest-dark);
-// @include theme('theme-atelier-heath-dark', $theme-atelier-heath-dark);
-// @include theme('theme-atelier-lakeside-dark', $theme-atelier-lakeside-dark);
-// @include theme('theme-atelier-seaside-dark', $theme-atelier-seaside-dark);
-// @include theme('theme-bespin-dark', $theme-bespin-dark);
-// @include theme('theme-brewer-dark', $theme-brewer-dark);
-// @include theme('theme-bright-dark', $theme-bright-dark);
-// @include theme('theme-chalk-dark', $theme-chalk-dark);
-// @include theme('theme-codeschool-dark', $theme-codeschool-dark);
-// @include theme('theme-colors-dark', $theme-colors-dark);
-// @include theme('theme-default-dark', $theme-default-dark);
 @include theme('theme-eighties-dark', $theme-eighties-dark);
-// @include theme('theme-embers-dark', $theme-embers-dark);
-// @include theme('theme-flat-dark', $theme-flat-dark);
-// @include theme('theme-google-dark', $theme-google-dark);
-// @include theme('theme-grayscale-dark', $theme-grayscale-dark);
-// @include theme('theme-greenscreen-dark', $theme-greenscreen-dark);
-// @include theme('theme-harmonic-dark', $theme-harmonic-dark);
-// @include theme('theme-hopscotch-dark', $theme-hopscotch-dark);
-// @include theme('theme-isotope-dark', $theme-isotope-dark);
-// @include theme('theme-marrakesh-dark', $theme-marrakesh-dark);
-// @include theme('theme-mocha-dark', $theme-mocha-dark);
-// @include theme('theme-monokai-dark', $theme-monokai-dark);
-// @include theme('theme-ocean-dark', $theme-ocean-dark);
-// @include theme('theme-paraiso-dark', $theme-paraiso-dark);
-// @include theme('theme-pop-dark', $theme-pop-dark);
-// @include theme('theme-railscasts-dark', $theme-railscasts-dark);
-// @include theme('theme-shapeshifter-dark', $theme-shapeshifter-dark);
-// @include theme('theme-solarized-dark', $theme-solarized-dark);
-// @include theme('theme-summerfruit-dark', $theme-summerfruit-dark);
-// @include theme('theme-tomorrow-dark', $theme-tomorrow-dark);
-// @include theme('theme-london-tube-dark', $theme-london-tube-dark);
-// @include theme('theme-twilight-dark', $theme-twilight-dark);

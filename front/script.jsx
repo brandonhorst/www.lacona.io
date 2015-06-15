@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react/addons'
 import Page from './page.jsx'
 import isMobile from './detect'
 

@@ -1,208 +1,6081 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports["default"]=function(e,i){return/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(e)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(e.substr(0,4))}(navigator.userAgent||navigator.vendor||window.opera),module.exports=exports["default"];
+"use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports["default"] = (function (a, b) {
+  return /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4));
+})(navigator.userAgent || navigator.vendor || window.opera);
+
+module.exports = exports["default"];
 
 },{}],2:[function(require,module,exports){
-"use strict";function execute(e){var t=this;switch(e.action){case"learn":$("html, body").animate({scrollTop:$("content").offset().top-90},400,"swing");break;case"subscribe":$.ajax({type:"POST",url:""+window.__env.APIROOT+"subscribe",data:JSON.stringify({email:e.email}),contentType:"application/json"}).then(function(){t.setState({noteMessage:""+e.email+" was added to Newsletter. Check your email for confirmation.",noteVisible:!0,noteType:"success"})},function(t){var a=encodeURIComponent(e.email);window.location.href="http://lacona.us10.list-manage.com/subscribe?u=f923be23d36f00f457ea3b2c6&id=1db875d5ed&MERGE0="+a});break;case"tweet":var a=encodeURIComponent(e.message);window.open("https://twitter.com/intent/tweet?text="+a+"&via=lacona","_blank","menubar=1,resizable=1,width=550,height=420");case"share":switch(e.platform){case"facebook":window.open("https://www.facebook.com/sharer/sharer.php?u=https://lacona.io","_blank","width=550,height=231");break;case"twitter":window.open("https://twitter.com/intent/tweet?text=I%20tweeted%20this%20with%20Lacona&url=https%3A%2F%2Flacona.io","_blank","menubar=1,resizable=1,width=550,height=420");break;case"google-plus":window.open("https://plus.google.com/share?url=https://lacona.io","_blank","menubar=1,resizable=1,width=534,height=446");break;case"email":window.location.href="mailto:?&subject=Check out Lacona&body=The%20upcoming%20natural%20language%20command%20system%20for%20Mac.%0A%0Ahttps://lacona.io"}break;case"follow":window.open("https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458","_blank","menubar=1,resizable=1,width=534,height=446");break;case"fork":window.open("https://github.com/lacona","_blank");break;case"contact":switch(e.platform){case"twitter":window.open("https://twitter.com/intent/tweet?text=Hey%20%40lacona%2C%20","_blank","menubar=1,resizable=1,width=550,height=420");break;case"email":window.location.href="mailto:app@lacona.io?Subject=Lacona%20Questions"}break;case"change":this.setState({theme:e.theme})}}function select(e){"change"===e.action&&e.theme&&this.setState({theme:e.theme})}Object.defineProperty(exports,"__esModule",{value:!0}),exports.execute=execute,exports.select=select;
-
-
-},{}],3:[function(require,module,exports){
 (function (global){
-"use strict";var _interopRequireWildcard=function(e){return e&&e.__esModule?e:{"default":e}},_get=function e(t,a,n){var l=Object.getOwnPropertyDescriptor(t,a);if(void 0===l){var i=Object.getPrototypeOf(t);return null===i?void 0:e(i,a,n)}if("value"in l)return l.value;var o=l.get;return void 0===o?void 0:o.call(n)},_inherits=function(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(e.__proto__=t)},_classCallCheck=function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")},_createClass=function(){function e(e,t){for(var a=0;a<t.length;a++){var n=t[a];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,a,n){return a&&e(t.prototype,a),n&&e(t,n),t}}();Object.defineProperty(exports,"__esModule",{value:!0});var _import=require("lodash"),_import2=_interopRequireWildcard(_import),_createFactory=require("lacona-phrase"),_ga$Initializer=require("react-google-analytics"),_ga$Initializer2=_interopRequireWildcard(_ga$Initializer),_import3=require("./execute"),things=_interopRequireWildcard(_import3),_fulltext=require("lacona-util-fulltext"),_fulltext2=_interopRequireWildcard(_fulltext),_Parser=require("lacona"),_Lacona=require("react-lacona"),_Lacona2=_interopRequireWildcard(_Lacona),_React=(typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null),_React2=_interopRequireWildcard(_React),_Sentence=require("./sentence.jsx"),_Sentence2=_interopRequireWildcard(_Sentence),Notification=function(){function e(){_classCallCheck(this,e)}return _createClass(e,[{key:"render",value:function(){return _React2["default"].createElement("div",{className:"notification "+this.props.type+(this.props.hidden?" hidden":""),onClick:this.props.hide},this.props.message)}}]),e}(),Page=function(e){function t(){_classCallCheck(this,t),_get(Object.getPrototypeOf(t.prototype),"constructor",this).call(this),this.state={theme:"theme-eighties-dark",input:"",noteMessage:"",noteVisible:!1,initialLoad:!0,noteType:""}}return _inherits(t,e),_createClass(t,[{key:"componentWillMount",value:function(){var e=_createFactory.createFactory(_Sentence2["default"]);this.parser=new _Parser.Parser,this.parser.grammar=e(),this.props.isMobile||(global.onscroll=this.checkScroll.bind(this))}},{key:"componentDidMount",value:function(){this.cancel(),_ga$Initializer2["default"]("create","UA-61643321-1","auto"),_ga$Initializer2["default"]("send","pageview"),this.setState({initialLoad:!1}),this.update("")}},{key:"update",value:function(e){var t=this.parser.parseArray(e),a=_import2["default"].chain(t).groupBy(function(e){return _fulltext2["default"].match(e)+_fulltext2["default"].suggestion(e)}).map(function(e){return e[0]}).value();this.setState({input:e,outputs:a})}},{key:"getSetFunction",value:function(e){var t=this;return function(a){t.update(e),t.refs.lacona.focusBar(),a.stopPropagation()}}},{key:"execute",value:function(e){things.execute.call(this,this.state.outputs[e].result),this.update("")}},{key:"select",value:function(e){things.select.call(this,this.state.outputs[e].result)}},{key:"cancel",value:function(e){this.update(""),this.setState({input:"",outputs:[]})}},{key:"checkScroll",value:function(e){var t=window.pageYOffset||document.documentElement.scrollTop,a=$(".disclaimer, .keys"),n=a.offset().top+a.height()+10;t>n?this.state.fixedMode||this.setState({fixedMode:!0}):this.state.fixedMode&&this.setState({fixedMode:!1})}},{key:"focus",value:function(){this.setState({active:!0})}},{key:"blur",value:function(){this.setState({active:!1})}},{key:"hideNote",value:function(){this.setState({noteVisible:!1})}},{key:"render",value:function(){return _React2["default"].createElement("div",{className:"page"+(this.state.fixedMode?" fixed":"")+(this.state.initialLoad?" initial-load":"")+(this.state.active?"":" inactive")+" "+(this.props.isMobile?"mobile":"desktop")},_React2["default"].createElement(Notification,{type:this.state.noteType,message:this.state.noteMessage,hidden:!this.state.noteVisible,hide:this.hideNote.bind(this)}),_React2["default"].createElement("div",{className:"initialHeader"},_React2["default"].createElement("a",{href:"javascript:$('html, body').animate({scrollTop:0}, 400, 'swing');",tabIndex:"-1"},_React2["default"].createElement("h1",null,"Lacona")),_React2["default"].createElement("h2",null,"Natural Language Command System")),_React2["default"].createElement("div",{className:"lacona-demo"},_React2["default"].createElement("div",{className:"keys desktopOnly"},_React2["default"].createElement("div",{className:"key"},_React2["default"].createElement("div",{className:"glyph"},"↕"),_React2["default"].createElement("div",{className:"explanation"},"select")),_React2["default"].createElement("div",{className:"key"},_React2["default"].createElement("div",{className:"glyph"},"⇥"),_React2["default"].createElement("div",{className:"explanation"},"complete")),_React2["default"].createElement("div",{className:"key"},_React2["default"].createElement("div",{className:"glyph"},"↩"),_React2["default"].createElement("div",{className:"explanation"},"do"))),_React2["default"].createElement("div",{className:"disclaimer mobileOnly"},"Lacona is a keyboard-driven application and is not designed to work on mobile devices. To get a full demo experience, please visit this page on your Desktop or Laptop."),_React2["default"].createElement("div",{className:"bar "+this.state.theme},_React2["default"].createElement(_Lacona2["default"],{update:this.update.bind(this),execute:this.execute.bind(this),select:this.select.bind(this),cancel:this.cancel.bind(this),outputs:this.state.outputs,focus:this.focus.bind(this),blur:this.blur.bind(this),placeholder:"What would you like to do?",autoFocus:!0,userInput:this.state.input,ref:"lacona"}),_React2["default"].createElement("div",{className:"logo"},_React2["default"].createElement("a",{href:"javascript:$('html, body').animate({scrollTop:0}, 400, 'swing');",tabIndex:"-1"},_React2["default"].createElement("img",{className:"icon",src:"logo.png"}))))),_React2["default"].createElement("content",null,_React2["default"].createElement("p",null,"Lacona is a revolutionary productivity tool for Mac that allows all of your interactions with your computer to be ",_React2["default"].createElement("em",null,"quicker"),", ",_React2["default"].createElement("em",null,"simpler"),", and ",_React2["default"].createElement("em",null,"more focused"),"."),_React2["default"].createElement("h2",null,"Speed"),_React2["default"].createElement("p",null,"Pull up Lacona with a single hotkey, and it allows you to perform common tasks instantly, without any need to touch the mouse or switch applications. A sophisticated autocomplete system reduces the typing required to a bare minimum. Skip the mundanity and the RSI, and get back to work."),_React2["default"].createElement("p",{className:"desktopOnly"},"Press ",_React2["default"].createElement("em",null,"tab")," on this page to see how it feels."),_React2["default"].createElement("h2",null,"Simplicity"),_React2["default"].createElement("p",null,'There are no commands to learn or interface to master. Enter commands in the same way you think them, and let Lacona work out the details. There is no asking "how do you...?" The answer is always the same: just type.'),_React2["default"].createElement("h2",null,"Focus"),_React2["default"].createElement("p",null,"Since computers have existed, we have needed to learn ",_React2["default"].createElement("em",null,"their")," language. Even tools with well-designed graphical interfaces still require us to translate our thoughts into points, clicks, drags, drops, and taps."),_React2["default"].createElement("p",null,"With Lacona, the computer takes that responsibility back. It understands commands ",_React2["default"].createElement("em",null,"the way they exist in your mind"),", freeing you from the burden of an expensive mental context-switch, so you can forget about the computer and just ",_React2["default"].createElement("em",null,"get things done"),"."),_React2["default"].createElement("h2",null,"Get It"),_React2["default"].createElement("p",null,"Lacona is currently under active development. To recieve updates when they are available, ",_React2["default"].createElement("a",{onClick:this.getSetFunction("subscribe ")},"subscribe to the mailing list")," or ",_React2["default"].createElement("a",{onClick:this.getSetFunction("follow @lacona on Twitter")},"follow @lacona on Twitter"),". With any questions, please feel free to ",_React2["default"].createElement("a",{onClick:this.getSetFunction("contact us on Twitter")},"start a conversation on Twitter"),".")),_React2["default"].createElement("footer",null,"©2015 Lacona Labs"),_React2["default"].createElement(_ga$Initializer.Initializer,null))}}]),t}(_React2["default"].Component);exports["default"]=Page,module.exports=exports["default"];
+'use strict';
 
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports['default'] = getExecute;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _moment = (typeof window !== "undefined" ? window.moment : typeof global !== "undefined" ? global.moment : null);
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _reactAddons = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null);
+
+var _reactAddons2 = _interopRequireDefault(_reactAddons);
+
+require('moment-duration-format');
+
+function intersperse(array, something) {
+  if (array.length < 2) {
+    return array;
+  }
+  var result = [],
+      i = 0,
+      l = array.length;
+  if (typeof something == 'function') {
+    for (; i < l; i++) {
+      if (i !== 0) {
+        result.push(something());
+      }
+      result.push(array[i]);
+    }
+  } else {
+    for (; i < l; i++) {
+      if (i !== 0) {
+        result.push(something);
+      }
+      result.push(array[i]);
+    }
+  }
+  return result;
+}
+
+function getExecute(showNotification) {
+  return function (result) {
+    var message = undefined;
+    if (result.open) {
+      if (result.open.app && result.open.url) {
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'load'
+        ), ' ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-url' },
+          result.open.url
+        ), ' in ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-application' },
+          result.open.app
+        )];
+      } else if (result.open.app && result.open.file) {
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'open'
+        ), ' ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-file' },
+          result.open.file
+        ), ' in ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-application' },
+          result.open.app
+        )];
+      } else if (result.open.app) {
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'launch'
+        ), ' ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-application' },
+          result.open.app
+        )];
+      } else if (result.open.file) {
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'open'
+        ), ' ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-file' },
+          result.open.file
+        ), ' in ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-application' },
+          'the default application'
+        )];
+      } else if (result.open.url) {
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'load'
+        ), ' ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-url' },
+          result.open.url
+        ), ' in ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-application' },
+          'the default browser'
+        )];
+      }
+    } else if (result.date) {
+      if (result.date.reminder) {
+        var time = undefined;
+
+        if (result.date.reminder.datetime) {
+          time = ['due ', _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-date-and-time' },
+            (0, _moment2['default'])(result.date.reminder.datetime).format('dddd, MMMM Do, YYYY [at] h:mm a')
+          )];
+        } else if (result.date.reminder.date) {
+          time = ['due ', _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-date-and-time' },
+            (0, _moment2['default'])(result.date.reminder.date).format('dddd, MMMM Do, YYYY'),
+            ' at 9:00 am'
+          )];
+        } else if (result.date.reminder.time) {
+          time = ['due ', _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-date-and-time' },
+            'today at ',
+            (0, _moment2['default'])(result.date.reminder.time).format('h:mm a')
+          )];
+        } else {
+          time = ['without a due date'];
+        }
+
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'create a reminder'
+        ), ' called ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-reminder-title' },
+          result.date.reminder.title
+        ), ' ', time];
+      } else if (result.date.event) {
+        var _location = undefined;
+        if (result.date.event.location) _location = [' with location ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-location' },
+          result.date.event.location
+        ), ''];
+
+        var time = undefined;
+        if (result.date.event.datetime) {
+          time = [_reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-date-and-time' },
+            (0, _moment2['default'])(result.date.event.datetime).format('dddd, MMMM Do, YYYY [at] h:mma')
+          ), ' that is ', _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-period-of-time' },
+            'an hour'
+          ), ' long'];
+        } else if (result.date.event.period) {
+          console.log(result.date.event.period.duration);
+          time = [_reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-date-and-time' },
+            (0, _moment2['default'])(result.date.event.period.start).format('dddd, MMMM Do, YYYY [at] h:mma')
+          ), ' that is ', _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-period-of-time' },
+            _moment2['default'].duration(result.date.event.period.duration).format('Y [years], M [months], D [days], H [hours] [and] m [minutes]')
+          ), ' long'];
+        }
+
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'create an event'
+        ), ' called ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-calendar-event' },
+          result.date.event.title
+        ), ' ', _location, ' on ', time];
+      }
+    } else if (result.search) {
+      console.log(result.search);
+      if (result.search.engines.length === 1) {
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'open'
+        ), ' a ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-search-engine' },
+          result.search.engines[0]
+        ), ' search for ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-query' },
+          result.search.query
+        ), ' in ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-application' },
+          'the default browser'
+        )];
+      } else {
+        var enginePhrases = _.map(result.search.engines, function (engine) {
+          return _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-search-engine' },
+            engine
+          );
+        });
+        var engines = result.search.engines.length === 2 ? intersperse(enginePhrases, ' and ') : [intersperse(enginePhrases.slice(0, -1), ', '), ', and ', _.last(enginePhrases)];
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'open'
+        ), ' ', engines, ' searches for ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-query' },
+          result.search.query
+        ), ' in ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-application' },
+          'the default browser'
+        )];
+      }
+    } else if (result.play) {
+      if (result.play.something) {
+        var descriptions = _.map(result.play.something, function (thing) {
+          if (thing.song) {
+            return [_reactAddons2['default'].createElement(
+              'span',
+              { className: 'descriptor-song' },
+              thing.song
+            )];
+          } else if (thing.album) {
+            return ['all songs on ', _reactAddons2['default'].createElement(
+              'span',
+              { className: 'descriptor-album' },
+              thing.album
+            )];
+          } else if (thing.artist) {
+            return ['all songs by ', _reactAddons2['default'].createElement(
+              'span',
+              { className: 'descriptor-artist' },
+              thing.artist
+            )];
+          } else if (thing.genre) {
+            return ['all songs in the ', _reactAddons2['default'].createElement(
+              'span',
+              { className: 'descriptor-genre' },
+              thing.genre
+            ), ' genre'];
+          } else if (thing.playlist) {
+            return ['all songs in the ', _reactAddons2['default'].createElement(
+              'span',
+              { className: 'descriptor-playlist' },
+              thing.playlist
+            ), ' playlist'];
+          } else if (thing.composer) {
+            return ['all songs composed by ', _reactAddons2['default'].createElement(
+              'span',
+              { className: 'descriptor-composer' },
+              thing.composer
+            )];
+          }
+        });
+
+        var allDescriptions = undefined;
+        if (descriptions.length === 1) {
+          allDescriptions = descriptions[0];
+        } else if (descriptions.length === 2) {
+          allDescriptions = intersperse(descriptions, ' and ');
+        } else {
+          allDescriptions = [intersperse(descriptions.slice(0, -1), ', '), ', and ', _.last(descriptions)];
+        }
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'play'
+        ), ' ', allDescriptions, ' in ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-application' },
+          'iTunes'
+        )];
+      } else if (result.play.next) {
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'play'
+        ), ' ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-argument5' },
+          'the next song'
+        ), ' in ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-application' },
+          'iTunes'
+        )];
+      } else if (result.play.previous) {
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'play'
+        ), ' ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-argument5' },
+          'the previous song'
+        ), ' in ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-application' },
+          'iTunes'
+        )];
+      } else if (result.play.stop) {
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'stop'
+        ), ' the music in ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-application' },
+          'iTunes'
+        )];
+      } else if (result.play.pause) {
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'pause'
+        ), ' the music in ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-application' },
+          'iTunes'
+        )];
+      }
+    } else if (result.contact) {
+      if (result.contact.email) {
+        if (result.contact.email.message) {
+          message = [_reactAddons2['default'].createElement(
+            'span',
+            { className: 'category-action' },
+            'start'
+          ), ' a new email to ', _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-relationship' },
+            result.contact.email.relationship
+          ), _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-contact' },
+            result.contact.email.contact
+          ), _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-email-address' },
+            result.contact.email.address
+          ), ' with ', _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-message' },
+            result.contact.email.message
+          ), ' in the subject'];
+        } else {
+          message = [_reactAddons2['default'].createElement(
+            'span',
+            { className: 'category-action' },
+            'start'
+          ), ' a new email to ', _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-relationship' },
+            result.contact.email.relationship
+          ), _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-contact' },
+            result.contact.email.contact
+          ), _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-email-address' },
+            result.contact.email.address
+          )];
+        }
+      } else if (result.contact.call) {
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'call'
+        ), ' ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-phone-number' },
+          result.contact.call.number
+        ), _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-relationship' },
+          result.contact.call.relationship
+        ), _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-contact' },
+          result.contact.call.contact
+        ), ' through your iPhone'];
+      } else if (result.contact.facetime) {
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'call'
+        ), ' ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-phone-number' },
+          result.contact.facetime.number
+        ), _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-relationship' },
+          result.contact.facetime.relationship
+        ), _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-email-address' },
+          result.contact.facetime.address
+        ), _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-contact' },
+          result.contact.facetime.contact
+        ), ' using the ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-application' },
+          'FaceTime'
+        ), ' app'];
+      } else if (result.contact.text) {
+        if (result.contact.text.message) {
+          message = [_reactAddons2['default'].createElement(
+            'span',
+            { className: 'category-action' },
+            'send'
+          ), ' ', _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-message' },
+            result.contact.text.message
+          ), ' to ', _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-phone-number' },
+            result.contact.text.number
+          ), _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-relationship' },
+            result.contact.text.relationship
+          ), _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-contact' },
+            result.contact.text.contact
+          ), _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-email-address' },
+            result.contact.text.address
+          ), ' using the ', _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-application' },
+            'Messages'
+          ), ' app'];
+        } else {
+          message = [_reactAddons2['default'].createElement(
+            'span',
+            { className: 'category-action' },
+            'open'
+          ), ' ', _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-application' },
+            'Messages'
+          ), 'to a conversation with ', _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-phone-number' },
+            result.contact.text.number
+          ), _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-relationship' },
+            result.contact.text.relationship
+          ), _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-contact' },
+            result.contact.text.contact
+          ), _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-email-address' },
+            result.contact.text.address
+          )];
+        }
+      }
+    }
+
+    if (message == null) {
+      message = 'something went wrong with: ' + JSON.stringify(result);
+    }
+
+    showNotification(message);
+  };
+}
+
+// export function execute(result) {
+//   switch(result.action) {
+//     case 'learn':
+//         $('html, body').animate({scrollTop: $('content').offset().top - 90}, 400, 'swing')
+//       break;
+//     case 'subscribe':
+//       $.ajax({
+//         type: 'POST',
+//         url: `${window.__env.APIROOT}subscribe`,
+//         data: JSON.stringify({email: result.email}),
+//         contentType: 'application/json'
+//       }).then(() => {
+//         this.setState({
+//           noteMessage: `${result.email} was added to Newsletter. Check your email for confirmation.`,
+//           noteVisible: true,
+//           noteType: 'success'
+//         })
+//       }, error => {
+//         const email = encodeURIComponent(result.email)
+//         window.location.href = `http://lacona.us10.list-manage.com/subscribe?u=f923be23d36f00f457ea3b2c6&id=1db875d5ed&MERGE0=${email}`
+//       })
+//       break;
+//     case 'tweet':
+//       const message = encodeURIComponent(result.message)
+//       window.open(`https://twitter.com/intent/tweet?text=${message}&via=lacona`, '_blank', 'menubar=1,resizable=1,width=550,height=420')
+//     case 'share':
+//       switch(result.platform) {
+//         case 'facebook':
+//             window.open('https://www.facebook.com/sharer/sharer.php?u=https://lacona.io', '_blank', 'width=550,height=231')
+//           break;
+//         case 'twitter':
+//             window.open('https://twitter.com/intent/tweet?text=I%20tweeted%20this%20with%20Lacona&url=https%3A%2F%2Flacona.io', '_blank', 'menubar=1,resizable=1,width=550,height=420')
+//           break;
+//         case 'google-plus':
+//             window.open('https://plus.google.com/share?url=https://lacona.io', '_blank', 'menubar=1,resizable=1,width=534,height=446')
+//           break;
+//         case 'email':
+//             window.location.href = 'mailto:?&subject=Check out Lacona&body=The%20upcoming%20natural%20language%20command%20system%20for%20Mac.%0A%0Ahttps://lacona.io'
+//           break;
+//       }
+//       break;
+//     case 'follow':
+//       window.open('https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458', '_blank', 'menubar=1,resizable=1,width=534,height=446')
+//       break;
+//     case 'fork':
+//       window.open('https://github.com/lacona', '_blank')
+//       break;
+//     case 'contact':
+//       switch (result.platform) {
+//         case 'twitter':
+//             window.open('https://twitter.com/intent/tweet?text=Hey%20%40lacona%2C%20', '_blank', 'menubar=1,resizable=1,width=550,height=420')
+//           break;
+//         case 'email':
+//             window.location.href = 'mailto:app@lacona.io?Subject=Lacona%20Questions'
+//           break;
+//       }
+//       break;
+//     case 'change':
+//       this.setState({theme: result.theme})
+//       break;
+//   }
+// }
+//
+//
+// export function select(result) {
+//   if (result.action === 'change' && result.theme) {
+//     this.setState({theme: result.theme})
+//   }
+// }
+
+module.exports = exports['default'];
+// showNotification(`Now, Lacona would ${message}. `)
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./execute":2,"./sentence.jsx":5,"lacona":58,"lacona-phrase":48,"lacona-util-fulltext":51,"lodash":64,"react-google-analytics":65,"react-lacona":67}],4:[function(require,module,exports){
+},{"moment-duration-format":120}],3:[function(require,module,exports){
 (function (global){
-"use strict";var _interopRequireWildcard=function(e){return e&&e.__esModule?e:{"default":e}},_React=(typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null),_React2=_interopRequireWildcard(_React),_Page=require("./page.jsx"),_Page2=_interopRequireWildcard(_Page),_isMobile=require("./detect"),_isMobile2=_interopRequireWildcard(_isMobile);_React2["default"].render(_React2["default"].createElement(_Page2["default"],{isMobile:_isMobile2["default"]}),document.getElementById("page"));
+'use strict';
 
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _get = function get(_x2, _x3, _x4) { var _again = true; _function: while (_again) { var object = _x2, property = _x3, receiver = _x4; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x2 = parent; _x3 = property; _x4 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+
+var _lodash = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _lacona = require('lacona');
+
+var _reactAddons = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null);
+
+var _reactAddons2 = _interopRequireDefault(_reactAddons);
+
+var _reactLacona = require('react-lacona');
+
+var _reactLacona2 = _interopRequireDefault(_reactLacona);
+
+function groupPlaceholders(result) {
+  return _lodash2['default'].chain(result.words).map(function (item) {
+    return item.placeholder ? '￼' : '￹' + item.text + '￺' + item.argument + '￻';
+  }).value();
+}
+
+function mapPlaceholderGroups(resultGroup) {
+  var placeholders = _lodash2['default'].chain(resultGroup).map(function (result) {
+    return _lodash2['default'].chain(result.words).filter('placeholder').map('text').value();
+  }).thru(function (descriptorLists) {
+    return _lodash2['default'].zip.apply(_lodash2['default'], _toConsumableArray(descriptorLists));
+  }).map(function (x) {
+    return _lodash2['default'].unique(x);
+  }).map(function (x) {
+    return _lodash2['default'].filter(x);
+  }).value();
+
+  var result = _lodash2['default'].clone(_lodash2['default'].first(resultGroup));
+
+  _lodash2['default'].chain(result.words).filter('placeholder').forEach(function (item, index) {
+    item.placeholderTexts = placeholders[index]
+    // item.descriptors = [placeholders[index]]
+    ;
+  }).value();
+
+  return result;
+}
+
+// function removeDescriptors (result) {
+//   _.forEach(result.match.concat(result.suggestion, result.completion), item => {
+//     item.topLevelDescriptor = item.ar_.first(item.descriptors)
+//   })
+// }
+
+var prefixes = ['open ', 'search ']; //, 'open ', 'search ']
+
+var Keys = (function () {
+  function Keys() {
+    _classCallCheck(this, Keys);
+  }
+
+  _createClass(Keys, [{
+    key: 'render',
+    value: function render() {
+      return _reactAddons2['default'].createElement(
+        'div',
+        { className: 'keys' + (this.props.visible ? ' visible' : '') },
+        _reactAddons2['default'].createElement(
+          'div',
+          { className: 'key' },
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'keyChar' },
+            '↑↓'
+          ),
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'keyDesc' },
+            'select'
+          )
+        ),
+        _reactAddons2['default'].createElement(
+          'div',
+          { className: 'key' },
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'keyChar' },
+            '⇥'
+          ),
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'keyDesc' },
+            'complete'
+          )
+        ),
+        _reactAddons2['default'].createElement(
+          'div',
+          { className: 'key' },
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'keyChar' },
+            '↩'
+          ),
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'keyDesc' },
+            'do'
+          )
+        )
+      );
+    }
+  }]);
+
+  return Keys;
+})();
+
+var Lacona = (function (_React$Component) {
+  function Lacona(props) {
+    _classCallCheck(this, Lacona);
+
+    _get(Object.getPrototypeOf(Lacona.prototype), 'constructor', this).call(this, props);
+
+    this.state = {
+      input: '',
+      output: [],
+      prefix: '',
+      focused: false
+    };
+
+    this.parser = new _lacona.Parser();
+    this.parser.grammar = props.grammar;
+    this.parser.extensions = props.extensions;
+  }
+
+  _inherits(Lacona, _React$Component);
+
+  _createClass(Lacona, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.update('');
+    }
+  }, {
+    key: 'focusEnd',
+    value: function focusEnd() {
+      this.refs.lacona.focusEnd();
+    }
+  }, {
+    key: 'getInput',
+    value: function getInput() {
+      return this.state.input;
+    }
+  }, {
+    key: 'parse',
+    value: function parse(input, checkDone) {
+      var prefixes = arguments[2] === undefined ? [''] : arguments[2];
+
+      if (checkDone()) return [];
+
+      var inputs = _lodash2['default'].map(prefixes, function (prefix) {
+        return '' + prefix + '' + input;
+      });
+
+      var fullOutput = [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = prefixes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var _prefix = _step.value;
+
+          var prefixedInput = '' + _prefix + '' + input;
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
+
+          try {
+            for (var _iterator2 = this.parser.parse(prefixedInput)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var output = _step2.value;
+
+              if (checkDone()) return [];
+              if (output.words[0].text === _prefix) {
+                output.words[0].fallthrough = true;
+              }
+              fullOutput.push(output);
+            }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+                _iterator2['return']();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator['return']) {
+            _iterator['return']();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      if (checkDone()) return [];
+
+      if (!_lodash2['default'].isEmpty(fullOutput)) {
+        return _lodash2['default'].chain(fullOutput).groupBy(groupPlaceholders).map(mapPlaceholderGroups).sortBy(function (option) {
+          return -option.score;
+        }).value();
+      }
+
+      return [];
+    }
+  }, {
+    key: 'update',
+    value: function update(input) {
+      var _this = this;
+
+      this.setState({ input: input });
+
+      var checkDone = function checkDone() {
+        return input !== _this.state.input;
+      };
+
+      setTimeout(function () {
+        var output = _this.parse(input, checkDone);
+        if (checkDone()) return;
+
+        if (!output.length) {
+          output = _this.parse(input, checkDone, prefixes);
+        }
+        if (checkDone()) return;
+
+        _this.setState({ output: output });
+      }, 11);
+    }
+  }, {
+    key: 'execute',
+    value: function execute(index) {
+      var result = this.state.output[index].result;
+      this.props.execute(result);
+    }
+  }, {
+    key: 'cancel',
+    value: function cancel() {
+      this.update('');
+    }
+  }, {
+    key: 'blur',
+    value: function blur(event) {
+      this.setState({ focused: false });
+    }
+  }, {
+    key: 'focus',
+    value: function focus(event) {
+      this.setState({ focused: true });
+      if (!this.props.tryMe) this.props.userInteracted();
+    }
+  }, {
+    key: 'clearPrefix',
+    value: function clearPrefix(event) {
+      this.setState({ prefix: '' });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _reactAddons2['default'].createElement(
+        'div',
+        { className: 'lacona' },
+        _reactAddons2['default'].createElement(Keys, { visible: this.state.focused }),
+        _reactAddons2['default'].createElement(_reactLacona2['default'], {
+          ref: 'lacona',
+          onFocus: this.focus.bind(this),
+          onBlur: this.blur.bind(this),
+          userInput: this.state.input,
+          outputs: this.state.output,
+          prefix: this.state.prefix,
+          update: this.update.bind(this),
+          execute: this.execute.bind(this),
+          cancel: this.cancel.bind(this),
+          clearPrefix: this.clearPrefix.bind(this),
+          userInteracted: this.props.userInteracted,
+          tabIndex: this.props.tabIndex,
+          placeholder: this.props.placeholder })
+      );
+    }
+  }]);
+
+  return Lacona;
+})(_reactAddons2['default'].Component);
+
+exports['default'] = Lacona;
+
+Lacona.defaultProps = {
+  tryMe: false,
+  placeholder: 'Try me!',
+  extensions: []
+};
+module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./detect":1,"./page.jsx":3}],5:[function(require,module,exports){
-"use strict";var _interopRequireWildcard=function(e){return e&&e.__esModule?e:{"default":e}},_classCallCheck=function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")},_createClass=function(){function e(e,t){for(var a=0;a<t.length;a++){var r=t[a];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,a,r){return a&&e(t.prototype,a),r&&e(t,r),t}}(),_inherits=function(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(e.__proto__=t)};Object.defineProperty(exports,"__esModule",{value:!0});var _import=require("lodash"),_import2=_interopRequireWildcard(_import),_createElement$Phrase=require("lacona-phrase"),_Email=require("lacona-phrase-email"),_Email2=_interopRequireWildcard(_Email),_Validator=require("lacona-phrase-validator"),_Validator2=_interopRequireWildcard(_Validator),themes=["3024","Ashes","Atelier Dune","Atelier Forest","Atelier Heath","Atelier Lakeside","Atelier Seaside","Bespin","Bright","Chalk","Default","Eighties","Flat","Grayscale","Greenscreen","Harmonic","Isotope","London Tube","Marrakesh","Mocha","Monokai","Ocean","Paraiso","Pop","Railscasts","Shapeshifter","Solarized","Tomorrow","Twilight"],Sentence=function(e){function t(){_classCallCheck(this,t),null!=e&&e.apply(this,arguments)}return _inherits(t,e),_createClass(t,[{key:"describe",value:function(){_import2["default"].map(themes,function(e){return _createElement$Phrase.createElement("literal",{value:"theme-"+_import2["default"].kebabCase(e)+"-light",text:""+e+" Light",fuzzy:!0})}).concat(_import2["default"].map(themes,function(e){return _createElement$Phrase.createElement("literal",{value:"theme-"+_import2["default"].kebabCase(e)+"-dark",text:""+e+" Dark",fuzzy:!0})}));return _createElement$Phrase.createElement("choice",null,_createElement$Phrase.createElement("sequence",null,_createElement$Phrase.createElement("literal",{text:"learn ",id:"action",value:"learn",category:"action"}),_createElement$Phrase.createElement("literal",{text:"more about Lacona",category:"argument",join:!0})),_createElement$Phrase.createElement("sequence",null,_createElement$Phrase.createElement("choice",{limit:1,id:"action",value:"subscribe",category:"action"},_createElement$Phrase.createElement("literal",{text:"add "}),_createElement$Phrase.createElement("literal",{text:"subscribe "})),_createElement$Phrase.createElement("placeholder",{text:"your email address",id:"email",category:"argument"},_createElement$Phrase.createElement(_Email2["default"],null)),_createElement$Phrase.createElement("literal",{text:" to the ",category:"conjunction"}),_createElement$Phrase.createElement("choice",{limit:1,category:"actor",join:!0},_createElement$Phrase.createElement("literal",{text:"newsletter"}),_createElement$Phrase.createElement("literal",{text:"mailing list"}))),_createElement$Phrase.createElement("sequence",null,_createElement$Phrase.createElement("literal",{text:"tweet ",id:"action",value:"tweet",category:"action"}),_createElement$Phrase.createElement("placeholder",{text:"something about lacona",category:"argument",id:"message"},_createElement$Phrase.createElement(_Validator2["default"],null))),_createElement$Phrase.createElement("sequence",null,_createElement$Phrase.createElement("literal",{text:"share ",id:"action",value:"share",category:"action"}),_createElement$Phrase.createElement("choice",{limit:1,join:!0,category:"conjunction"},_createElement$Phrase.createElement("literal",{text:"with "}),_createElement$Phrase.createElement("literal",{text:"using "}),_createElement$Phrase.createElement("literal",{text:"on "})),_createElement$Phrase.createElement("placeholder",{text:"a social network",category:"actor",id:"platform"},_createElement$Phrase.createElement("choice",null,_createElement$Phrase.createElement("literal",{text:"Twitter",value:"twitter"}),_createElement$Phrase.createElement("literal",{text:"Facebook",value:"facebook"}),_createElement$Phrase.createElement("literal",{text:"Google+",value:"google-plus"}),_createElement$Phrase.createElement("literal",{text:"Email",value:"email"})))),_createElement$Phrase.createElement("sequence",null,_createElement$Phrase.createElement("literal",{text:"follow ",id:"action",value:"follow",category:"action"}),_createElement$Phrase.createElement("literal",{text:"@lacona ",category:"argument",join:!0}),_createElement$Phrase.createElement("literal",{text:"on ",category:"conjunction",join:!0}),_createElement$Phrase.createElement("literal",{text:"Twitter",category:"actor",join:!0})),_createElement$Phrase.createElement("sequence",null,_createElement$Phrase.createElement("literal",{text:"contact us ",id:"action",value:"contact",category:"action"}),_createElement$Phrase.createElement("choice",{limit:1,join:!0,category:"conjunction"},_createElement$Phrase.createElement("literal",{text:"using "}),_createElement$Phrase.createElement("literal",{text:"over "}),_createElement$Phrase.createElement("literal",{text:"with "}),_createElement$Phrase.createElement("literal",{text:"on "})),_createElement$Phrase.createElement("placeholder",{text:"a social network",category:"actor",id:"platform"},_createElement$Phrase.createElement("choice",null,_createElement$Phrase.createElement("literal",{text:"Twitter",value:"twitter"}),_createElement$Phrase.createElement("literal",{text:"Email",value:"email"})))))}}]),t}(_createElement$Phrase.Phrase);exports["default"]=Sentence,module.exports=exports["default"];
+},{"lacona":61,"react-lacona":123}],4:[function(require,module,exports){
+(function (global){
+'use strict';
 
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
 
-},{"lacona-phrase":48,"lacona-phrase-email":45,"lacona-phrase-validator":46,"lodash":64}],6:[function(require,module,exports){
-module.exports={"default":require("core-js/library/fn/get-iterator"),__esModule:!0};
+var _get = function get(_x2, _x3, _x4) { var _again = true; _function: while (_again) { var object = _x2, property = _x3, receiver = _x4; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x2 = parent; _x3 = property; _x4 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-},{"core-js/library/fn/get-iterator":15}],7:[function(require,module,exports){
-module.exports={"default":require("core-js/library/fn/promise"),__esModule:!0};
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-},{"core-js/library/fn/promise":16}],8:[function(require,module,exports){
-module.exports={"default":require("core-js/library/fn/symbol"),__esModule:!0};
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
+var _lodash = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
 
-},{"core-js/library/fn/symbol":17}],9:[function(require,module,exports){
-module.exports={"default":require("core-js/library/fn/symbol/iterator"),__esModule:!0};
+var _lodash2 = _interopRequireDefault(_lodash);
 
+var _sentenceJsx = require('./sentence.jsx');
 
-},{"core-js/library/fn/symbol/iterator":18}],10:[function(require,module,exports){
-"use strict";exports["default"]=function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")},exports.__esModule=!0;
+var _asyncEachSeries = require('async-each-series');
 
+var _asyncEachSeries2 = _interopRequireDefault(_asyncEachSeries);
 
-},{}],11:[function(require,module,exports){
-"use strict";exports["default"]=function(){function e(e,r){for(var t=0;t<r.length;t++){var n=r[t];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(r,t,n){return t&&e(r.prototype,t),n&&e(r,n),r}}(),exports.__esModule=!0;
+var _reactGoogleAnalytics = require('react-google-analytics');
 
+var _reactGoogleAnalytics2 = _interopRequireDefault(_reactGoogleAnalytics);
 
-},{}],12:[function(require,module,exports){
-"use strict";exports["default"]=function(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(e.__proto__=t)},exports.__esModule=!0;
+var _executeJsx = require('./execute.jsx');
 
+var _executeJsx2 = _interopRequireDefault(_executeJsx);
 
-},{}],13:[function(require,module,exports){
-"use strict";exports["default"]=function(e){return e&&e.__esModule?e:{"default":e}},exports.__esModule=!0;
+var _laconaJsx = require('./lacona.jsx');
 
+var _laconaJsx2 = _interopRequireDefault(_laconaJsx);
 
-},{}],14:[function(require,module,exports){
-"use strict";exports["default"]=function(e){return e&&e.__esModule?e["default"]:e},exports.__esModule=!0;
+var _reactAddons = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null);
 
+var _reactAddons2 = _interopRequireDefault(_reactAddons);
 
-},{}],15:[function(require,module,exports){
-require("../modules/web.dom.iterable"),require("../modules/es6.string.iterator"),require("../modules/core.iter-helpers"),module.exports=require("../modules/$").core.getIterator;
+var MS_PER_INPUT = 10;
 
+var examples = ['open Calendar', 'open Facebook', 'open kickstarter.com', 'open ~/Downloads/Lacona.dmg', 'open todo.txt', 'open my-document.docx with Pages', 'open lacona.io in Safari', 'schedule Dinner with Vicky at The Friendly Toast for 7pm tomorrow', 'schedule Vacation 10a Monday to 6:30p Thursday', 'remind me to Pick up the car September 12 at 11:30am', 'remind me to Buy a gift 7 days before 12/1', 'search Google for pictures of cats', 'search Wikipedia for Laconia', 'Google stormtroopers', 'Amazon Avengers', 'play Robot Love', 'play Walk the Moon', 'play Jason Derulo, Flyte, and Elle King', 'play Jams', 'play next song', 'pause', 'call Mom', 'email Tony Stark', 'text Leaving now :) to Hank McCoy', 'email Dinner Plans to Peter Parker', 'facetime Bruce Banner', 'email app@lacona.io', 'call +1 617 867 5309'];
 
-},{"../modules/$":27,"../modules/core.iter-helpers":35,"../modules/es6.string.iterator":38,"../modules/web.dom.iterable":40}],16:[function(require,module,exports){
-require("../modules/es6.string.iterator"),require("../modules/web.dom.iterable"),require("../modules/es6.promise"),module.exports=require("../modules/$").core.Promise;
+var Lightbox = (function () {
+  function Lightbox() {
+    _classCallCheck(this, Lightbox);
+  }
 
+  _createClass(Lightbox, [{
+    key: 'render',
+    value: function render() {
+      return _reactAddons2['default'].createElement(
+        'div',
+        { className: 'lightbox-total' },
+        _reactAddons2['default'].createElement('div', { className: 'lightbox-cover', onClick: this.props.hide }),
+        _reactAddons2['default'].createElement(
+          'div',
+          { className: 'lightbox' },
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'closeButton', onClick: this.props.hide },
+            '×'
+          ),
+          _reactAddons2['default'].createElement(
+            'h3',
+            null,
+            'Thanks for trying the Lacona demo!'
+          ),
+          _reactAddons2['default'].createElement(
+            'p',
+            null,
+            'If this were a real copy of Lacona, it would ',
+            this.props.message,
+            '.'
+          ),
+          _reactAddons2['default'].createElement(ShareSheet, null)
+        )
+      );
+    }
+  }]);
 
-},{"../modules/$":27,"../modules/es6.promise":37,"../modules/es6.string.iterator":38,"../modules/web.dom.iterable":40}],17:[function(require,module,exports){
-require("../../modules/es6.symbol"),module.exports=require("../../modules/$").core.Symbol;
+  return Lightbox;
+})();
 
+var ShareSheet = (function () {
+  function ShareSheet() {
+    _classCallCheck(this, ShareSheet);
+  }
 
-},{"../../modules/$":27,"../../modules/es6.symbol":39}],18:[function(require,module,exports){
-require("../../modules/es6.string.iterator"),require("../../modules/web.dom.iterable"),module.exports=require("../../modules/$.wks")("iterator");
+  _createClass(ShareSheet, [{
+    key: 'render',
+    value: function render() {
+      return _reactAddons2['default'].createElement(
+        'div',
+        { className: 'share-sheet' },
+        this.props.includeTry ? _reactAddons2['default'].createElement(
+          'div',
+          { className: 'share-item extend' },
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'share-desc' },
+            'Try'
+          ),
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'share-icons' },
+            _reactAddons2['default'].createElement('img', { src: 'try.png' })
+          )
+        ) : null,
+        _reactAddons2['default'].createElement(
+          'a',
+          { href: '#comingsoon', className: 'share-item' },
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'share-desc' },
+            'Back'
+          ),
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'share-icons' },
+            _reactAddons2['default'].createElement('img', { src: 'kickstarter.png' })
+          )
+        ),
+        _reactAddons2['default'].createElement(
+          'a',
+          { className: 'share-item', onClick: function (e) {
+              window.open('https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458', '_blank', 'menubar=1,resizable=1,width=550,height=420');e.preventDefault();
+            }, href: 'https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458', target: '_blank' },
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'share-desc' },
+            'Follow'
+          ),
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'share-icons' },
+            _reactAddons2['default'].createElement('img', { src: 'twitter.png' })
+          )
+        ),
+        _reactAddons2['default'].createElement(
+          'a',
+          { className: 'share-item', onClick: function (e) {
+              window.open('http://eepurl.com/bjPRjD', '_blank', 'menubar=1,resizable=1,width=550,height=420');e.preventDefault();
+            }, href: 'http://eepurl.com/bjPRjD', target: '_blank' },
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'share-desc' },
+            'Subscribe'
+          ),
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'share-icons' },
+            _reactAddons2['default'].createElement('img', { src: 'email.png' })
+          )
+        ),
+        _reactAddons2['default'].createElement(
+          'div',
+          { className: 'share-item' },
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'share-desc' },
+            'Share'
+          ),
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'share-icons' },
+            _reactAddons2['default'].createElement(
+              'a',
+              { onClick: function (e) {
+                  window.open('https://www.facebook.com/sharer/sharer.php?u=http://lacona.io', '_blank', 'width=550,height=231');e.preventDefault();
+                }, href: 'https://www.facebook.com/sharer/sharer.php?u=http://lacona.io' },
+              _reactAddons2['default'].createElement('img', { src: 'facebook.png' })
+            ),
+            _reactAddons2['default'].createElement(
+              'a',
+              { onClick: function (e) {
+                  window.open('https://twitter.com/intent/tweet?text=Check%20out%20Lacona%20-%20Natural%20Language%20Commands%20for%20your%20Mac&url=http%3A%2F%2Flacona.io', '_blank', 'menubar=1,resizable=1,width=550,height=420');e.preventDefault();
+                }, href: 'https://twitter.com/intent/tweet?text=Check%20out%20Lacona%20-%20Natural%20Language%20Commands%20for%20your%20Mac&url=https%3A%2F%2Flacona.io' },
+              _reactAddons2['default'].createElement('img', { src: 'twitter.png' })
+            ),
+            _reactAddons2['default'].createElement(
+              'a',
+              { onClick: function (e) {
+                  window.open('https://plus.google.com/share?url=http://lacona.io', '_blank', 'width=550,height=231');e.preventDefault();
+                }, href: 'https://plus.google.com/share?url=http://lacona.io' },
+              _reactAddons2['default'].createElement('img', { src: 'googleplus.png' })
+            )
+          )
+        )
+      );
+    }
+  }]);
 
+  return ShareSheet;
+})();
 
-},{"../../modules/$.wks":34,"../../modules/es6.string.iterator":38,"../../modules/web.dom.iterable":40}],19:[function(require,module,exports){
-function assert(r,t,e){if(!r)throw TypeError(e?t+e:t)}var $=require("./$");assert.def=$.assertDefined,assert.fn=function(r){if(!$.isFunction(r))throw TypeError(r+" is not a function!");return r},assert.obj=function(r){if(!$.isObject(r))throw TypeError(r+" is not an object!");return r},assert.inst=function(r,t,e){if(!(r instanceof t))throw TypeError(e+": use the 'new' operator!");return r},module.exports=assert;
+ShareSheet.defaultProps = {
+  includeTry: false
+};
 
+var Page = (function (_React$Component) {
+  function Page() {
+    _classCallCheck(this, Page);
 
-},{"./$":27}],20:[function(require,module,exports){
-function cof(o){return toString.call(o).slice(8,-1)}var $=require("./$"),TAG=require("./$.wks")("toStringTag"),toString={}.toString;cof.classof=function(o){var t,r;return void 0==o?void 0===o?"Undefined":"Null":"string"==typeof(r=(t=Object(o))[TAG])?r:cof(t)},cof.set=function(o,t,r){o&&!$.has(o=r?o:o.prototype,TAG)&&$.hide(o,TAG,t)},module.exports=cof;
+    _get(Object.getPrototypeOf(Page.prototype), 'constructor', this).call(this);
 
+    this.state = {
+      theme: 'theme-eighties-dark',
+      initialLoad: true
+    };
 
-},{"./$":27,"./$.wks":34}],21:[function(require,module,exports){
-var assertFunction=require("./$.assert").fn;module.exports=function(r,n,t){if(assertFunction(r),~t&&void 0===n)return r;switch(t){case 1:return function(t){return r.call(n,t)};case 2:return function(t,e){return r.call(n,t,e)};case 3:return function(t,e,u){return r.call(n,t,e,u)}}return function(){return r.apply(n,arguments)}};
+    this.execute = (0, _executeJsx2['default'])(this.showLightbox.bind(this));
 
+    this.demoRunning = true;
+  }
 
-},{"./$.assert":19}],22:[function(require,module,exports){
-function ctx(e,n){return function(){return e.apply(n,arguments)}}function $def(e,n,o){var t,f,i,r,c=e&$def.G,d=c?global:e&$def.S?global[n]:(global[n]||{}).prototype,u=c?core:core[n]||(core[n]={});c&&(o=n);for(t in o)f=!(e&$def.F)&&d&&t in d,f&&t in u||(i=f?d[t]:o[t],c&&!isFunction(d[t])?r=o[t]:e&$def.B&&f?r=ctx(i,global):e&$def.W&&d[t]==i?!function(e){r=function(n){return this instanceof e?new e(n):e(n)},r.prototype=e.prototype}(i):r=e&$def.P&&isFunction(i)?ctx(Function.call,i):i,$.hide(u,t,r))}var $=require("./$"),global=$.g,core=$.core,isFunction=$.isFunction;$def.F=1,$def.G=2,$def.S=4,$def.P=8,$def.B=16,$def.W=32,module.exports=$def;
+  _inherits(Page, _React$Component);
 
+  _createClass(Page, [{
+    key: 'showLightbox',
+    value: function showLightbox(text) {
+      this.setState({ lightBoxMessage: text });
+    }
+  }, {
+    key: 'hideLightbox',
+    value: function hideLightbox() {
+      this.setState({ lightBoxMessage: null });
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      (0, _reactGoogleAnalytics2['default'])('create', 'UA-61643321-1', 'auto');
+      (0, _reactGoogleAnalytics2['default'])('send', 'pageview');
 
-},{"./$":27}],23:[function(require,module,exports){
-module.exports=function(e){return e.FW=!1,e.path=e.core,e};
+      this.setState({ initialLoad: false });
 
+      this.startDemo();
+    }
+  }, {
+    key: 'startDemo',
+    value: function startDemo() {
+      var _this = this;
 
-},{}],24:[function(require,module,exports){
-module.exports=function(e,r,l){var a=void 0===l;switch(r.length){case 0:return a?e():e.call(l);case 1:return a?e(r[0]):e.call(l,r[0]);case 2:return a?e(r[0],r[1]):e.call(l,r[0],r[1]);case 3:return a?e(r[0],r[1],r[2]):e.call(l,r[0],r[1],r[2]);case 4:return a?e(r[0],r[1],r[2],r[3]):e.call(l,r[0],r[1],r[2],r[3]);case 5:return a?e(r[0],r[1],r[2],r[3],r[4]):e.call(l,r[0],r[1],r[2],r[3],r[4])}return e.apply(l,r)};
+      var shuffledExamples = _lodash2['default'].shuffle(examples);
 
+      var shouldStop = function shouldStop() {
+        return !_this.demoRunning;
+      };
+
+      (0, _asyncEachSeries2['default'])(shuffledExamples, function (item, done) {
+        _this.type('big', shouldStop, item, false);
+        if (!shouldStop()) setTimeout(done, 7000);
+      }, this.startDemo.bind(this));
+    }
+  }, {
+    key: 'stopDemo',
+    value: function stopDemo() {
+      this.demoRunning = false;
+    }
+  }, {
+    key: 'erase',
+    value: function erase(elem, shouldStop, focus, done) {
+      var input = elem.getInput();
+
+      var _loop = function (i) {
+        _lodash2['default'].delay(function () {
+          if (shouldStop()) return;
+          elem.update(input.substr(0, input.length - i));
+          if (focus) elem.focusEnd();
+        }, i * MS_PER_INPUT / 2);
+      };
+
+      for (var i = 0; i < input.length; i++) {
+        _loop(i);
+      }
+
+      _lodash2['default'].delay(function () {
+        done();
+      }, input.length * MS_PER_INPUT / 2);
+    }
+  }, {
+    key: 'type',
+    value: function type(ref, shouldStop, content) {
+      var focus = arguments[3] === undefined ? true : arguments[3];
+
+      var elem = this.refs[ref];
+      this.erase(elem, shouldStop, focus, function () {
+        var _loop2 = function (i) {
+          if (shouldStop()) return {
+              v: undefined
+            };
+          _lodash2['default'].delay(function () {
+            elem.update(content.substr(0, i + 1));
+            if (focus) elem.focusEnd();
+          }, i * MS_PER_INPUT);
+        };
+
+        for (var i = 0; i < content.length; i++) {
+          var _ret2 = _loop2(i);
+
+          if (typeof _ret2 === 'object') return _ret2.v;
+        }
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      return _reactAddons2['default'].createElement(
+        'div',
+        { className: 'page' + (this.state.fixedMode ? ' fixed' : '') + '' + (this.state.initialLoad ? ' initial-load' : '') + '' + (this.state.active ? '' : ' inactive') + ' ' + (this.props.isMobile ? 'mobile' : 'desktop') + ' theme-eighties-dark' },
+        _reactAddons2['default'].createElement(
+          _reactAddons2['default'].addons.CSSTransitionGroup,
+          { transitionName: 'lightbox' },
+          this.state.lightBoxMessage ? _reactAddons2['default'].createElement(Lightbox, { key: '1', message: this.state.lightBoxMessage, hide: this.hideLightbox.bind(this) }) : null
+        ),
+        _reactAddons2['default'].createElement(
+          'header',
+          null,
+          _reactAddons2['default'].createElement(
+            'h1',
+            null,
+            _reactAddons2['default'].createElement(
+              'a',
+              { href: '#', tabIndex: '-1' },
+              'Lacona'
+            )
+          ),
+          _reactAddons2['default'].createElement(
+            'h2',
+            null,
+            _reactAddons2['default'].createElement(
+              'span',
+              { className: 'category-action highlighted' },
+              'Natural Language Commands'
+            ),
+            ' ',
+            _reactAddons2['default'].createElement(
+              'span',
+              { className: 'category-conjunction highlighted' },
+              'for your'
+            ),
+            ' ',
+            _reactAddons2['default'].createElement(
+              'span',
+              { className: 'category-argument2 highlighted' },
+              'Mac'
+            )
+          ),
+          _reactAddons2['default'].createElement(
+            'p',
+            null,
+            'Call up Lacona with a keypress, and type whatever you want to do.'
+          ),
+          _reactAddons2['default'].createElement(
+            'p',
+            null,
+            'It gives intelligent suggestions as you type and then follows your orders.'
+          )
+        ),
+        _reactAddons2['default'].createElement(
+          'content',
+          null,
+          _reactAddons2['default'].createElement(
+            'section',
+            { className: 'full green' },
+            _reactAddons2['default'].createElement(
+              'div',
+              { className: 'text' },
+              _reactAddons2['default'].createElement(ShareSheet, { includeTry: true })
+            )
+          ),
+          _reactAddons2['default'].createElement(
+            'section',
+            { className: 'full' },
+            _reactAddons2['default'].createElement(_laconaJsx2['default'], {
+              userInteracted: this.stopDemo.bind(this),
+              grammar: _sentenceJsx.all.grammar,
+              execute: this.execute,
+              ref: 'big',
+              tryMe: true,
+              tabIndex: 1 })
+          ),
+          _reactAddons2['default'].createElement(
+            'section',
+            { className: 'textLeft' },
+            _reactAddons2['default'].createElement(
+              'div',
+              { className: 'text' },
+              _reactAddons2['default'].createElement(
+                'h3',
+                null,
+                'Ditch the Dock'
+              ),
+              _reactAddons2['default'].createElement(
+                'p',
+                null,
+                'With Lacona, your Apps, Bookmarks, Files, and more are just a few keystrokes away.'
+              ),
+              _reactAddons2['default'].createElement(
+                'ul',
+                { className: 'examples' },
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '0', function () {
+                      return false;
+                    }, 'open Calendar') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'open'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-application' },
+                    'Calendar'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '0', function () {
+                      return false;
+                    }, 'open Facebook') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'open'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-bookmark' },
+                    'Facebook'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '0', function () {
+                      return false;
+                    }, 'iTunes') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-application' },
+                    'iTunes'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '0', function () {
+                      return false;
+                    }, 'open kickstarter.com') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'open'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-url' },
+                    'kickstarter.com'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '0', function () {
+                      return false;
+                    }, 'open lacona.io in Safari') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'open'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-url' },
+                    'lacona.io'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'in'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-application' },
+                    'Safari'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '0', function () {
+                      return false;
+                    }, 'lifehacker.com') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-url' },
+                    'lifehacker.com'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '0', function () {
+                      return false;
+                    }, 'open ~/Downloads/Lacona.dmg') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'open'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-path' },
+                    '~/Downloads/Lacona.dmg'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '0', function () {
+                      return false;
+                    }, 'open todo.txt') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'open'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-file' },
+                    'todo.txt'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '0', function () {
+                      return false;
+                    }, 'open my-document.docx with Pages') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'open'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-file' },
+                    'my-document.docx'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'with'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-application' },
+                    'Pages'
+                  )
+                )
+              )
+            ),
+            _reactAddons2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '0', grammar: _sentenceJsx.open.grammar, execute: function (open) {
+                return _this2.execute({ open: open });
+              } })
+          ),
+          _reactAddons2['default'].createElement(
+            'section',
+            { className: 'textRight' },
+            _reactAddons2['default'].createElement(
+              'div',
+              { className: 'text' },
+              _reactAddons2['default'].createElement(
+                'h3',
+                null,
+                'Organize your Life, not your Calendar'
+              ),
+              _reactAddons2['default'].createElement(
+                'p',
+                null,
+                'Create events and reminders just like you were talking to a person. Lacona understands.'
+              ),
+              _reactAddons2['default'].createElement(
+                'p',
+                { className: 'well' },
+                'Dates are complicated! The occasional choppiness is only because Lacona is running in a browser. The real app will be silky smooth.'
+              ),
+              _reactAddons2['default'].createElement(
+                'ul',
+                { className: 'examples' },
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '1', function () {
+                      return false;
+                    }, 'schedule Dinner with Vicky at Sacco\'s Flatbread for 7pm tomorrow') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'schedule'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-calendar-event' },
+                    'Dinner with Vicky'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'at'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-location' },
+                    'The Friendly Toast'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'for'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-date-and-time' },
+                    '7pm tomorrow'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '1', function () {
+                      return false;
+                    }, 'remind me to Pick up the car September 12 at 11:30am') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'remind me to'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-reminder-title' },
+                    'Pick up the car'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-date-and-time' },
+                    'September 12 at 11:30am'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '1', function () {
+                      return false;
+                    }, 'schedule Vacation 10a Monday to 6:30p Thursday') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'schedule'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-calendar-event' },
+                    'Vacation'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-period-of-time' },
+                    '10a Monday to 6:30p Thursday'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '1', function () {
+                      return false;
+                    }, 'remind me to Buy a gift 7 days before 12/1') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'remind me to'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-reminder-title' },
+                    'Buy a gift'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-date' },
+                    '7 days before 12/1'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '1', function () {
+                      return false;
+                    }, 'remind me to Call Jenny') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'remind me to'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-reminder-title' },
+                    'Call Jenny'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '1', function () {
+                      return false;
+                    }, 'remind me to Charge my phone at 9pm') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'remind me to'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-reminder-title' },
+                    'Charge my phone'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'at'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-time' },
+                    '9pm'
+                  )
+                )
+              )
+            ),
+            _reactAddons2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '1', grammar: _sentenceJsx.date.grammar, execute: function (date) {
+                return _this2.execute({ date: date });
+              } })
+          ),
+          _reactAddons2['default'].createElement(
+            'section',
+            { className: 'textLeft' },
+            _reactAddons2['default'].createElement(
+              'div',
+              { className: 'text' },
+              _reactAddons2['default'].createElement(
+                'h3',
+                null,
+                'Seek and Ye Shall Find'
+              ),
+              _reactAddons2['default'].createElement(
+                'p',
+                null,
+                'Search the web like a boss. Utilize powerful fallthrough functionality to save even more keystrokes.'
+              ),
+              _reactAddons2['default'].createElement(
+                'ul',
+                { className: 'examples' },
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '2', function () {
+                      return false;
+                    }, 'search Google for pictures of cats') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'search'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-search-engine' },
+                    'Google'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'for'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-query' },
+                    'pictures of cats'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '2', function () {
+                      return false;
+                    }, 'Google stormtroopers') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-search-engine' },
+                    'Google'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-query' },
+                    'stormtroopers'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '2', function () {
+                      return false;
+                    }, 'Amazon Avengers') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-search-engine' },
+                    'Amazon'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-query' },
+                    'Avengers'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '2', function () {
+                      return false;
+                    }, 'search Wikipedia for Laconia') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'search'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-search-engine' },
+                    'Wikipedia'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'for'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-query' },
+                    'Laconia'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '2', function () {
+                      return false;
+                    }, 'search eBay and Amazon for iPhone 6') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'search'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-search-engine' },
+                    'eBay'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'and'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-search-engine' },
+                    'Amazon'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'for'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-query' },
+                    'iPhone 6'
+                  )
+                )
+              )
+            ),
+            _reactAddons2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '2', grammar: _sentenceJsx.search.grammar, execute: function (search) {
+                return _this2.execute({ search: search });
+              } })
+          ),
+          _reactAddons2['default'].createElement(
+            'section',
+            { className: 'textRight' },
+            _reactAddons2['default'].createElement(
+              'div',
+              { className: 'text' },
+              _reactAddons2['default'].createElement(
+                'h3',
+                null,
+                'Your Work Needs a DJ'
+              ),
+              _reactAddons2['default'].createElement(
+                'p',
+                null,
+                'Instantly play anything in your iTunes library, without ever touching the mouse.'
+              ),
+              _reactAddons2['default'].createElement(
+                'ul',
+                { className: 'examples' },
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '3', function () {
+                      return false;
+                    }, 'play Robot Love') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'play'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-song' },
+                    'Robot Love'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '3', function () {
+                      return false;
+                    }, 'play Walk the Moon') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'play'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-artist' },
+                    'Walk the Moon'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '3', function () {
+                      return false;
+                    }, 'play Jason Derulo, Flyte, and Elle King') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'play'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-artist' },
+                    'Jason Derulo'
+                  ),
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    ', '
+                  ),
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-artist' },
+                    'Flyte'
+                  ),
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    ', and '
+                  ),
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-artist' },
+                    'Elle King'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '3', function () {
+                      return false;
+                    }, 'play Jams') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'play'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-playlist' },
+                    'Jams'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '3', function () {
+                      return false;
+                    }, 'play next song') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'play'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-next-song' },
+                    'next song'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '3', function () {
+                      return false;
+                    }, 'pause') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'pause'
+                  )
+                )
+              )
+            ),
+            _reactAddons2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '3', grammar: _sentenceJsx.play.grammar, execute: function (play) {
+                return _this2.execute({ play: play });
+              } })
+          ),
+          _reactAddons2['default'].createElement(
+            'section',
+            { className: 'textLeft' },
+            _reactAddons2['default'].createElement(
+              'div',
+              { className: 'text' },
+              _reactAddons2['default'].createElement(
+                'h3',
+                null,
+                'Keep in Touch'
+              ),
+              _reactAddons2['default'].createElement(
+                'p',
+                null,
+                'Easily communicate with all of your contacts over Email, FaceTime, iMessage. Make calls and send texts through your iPhone. Smoke signals not yet supported.'
+              ),
+              _reactAddons2['default'].createElement(
+                'ul',
+                { className: 'examples' },
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '4', function () {
+                      return false;
+                    }, 'call Mom') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'call'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-relationship' },
+                    'Mom'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '4', function () {
+                      return false;
+                    }, 'email Tony Stark') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'email'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-contact' },
+                    'Tony Stark'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '4', function () {
+                      return false;
+                    }, 'text Leaving now :) to Hank McCoy') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'text'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-message' },
+                    'Leaving now :)'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'conjunction' },
+                    'to'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-contact' },
+                    'Hank McCoy'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '4', function () {
+                      return false;
+                    }, 'email Dinner Plans to Peter Parker') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'email'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-message' },
+                    'Dinner Plans'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'conjunction' },
+                    'to'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-contact' },
+                    'Peter Parker'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '4', function () {
+                      return false;
+                    }, 'facetime my boss') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'facetime'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-relationship' },
+                    'my boss'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '4', function () {
+                      return false;
+                    }, 'facetime Bruce Banner') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'facetime'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-contact' },
+                    'Bruce Banner'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '4', function () {
+                      return false;
+                    }, 'email app@lacona.io') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'email'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-email-address' },
+                    'app@lacona.io'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '4', function () {
+                      return false;
+                    }, 'call +1 617 867 5309') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'call'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-phone-number' },
+                    '+1 617 867 5309'
+                  )
+                )
+              )
+            ),
+            _reactAddons2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '4', grammar: _sentenceJsx.contact.grammar, execute: function (contact) {
+                return _this2.execute({ contact: contact });
+              } })
+          ),
+          _reactAddons2['default'].createElement(
+            'section',
+            { className: 'full' },
+            _reactAddons2['default'].createElement(
+              'div',
+              { className: 'text' },
+              _reactAddons2['default'].createElement(
+                'h3',
+                null,
+                'The Sky\'s the Limit'
+              ),
+              _reactAddons2['default'].createElement(
+                'p',
+                null,
+                'Lacona is built to be extended. An open Developer API will let it understand anything you need to do.'
+              ),
+              _reactAddons2['default'].createElement(
+                'ul',
+                { className: 'examples inactive' },
+                _reactAddons2['default'].createElement(
+                  'li',
+                  null,
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'tweet'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-argument2' },
+                    'just setting up my twttr #blessed'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  null,
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'skype'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-contact' },
+                    'Aaron'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  null,
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'switch to'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-application' },
+                    'Safari'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  null,
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'email'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-argument4' },
+                    'my last instagram picture'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'to'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-relationship' },
+                    'Mom'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  null,
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'calculate'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-argument3' },
+                    'sqrt(5)'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  null,
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'turn off'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-argument5' },
+                    'the kitchen lights'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  null,
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'check'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-argument6' },
+                    'APPL'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  null,
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'translate'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-argument3' },
+                    'How do you do?'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'to'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-argument2' },
+                    'Japanese'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  null,
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'empty the Trash'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  null,
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'remind me to'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-argument3' },
+                    'Book a flight home'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-date' },
+                    '6 weeks before Jordan\'s birthday'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  null,
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'set a timer'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'for'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-argument2' },
+                    '25 minutes'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  null,
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'block'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-url' },
+                    'reddit.com'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  null,
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'fork'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-argument1' },
+                    'lacona/lacona'
+                  )
+                )
+              )
+            )
+          )
+        ),
+        _reactAddons2['default'].createElement(
+          'footer',
+          null,
+          _reactAddons2['default'].createElement(
+            'div',
+            { className: 'text' },
+            _reactAddons2['default'].createElement(
+              'p',
+              { className: 'well' },
+              'This page is only a demonstration of Lacona\'s interface. It cannot access your files, apps, calendar, or anything else on your computer.'
+            ),
+            '©2015 Lacona Labs'
+          )
+        ),
+        _reactAddons2['default'].createElement(_reactGoogleAnalytics.Initializer, null)
+      );
+    }
+  }]);
+
+  return Page;
+})(_reactAddons2['default'].Component);
+
+exports['default'] = Page;
+module.exports = exports['default'];
+/*<p>Feel free to try something else, <a href='https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458' target='_blank' onClick={this.openWindow}>follow @lacona on Twitter</a>, or <a href='http://eepurl.com/bjPRjD' target='_blank'>subscribe to the newsletter</a>.</p>*/ /*<p>Lacona will be available for download <em>late summer, 2015</em>. Until then, check out the demos below, <a href='https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458' target='_blank' onClick={this.openWindow}>follow @lacona on Twitter</a>, or <a href='http://eepurl.com/bjPRjD' target='_blank'>sign up for the newsletter</a>.</p>*/ /*<li><span className='category-action'>Поиск</span> <span className='descriptor-search-engine'>Яндекса</span> <span className='category-conjunction'>для</span> <span className='descriptor-query'>музыки</span></li>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   <li><span className='category-conjunction'>在</span><span className='descriptor-search-engine'>百度</span><span classAName='category-conjunction'>上</span><span className='category-action'>搜索</span><span className='descriptor-query'>好听的音乐</span></li>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   <li style={{textAlign: 'right'}}><span className='category-action'>بحث</span> <span className='descriptor-search-engine'>يملي</span> <span className='descriptor-query'>للموسيقى</span></li>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   <li><span className='category-action'>calculate</span> <span className='category-argument3'>六十四 + 23 + ٣‎٤</span></li>*/ /*<section className='full'>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             <div className='text'>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               <h3>Just the Beginning</h3>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               <p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 Lacona is currently under active development, and will be launching <em>Summer, 2015</em>. To recieve updates, <a href='http://lacona.us10.list-manage.com/subscribe?u=f923be23d36f00f457ea3b2c6&id=1db875d5ed' target='_blank' onClick={this.openWindow}>subscribe to the Newsletter</a> or .
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               </p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               {/*<p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 Since computers have existed, we have needed to learn <em>their</em> language. With Lacona, the computer takes that responsibility back. It understands commands <em>the way they exist in your mind</em>, freeing you from the burden of an expensive mental context-switch, so you can forget about the computer and just <em>get things done</em>.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               </p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </section>*/
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./execute.jsx":2,"./lacona.jsx":3,"./sentence.jsx":5,"async-each-series":6,"react-google-analytics":121}],5:[function(require,module,exports){
+(function (global){
+/** @jsx createElement */
+
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+var _lodash = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _laconaPhraseDatetime = require('lacona-phrase-datetime');
+
+var _laconaPhraseUrl = require('lacona-phrase-url');
+
+var _laconaPhraseUrl2 = _interopRequireDefault(_laconaPhraseUrl);
+
+var _laconaPhraseEmail = require('lacona-phrase-email');
+
+var _laconaPhraseEmail2 = _interopRequireDefault(_laconaPhraseEmail);
+
+var _laconaPhrasePhonenumber = require('lacona-phrase-phonenumber');
+
+var _laconaPhrasePhonenumber2 = _interopRequireDefault(_laconaPhrasePhonenumber);
+
+var _laconaPhraseRepeat = require('lacona-phrase-repeat');
+
+var _laconaPhraseRepeat2 = _interopRequireDefault(_laconaPhraseRepeat);
+
+var userFiles = [{
+  name: 'Desktop',
+  children: ['mydocument.pages', 'mockup.html', 'kickstarter.url'] }, {
+  name: 'Documents',
+  children: [{
+    name: 'University',
+    children: ['...']
+  }, {
+    name: 'Resumes',
+    children: ['...']
+  }, {
+    name: 'Ideas',
+    children: ['...']
+  }, {
+    name: 'Presentations',
+    children: ['...']
+  }, {
+    name: 'Projects',
+    children: ['...']
+  }, {
+    name: 'NLP',
+    children: ['...']
+  }]
+}, {
+  name: 'Downloads',
+  children: ['Lacona.dmg']
+}, {
+  name: 'Library',
+  children: [{
+    name: 'Accounts',
+    children: ['...']
+  }, {
+    name: 'Application Scripts',
+    children: ['...']
+  }, {
+    name: 'Application Support',
+    children: ['...']
+  }, {
+    name: 'Assistants',
+    children: ['...']
+  }, {
+    name: 'Audio',
+    children: ['...']
+  }, {
+    name: 'Autosave Information',
+    children: ['...']
+  }, {
+    name: 'Caches',
+    children: ['...']
+  }, {
+    name: 'Calendars',
+    children: ['...']
+  }, {
+    name: 'ColorPickers',
+    children: ['...']
+  }, {
+    name: 'Colors',
+    children: ['...']
+  }, {
+    name: 'Compositions',
+    children: ['...']
+  }, {
+    name: 'Containers',
+    children: ['...']
+  }, {
+    name: 'Cookies',
+    children: ['...']
+  }, {
+    name: 'Developer',
+    children: ['...']
+  }, {
+    name: 'Dictionaries',
+    children: ['...']
+  }, {
+    name: 'Favorites',
+    children: ['...']
+  }, {
+    name: 'FlashlightPlugins',
+    children: ['...']
+  }, {
+    name: 'FontCollections',
+    children: ['...']
+  }, {
+    name: 'Fonts',
+    children: ['...']
+  }, {
+    name: 'GameKit',
+    children: ['...']
+  }, {
+    name: 'Google',
+    children: ['...']
+  }, {
+    name: 'Group Containers',
+    children: ['...']
+  }, {
+    name: 'IdentityServices',
+    children: ['...']
+  }, {
+    name: 'Input Methods',
+    children: ['...']
+  }, {
+    name: 'Internet Plug-Ins',
+    children: ['...']
+  }, {
+    name: 'Keyboard Layouts',
+    children: ['...']
+  }, {
+    name: 'Keychains',
+    children: ['...']
+  }, {
+    name: 'LanguageModeling',
+    children: ['...']
+  }, {
+    name: 'LaunchAgents',
+    children: ['...']
+  }, {
+    name: 'Logs',
+    children: ['...']
+  }, {
+    name: 'Mail',
+    children: ['...']
+  }, {
+    name: 'Messages',
+    children: ['...']
+  }, {
+    name: 'Mobile Documents',
+    children: ['...']
+  }, {
+    name: 'PreferencePanes',
+    children: ['...']
+  }, {
+    name: 'Preferences',
+    children: ['...']
+  }, {
+    name: 'Printers',
+    children: ['...']
+  }, {
+    name: 'PubSub',
+    children: ['...']
+  }, {
+    name: 'Safari',
+    children: ['...']
+  }, {
+    name: 'Saved Application State',
+    children: ['...']
+  }, {
+    name: 'Saved Searches',
+    children: ['...']
+  }, {
+    name: 'Screen Savers',
+    children: ['...']
+  }, {
+    name: 'ScriptingAdditions',
+    children: ['...']
+  }, {
+    name: 'Services',
+    children: ['...']
+  }, {
+    name: 'Sounds',
+    children: ['...']
+  }, {
+    name: 'Spelling',
+    children: ['...']
+  }, {
+    name: 'SyncedPreferences',
+    children: ['...']
+  }, {
+    name: 'Voices',
+    children: ['...']
+  }, {
+    name: 'WebKit',
+    children: ['...']
+  }, {
+    name: 'com.apple.nsurlsessiond',
+    children: ['...']
+  }, {
+    name: 'iMovie',
+    children: ['...']
+  }, {
+    name: 'iTunes',
+    children: ['...']
+  }]
+}, {
+  name: 'Movies',
+  children: ['The Avengers.avi', 'X-Men First Class.avi', 'Iron Man.avi']
+}, {
+  name: 'Music',
+  children: [{
+    name: 'Audio Music Apps',
+    children: ['...']
+  }, {
+    name: 'GarageBand',
+    children: ['...']
+  }, {
+    name: 'iTunes',
+    children: ['...']
+  }]
+}, {
+  name: 'Pictures',
+  children: ['Photos Library.photoslibrary']
+}];
+
+var rootFiles = [{
+  name: 'Applications',
+  children: [{
+    name: 'App Store.app',
+    children: ['...']
+  }, {
+    name: 'Atom.app',
+    children: ['...']
+  }, {
+    name: 'Automator.app',
+    children: ['...']
+  }, {
+    name: 'Calculator.app',
+    children: ['...']
+  }, {
+    name: 'Calendar.app',
+    children: ['...']
+  }, {
+    name: 'Chess.app',
+    children: ['...']
+  }, {
+    name: 'Contacts.app',
+    children: ['...']
+  }, {
+    name: 'DVD Player.app',
+    children: ['...']
+  }, {
+    name: 'Dash.app',
+    children: ['...']
+  }, {
+    name: 'Dashboard.app',
+    children: ['...']
+  }, {
+    name: 'Dictionary.app',
+    children: ['...']
+  }, {
+    name: 'FaceTime.app',
+    children: ['...']
+  }, {
+    name: 'Font Book.app',
+    children: ['...']
+  }, {
+    name: 'Game Center.app',
+    children: ['...']
+  }, {
+    name: 'GarageBand.app',
+    children: ['...']
+  }, {
+    name: 'GitHub.app',
+    children: ['...']
+  }, {
+    name: 'Google Chrome.app',
+    children: ['...']
+  }, {
+    name: 'Image Capture.app',
+    children: ['...']
+  }, {
+    name: 'Keynote.app',
+    children: ['...']
+  }, {
+    name: 'Launchpad.app',
+    children: ['...']
+  }, {
+    name: 'Mail.app',
+    children: ['...']
+  }, {
+    name: 'Maps.app',
+    children: ['...']
+  }, {
+    name: 'Messages.app',
+    children: ['...']
+  }, {
+    name: 'Mission Control.app',
+    children: ['...']
+  }, {
+    name: 'Notes.app',
+    children: ['...']
+  }, {
+    name: 'Numbers.app',
+    children: ['...']
+  }, {
+    name: 'Pages.app',
+    children: ['...']
+  }, {
+    name: 'Photo Booth.app',
+    children: ['...']
+  }, {
+    name: 'Photos.app',
+    children: ['...']
+  }, {
+    name: 'Preview.app',
+    children: ['...']
+  }, {
+    name: 'QuickTime Player.app',
+    children: ['...']
+  }, {
+    name: 'Reminders.app',
+    children: ['...']
+  }, {
+    name: 'Safari.app',
+    children: ['...']
+  }, {
+    name: 'Slack.app',
+    children: ['...']
+  }, {
+    name: 'Stickies.app',
+    children: ['...']
+  }, {
+    name: 'System Preferences.app',
+    children: ['...']
+  }, {
+    name: 'TextEdit.app',
+    children: ['...']
+  }, {
+    name: 'Time Machine.app',
+    children: ['...']
+  }, {
+    name: 'Utilities',
+    children: ['...']
+  }, {
+    name: 'Xcode.app',
+    children: ['...']
+  }, {
+    name: 'iBooks.app',
+    children: ['...']
+  }, {
+    name: 'iMovie.app',
+    children: ['...']
+  }, {
+    name: 'iPhoto.app',
+    children: ['...']
+  }, {
+    name: 'iTunes.app',
+    children: ['...']
+  }]
+}, {
+  name: 'Library',
+  children: [{
+    name: 'Application Support',
+    children: ['...']
+  }, {
+    name: 'Audio',
+    children: ['...']
+  }, {
+    name: 'Caches',
+    children: ['...']
+  }, {
+    name: 'ColorPickers',
+    children: ['...']
+  }, {
+    name: 'ColorSync',
+    children: ['...']
+  }, {
+    name: 'Components',
+    children: ['...']
+  }, {
+    name: 'Compositions',
+    children: ['...']
+  }, {
+    name: 'Contextual Menu Items',
+    children: ['...']
+  }, {
+    name: 'CoreMediaIO',
+    children: ['...']
+  }, {
+    name: 'Desktop Pictures',
+    children: ['...']
+  }, {
+    name: 'Developer',
+    children: ['...']
+  }, {
+    name: 'Dictionaries',
+    children: ['...']
+  }, {
+    name: 'DirectoryServices',
+    children: ['...']
+  }, {
+    name: 'Documentation',
+    children: ['...']
+  }, {
+    name: 'DropboxHelperTools',
+    children: ['...']
+  }, {
+    name: 'Extensions',
+    children: ['...']
+  }, {
+    name: 'Filesystems',
+    children: ['...']
+  }, {
+    name: 'Fonts',
+    children: ['...']
+  }, {
+    name: 'Frameworks',
+    children: ['...']
+  }, {
+    name: 'Google',
+    children: ['...']
+  }, {
+    name: 'Graphics',
+    children: ['...']
+  }, {
+    name: 'Image Capture',
+    children: ['...']
+  }, {
+    name: 'Input Methods',
+    children: ['...']
+  }, {
+    name: 'Internet Plug-Ins',
+    children: ['...']
+  }, {
+    name: 'Java',
+    children: ['...']
+  }, {
+    name: 'Keyboard Layouts',
+    children: ['...']
+  }, {
+    name: 'Keychains',
+    children: ['...']
+  }, {
+    name: 'LaunchAgents',
+    children: ['...']
+  }, {
+    name: 'LaunchDaemons',
+    children: ['...']
+  }, {
+    name: 'Logs',
+    children: ['...']
+  }, {
+    name: 'Messages',
+    children: ['...']
+  }, {
+    name: 'Modem Scripts',
+    children: ['...']
+  }, {
+    name: 'OpenDirectory',
+    children: ['...']
+  }, {
+    name: 'PDF Services',
+    children: ['...']
+  }, {
+    name: 'Perl',
+    children: ['...']
+  }, {
+    name: 'PreferencePanes',
+    children: ['...']
+  }, {
+    name: 'Preferences',
+    children: ['...']
+  }, {
+    name: 'Printers',
+    children: ['...']
+  }, {
+    name: 'PrivilegedHelperTools',
+    children: ['...']
+  }, {
+    name: 'Python',
+    children: ['...']
+  }, {
+    name: 'QuickLook',
+    children: ['...']
+  }, {
+    name: 'QuickTime',
+    children: ['...']
+  }, {
+    name: 'Receipts',
+    children: ['...']
+  }, {
+    name: 'Ruby',
+    children: ['...']
+  }, {
+    name: 'Sandbox',
+    children: ['...']
+  }, {
+    name: 'Screen Savers',
+    children: ['...']
+  }, {
+    name: 'ScriptingAdditions',
+    children: ['...']
+  }, {
+    name: 'Scripts',
+    children: ['...']
+  }, {
+    name: 'Security',
+    children: ['...']
+  }, {
+    name: 'Server',
+    children: ['...']
+  }, {
+    name: 'Speech',
+    children: ['...']
+  }, {
+    name: 'Spelling',
+    children: ['...']
+  }, {
+    name: 'Spotlight',
+    children: ['...']
+  }, {
+    name: 'StartupItems',
+    children: ['...']
+  }, {
+    name: 'SystemMigration',
+    children: ['...']
+  }, {
+    name: 'SystemProfiler',
+    children: ['...']
+  }, {
+    name: 'Updates',
+    children: ['...']
+  }, {
+    name: 'User Pictures',
+    children: ['...']
+  }, {
+    name: 'Video',
+    children: ['...']
+  }, {
+    name: 'WebServer',
+    children: ['...']
+  }, {
+    name: 'Widgets',
+    children: ['...']
+  }, {
+    name: 'iTunes',
+    children: ['...']
+  }]
+}, {
+  name: 'Users',
+  children: [{
+    name: 'LaconaUser',
+    children: userFiles
+  }, {
+    name: 'Guest',
+    children: ['...']
+  }, {
+    name: 'Shared',
+    children: ['...']
+  }]
+}, {
+  name: 'bin',
+  children: ['bash', 'cat', 'chmod', 'cp', 'csh', 'date', 'dd', 'df', 'domainname', 'echo', 'ed', 'expr', 'hostname', 'kill', 'ksh', 'launchctl', 'link', 'ln', 'ls', 'mkdir', 'mv', 'pax', 'ps', 'pwd', 'rcp', 'rm', 'rmdir', 'sh', 'sleep', 'stty', 'sync', 'tcsh', 'test', 'unlink', 'wait4path', 'zsh']
+}, {
+  name: 'etc',
+  children: []
+}, {
+  name: 'home',
+  children: []
+}, {
+  name: 'net',
+  children: []
+}, {
+  name: 'tmp',
+  children: ['KSOutOfProcessFetcher.0.OlaJUhhgKAnFsX7fZ0FyXTFxIgg=', 'com.apple.launchd.CWPFO2w3Rj', 'com.apple.launchd.eM0bByeRbW', 'tmphosts', 'tmphosts1', 'some.tmp', 'test.tmp', 'yes.txt']
+}, {
+  name: 'usr',
+  children: [{
+    name: 'X11',
+    children: ['...']
+  }, {
+    name: 'X11R6',
+    children: ['...']
+  }, {
+    name: 'bin',
+    children: ['...']
+  }, {
+    name: 'include',
+    children: ['...']
+  }, {
+    name: 'lib',
+    children: ['...']
+  }, {
+    name: 'libexec',
+    children: ['...']
+  }, {
+    name: 'local',
+    children: ['...']
+  }, {
+    name: 'sbin',
+    children: ['...']
+  }, {
+    name: 'share',
+    children: ['...']
+  }, {
+    name: 'standalone',
+    children: ['...']
+  }]
+}, {
+  name: 'var',
+  children: [{
+    name: 'Keychains',
+    children: ['...']
+  }, {
+    name: 'agentx',
+    children: ['...']
+  }, {
+    name: 'at',
+    children: ['...']
+  }, {
+    name: 'audit',
+    children: ['...']
+  }, {
+    name: 'backups',
+    children: ['...']
+  }, {
+    name: 'db',
+    children: ['...']
+  }, {
+    name: 'empty',
+    children: ['...']
+  }, {
+    name: 'folders',
+    children: ['...']
+  }, {
+    name: 'folders~orig',
+    children: ['...']
+  }, {
+    name: 'jabberd',
+    children: ['...']
+  }, {
+    name: 'lib',
+    children: ['...']
+  }, {
+    name: 'log',
+    children: ['...']
+  }, {
+    name: 'mail',
+    children: ['...']
+  }, {
+    name: 'msgs',
+    children: ['...']
+  }, {
+    name: 'netboot',
+    children: ['...']
+  }, {
+    name: 'networkd',
+    children: ['...']
+  }, {
+    name: 'root',
+    children: ['...']
+  }, {
+    name: 'rpc',
+    children: ['...']
+  }, {
+    name: 'run',
+    children: ['...']
+  }, {
+    name: 'rwho',
+    children: ['...']
+  }, {
+    name: 'spool',
+    children: ['...']
+  }, {
+    name: 'tmp',
+    children: ['...']
+  }, {
+    name: 'vm',
+    children: ['...']
+  }, {
+    name: 'yp',
+    children: ['...']
+  }]
+}];
+
+var tunes = [{ name: 'I\'m Good',
+  artist: 'The Mowgli\'s',
+  album: 'I\'m Good',
+  genre: 'Pop' }, { name: 'Baby Love',
+  artist: 'Petite Meller',
+  album: 'Baby Love',
+  genre: 'Pop' }, { name: 'T-Shirt Weather',
+  artist: 'Circa Waves',
+  album: 'T-Shirt Weather',
+  genre: 'Pop' }, { name: 'Fade Out Lines - The Avener Rework',
+  artist: 'The Avener & Phoebe Killdeer',
+  album: 'Fade Out Lines',
+  genre: 'Pop' }, { name: 'Salt',
+  artist: 'Bad Suns',
+  album: 'Language & Perspective',
+  genre: 'Pop' }, { name: 'Ship To Wreck',
+  artist: 'Florence + The Machine',
+  album: 'Ship To Wreck',
+  genre: 'Pop' }, { name: 'Couch Potato',
+  artist: 'Shortstraw',
+  album: 'Good Morning, Sunshine',
+  genre: 'Pop' }, { name: 'Good Day',
+  artist: 'distant cousins',
+  album: 'Good Day',
+  genre: 'Pop' }, { name: 'Ex\'s & Oh\'s',
+  artist: 'Elle King',
+  album: 'Love Stuff',
+  genre: 'Pop' }, { name: 'Irresistible',
+  artist: 'Fall Out Boy',
+  album: 'American Beauty/American Psycho',
+  genre: 'Pop' }, { name: 'Centuries',
+  artist: 'Fall Out Boy',
+  album: 'American Beauty/American Psycho',
+  genre: 'Pop' }, { name: 'Light Me Up',
+  artist: 'Flyte',
+  album: 'Light Me Up',
+  genre: 'Pop' }, { name: 'Violins',
+  artist: 'I\'m From Barcelona',
+  album: 'Violins',
+  genre: 'Pop' }, { name: 'I Bet My Life',
+  artist: 'Imagine Dragons',
+  album: 'Smoke + Mirrors (Deluxe)',
+  genre: 'Pop' }, { name: 'RIVA (Restart the Game) - Radio Edit',
+  artist: 'Klingande',
+  album: 'RIVA (Restart The Game) [Radio Edit]',
+  genre: 'Pop' }, { name: 'Lean On (feat. MØ & DJ Snake)',
+  artist: 'Major Lazer',
+  album: 'Lean On (feat. MØ & DJ Snake)',
+  genre: 'Pop' }, { name: 'Got It',
+  artist: 'Marian Hill',
+  album: 'Sway',
+  genre: 'Pop' }, { name: 'Can You Blame Me',
+  artist: 'Matt and Kim',
+  album: 'Can You Blame Me',
+  genre: 'Pop' }, { name: 'Talk About You',
+  artist: 'MIKA',
+  album: 'Talk About You',
+  genre: 'Pop' }, { name: 'Love Like Mine',
+  artist: 'Miami Horror',
+  album: 'Love Like Mine',
+  genre: 'Pop' }, { name: 'Our Own House',
+  artist: 'MisterWives',
+  album: 'Our Own House',
+  genre: 'Pop' }, { name: 'The Rhythm',
+  artist: 'MNEK',
+  album: 'The Rhythm',
+  genre: 'Pop' }, { name: 'Magic (feat. Nile Rodgers and Brandy)',
+  artist: 'Mystery Skulls',
+  album: 'Forever',
+  genre: 'Pop' }, { name: 'Never Gets Old',
+  artist: 'Penguin Prison',
+  album: 'Never Gets Old',
+  genre: 'Pop' }, { name: 'Karaoke',
+  artist: 'Smallpools',
+  album: 'Karaoke',
+  genre: 'Pop' }, { name: 'Robot Love',
+  artist: 'Urban Cone',
+  album: 'Robot Love',
+  genre: 'Pop' }, { name: 'King',
+  artist: 'Years & Years',
+  album: 'King',
+  genre: 'Pop' }, { name: 'So Cruel',
+  artist: 'Young Empires',
+  album: 'So Cruel',
+  genre: 'Pop' }, { name: 'The Night Is Still Young',
+  artist: 'Nicki Minaj',
+  album: 'The Pinkprint',
+  genre: 'Pop' }, { name: 'I Will Never Let You Down',
+  artist: 'Rita Ora',
+  album: 'I Will Never Let You Down',
+  genre: 'Pop' }, { name: 'Never Been In Love (feat. Icona Pop)',
+  artist: 'Cobra Starship',
+  album: 'Never Been In Love (feat. Icona Pop)',
+  genre: 'Pop' }, { name: 'What I did for Love (feat. Emeli Sandé)',
+  artist: 'David Guetta',
+  album: 'Listen (Deluxe)',
+  genre: 'Pop' }, { name: 'Want To Want Me',
+  artist: 'Jason Derulo',
+  album: 'Want To Want Me',
+  genre: 'Pop' }, { name: 'Stronger',
+  artist: 'Clean Bandit',
+  album: 'New Eyes',
+  genre: 'Pop' }, { name: 'Stole the Show',
+  artist: 'Kygo',
+  album: 'Stole the Show',
+  genre: 'Pop' }, { name: 'In Your Arms',
+  artist: 'Nico & Vinz',
+  album: 'Black Star Elephant',
+  genre: 'Pop' }, { name: 'Intoxicated',
+  artist: 'Martin Solveig',
+  album: 'Intoxicated (Radio Edit)',
+  genre: 'Pop' }, { name: 'Runaway (U & I)',
+  artist: 'Galantis',
+  album: 'Runaway (U & I)',
+  genre: 'Pop' }, { name: 'Outside',
+  artist: 'Calvin Harris',
+  album: 'Motion',
+  genre: 'Pop' }, { name: 'Crazy For You',
+  artist: 'Hedley',
+  album: 'Wild Life',
+  genre: 'Pop' }, { name: 'Kathleen',
+  artist: 'Catfish and the Bottlemen',
+  album: 'The Balcony',
+  genre: 'Pop' }, { name: 'Work This Body',
+  artist: 'Walk the Moon',
+  album: 'TALKING IS HARD',
+  genre: 'Pop' }, { name: 'Seeing Stars',
+  artist: 'BØRNS',
+  album: 'Candy',
+  genre: 'Pop' }, { name: 'If It\'s Not You',
+  artist: 'Keljet',
+  album: 'Keljet x AYER - If It\'s Not You',
+  genre: 'Pop' }, { name: 'The Nights',
+  artist: 'Avicii',
+  album: 'The Days / Nights',
+  genre: 'Pop' }, { name: 'Pay No Mind',
+  artist: 'Madeon',
+  album: 'Adventure (Deluxe)',
+  genre: 'Pop' }, { name: 'Best Fake Smile',
+  artist: 'James Bay',
+  album: 'Chaos And The Calm',
+  genre: 'Pop' }, { name: 'Savages',
+  artist: 'Marina and The Diamonds',
+  album: 'FROOT',
+  genre: 'Pop' }, { name: 'Human Contact',
+  artist: 'Catey Shaw',
+  album: 'The Brooklyn EP',
+  genre: 'Pop' }, { name: 'Hum Hum',
+  artist: 'Mating Ritual',
+  album: 'Hum Hum',
+  genre: 'Pop' }, { name: 'Cold Cold Man',
+  artist: 'Saint Motel',
+  album: 'My Type EP',
+  genre: 'Pop' }];
+
+var FileList = (function (_Phrase) {
+  function FileList() {
+    _classCallCheck(this, FileList);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(FileList, _Phrase);
+
+  _createClass(FileList, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (result.dir) {
+        var dir = result.dir === '~' ? '/Users/LaconaUser' : result.dir;
+        return '' + dir + '/' + result.file;
+      } else {
+        return result;
+      }
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      if (_lodash2['default'].isPlainObject(this.props.directoryOrFile)) {
+        return (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('literal', { text: '' + this.props.directoryOrFile.name + '/', id: 'dir', value: this.props.directoryOrFile.name }),
+          (0, _laconaPhrase.createElement)(
+            'argument',
+            { text: 'content', id: 'file' },
+            (0, _laconaPhrase.createElement)(
+              'choice',
+              null,
+              (0, _laconaPhrase.createElement)('literal', { text: '', value: '' }),
+              _lodash2['default'].map(this.props.directoryOrFile.children, function (child) {
+                return (0, _laconaPhrase.createElement)(FileList, { directoryOrFile: child });
+              })
+            )
+          )
+        );
+      } else {
+        return (0, _laconaPhrase.createElement)('literal', { text: this.props.directoryOrFile, value: this.props.directoryOrFile });
+      }
+    }
+  }]);
+
+  return FileList;
+})(_laconaPhrase.Phrase);
+
+var File = (function (_Phrase2) {
+  function File() {
+    _classCallCheck(this, File);
+
+    if (_Phrase2 != null) {
+      _Phrase2.apply(this, arguments);
+    }
+  }
+
+  _inherits(File, _Phrase2);
+
+  _createClass(File, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'choice',
+        null,
+        (0, _laconaPhrase.createElement)(
+          'argument',
+          { text: 'path', showForEmpty: true },
+          (0, _laconaPhrase.createElement)(
+            'choice',
+            null,
+            (0, _laconaPhrase.createElement)(FileList, { directoryOrFile: { name: '~', children: userFiles } }),
+            (0, _laconaPhrase.createElement)(FileList, { directoryOrFile: { name: '', children: rootFiles } })
+          )
+        ),
+        (0, _laconaPhrase.createElement)(
+          'argument',
+          { text: 'file', showForEmpty: true },
+          (0, _laconaPhrase.createElement)('list', { items: [{ text: 'logo.jpg', value: '/Users/LaconaUser/Documents/logo.jpg' }, { text: 'logo.png', value: '/Users/LaconaUser/Documents/logo.png' }, { text: 'document.docx', value: '/Users/LaconaUser/Documents/document.docx' }, { text: 'my-document.docx', value: '/Users/LaconaUser/Documents/my-document.docx' }, { text: 'main.js', value: '/Users/LaconaUser/Projects/test/main.js' }, { text: 'package.json', value: '/Users/LaconaUser/Projects/test/package.json' }, { text: 'lodash.js', value: '/Users/LaconaUser/Projects/test/lodash.js' }, { text: 'react-router.jsx', value: '/Users/LaconaUser/Projects/test/react-router.jsx' }, { text: 'briefing 1_2.keynote', value: '/Users/LaconaUser/Documents/Presentations/briefing 1_2.keynote' }, { text: 'briefing 2_24.keynote', value: '/Users/LaconaUser/Documents/Presentations/briefing 2_24.keynote' }, { text: 'briefing 5_5.keynote', value: '/Users/LaconaUser/Documents/Presentations/briefing 5_5.keynote' }, { text: 'status-updates.txt', value: '/Users/LaconaUser/status-updates.txt' }, { text: 'todo.txt', value: '/Users/LaconaUser/todo.txt' }, { text: 'main.cpp', value: '/Users/LaconaUser/Projects/cpp-test/main.cpp' }, { text: 'main.h', value: '/Users/LaconaUser/Projects/cpp-test/main.h' }, { text: 'quick-brown-fox.js', value: '/Users/LaconaUser/Projects/cpp-test/quick-brown-fox.js' }, { text: 'overjumper.cs', value: '/Users/LaconaUser/Projects/cpp-test/overjumper.cs' }, { text: 'overjumper.h', value: '/Users/LaconaUser/Projects/cpp-test/overjumper.h' }, { text: 'lazy_dog.js', value: '/Users/LaconaUser/Projects/cpp-test/lazy_dog.js' }], fuzzy: true })
+        )
+      );
+    }
+  }]);
+
+  return File;
+})(_laconaPhrase.Phrase);
+
+var Application = (function (_Phrase3) {
+  function Application() {
+    _classCallCheck(this, Application);
+
+    if (_Phrase3 != null) {
+      _Phrase3.apply(this, arguments);
+    }
+  }
+
+  _inherits(Application, _Phrase3);
+
+  _createClass(Application, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'argument',
+        { text: 'application', showForEmpty: true },
+        (0, _laconaPhrase.createElement)('list', { items: [{ text: 'Calendar', value: 'Calendar' }, { text: 'Contacts', value: 'Contacts' }, { text: 'FaceTime', value: 'FaceTime' }, { text: 'Game Center', value: 'Game Center' }, { text: 'GarageBand', value: 'GarageBand' }, { text: 'iBooks', value: 'iBooks' }, { text: 'iMovie', value: 'iMovie' }, { text: 'iPhoto', value: 'iPhoto' }, { text: 'iTunes', value: 'iTunes' }, { text: 'Keynote', value: 'Keynote' }, { text: 'App Store', value: 'App Store' }, { text: 'Mail', value: 'Mail' }, { text: 'Maps', value: 'Maps' }, { text: 'Messages', value: 'Messages' }, { text: 'Notes', value: 'Notes' }, { text: 'Numbers', value: 'Numbers' }, { text: 'Pages', value: 'Pages' }, { text: 'Photo Booth', value: 'Photo Booth' }, { text: 'Reminders', value: 'Reminders' }, { text: 'Safari', value: 'Safari' }, { text: 'Automator', value: 'Automator' }, { text: 'Calculator', value: 'Calculator' }, { text: 'Chess', value: 'Chess' }, { text: 'Dictionary', value: 'Dictionary' }, { text: 'DVD Player', value: 'DVD Player' }, { text: 'Font Book', value: 'Font Book' }, { text: 'Image Capture', value: 'Image Capture' }, { text: 'Preview', value: 'Preview' }, { text: 'QuickTime Player', value: 'QuickTime Player' }, { text: 'Stickies', value: 'Stickies' }, { text: 'System Information', value: 'System Information' }, { text: 'TextEdit', value: 'TextEdit' }, { text: 'VoiceOver Utility', value: 'VoiceOver Utility' }], fuzzy: true })
+      );
+    }
+  }]);
+
+  return Application;
+})(_laconaPhrase.Phrase);
+
+var Bookmark = (function (_Phrase4) {
+  function Bookmark() {
+    _classCallCheck(this, Bookmark);
+
+    if (_Phrase4 != null) {
+      _Phrase4.apply(this, arguments);
+    }
+  }
+
+  _inherits(Bookmark, _Phrase4);
+
+  _createClass(Bookmark, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'argument',
+        { text: 'bookmark', showForEmpty: true },
+        (0, _laconaPhrase.createElement)('list', { items: [{ text: 'Facebook', value: 'http://facebook.com' }, { text: 'Twitter', value: 'http://twitter.com' }, { text: 'Google', value: 'http://google.com' }, { text: 'Lifehacker', value: 'http://lifehacker.com' }, { text: 'xkcd', value: 'http://xkcd.com' }, { text: 'Github', value: 'http://github.com' }, { text: 'Youtube', value: 'http://youtube.com' }, { text: 'Wikipedia', value: 'http://wikipedia.org' }, { text: 'Ebay', value: 'http://ebay.com' }], fuzzy: true })
+      );
+    }
+  }]);
+
+  return Bookmark;
+})(_laconaPhrase.Phrase);
+
+var open = {
+  grammar: (0, _laconaPhrase.createElement)(
+    'sequence',
+    { id: 'open' },
+    (0, _laconaPhrase.createElement)('literal', { text: 'open ', category: 'action' }),
+    (0, _laconaPhrase.createElement)(
+      'choice',
+      { merge: true },
+      (0, _laconaPhrase.createElement)(Application, { id: 'app' }),
+      (0, _laconaPhrase.createElement)(_laconaPhraseUrl2['default'], { id: 'url' }),
+      (0, _laconaPhrase.createElement)(Bookmark, { id: 'url' }),
+      (0, _laconaPhrase.createElement)(File, { id: 'file' }),
+      (0, _laconaPhrase.createElement)(
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)(
+          'choice',
+          { merge: true },
+          (0, _laconaPhrase.createElement)(_laconaPhraseUrl2['default'], { id: 'url' }),
+          (0, _laconaPhrase.createElement)(Bookmark, { id: 'url' }),
+          (0, _laconaPhrase.createElement)(File, { id: 'file' })
+        ),
+        (0, _laconaPhrase.createElement)('list', { items: [' with ', ' using ', ' in '], limit: 1, category: 'conjunction' }),
+        (0, _laconaPhrase.createElement)(Application, { id: 'app' })
+      )
+    )
+  )
+};
+
+exports.open = open;
+var date = {
+  grammar: (0, _laconaPhrase.createElement)(
+    'choice',
+    { id: 'date' },
+    (0, _laconaPhrase.createElement)(
+      'sequence',
+      { id: 'event' },
+      (0, _laconaPhrase.createElement)('list', { items: ['schedule ', 'create an event ', 'create event ', 'add an event ', 'add event '], limit: 1, category: 'action' }),
+      (0, _laconaPhrase.createElement)(
+        'argument',
+        { text: 'calendar event', id: 'title' },
+        (0, _laconaPhrase.createElement)('freetext', { limit: 1, splitOn: ' ' })
+      ),
+      (0, _laconaPhrase.createElement)(
+        'sequence',
+        { optional: true, id: 'location' },
+        (0, _laconaPhrase.createElement)('list', { items: [' at ', ' on ', ' in '], limit: 1, category: 'conjunction' }),
+        (0, _laconaPhrase.createElement)(
+          'argument',
+          { text: 'location', merge: true },
+          (0, _laconaPhrase.createElement)('freetext', { limit: 1, splitOn: ' ' })
+        )
+      ),
+      (0, _laconaPhrase.createElement)('list', { items: [' for ', ' '], category: 'conjunction', limit: 1 }),
+      (0, _laconaPhrase.createElement)(
+        'choice',
+        { limit: 1, merge: true },
+        (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.DateTime, { includeAt: true }),
+        (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.TimePeriod, null)
+      )
+    ),
+    (0, _laconaPhrase.createElement)(
+      'sequence',
+      { id: 'reminder' },
+      (0, _laconaPhrase.createElement)('literal', { text: 'remind me to ', category: 'action' }),
+      (0, _laconaPhrase.createElement)(
+        'argument',
+        { text: 'reminder title', id: 'title' },
+        (0, _laconaPhrase.createElement)('freetext', { limit: 1, splitOn: ' ' })
+      ),
+      (0, _laconaPhrase.createElement)(
+        'sequence',
+        { optional: true, merge: true },
+        (0, _laconaPhrase.createElement)('literal', { text: ' ', category: 'conjunction' }),
+        (0, _laconaPhrase.createElement)(
+          'choice',
+          { merge: true },
+          (0, _laconaPhrase.createElement)(
+            'argument',
+            { text: 'time', id: 'time' },
+            (0, _laconaPhrase.createElement)(
+              'sequence',
+              null,
+              (0, _laconaPhrase.createElement)('literal', { text: 'at ' }),
+              (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.Time, { allowPast: false, merge: true })
+            )
+          ),
+          (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.Date, { allowPast: false }),
+          (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.DateTime, { includeAt: true, allowPast: false })
+        )
+      )
+    )
+  )
+};
+
+exports.date = date;
+var engines = [{ text: 'Google', value: 'Google' }, { text: 'Wikipedia', value: 'Wikipedia' }, { text: 'Bing', value: 'Bing' }, { text: 'Yahoo', value: 'Yahoo' }, { text: 'Amazon', value: 'Amazon' }, { text: 'eBay', value: 'eBay' }];
+
+var SearchEngines = (function (_Phrase5) {
+  function SearchEngines() {
+    _classCallCheck(this, SearchEngines);
+
+    if (_Phrase5 != null) {
+      _Phrase5.apply(this, arguments);
+    }
+  }
+
+  _inherits(SearchEngines, _Phrase5);
+
+  _createClass(SearchEngines, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        _laconaPhraseRepeat2['default'],
+        { unique: true },
+        (0, _laconaPhrase.createElement)(
+          'content',
+          null,
+          (0, _laconaPhrase.createElement)(
+            'argument',
+            { text: 'search engine' },
+            (0, _laconaPhrase.createElement)('list', { items: engines })
+          )
+        ),
+        (0, _laconaPhrase.createElement)(
+          'separator',
+          null,
+          (0, _laconaPhrase.createElement)('list', { items: [' and ', ', ', ', and'], limit: 1, category: 'conjunction' })
+        ),
+        this.props.firstArgument ? undefined : (0, _laconaPhrase.createElement)(
+          'firstContent',
+          null,
+          (0, _laconaPhrase.createElement)(
+            'descriptor',
+            { text: 'search engine', argument: true },
+            (0, _laconaPhrase.createElement)('list', { items: engines })
+          )
+        )
+      );
+    }
+  }]);
+
+  return SearchEngines;
+})(_laconaPhrase.Phrase);
+
+SearchEngines.defaultProps = {
+  firstArgument: true
+};
+
+var search = {
+  grammar: (0, _laconaPhrase.createElement)(
+    'choice',
+    { limit: 1, id: 'search' },
+    (0, _laconaPhrase.createElement)(
+      'sequence',
+      null,
+      (0, _laconaPhrase.createElement)('literal', { text: 'search ', category: 'action' }),
+      (0, _laconaPhrase.createElement)(SearchEngines, { id: 'engines' }),
+      (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
+      (0, _laconaPhrase.createElement)('decorator', { text: 'for ', category: 'conjunction' }),
+      (0, _laconaPhrase.createElement)(
+        'argument',
+        { text: 'query', id: 'query' },
+        (0, _laconaPhrase.createElement)('freetext', { consumeAll: true })
+      )
+    ),
+    (0, _laconaPhrase.createElement)(
+      'sequence',
+      null,
+      (0, _laconaPhrase.createElement)('literal', { text: 'search ', category: 'action' }),
+      (0, _laconaPhrase.createElement)('literal', { text: 'for ', category: 'conjunction', optional: true, prefered: true, limited: true }),
+      (0, _laconaPhrase.createElement)(
+        'argument',
+        { text: 'query', id: 'query' },
+        (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
+      ),
+      (0, _laconaPhrase.createElement)('list', { items: [' on ', ' with ', ' using '], limit: 1 }),
+      (0, _laconaPhrase.createElement)(SearchEngines, { id: 'engines', firstArgument: false })
+    )
+  )
+};
+
+exports.search = search;
+function itemify(x) {
+  return { text: x, value: x };
+}
+
+var play = {
+  grammar: (0, _laconaPhrase.createElement)(
+    'choice',
+    { id: 'play' },
+    (0, _laconaPhrase.createElement)(
+      'sequence',
+      null,
+      (0, _laconaPhrase.createElement)('literal', { text: 'play ', category: 'action' }),
+      (0, _laconaPhrase.createElement)(
+        'choice',
+        { merge: true },
+        (0, _laconaPhrase.createElement)(
+          _laconaPhraseRepeat2['default'],
+          { id: 'something', unique: true },
+          (0, _laconaPhrase.createElement)(
+            'content',
+            null,
+            (0, _laconaPhrase.createElement)(
+              'choice',
+              null,
+              (0, _laconaPhrase.createElement)(
+                'argument',
+                { text: 'song', showForEmpty: true, id: 'song' },
+                (0, _laconaPhrase.createElement)('list', { items: _lodash2['default'].chain(tunes).map('name').map(itemify).value(), limit: 10 })
+              ),
+              (0, _laconaPhrase.createElement)(
+                'argument',
+                { text: 'album', showForEmpty: true, id: 'album' },
+                (0, _laconaPhrase.createElement)('list', { items: _lodash2['default'].chain(tunes).map('album').unique().map(itemify).value(), limit: 10 })
+              ),
+              (0, _laconaPhrase.createElement)(
+                'argument',
+                { text: 'artist', showForEmpty: true, id: 'artist' },
+                (0, _laconaPhrase.createElement)('list', { items: _lodash2['default'].chain(tunes).map('artist').unique().map(itemify).value(), limit: 10 })
+              ),
+              (0, _laconaPhrase.createElement)(
+                'argument',
+                { text: 'genre', showForEmpty: true, id: 'genre' },
+                (0, _laconaPhrase.createElement)('list', { items: _lodash2['default'].chain(tunes).map('genre').unique().map(itemify).value(), limit: 10 })
+              ),
+              (0, _laconaPhrase.createElement)(
+                'argument',
+                { text: 'playlist', showForEmpty: true, id: 'playlist' },
+                (0, _laconaPhrase.createElement)('list', { items: ['Jams', 'Chill', 'Workout', 'Driving'].map(itemify) })
+              ),
+              (0, _laconaPhrase.createElement)(
+                'argument',
+                { text: 'composer', showForEmpty: true, id: 'composer' },
+                (0, _laconaPhrase.createElement)('literal', null)
+              )
+            )
+          ),
+          (0, _laconaPhrase.createElement)(
+            'separator',
+            null,
+            (0, _laconaPhrase.createElement)('list', { items: [' and ', ', ', ', and '], limit: 1, category: 'conjunction' })
+          )
+        ),
+        (0, _laconaPhrase.createElement)('list', { id: 'previous', value: true, items: ['previous track', 'previous song'], limit: 1, category: 'argument5' })
+      )
+    ),
+    (0, _laconaPhrase.createElement)(
+      'choice',
+      { limit: 1, value: { next: true } },
+      (0, _laconaPhrase.createElement)(
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)('literal', { text: 'play ', category: 'action' }),
+        (0, _laconaPhrase.createElement)('list', { items: ['next track', 'next song'], limit: 1, category: 'argument5' })
+      ),
+      (0, _laconaPhrase.createElement)(
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)('literal', { text: 'skip ', category: 'action' }),
+        (0, _laconaPhrase.createElement)('list', { items: ['track', 'song', 'this track', 'this song'], limit: 1, category: 'argument5' })
+      )
+    ),
+    (0, _laconaPhrase.createElement)('list', { value: { pause: true }, items: ['pause music', 'pause this track', 'pause iTunes', 'pause track', 'pause song'], limit: 1, category: 'action' }),
+    (0, _laconaPhrase.createElement)('list', { value: { stop: true }, items: ['stop music', 'stop iTunes', 'stop track', 'stop song'], limit: 1, category: 'action' })
+  )
+};
+
+exports.play = play;
+
+var Contact = (function (_Phrase6) {
+  function Contact() {
+    _classCallCheck(this, Contact);
+
+    if (_Phrase6 != null) {
+      _Phrase6.apply(this, arguments);
+    }
+  }
+
+  _inherits(Contact, _Phrase6);
+
+  _createClass(Contact, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'argument',
+        { text: 'contact', showForEmpty: true },
+        (0, _laconaPhrase.createElement)('list', { items: [{ text: 'Tony Stark', value: 'Tony Stark' }, { text: 'Thor Odinson', value: 'Thor Odinson' }, { text: 'Henry Pym', value: 'Henry Pym' }, { text: 'Bruce Banner', value: 'Bruce Banner' }, { text: 'Steve Rogers', value: 'Steve Rogers' }, { text: 'Clinton Barton', value: 'Clinton Barton' }, { text: 'Wanda Maximoff', value: 'Wanda Maximoff' }, { text: 'Victor Shade', value: 'Victor Shade' }, { text: 'Natalia Romanova', value: 'Natalia Romanova' }, { text: 'Jennifer Walters', value: 'Jennifer Walters' }, { text: 'Hank McCoy', value: 'Hank McCoy' }, { text: 'Reed Richards', value: 'Reed Richards' }, { text: 'Susan Richards', value: 'Susan Richards' }, { text: 'Jim Hammond', value: 'Jim Hammond' }, { text: 'Benjamin Grimm', value: 'Benjamin Grimm' }, { text: 'Peter Parker', value: 'Peter Parker' }, { text: 'Luke Cage', value: 'Luke Cage' }, { text: 'Logan Howlett', value: 'Logan Howlett' }, { text: 'James Barnes', value: 'James Barnes' }, { text: 'Steven Strange', value: 'Steven Strange' }, { text: 'Matt Murdock', value: 'Matt Murdock' }, { text: 'Scott Summers', value: 'Scott Summers' }, { text: 'Charles Xavier', value: 'Charles Xavier' }, { text: 'Bobby Drake', value: 'Bobby Drake' }, { text: 'Jean Grey-Summers', value: 'Jean Grey-Summers' }, { text: 'Kurt Wagner', value: 'Kurt Wagner' }, { text: 'Ororo Monroe', value: 'Ororo Monroe' }, { text: 'Anna Marie', value: 'Anna Marie' }, { text: 'Erik Lehnsherr', value: 'Erik Lehnsherr' }] })
+      );
+    }
+  }]);
+
+  return Contact;
+})(_laconaPhrase.Phrase);
+
+var Relationship = (function (_Phrase7) {
+  function Relationship() {
+    _classCallCheck(this, Relationship);
+
+    if (_Phrase7 != null) {
+      _Phrase7.apply(this, arguments);
+    }
+  }
+
+  _inherits(Relationship, _Phrase7);
+
+  _createClass(Relationship, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'argument',
+        { text: 'relationship', showForEmpty: true },
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('literal', { text: 'my ', optional: true, limited: true }),
+          (0, _laconaPhrase.createElement)('list', { merge: true, items: [{ text: 'Mom', value: 'your mom' }, { text: 'Dad', value: 'your dad' }, { text: 'Landlord', value: 'your landlord' }, { text: 'Boss', value: 'your boss' }] })
+        )
+      );
+    }
+  }]);
+
+  return Relationship;
+})(_laconaPhrase.Phrase);
+
+var contact = {
+  grammar: (0, _laconaPhrase.createElement)(
+    'choice',
+    { id: 'contact' },
+    (0, _laconaPhrase.createElement)(
+      'sequence',
+      { id: 'email' },
+      (0, _laconaPhrase.createElement)('literal', { text: 'email ', category: 'action' }),
+      (0, _laconaPhrase.createElement)(
+        'choice',
+        { merge: true },
+        (0, _laconaPhrase.createElement)(
+          'choice',
+          null,
+          (0, _laconaPhrase.createElement)(_laconaPhraseEmail2['default'], { id: 'address' }),
+          (0, _laconaPhrase.createElement)(Relationship, { id: 'relationship' }),
+          (0, _laconaPhrase.createElement)(Contact, { id: 'contact' })
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)(
+            'argument',
+            { text: 'message', id: 'message' },
+            (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ' })
+          ),
+          (0, _laconaPhrase.createElement)('literal', { text: ' to ', category: 'conjunction' }),
+          (0, _laconaPhrase.createElement)(
+            'choice',
+            { merge: true },
+            (0, _laconaPhrase.createElement)(_laconaPhraseEmail2['default'], { id: 'address' }),
+            (0, _laconaPhrase.createElement)(Relationship, { id: 'relationship' }),
+            (0, _laconaPhrase.createElement)(Contact, { id: 'contact' })
+          )
+        )
+      )
+    ),
+    (0, _laconaPhrase.createElement)(
+      'sequence',
+      { id: 'call' },
+      (0, _laconaPhrase.createElement)('literal', { text: 'call ', category: 'action' }),
+      (0, _laconaPhrase.createElement)(
+        'choice',
+        { merge: true },
+        (0, _laconaPhrase.createElement)(_laconaPhrasePhonenumber2['default'], { id: 'number' }),
+        (0, _laconaPhrase.createElement)(Relationship, { id: 'relationship' }),
+        (0, _laconaPhrase.createElement)(Contact, { id: 'contact' })
+      )
+    ),
+    (0, _laconaPhrase.createElement)(
+      'sequence',
+      { id: 'facetime' },
+      (0, _laconaPhrase.createElement)('literal', { text: 'facetime ', category: 'action' }),
+      (0, _laconaPhrase.createElement)(
+        'choice',
+        { merge: true },
+        (0, _laconaPhrase.createElement)(Relationship, { id: 'relationship' }),
+        (0, _laconaPhrase.createElement)(Contact, { id: 'contact' }),
+        (0, _laconaPhrase.createElement)(_laconaPhrasePhonenumber2['default'], { id: 'number' }),
+        (0, _laconaPhrase.createElement)(_laconaPhraseEmail2['default'], { id: 'address' })
+      )
+    ),
+    (0, _laconaPhrase.createElement)(
+      'sequence',
+      { id: 'text' },
+      (0, _laconaPhrase.createElement)('list', { items: ['text ', 'iMessage '], limit: 1, category: 'action' }),
+      (0, _laconaPhrase.createElement)(
+        'choice',
+        { merge: true },
+        (0, _laconaPhrase.createElement)(
+          'choice',
+          null,
+          (0, _laconaPhrase.createElement)(Relationship, { id: 'relationship' }),
+          (0, _laconaPhrase.createElement)(Contact, { id: 'contact' }),
+          (0, _laconaPhrase.createElement)(_laconaPhrasePhonenumber2['default'], { id: 'number' }),
+          (0, _laconaPhrase.createElement)(_laconaPhraseEmail2['default'], { id: 'address' })
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)(
+            'argument',
+            { text: 'message', id: 'message' },
+            (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ' })
+          ),
+          (0, _laconaPhrase.createElement)('literal', { text: ' to ', category: 'conjunction' }),
+          (0, _laconaPhrase.createElement)(
+            'choice',
+            { merge: true },
+            (0, _laconaPhrase.createElement)(Relationship, { id: 'relationship' }),
+            (0, _laconaPhrase.createElement)(Contact, { id: 'contact' }),
+            (0, _laconaPhrase.createElement)(_laconaPhrasePhonenumber2['default'], { id: 'number' }),
+            (0, _laconaPhrase.createElement)(_laconaPhraseEmail2['default'], { id: 'address' })
+          )
+        )
+      )
+    )
+  )
+};
+
+exports.contact = contact;
+var all = {
+  grammar: (0, _laconaPhrase.createElement)(
+    'choice',
+    null,
+    open.grammar,
+    date.grammar,
+    search.grammar,
+    play.grammar,
+    contact.grammar
+  )
+}
+
+// export default class Sentence extends Phrase {
+//   describe() {
+//     const themeChoices = _.map(themes, theme => <literal value={`theme-${_.kebabCase(theme)}-light`} text={`${theme} Light`} fuzzy={true} />)
+//       .concat(_.map(themes, theme => <literal value={`theme-${_.kebabCase(theme)}-dark`} text={`${theme} Dark`} fuzzy={true} />))
+//
+//     return (
+//       <choice>
+//         <sequence>
+//           <literal text='learn ' id='action' value='learn' category='action' />
+//           <literal text='more about Lacona' category='argument' join={true} />
+//         </sequence>
+//         <sequence>
+//           <choice limit={1} id='action' value='subscribe' category='action'>
+//             <literal text='add ' />
+//             <literal text='subscribe ' />
+//           </choice>
+//           <placeholder text='your email address' id='email' category='argument'>
+//             <Email />
+//           </placeholder>
+//           <literal text=' to the ' category='conjunction' />
+//           <choice limit={1} category='actor' join={true}>
+//             <literal text='newsletter' />
+//             <literal text='mailing list' />
+//           </choice>
+//         </sequence>
+//         <sequence>
+//           <literal text='tweet ' id='action' value='tweet' category='action' />
+//           <placeholder text='something about lacona' category='argument' id='message'>
+//             <Validator />
+//           </placeholder>
+//         </sequence>
+//         <sequence>
+//           <literal text='share ' id='action' value='share' category='action' />
+//           <choice limit={1} join={true} category='conjunction'>
+//             <literal text='with ' />
+//             <literal text='using ' />
+//             <literal text='on ' />
+//           </choice>
+//           <placeholder text='a social network' category='actor' id='platform' >
+//             <choice>
+//               <literal text='Twitter' value='twitter' />
+//               <literal text='Facebook' value='facebook' />
+//               <literal text='Google+' value='google-plus' />
+//               <literal text='Email' value='email' />
+//             </choice>
+//           </placeholder>
+//         </sequence>
+//         <sequence>
+//           <literal text='follow ' id='action' value='follow' category='action' />
+//           <literal text='@lacona ' category='argument' join={true} />
+//           <literal text='on ' category='conjunction' join={true} />
+//           <literal text='Twitter' category='actor' join={true} />
+//         </sequence>
+//         <sequence>
+//           <literal text='contact us ' id='action' value='contact' category='action' />
+//           <choice limit={1} join={true} category='conjunction'>
+//             <literal text='using ' />
+//             <literal text='over ' />
+//             <literal text='with ' />
+//             <literal text='on ' />
+//           </choice>
+//           <placeholder text='a social network' category='actor' id='platform'>
+//             <choice>
+//               <literal text='Twitter' value='twitter' />
+//               <literal text='Email' value='email' />
+//             </choice>
+//           </placeholder>
+//         </sequence>
+//       </choice>
+//     )
+//   }
+// }
+;exports.all = all;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"lacona-phrase":45,"lacona-phrase-datetime":12,"lacona-phrase-email":29,"lacona-phrase-phonenumber":33,"lacona-phrase-repeat":37,"lacona-phrase-url":41}],6:[function(require,module,exports){
+module.exports = function (arr, iterator, callback) {
+  callback = callback || function () {};
+  if (!Array.isArray(arr) || !arr.length) {
+      return callback();
+  }
+  var completed = 0;
+  var iterate = function () {
+    iterator(arr[completed], function (err) {
+      if (err) {
+        callback(err);
+        callback = function () {};
+      }
+      else {
+        ++completed;
+        if (completed >= arr.length) { callback(); }
+        else { iterate(); }
+      }
+    });
+  };
+  iterate();
+};
+
+},{}],7:[function(require,module,exports){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+function EventEmitter() {
+  this._events = this._events || {};
+  this._maxListeners = this._maxListeners || undefined;
+}
+module.exports = EventEmitter;
+
+// Backwards-compat with node 0.10.x
+EventEmitter.EventEmitter = EventEmitter;
+
+EventEmitter.prototype._events = undefined;
+EventEmitter.prototype._maxListeners = undefined;
+
+// By default EventEmitters will print a warning if more than 10 listeners are
+// added to it. This is a useful default which helps finding memory leaks.
+EventEmitter.defaultMaxListeners = 10;
+
+// Obviously not all Emitters should be limited to 10. This function allows
+// that to be increased. Set to zero for unlimited.
+EventEmitter.prototype.setMaxListeners = function(n) {
+  if (!isNumber(n) || n < 0 || isNaN(n))
+    throw TypeError('n must be a positive number');
+  this._maxListeners = n;
+  return this;
+};
+
+EventEmitter.prototype.emit = function(type) {
+  var er, handler, len, args, i, listeners;
+
+  if (!this._events)
+    this._events = {};
+
+  // If there is no 'error' event listener then throw.
+  if (type === 'error') {
+    if (!this._events.error ||
+        (isObject(this._events.error) && !this._events.error.length)) {
+      er = arguments[1];
+      if (er instanceof Error) {
+        throw er; // Unhandled 'error' event
+      }
+      throw TypeError('Uncaught, unspecified "error" event.');
+    }
+  }
+
+  handler = this._events[type];
+
+  if (isUndefined(handler))
+    return false;
+
+  if (isFunction(handler)) {
+    switch (arguments.length) {
+      // fast cases
+      case 1:
+        handler.call(this);
+        break;
+      case 2:
+        handler.call(this, arguments[1]);
+        break;
+      case 3:
+        handler.call(this, arguments[1], arguments[2]);
+        break;
+      // slower
+      default:
+        len = arguments.length;
+        args = new Array(len - 1);
+        for (i = 1; i < len; i++)
+          args[i - 1] = arguments[i];
+        handler.apply(this, args);
+    }
+  } else if (isObject(handler)) {
+    len = arguments.length;
+    args = new Array(len - 1);
+    for (i = 1; i < len; i++)
+      args[i - 1] = arguments[i];
+
+    listeners = handler.slice();
+    len = listeners.length;
+    for (i = 0; i < len; i++)
+      listeners[i].apply(this, args);
+  }
+
+  return true;
+};
+
+EventEmitter.prototype.addListener = function(type, listener) {
+  var m;
+
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events)
+    this._events = {};
+
+  // To avoid recursion in the case that type === "newListener"! Before
+  // adding it to the listeners, first emit "newListener".
+  if (this._events.newListener)
+    this.emit('newListener', type,
+              isFunction(listener.listener) ?
+              listener.listener : listener);
+
+  if (!this._events[type])
+    // Optimize the case of one listener. Don't need the extra array object.
+    this._events[type] = listener;
+  else if (isObject(this._events[type]))
+    // If we've already got an array, just append.
+    this._events[type].push(listener);
+  else
+    // Adding the second element, need to change to array.
+    this._events[type] = [this._events[type], listener];
+
+  // Check for listener leak
+  if (isObject(this._events[type]) && !this._events[type].warned) {
+    var m;
+    if (!isUndefined(this._maxListeners)) {
+      m = this._maxListeners;
+    } else {
+      m = EventEmitter.defaultMaxListeners;
+    }
+
+    if (m && m > 0 && this._events[type].length > m) {
+      this._events[type].warned = true;
+      console.error('(node) warning: possible EventEmitter memory ' +
+                    'leak detected. %d listeners added. ' +
+                    'Use emitter.setMaxListeners() to increase limit.',
+                    this._events[type].length);
+      if (typeof console.trace === 'function') {
+        // not supported in IE 10
+        console.trace();
+      }
+    }
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+
+EventEmitter.prototype.once = function(type, listener) {
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  var fired = false;
+
+  function g() {
+    this.removeListener(type, g);
+
+    if (!fired) {
+      fired = true;
+      listener.apply(this, arguments);
+    }
+  }
+
+  g.listener = listener;
+  this.on(type, g);
+
+  return this;
+};
+
+// emits a 'removeListener' event iff the listener was removed
+EventEmitter.prototype.removeListener = function(type, listener) {
+  var list, position, length, i;
+
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events || !this._events[type])
+    return this;
+
+  list = this._events[type];
+  length = list.length;
+  position = -1;
+
+  if (list === listener ||
+      (isFunction(list.listener) && list.listener === listener)) {
+    delete this._events[type];
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+
+  } else if (isObject(list)) {
+    for (i = length; i-- > 0;) {
+      if (list[i] === listener ||
+          (list[i].listener && list[i].listener === listener)) {
+        position = i;
+        break;
+      }
+    }
+
+    if (position < 0)
+      return this;
+
+    if (list.length === 1) {
+      list.length = 0;
+      delete this._events[type];
+    } else {
+      list.splice(position, 1);
+    }
+
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.removeAllListeners = function(type) {
+  var key, listeners;
+
+  if (!this._events)
+    return this;
+
+  // not listening for removeListener, no need to emit
+  if (!this._events.removeListener) {
+    if (arguments.length === 0)
+      this._events = {};
+    else if (this._events[type])
+      delete this._events[type];
+    return this;
+  }
+
+  // emit removeListener for all listeners on all events
+  if (arguments.length === 0) {
+    for (key in this._events) {
+      if (key === 'removeListener') continue;
+      this.removeAllListeners(key);
+    }
+    this.removeAllListeners('removeListener');
+    this._events = {};
+    return this;
+  }
+
+  listeners = this._events[type];
+
+  if (isFunction(listeners)) {
+    this.removeListener(type, listeners);
+  } else {
+    // LIFO order
+    while (listeners.length)
+      this.removeListener(type, listeners[listeners.length - 1]);
+  }
+  delete this._events[type];
+
+  return this;
+};
+
+EventEmitter.prototype.listeners = function(type) {
+  var ret;
+  if (!this._events || !this._events[type])
+    ret = [];
+  else if (isFunction(this._events[type]))
+    ret = [this._events[type]];
+  else
+    ret = this._events[type].slice();
+  return ret;
+};
+
+EventEmitter.listenerCount = function(emitter, type) {
+  var ret;
+  if (!emitter._events || !emitter._events[type])
+    ret = 0;
+  else if (isFunction(emitter._events[type]))
+    ret = 1;
+  else
+    ret = emitter._events[type].length;
+  return ret;
+};
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg !== null;
+}
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+
+},{}],8:[function(require,module,exports){
+// shim for using process in browser
+
+var process = module.exports = {};
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = setTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            currentQueue[queueIndex].run();
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    clearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (!draining) {
+        setTimeout(drainQueue, 0);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+// TODO(shtylman)
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+},{}],9:[function(require,module,exports){
+'use strict';
+
+var _defineProperty = function (obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: key == null || typeof Symbol == 'undefined' || key.constructor !== Symbol, configurable: true, writable: true }); };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var _Integer = require('lacona-phrase-number');
+
+var DateDuration = (function (_Phrase) {
+  function DateDuration() {
+    _classCallCheck(this, DateDuration);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(DateDuration, _Phrase);
+
+  _createClass(DateDuration, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) {
+        return;
+      }if (result.type === 'weeks') {
+        return { days: result.num * 7 };
+      } else {
+        return _defineProperty({}, result.type, result.num);
+      }
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      var singularItems = this.props.includeThe ? ['1', 'the'] : ['1'];
+
+      return _createElement$Phrase.createElement(
+        'choice',
+        null,
+        _createElement$Phrase.createElement(
+          'sequence',
+          null,
+          _createElement$Phrase.createElement(
+            'placeholder',
+            { text: 'number', showForEmpty: true, id: 'num' },
+            _createElement$Phrase.createElement('list', { items: singularItems, value: 1, limit: 1 })
+          ),
+          _createElement$Phrase.createElement('literal', { text: ' ' }),
+          _createElement$Phrase.createElement(
+            'placeholder',
+            { text: 'time period', id: 'type' },
+            _createElement$Phrase.createElement(
+              'choice',
+              null,
+              _createElement$Phrase.createElement('literal', { text: 'day', value: 'days' }),
+              _createElement$Phrase.createElement('literal', { text: 'week', value: 'weeks' }),
+              _createElement$Phrase.createElement('literal', { text: 'month', value: 'months' }),
+              _createElement$Phrase.createElement('literal', { text: 'year', value: 'years' })
+            )
+          )
+        ),
+        _createElement$Phrase.createElement(
+          'sequence',
+          null,
+          _createElement$Phrase.createElement(_Integer.Integer, { id: 'num', min: 2 }),
+          _createElement$Phrase.createElement('literal', { text: ' ' }),
+          _createElement$Phrase.createElement(
+            'placeholder',
+            { text: 'time period', id: 'type' },
+            _createElement$Phrase.createElement(
+              'choice',
+              null,
+              _createElement$Phrase.createElement('literal', { text: 'days', value: 'days' }),
+              _createElement$Phrase.createElement('literal', { text: 'weeks', value: 'weeks' }),
+              _createElement$Phrase.createElement('literal', { text: 'months', value: 'months' }),
+              _createElement$Phrase.createElement('literal', { text: 'years', value: 'years' })
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return DateDuration;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = DateDuration;
+
+DateDuration.defaultProps = { includeThe: false };
+module.exports = exports['default'];
+},{"lacona-phrase":26,"lacona-phrase-number":19}],10:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
+var _defineProperty = function (obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: key == null || typeof Symbol == 'undefined' || key.constructor !== Symbol, configurable: true, writable: true }); };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var _DateDuration = require('./date-duration');
+
+var _DateDuration2 = _interopRequireWildcard(_DateDuration);
+
+var _DigitString$Integer$Ordinal = require('lacona-phrase-number');
+
+var _Month = require('./month');
+
+var _Month2 = _interopRequireWildcard(_Month);
+
+var _Weekday = require('./weekday');
+
+var _Weekday2 = _interopRequireWildcard(_Weekday);
+
+var DatePhrase = (function (_Phrase) {
+  function DatePhrase() {
+    _classCallCheck(this, DatePhrase);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(DatePhrase, _Phrase);
+
+  _createClass(DatePhrase, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) {
+        return;
+      }if (result.relative) {
+        var date = new Date();
+        date.setHours(0, 0, 0, 0);
+        if (!_import2['default'].isUndefined(result.relative.days)) date.setDate(date.getDate() + result.relative.days);
+        if (!_import2['default'].isUndefined(result.relative.weeks)) date.setDate(date.getDate() + result.relative.weeks * 7);
+        if (!_import2['default'].isUndefined(result.relative.months)) date.setMonth(date.getMonth() + result.relative.months);
+        if (!_import2['default'].isUndefined(result.relative.years)) date.setFullYear(date.getFullYear() + result.relative.years);
+
+        return date;
+      } else if (result.absolute) {
+        return result.absolute;
+      }
+    }
+  }]);
+
+  return DatePhrase;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = DatePhrase;
+
+DatePhrase.translations = [{
+  langs: ['en_US', 'default'],
+  describe: function describe() {
+    return _createElement$Phrase.createElement(
+      'sequence',
+      null,
+      _createElement$Phrase.createElement('literal', { text: 'on ', optional: true, prefered: true, limited: true }),
+      _createElement$Phrase.createElement(
+        'argument',
+        { text: 'date', showForEmpty: true, merge: true },
+        _createElement$Phrase.createElement(
+          'choice',
+          null,
+          _createElement$Phrase.createElement(
+            'choice',
+            { id: 'relative' },
+            _createElement$Phrase.createElement(NamedDay, { allowPast: this.props.allowPast }),
+            _createElement$Phrase.createElement(RelativeNumbered, { allowPast: this.props.allowPast }),
+            _createElement$Phrase.createElement(RelativeAdjacent, { allowPast: this.props.allowPast })
+          ),
+          _createElement$Phrase.createElement(
+            'choice',
+            { id: 'absolute' },
+            this.props.allowRecurse ? _createElement$Phrase.createElement(RecursiveDay, { allowPast: this.props.allowPast }) : null,
+            _createElement$Phrase.createElement(RelativeWeekday, { allowPast: this.props.allowPast }),
+            _createElement$Phrase.createElement(AbsoluteDay, { allowPast: this.props.allowPast }),
+            _createElement$Phrase.createElement(NamedMonthAbsolute, { allowPast: this.props.allowPast })
+          )
+        )
+      )
+    );
+  }
+}];
+DatePhrase.defaultProps = {
+  allowRecurse: true,
+  allowPast: true
+};
+
+var RecursiveDay = (function (_Phrase2) {
+  function RecursiveDay() {
+    _classCallCheck(this, RecursiveDay);
+
+    if (_Phrase2 != null) {
+      _Phrase2.apply(this, arguments);
+    }
+  }
+
+  _inherits(RecursiveDay, _Phrase2);
+
+  _createClass(RecursiveDay, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result || !result.date) {
+        return;
+      }var date = new Date(result.date.getTime());
+
+      if (result.years) {
+        date.setFullYear(result.years * result.direction + result.date.getFullYear());
+      } else if (result.months) {
+        date.setMonth(result.months * result.direction + result.date.getMonth());
+      } else if (result.days) {
+        date.setDate(result.days * result.direction + result.date.getDate());
+      }
+
+      return date;
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'sequence',
+        null,
+        _createElement$Phrase.createElement(_DateDuration2['default'], { includeThe: true, merge: true }),
+        _createElement$Phrase.createElement('list', { id: 'direction', items: [{ text: ' before ', value: -1 }, { text: ' after ', value: 1 }, { text: ' from ', value: 1 }], limit: 2 }),
+        _createElement$Phrase.createElement(
+          'placeholder',
+          { text: 'date', id: 'date' },
+          _createElement$Phrase.createElement(DatePhrase, { allowRecurse: false })
+        )
+      );
+    }
+  }]);
+
+  return RecursiveDay;
+})(_createElement$Phrase.Phrase);
+
+var NamedDay = (function (_Phrase3) {
+  function NamedDay() {
+    _classCallCheck(this, NamedDay);
+
+    if (_Phrase3 != null) {
+      _Phrase3.apply(this, arguments);
+    }
+  }
+
+  _inherits(NamedDay, _Phrase3);
+
+  _createClass(NamedDay, [{
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'choice',
+        null,
+        _createElement$Phrase.createElement('literal', { text: 'today', value: { days: 0 } }),
+        _createElement$Phrase.createElement('literal', { text: 'tomorrow', value: { days: 1 } }),
+        this.props.allowPast ? _createElement$Phrase.createElement('literal', { text: 'yesterday', value: { days: -1 } }) : null
+      );
+    }
+  }]);
+
+  return NamedDay;
+})(_createElement$Phrase.Phrase);
+
+var RelativeNumbered = (function (_Phrase4) {
+  function RelativeNumbered() {
+    _classCallCheck(this, RelativeNumbered);
+
+    if (_Phrase4 != null) {
+      _Phrase4.apply(this, arguments);
+    }
+  }
+
+  _inherits(RelativeNumbered, _Phrase4);
+
+  _createClass(RelativeNumbered, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) {
+        return;
+      }if (result.direction < 0) {
+        return _import2['default'].mapValues(result.duration, function (num) {
+          return -num;
+        });
+      } else {
+        return result.duration;
+      }
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'choice',
+        null,
+        _createElement$Phrase.createElement(
+          'sequence',
+          null,
+          _createElement$Phrase.createElement('literal', { text: 'in ', id: 'direction', value: 1 }),
+          _createElement$Phrase.createElement(_DateDuration2['default'], { id: 'duration' })
+        ),
+        this.props.allowPast ? _createElement$Phrase.createElement(
+          'sequence',
+          null,
+          _createElement$Phrase.createElement(_DateDuration2['default'], { id: 'duration' }),
+          _createElement$Phrase.createElement('literal', { text: ' ago', id: 'direction', value: -1 })
+        ) : null
+      );
+    }
+  }]);
+
+  return RelativeNumbered;
+})(_createElement$Phrase.Phrase);
+
+var RelativeAdjacent = (function (_Phrase5) {
+  function RelativeAdjacent() {
+    _classCallCheck(this, RelativeAdjacent);
+
+    if (_Phrase5 != null) {
+      _Phrase5.apply(this, arguments);
+    }
+  }
+
+  _inherits(RelativeAdjacent, _Phrase5);
+
+  _createClass(RelativeAdjacent, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) {
+        return;
+      }return _defineProperty({}, result.type, result.num);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'sequence',
+        null,
+        _createElement$Phrase.createElement(
+          'choice',
+          { id: 'num' },
+          _createElement$Phrase.createElement('literal', { text: 'next ', value: 1 }),
+          _createElement$Phrase.createElement('literal', { text: 'last ', value: -1 })
+        ),
+        _createElement$Phrase.createElement(
+          'placeholder',
+          { text: 'week, month, year', id: 'type' },
+          _createElement$Phrase.createElement(
+            'choice',
+            null,
+            _createElement$Phrase.createElement('literal', { text: 'week', value: 'weeks' }),
+            _createElement$Phrase.createElement('literal', { text: 'month', value: 'months' }),
+            _createElement$Phrase.createElement('literal', { text: 'year', value: 'years' })
+          )
+        )
+      );
+    }
+  }]);
+
+  return RelativeAdjacent;
+})(_createElement$Phrase.Phrase);
+
+var RelativeWeekday = (function (_Phrase6) {
+  function RelativeWeekday() {
+    _classCallCheck(this, RelativeWeekday);
+
+    if (_Phrase6 != null) {
+      _Phrase6.apply(this, arguments);
+    }
+  }
+
+  _inherits(RelativeWeekday, _Phrase6);
+
+  _createClass(RelativeWeekday, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      var returnDate = new Date();
+      var currentDay = returnDate.getDay();
+      var distance = undefined;
+      if (result.distance != null) {
+        distance = result.weekday - currentDay + 7 * result.distance;
+      } else {
+        distance = (result.weekday + (7 - currentDay)) % 7;
+      }
+      returnDate.setDate(returnDate.getDate() + distance);
+      return returnDate;
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'sequence',
+        null,
+        _createElement$Phrase.createElement(
+          'choice',
+          { id: 'distance' },
+          _createElement$Phrase.createElement('literal', { text: '', value: null }),
+          _createElement$Phrase.createElement('literal', { text: 'last ', value: -1 }),
+          _createElement$Phrase.createElement('literal', { text: 'this ', value: 0 }),
+          _createElement$Phrase.createElement('list', { items: ['next ', 'this upcoming '], limit: 1, value: 1 })
+        ),
+        _createElement$Phrase.createElement(
+          'placeholder',
+          { text: 'weekday', id: 'weekday' },
+          _createElement$Phrase.createElement(_Weekday2['default'], null)
+        )
+      );
+    }
+  }]);
+
+  return RelativeWeekday;
+})(_createElement$Phrase.Phrase);
+
+function leapYear(year) {
+  return year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
+}
+
+var AbsoluteDay = (function (_Phrase7) {
+  function AbsoluteDay() {
+    _classCallCheck(this, AbsoluteDay);
+
+    if (_Phrase7 != null) {
+      _Phrase7.apply(this, arguments);
+    }
+  }
+
+  _inherits(AbsoluteDay, _Phrase7);
+
+  _createClass(AbsoluteDay, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      var year = undefined;
+
+      if (result.year) {
+        if (result.year.length === 2) {
+          var partialYear = parseInt(result.year, 10);
+          if (partialYear > 29) {
+            year = 1900 + partialYear;
+          } else {
+            year = 2000 + partialYear;
+          }
+        } else {
+          year = parseInt(result.year, 10);
+        }
+      } else {
+        year = new Date().getFullYear();
+      }
+
+      var month = parseInt(result.month, 10) - 1;
+      var day = parseInt(result.day, 10);
+      return new Date(year, month, day, 0, 0, 0, 0);
+    }
+  }, {
+    key: 'filter',
+
+    // this is interesting, because the user must be able to specify Feburary 29 if they have not specified a year, and then it must be validated by the year. So use a leap year (2012)
+    value: function filter(result) {
+      if (_import2['default'].isUndefined(result) || _import2['default'].isUndefined(result.month) || _import2['default'].isUndefined(result.day)) {
+        return true;
+      }var year = _import2['default'].isUndefined(result.year) || _import2['default'].isEqual(result.year, {}) ? 2012 : parseInt(result.year, 10);
+      var month = parseInt(result.month, 10) - 1;
+      var day = parseInt(result.day, 10);
+      var date = new Date(year, month, day, 0, 0, 0, 0);
+      return date.getMonth() === month;
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'sequence',
+        null,
+        _createElement$Phrase.createElement(_DigitString$Integer$Ordinal.DigitString, { maxLength: 2, descriptor: 'mm', id: 'month' }),
+        _createElement$Phrase.createElement('list', { items: ['/', '-', '.'], limit: 1 }),
+        _createElement$Phrase.createElement(_DigitString$Integer$Ordinal.DigitString, { maxLength: 2, max: 31, descriptor: 'dd', id: 'day' }),
+        _createElement$Phrase.createElement(
+          'sequence',
+          { optional: true, merge: true },
+          _createElement$Phrase.createElement('list', { items: ['/', '-', '.'], limit: 1 }),
+          _createElement$Phrase.createElement(
+            'choice',
+            { id: 'year' },
+            _createElement$Phrase.createElement(_DigitString$Integer$Ordinal.DigitString, { minLength: 2, maxLength: 2, descriptor: 'yy' }),
+            _createElement$Phrase.createElement(_DigitString$Integer$Ordinal.DigitString, { minLength: 4, maxLength: 4, descriptor: 'yyyy' })
+          )
+        )
+      );
+    }
+  }]);
+
+  return AbsoluteDay;
+})(_createElement$Phrase.Phrase);
+
+var NamedMonthAbsolute = (function (_Phrase8) {
+  function NamedMonthAbsolute() {
+    _classCallCheck(this, NamedMonthAbsolute);
+
+    if (_Phrase8 != null) {
+      _Phrase8.apply(this, arguments);
+    }
+  }
+
+  _inherits(NamedMonthAbsolute, _Phrase8);
+
+  _createClass(NamedMonthAbsolute, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      var year = _import2['default'].isUndefined(result.year) ? new Date().getFullYear() : parseInt(result.year, 10);
+      return new Date(year, result.month, result.day, 0, 0, 0, 0);
+    }
+  }, {
+    key: 'filter',
+
+    // this is interesting, because the user must be able to specify Feburary 29 if they have not specified a year, and then it must be validated by the year. So use a leap year (2012)
+    value: function filter(result) {
+      if (_import2['default'].isUndefined(result) || _import2['default'].isUndefined(result.month) || _import2['default'].isUndefined(result.day)) {
+        return true;
+      }var year = _import2['default'].isUndefined(result.year) || _import2['default'].isEqual(result.year, {}) ? 2012 : parseInt(result.year, 10);
+      var date = new Date(year, result.month, result.day, 0, 0, 0, 0);
+      return date.getMonth() === result.month;
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'choice',
+        null,
+        _createElement$Phrase.createElement(
+          'sequence',
+          null,
+          _createElement$Phrase.createElement(_Month2['default'], { id: 'month' }),
+          _createElement$Phrase.createElement('list', { items: [' ', ' the '], limit: 1 }),
+          _createElement$Phrase.createElement(
+            'choice',
+            { id: 'day', limit: 1 },
+            _createElement$Phrase.createElement(_DigitString$Integer$Ordinal.Integer, { max: 31, min: 1 }),
+            _createElement$Phrase.createElement(_DigitString$Integer$Ordinal.Ordinal, { max: 31 })
+          ),
+          _createElement$Phrase.createElement(
+            'sequence',
+            { id: 'year', optional: true, prefered: false },
+            _createElement$Phrase.createElement('list', { items: [', ', ' '], limit: 1 }),
+            _createElement$Phrase.createElement(_DigitString$Integer$Ordinal.DigitString, { descriptor: 'year', max: 9999, allowLeadingZeros: false, merge: true })
+          )
+        ),
+        _createElement$Phrase.createElement(
+          'sequence',
+          null,
+          _createElement$Phrase.createElement('literal', { text: 'the ' }),
+          _createElement$Phrase.createElement(
+            'choice',
+            { id: 'day', limit: 1 },
+            _createElement$Phrase.createElement(_DigitString$Integer$Ordinal.Integer, { max: 31, min: 1 }),
+            _createElement$Phrase.createElement(_DigitString$Integer$Ordinal.Ordinal, { max: 31 })
+          ),
+          _createElement$Phrase.createElement('list', { items: [' of ', ' '], limit: 1 }),
+          _createElement$Phrase.createElement(_Month2['default'], { id: 'month' }),
+          _createElement$Phrase.createElement(
+            'sequence',
+            { id: 'year', optional: true, prefered: false },
+            _createElement$Phrase.createElement('list', { items: [', ', ' '], limit: 1 }),
+            _createElement$Phrase.createElement(_DigitString$Integer$Ordinal.DigitString, { descriptor: 'year', max: 9999, allowLeadingZeros: false, merge: true })
+          )
+        )
+      );
+    }
+  }]);
+
+  return NamedMonthAbsolute;
+})(_createElement$Phrase.Phrase);
+
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./date-duration":9,"./month":13,"./weekday":17,"lacona-phrase":26,"lacona-phrase-number":19}],11:[function(require,module,exports){
+'use strict';
+
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var _Time = require('./time');
+
+var _Time2 = _interopRequireWildcard(_Time);
+
+var _DatePhrase = require('./date');
+
+var _DatePhrase2 = _interopRequireWildcard(_DatePhrase);
+
+var DateTime = (function (_Phrase) {
+  function DateTime() {
+    _classCallCheck(this, DateTime);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(DateTime, _Phrase);
+
+  _createClass(DateTime, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result || !result.date || !result.time) {
+        return;
+      }return new Date(result.date.getFullYear(), result.date.getMonth(), result.date.getDate(), result.time.getHours(), result.time.getMinutes(), result.time.getSeconds(), 0);
+    }
+  }]);
+
+  return DateTime;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = DateTime;
+
+DateTime.translations = [{
+  langs: ['en_US', 'default'],
+  describe: function describe() {
+    return _createElement$Phrase.createElement(
+      'choice',
+      null,
+      _createElement$Phrase.createElement(
+        'sequence',
+        null,
+        this.props.includeAt ? _createElement$Phrase.createElement('literal', { text: 'at ' }) : null,
+        _createElement$Phrase.createElement(_Time2['default'], { id: 'time' }),
+        _createElement$Phrase.createElement('literal', { text: ' ' }),
+        _createElement$Phrase.createElement(_DatePhrase2['default'], { id: 'date', allowPast: this.props.allowPast })
+      ),
+      _createElement$Phrase.createElement(
+        'sequence',
+        null,
+        _createElement$Phrase.createElement(_DatePhrase2['default'], { id: 'date', allowPast: this.props.allowPast }),
+        _createElement$Phrase.createElement('literal', { text: ' at ' }),
+        _createElement$Phrase.createElement(_Time2['default'], { id: 'time' })
+      )
+    );
+  }
+}];
+
+DateTime.defaultProps = {
+  includeAt: false,
+  allowPast: true
+};
+module.exports = exports['default'];
+},{"./date":10,"./time":15,"lacona-phrase":26}],12:[function(require,module,exports){
+'use strict';
+
+var _interopRequire = function (obj) { return obj && obj.__esModule ? obj['default'] : obj; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _default = require('./date');
+
+exports.Date = _interopRequire(_default);
+
+var _default2 = require('./time');
+
+exports.Time = _interopRequire(_default2);
+
+var _default3 = require('./datetime');
+
+exports.DateTime = _interopRequire(_default3);
+
+var _default4 = require('./timeperiod');
+
+exports.TimePeriod = _interopRequire(_default4);
+},{"./date":10,"./datetime":11,"./time":15,"./timeperiod":16}],13:[function(require,module,exports){
+'use strict';
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var Weekday = (function (_Phrase) {
+  function Weekday() {
+    _classCallCheck(this, Weekday);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(Weekday, _Phrase);
+
+  _createClass(Weekday, [{
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'placeholder',
+        { text: 'month', showForEmpty: true },
+        _createElement$Phrase.createElement('list', { items: [{ text: 'January', value: 0 }, { text: 'Feburary', value: 1 }, { text: 'March', value: 2 }, { text: 'April', value: 3 }, { text: 'May', value: 4 }, { text: 'June', value: 5 }, { text: 'July', value: 6 }, { text: 'August', value: 7 }, { text: 'September', value: 8 }, { text: 'October', value: 9 }, { text: 'November', value: 10 }, { text: 'December', value: 11 }] })
+      );
+    }
+  }]);
+
+  return Weekday;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = Weekday;
+module.exports = exports['default'];
+},{"lacona-phrase":26}],14:[function(require,module,exports){
+'use strict';
+
+var _defineProperty = function (obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: key == null || typeof Symbol == 'undefined' || key.constructor !== Symbol, configurable: true, writable: true }); };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var _Integer = require('lacona-phrase-number');
+
+var TimeDuration = (function (_Phrase) {
+  function TimeDuration() {
+    _classCallCheck(this, TimeDuration);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(TimeDuration, _Phrase);
+
+  _createClass(TimeDuration, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) {
+        return;
+      }return _defineProperty({}, result.type, result.num);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'choice',
+        null,
+        _createElement$Phrase.createElement(
+          'sequence',
+          null,
+          _createElement$Phrase.createElement(
+            'placeholder',
+            { text: 'number', showForEmpty: true },
+            _createElement$Phrase.createElement('literal', { text: '1 ', id: 'num', value: 1 })
+          ),
+          _createElement$Phrase.createElement(
+            'placeholder',
+            { text: 'time period', id: 'type' },
+            _createElement$Phrase.createElement(
+              'choice',
+              null,
+              _createElement$Phrase.createElement('literal', { text: 'hour', value: 'hours' }),
+              _createElement$Phrase.createElement('literal', { text: 'minute', value: 'minutes' }),
+              _createElement$Phrase.createElement('literal', { text: 'second', value: 'seconds' })
+            )
+          )
+        ),
+        _createElement$Phrase.createElement(
+          'sequence',
+          null,
+          _createElement$Phrase.createElement(_Integer.Integer, { id: 'num', min: 2 }),
+          _createElement$Phrase.createElement('literal', { text: ' ' }),
+          _createElement$Phrase.createElement(
+            'placeholder',
+            { text: 'time period', id: 'type' },
+            _createElement$Phrase.createElement(
+              'choice',
+              null,
+              _createElement$Phrase.createElement('literal', { text: 'hours', value: 'hours' }),
+              _createElement$Phrase.createElement('literal', { text: 'minutes', value: 'minutes' }),
+              _createElement$Phrase.createElement('literal', { text: 'seconds', value: 'seconds' })
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return TimeDuration;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = TimeDuration;
+module.exports = exports['default'];
+},{"lacona-phrase":26,"lacona-phrase-number":19}],15:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var _DigitString$Integer = require('lacona-phrase-number');
+
+var Time = (function (_Phrase) {
+  function Time() {
+    _classCallCheck(this, Time);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(Time, _Phrase);
+
+  _createClass(Time, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) {
+        return;
+      }if (_import2['default'].isDate(result)) {
+        return result;
+      } else if (!_import2['default'].isUndefined(result.hour)) {
+        var date = new Date();
+        date.setHours(result.hour, result.minute || 0, 0, 0);
+        return date;
+      } else {
+        console.log('SOMETHING WENT WRONG WITH Time');
+        return new Date();
+      }
+    }
+  }]);
+
+  return Time;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = Time;
+
+Time.translations = [{
+  langs: ['en_US', 'default'],
+  describe: function describe() {
+    return _createElement$Phrase.createElement(
+      'argument',
+      { text: 'time', showForEmpty: true },
+      _createElement$Phrase.createElement(
+        'choice',
+        null,
+        _createElement$Phrase.createElement('literal', { text: 'midnight', id: 'hour', value: 0 }),
+        _createElement$Phrase.createElement('literal', { text: 'noon', id: 'hour', value: 12 }),
+        _createElement$Phrase.createElement(AbsTime, { minutes: true }),
+        _createElement$Phrase.createElement(RelativeTime, null)
+      )
+    );
+  }
+}];
+
+var RelativeTime = (function (_Phrase2) {
+  function RelativeTime() {
+    _classCallCheck(this, RelativeTime);
+
+    if (_Phrase2 != null) {
+      _Phrase2.apply(this, arguments);
+    }
+  }
+
+  _inherits(RelativeTime, _Phrase2);
+
+  _createClass(RelativeTime, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) {
+        return;
+      }var date = new Date();
+
+      if (result.direction > 0) {
+        date.setHours(result.hour, result.minutes, 0, 0);
+      } else {
+        var hour = result.hour === 0 ? 23 : result.hour - 1;
+        var _minutes = 60 - result.minutes;
+        date.setHours(hour, _minutes, 0, 0);
+      }
+      return date;
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'sequence',
+        null,
+        _createElement$Phrase.createElement(
+          'placeholder',
+          { text: 'number', showForEmpty: true, id: 'minutes' },
+          _createElement$Phrase.createElement(
+            'choice',
+            null,
+            _createElement$Phrase.createElement('literal', { text: 'quarter', value: 15 }),
+            _createElement$Phrase.createElement('literal', { text: 'half', value: 30 }),
+            _createElement$Phrase.createElement(
+              'sequence',
+              null,
+              _createElement$Phrase.createElement(_DigitString$Integer.Integer, { min: 1, max: 59, merge: true }),
+              _createElement$Phrase.createElement('literal', { optional: true, text: ' minutes' })
+            )
+          )
+        ),
+        _createElement$Phrase.createElement(
+          'choice',
+          { id: 'direction' },
+          _createElement$Phrase.createElement('literal', { text: ' past ', value: 1 }),
+          _createElement$Phrase.createElement(
+            'choice',
+            { limit: 1, value: -1 },
+            _createElement$Phrase.createElement('literal', { text: ' to ' }),
+            _createElement$Phrase.createElement('literal', { text: ' of ' }),
+            _createElement$Phrase.createElement('literal', { text: ' til ' })
+          )
+        ),
+        _createElement$Phrase.createElement(
+          'placeholder',
+          { text: 'some hour', merge: true },
+          _createElement$Phrase.createElement(
+            'choice',
+            null,
+            _createElement$Phrase.createElement(AbsTime, { minutes: false }),
+            _createElement$Phrase.createElement('literal', { text: 'midnight', value: { hour: 0, minute: 0 } }),
+            _createElement$Phrase.createElement('literal', { text: 'noon', value: { hour: 12, minute: 0 } })
+          )
+        )
+      );
+    }
+  }]);
+
+  return RelativeTime;
+})(_createElement$Phrase.Phrase);
+
+var AbsTime = (function (_Phrase3) {
+  function AbsTime() {
+    _classCallCheck(this, AbsTime);
+
+    if (_Phrase3 != null) {
+      _Phrase3.apply(this, arguments);
+    }
+  }
+
+  _inherits(AbsTime, _Phrase3);
+
+  _createClass(AbsTime, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      var hour = parseInt(result.hour);
+
+      if (result.ampm) {
+        hour = result.ampm === 'am' ? hour === 12 ? 0 : hour : hour + 12;
+      }
+
+      var minute = result.minutes ? parseInt(result.minutes, 10) : 0;
+
+      return { hour: hour, minute: minute };
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'sequence',
+        null,
+        _createElement$Phrase.createElement(_DigitString$Integer.DigitString, { descriptor: 'hour', min: 1, max: 12, allowLeadingZeros: false, id: 'hour' }),
+        this.props.minutes ? _createElement$Phrase.createElement(
+          'sequence',
+          { id: 'minutes', optional: true, prefered: false },
+          _createElement$Phrase.createElement('literal', { text: ':' }),
+          _createElement$Phrase.createElement(Minutes, { merge: true })
+        ) : null,
+        _createElement$Phrase.createElement(
+          'choice',
+          { id: 'ampm' },
+          _createElement$Phrase.createElement('list', { items: [' am', 'am', ' a', 'a', ' a.m.', 'a.m.', ' a.m', 'a.m'], value: 'am', limit: 1 }),
+          _createElement$Phrase.createElement('list', { items: [' pm', 'pm', ' p', 'p', ' p.m.', 'p.m.', ' p.m', 'p.m'], value: 'pm', limit: 1 })
+        )
+      );
+    }
+  }]);
+
+  return AbsTime;
+})(_createElement$Phrase.Phrase);
+
+AbsTime.defaultProps = { minutes: true };
+
+var Minutes = (function (_Phrase4) {
+  function Minutes() {
+    _classCallCheck(this, Minutes);
+
+    if (_Phrase4 != null) {
+      _Phrase4.apply(this, arguments);
+    }
+  }
+
+  _inherits(Minutes, _Phrase4);
+
+  _createClass(Minutes, [{
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(_DigitString$Integer.DigitString, { descriptor: 'minutes', max: 59, minLength: 2, maxLength: 2 });
+    }
+  }]);
+
+  return Minutes;
+})(_createElement$Phrase.Phrase);
+
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"lacona-phrase":26,"lacona-phrase-number":19}],16:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var _DatePhrase = require('./date');
+
+var _DatePhrase2 = _interopRequireWildcard(_DatePhrase);
+
+var _DateTime = require('./datetime');
+
+var _DateTime2 = _interopRequireWildcard(_DateTime);
+
+var _DateDuration = require('./date-duration');
+
+var _DateDuration2 = _interopRequireWildcard(_DateDuration);
+
+var _moment = (typeof window !== "undefined" ? window.moment : typeof global !== "undefined" ? global.moment : null);
+
+var _moment2 = _interopRequireWildcard(_moment);
+
+var _Time = require('./time');
+
+var _Time2 = _interopRequireWildcard(_Time);
+
+var _TimeDuration = require('./time-duration');
+
+var _TimeDuration2 = _interopRequireWildcard(_TimeDuration);
+
+function join(date, time) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds());
+}
+
+var TimePeriod = (function (_Phrase) {
+  function TimePeriod() {
+    _classCallCheck(this, TimePeriod);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(TimePeriod, _Phrase);
+
+  _createClass(TimePeriod, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) {
+        return;
+      }if (result.startdatetime) {
+        if (result.enddatetime) {
+          return {
+            start: result.startdatetime,
+            duration: _moment2['default'](result.enddatetime).diff(result.startdatetime)
+          };
+        } else if (result.endtime) {
+          var enddatetime = join(result.startdatetime, result.endtime);
+          return {
+            start: result.startdatetime,
+            duration: _moment2['default'](enddatetime).diff(result.startdatetime)
+          };
+        } else if (result.duration) {
+          return {
+            start: result.startdatetime,
+            duration: _moment2['default'](result.startdatetime).diff(_moment2['default'](result.startdatetime).add(result.duration))
+          };
+        } else {
+          return {
+            start: result.startdatetime,
+            duration: 0
+          };
+        }
+      } else if (result.date) {
+        if (result.starttime && result.endtime) {
+          var startdatetime = join(result.date, result.starttime);
+          var enddatetime = join(result.date, result.endtime);
+          console.log('ttt', startdatetime, enddatetime);
+          return {
+            start: startdatetime,
+            duration: _moment2['default'](enddatetime).diff(startdatetime)
+          };
+        }
+      }
+    }
+  }]);
+
+  return TimePeriod;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = TimePeriod;
+
+TimePeriod.translations = [{
+  langs: ['en_US', 'default'],
+  describe: function describe() {
+    return _createElement$Phrase.createElement(
+      'choice',
+      null,
+      _createElement$Phrase.createElement(
+        'sequence',
+        null,
+        _createElement$Phrase.createElement(_DateTime2['default'], { id: 'startdatetime' }),
+        _createElement$Phrase.createElement('list', { items: [' to ', ' - ', '-'], limit: 1 }),
+        _createElement$Phrase.createElement(
+          'choice',
+          { merge: true },
+          _createElement$Phrase.createElement(_Time2['default'], { id: 'endtime' }),
+          _createElement$Phrase.createElement(_DateTime2['default'], { id: 'enddatetime' })
+        )
+      ),
+      _createElement$Phrase.createElement(
+        'sequence',
+        null,
+        _createElement$Phrase.createElement(_DatePhrase2['default'], { id: 'date' }),
+        _createElement$Phrase.createElement('literal', { text: ' ' }),
+        _createElement$Phrase.createElement(_Time2['default'], { id: 'starttime' }),
+        _createElement$Phrase.createElement('list', { items: [' to ', ' - ', '-'], limit: 1 }),
+        _createElement$Phrase.createElement(_Time2['default'], { id: 'endtime' })
+      ),
+      _createElement$Phrase.createElement(
+        'sequence',
+        null,
+        _createElement$Phrase.createElement(_Time2['default'], { id: 'starttime' }),
+        _createElement$Phrase.createElement('list', { items: [' to ', ' - ', '-'], limit: 1 }),
+        _createElement$Phrase.createElement(_Time2['default'], { id: 'endtime' }),
+        _createElement$Phrase.createElement('literal', { text: ' ' }),
+        _createElement$Phrase.createElement(_DatePhrase2['default'], { id: 'date' })
+      ),
+      _createElement$Phrase.createElement(
+        'sequence',
+        null,
+        _createElement$Phrase.createElement(
+          'placeholder',
+          { text: 'time period', id: 'duration' },
+          _createElement$Phrase.createElement(
+            'choice',
+            null,
+            _createElement$Phrase.createElement(_TimeDuration2['default'], null),
+            _createElement$Phrase.createElement(_DateDuration2['default'], null)
+          )
+        ),
+        _createElement$Phrase.createElement('literal', { text: ' at ' }),
+        _createElement$Phrase.createElement(_DateTime2['default'], { id: 'startdatetime' })
+      ),
+      _createElement$Phrase.createElement(
+        'sequence',
+        null,
+        _createElement$Phrase.createElement(_DateTime2['default'], { id: 'startdatetime' }),
+        _createElement$Phrase.createElement('literal', { text: ' for ' }),
+        _createElement$Phrase.createElement(
+          'placeholder',
+          { text: 'time period', id: 'duration' },
+          _createElement$Phrase.createElement(
+            'choice',
+            null,
+            _createElement$Phrase.createElement(_TimeDuration2['default'], null),
+            _createElement$Phrase.createElement(_DateDuration2['default'], null)
+          )
+        )
+      )
+    );
+  }
+}];
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./date":10,"./date-duration":9,"./datetime":11,"./time":15,"./time-duration":14,"lacona-phrase":26}],17:[function(require,module,exports){
+'use strict';
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var Weekday = (function (_Phrase) {
+  function Weekday() {
+    _classCallCheck(this, Weekday);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(Weekday, _Phrase);
+
+  _createClass(Weekday, [{
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement('list', { items: [{ text: 'Sunday', value: 0 }, { text: 'Monday', value: 1 }, { text: 'Tuesday', value: 2 }, { text: 'Wednesday', value: 3 }, { text: 'Thursday', value: 4 }, { text: 'Friday', value: 5 }, { text: 'Saturday', value: 6 }] });
+    }
+  }]);
+
+  return Weekday;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = Weekday;
+module.exports = exports['default'];
+},{"lacona-phrase":26}],18:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+var DigitString = (function () {
+  function DigitString() {
+    _classCallCheck(this, DigitString);
+  }
+
+  _createClass(DigitString, [{
+    key: 'validate',
+    value: function validate(input) {
+      if (!/^[0-9]+$/.test(input)) {
+        return false;
+      }if (input.length > this.props.maxLength) {
+        return false;
+      }if (input.length < this.props.minLength) {
+        return false;
+      }if (!this.props.allowLeadingZeros && input !== '0' && input.search(/^0/) !== -1) {
+        return false;
+      }if (!_import2['default'].isUndefined(this.props.max) || !_import2['default'].isUndefined(this.props.min)) {
+        var intValue = parseInt(input, 10);
+        if (isNaN(intValue)) {
+          return false;
+        }if (intValue > this.props.max) {
+          return false;
+        }if (intValue < this.props.min) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+  }, {
+    key: 'displayWhen',
+    value: function displayWhen(input) {
+      if (!/^\d*$/.test(input)) {
+        return false;
+      }if (input.length > this.props.maxLength) {
+        return false;
+      }if (!this.props.allowLeadingZeros && input !== '0' && /^0/.test(input)) {
+        return false;
+      }var intValue = parseInt(input, 10);
+      if (intValue > this.props.max) {
+        return false;
+      }return true;
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'placeholder',
+        { text: this.props.descriptor, displayWhen: this.displayWhen.bind(this) },
+        _createElement$Phrase.createElement('freetext', { validate: this.validate.bind(this), splitOn: /\D/, score: 1 })
+      );
+    }
+  }]);
+
+  return DigitString;
+})();
+
+exports['default'] = DigitString;
+
+DigitString.defaultProps = {
+  minLength: 0,
+  maxLength: 9007199254740991,
+  min: 0,
+  max: 9007199254740991,
+  allowLeadingZeros: true,
+  descriptor: 'number'
+};
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"lacona-phrase":23}],19:[function(require,module,exports){
+'use strict';
+
+var _interopRequire = function (obj) { return obj && obj.__esModule ? obj['default'] : obj; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _default = require('./integer');
+
+exports.Integer = _interopRequire(_default);
+
+var _default2 = require('./digitstring');
+
+exports.DigitString = _interopRequire(_default2);
+
+var _default3 = require('./number');
+
+exports.Number = _interopRequire(_default3);
+
+var _default4 = require('./ordinal');
+
+exports.Ordinal = _interopRequire(_default4);
+},{"./digitstring":18,"./integer":20,"./number":21,"./ordinal":22}],20:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var MAX_SAFE_INTEGER = Math.pow(2, 53) - 1;
+
+var Integer = (function (_Phrase) {
+  function Integer() {
+    _classCallCheck(this, Integer);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(Integer, _Phrase);
+
+  _createClass(Integer, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (_import2['default'].isUndefined(result)) {
+        return;
+      }return parseInt(result, 10);
+    }
+  }, {
+    key: 'validate',
+    value: function validate(input) {
+      if (!/^[\-\+]?\d+$/.test(input)) {
+        return false;
+      }var number = parseInt(input, 10);
+      return number <= this.props.max && number >= this.props.min;
+    }
+  }, {
+    key: 'displayWhen',
+    value: function displayWhen(input) {
+      if (!/^[\-\+]?\d*$/.test(input)) {
+        return false;
+      }var number = parseInt(input, 10) || 0;
+      if (this.props.min >= 0) {
+        if (_import2['default'].startsWith(input, '-')) {
+          return false;
+        }return number <= this.props.max;
+      } else if (this.props.max <= 0) {
+        return number >= this.props.min;
+      } else {
+        return number <= this.props.max && number >= this.props.min;
+      }
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'placeholder',
+        { text: this.props.descriptor, displayWhen: this.displayWhen.bind(this) },
+        _createElement$Phrase.createElement('freetext', { validate: this.validate.bind(this), limit: this.props.limit, splitOn: /\D/, score: 1 })
+      );
+    }
+  }]);
+
+  return Integer;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = Integer;
+
+Integer.defaultProps = {
+  max: MAX_SAFE_INTEGER,
+  min: -MAX_SAFE_INTEGER,
+  descriptor: 'number'
+};
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"lacona-phrase":23}],21:[function(require,module,exports){
+"use strict";
+
+// import
+// var lacona = require('lacona');
+// var freetext = require('lacona-phrase-freetext');
+//
+// module.exports = lacona.createPhrase({
+//   name: 'lacona/float',
+//   getValue: function (result) {
+//     return parseFloat(result.float);
+//   },
+//   describe: function () {
+//     return freetext({
+//       id: 'float',
+//       regex: /^(\d+\.\d*|\d*\.\d+|\d+)$/,
+//       default: '1.0'
+//     });
+//   }
+// });
+},{}],22:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var MAX_SAFE_INTEGER = Math.pow(2, 53) - 1;
+
+var Ordinal = (function (_Phrase) {
+  function Ordinal() {
+    _classCallCheck(this, Ordinal);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(Ordinal, _Phrase);
+
+  _createClass(Ordinal, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (_import2['default'].isUndefined(result)) {
+        return;
+      }return parseInt(result, 10);
+    }
+  }, {
+    key: 'validate',
+    value: function validate(input) {
+      if (!/^(?:\d+th|\d*1st|\d*2nd|\d*3rd)$/.test(input)) {
+        return false;
+      }var number = parseInt(input, 10);
+      return number <= this.props.max && number >= this.props.min;
+    }
+  }, {
+    key: 'displayWhen',
+    value: function displayWhen(input) {
+      if (!/^(?:\d*|\d*t|\d*1s|\d*2n|\d*3r)$/.test(input)) {
+        return false;
+      }var number = parseInt(input, 10) || 1;
+      return number <= this.props.max;
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'placeholder',
+        { text: this.props.descriptor, displayWhen: this.displayWhen.bind(this) },
+        _createElement$Phrase.createElement('freetext', { validate: this.validate.bind(this), limit: this.props.limit, splitOn: /[ ,]/, score: 1 })
+      );
+    }
+  }]);
+
+  return Ordinal;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = Ordinal;
+
+Ordinal.defaultProps = {
+  max: MAX_SAFE_INTEGER,
+  min: 1,
+  descriptor: 'nth'
+};
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"lacona-phrase":23}],23:[function(require,module,exports){
+"use strict";
+
+var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
+exports.createElement = createElement;
+exports.createFactory = createFactory;
+exports.createPhrase = createPhrase;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var inherits = _interopRequire(require("inherits"));
+
+var version = require("../package").version;
+
+function createElement(Constructor, props) {
+  for (var _len = arguments.length, children = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    children[_key - 2] = arguments[_key];
+  }
+
+  return {
+    Constructor: Constructor,
+    props: props,
+    children: children,
+    version: version
+  };
+}
+
+function createFactory(constructor) {
+  return createElement.bind(null, constructor);
+}
+
+var Phrase = exports.Phrase = function Phrase() {
+  _classCallCheck(this, Phrase);
+};
+
+var Source = exports.Source = function Source() {
+  _classCallCheck(this, Source);
+};
+
+function createPhrase(options) {
+  var Constructor = function Constructor() {};
+
+  inherits(Constructor, Phrase);
+
+  Constructor.translations = options.translations;
+  Constructor.extensions = options.extensions;
+  Constructor.defaultProps = options.defaultProps;
+  Constructor.sources = options.sources;
+
+  for (var key in options) {
+    if (typeof options[key] === "function") {
+      Constructor.prototype[key] = options[key];
+    }
+  }
+  return Constructor;
+}
+
+var choice = createFactory("choice");
+exports.choice = choice;
+var content = createFactory("content");
+exports.content = content;
+var literal = createFactory("literal");
+exports.literal = literal;
+var separator = createFactory("separator");
+exports.separator = separator;
+var sequence = createFactory("sequence");
+exports.sequence = sequence;
+var value = createFactory("value");
+exports.value = value;
+},{"../package":25,"inherits":24}],24:[function(require,module,exports){
+if (typeof Object.create === 'function') {
+  // implementation from standard node.js 'util' module
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    ctor.prototype = Object.create(superCtor.prototype, {
+      constructor: {
+        value: ctor,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+  };
+} else {
+  // old school shim for old browsers
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    var TempCtor = function () {}
+    TempCtor.prototype = superCtor.prototype
+    ctor.prototype = new TempCtor()
+    ctor.prototype.constructor = ctor
+  }
+}
 
 },{}],25:[function(require,module,exports){
-var SYMBOL_ITERATOR=require("./$.wks")("iterator"),SAFE_CLOSING=!1;try{var riter=[7][SYMBOL_ITERATOR]();riter["return"]=function(){SAFE_CLOSING=!0},Array.from(riter,function(){throw 2})}catch(e){}module.exports=function(r){if(!SAFE_CLOSING)return!1;var t=!1;try{var n=[7],e=n[SYMBOL_ITERATOR]();e.next=function(){t=!0},n[SYMBOL_ITERATOR]=function(){return e},r(n)}catch(i){}return t};
-
-
-},{"./$.wks":34}],26:[function(require,module,exports){
-"use strict";function setIterator(t,e){$.hide(t,SYMBOL_ITERATOR,e),FF_ITERATOR in[]&&$.hide(t,FF_ITERATOR,e)}function defineIterator(t,e,r,o){var a=t.prototype,s=a[SYMBOL_ITERATOR]||a[FF_ITERATOR]||o&&a[o]||r;if($.FW&&setIterator(a,s),s!==r){var n=$.getProto(s.call(new t));cof.set(n,e+" Iterator",!0),$.FW&&$.has(a,FF_ITERATOR)&&setIterator(n,$.that)}return Iterators[e]=s,Iterators[e+" Iterator"]=$.that,s}function getIterator(t){var e=$.g.Symbol,r=t[e&&e.iterator||FF_ITERATOR],o=r||t[SYMBOL_ITERATOR]||Iterators[cof.classof(t)];return assertObject(o.call(t))}function closeIterator(t){var e=t["return"];void 0!==e&&assertObject(e.call(t))}function stepCall(t,e,r,o){try{return o?e(assertObject(r)[0],r[1]):e(r)}catch(a){throw closeIterator(t),a}}var $=require("./$"),ctx=require("./$.ctx"),cof=require("./$.cof"),$def=require("./$.def"),assertObject=require("./$.assert").obj,SYMBOL_ITERATOR=require("./$.wks")("iterator"),FF_ITERATOR="@@iterator",Iterators={},IteratorPrototype={},BUGGY="keys"in[]&&!("next"in[].keys());setIterator(IteratorPrototype,$.that);var $iter=module.exports={BUGGY:BUGGY,Iterators:Iterators,prototype:IteratorPrototype,step:function(t,e){return{value:e,done:!!t}},stepCall:stepCall,close:closeIterator,is:function(t){var e=Object(t),r=$.g.Symbol,o=r&&r.iterator||FF_ITERATOR;return o in e||SYMBOL_ITERATOR in e||$.has(Iterators,cof.classof(e))},get:getIterator,set:setIterator,create:function(t,e,r,o){t.prototype=$.create(o||$iter.prototype,{next:$.desc(1,r)}),cof.set(t,e+" Iterator")},define:defineIterator,std:function(t,e,r,o,a,s,n){function i(t){return function(){return new r(this,t)}}$iter.create(r,e,o);var c,I,f=i("key+value"),u=i("value"),l=t.prototype;if("value"==a?u=defineIterator(t,e,u,"values"):f=defineIterator(t,e,f,"entries"),a&&(c={entries:f,keys:s?u:i("key"),values:u},$def($def.P+$def.F*BUGGY,e,c),n))for(I in c)I in l||$.hide(l,I,c[I])},forOf:function(t,e,r,o){for(var a,s=getIterator(t),n=ctx(r,o,e?2:1);!(a=s.next()).done;)if(stepCall(s,n,a.value,e)===!1)return closeIterator(s)}};
-
-
-},{"./$":27,"./$.assert":19,"./$.cof":20,"./$.ctx":21,"./$.def":22,"./$.wks":34}],27:[function(require,module,exports){
-"use strict";function toInteger(e){return isNaN(e=+e)?0:(e>0?floor:ceil)(e)}function desc(e,t){return{enumerable:!(1&e),configurable:!(2&e),writable:!(4&e),value:t}}function simpleSet(e,t,n){return e[t]=n,e}function createDefiner(e){return DESC?function(t,n,r){return $.setDesc(t,n,desc(e,r))}:simpleSet}function isObject(e){return null!==e&&("object"==typeof e||"function"==typeof e)}function isFunction(e){return"function"==typeof e}function assertDefined(e){if(void 0==e)throw TypeError("Can't call method on  "+e);return e}var global="undefined"!=typeof self?self:Function("return this")(),core={},defineProperty=Object.defineProperty,hasOwnProperty={}.hasOwnProperty,ceil=Math.ceil,floor=Math.floor,max=Math.max,min=Math.min,DESC=!!function(){try{return 2==defineProperty({},"a",{get:function(){return 2}}).a}catch(e){}}(),hide=createDefiner(1),$=module.exports=require("./$.fw")({g:global,core:core,html:global.document&&document.documentElement,isObject:isObject,isFunction:isFunction,it:function(e){return e},that:function(){return this},toInteger:toInteger,toLength:function(e){return e>0?min(toInteger(e),9007199254740991):0},toIndex:function(e,t){return e=toInteger(e),0>e?max(e+t,0):min(e,t)},has:function(e,t){return hasOwnProperty.call(e,t)},create:Object.create,getProto:Object.getPrototypeOf,DESC:DESC,desc:desc,getDesc:Object.getOwnPropertyDescriptor,setDesc:defineProperty,getKeys:Object.keys,getNames:Object.getOwnPropertyNames,getSymbols:Object.getOwnPropertySymbols,assertDefined:assertDefined,ES5Object:Object,toObject:function(e){return $.ES5Object(assertDefined(e))},hide:hide,def:createDefiner(0),set:global.Symbol?simpleSet:hide,mix:function(e,t){for(var n in t)hide(e,n,t[n]);return e},each:[].forEach});"undefined"!=typeof __e&&(__e=core),"undefined"!=typeof __g&&(__g=global);
-
-
-},{"./$.fw":23}],28:[function(require,module,exports){
-var $=require("./$");module.exports=function(e,r){for(var t,o=$.toObject(e),n=$.getKeys(o),u=n.length,f=0;u>f;)if(o[t=n[f++]]===r)return t};
-
-
-},{"./$":27}],29:[function(require,module,exports){
-var $=require("./$");module.exports=function(e){$.DESC&&$.FW&&$.setDesc(e,require("./$.wks")("species"),{configurable:!0,get:$.that})};
-
-
-},{"./$":27,"./$.wks":34}],30:[function(require,module,exports){
-"use strict";var $=require("./$");module.exports=function(e){return function(r){var t,n,i=String($.assertDefined(this)),o=$.toInteger(r),c=i.length;return 0>o||o>=c?e?"":void 0:(t=i.charCodeAt(o),55296>t||t>56319||o+1===c||(n=i.charCodeAt(o+1))<56320||n>57343?e?i.charAt(o):t:e?i.slice(o,o+2):(t-55296<<10)+(n-56320)+65536)}};
-
-
-},{"./$":27}],31:[function(require,module,exports){
-"use strict";function run(){var e=+this;if($.has(queue,e)){var n=queue[e];delete queue[e],n()}}function listner(e){run.call(e.data)}var $=require("./$"),ctx=require("./$.ctx"),cof=require("./$.cof"),invoke=require("./$.invoke"),global=$.g,isFunction=$.isFunction,html=$.html,document=global.document,process=global.process,setTask=global.setImmediate,clearTask=global.clearImmediate,postMessage=global.postMessage,addEventListener=global.addEventListener,MessageChannel=global.MessageChannel,counter=0,queue={},ONREADYSTATECHANGE="onreadystatechange",defer,channel,port;isFunction(setTask)&&isFunction(clearTask)||(setTask=function(e){for(var n=[],t=1;arguments.length>t;)n.push(arguments[t++]);return queue[++counter]=function(){invoke(isFunction(e)?e:Function(e),n)},defer(counter),counter},clearTask=function(e){delete queue[e]},"process"==cof(process)?defer=function(e){process.nextTick(ctx(run,e,1))}:addEventListener&&isFunction(postMessage)&&!global.importScripts?(defer=function(e){postMessage(e,"*")},addEventListener("message",listner,!1)):isFunction(MessageChannel)?(channel=new MessageChannel,port=channel.port2,channel.port1.onmessage=listner,defer=ctx(port.postMessage,port,1)):defer=document&&ONREADYSTATECHANGE in document.createElement("script")?function(e){html.appendChild(document.createElement("script"))[ONREADYSTATECHANGE]=function(){html.removeChild(this),run.call(e)}}:function(e){setTimeout(ctx(run,e,1),0)}),module.exports={set:setTask,clear:clearTask};
-
-
-},{"./$":27,"./$.cof":20,"./$.ctx":21,"./$.invoke":24}],32:[function(require,module,exports){
-function uid(i){return"Symbol("+i+")_"+(++sid+Math.random()).toString(36)}var sid=0;uid.safe=require("./$").g.Symbol||uid,module.exports=uid;
-
-
-},{"./$":27}],33:[function(require,module,exports){
-var $=require("./$"),UNSCOPABLES=require("./$.wks")("unscopables");!$.FW||UNSCOPABLES in[]||$.hide(Array.prototype,UNSCOPABLES,{}),module.exports=function(e){$.FW&&([][UNSCOPABLES][e]=!0)};
-
-
-},{"./$":27,"./$.wks":34}],34:[function(require,module,exports){
-var global=require("./$").g,store={};module.exports=function(o){return store[o]||(store[o]=global.Symbol&&global.Symbol[o]||require("./$.uid").safe("Symbol."+o))};
-
-
-},{"./$":27,"./$.uid":32}],35:[function(require,module,exports){
-var core=require("./$").core,$iter=require("./$.iter");core.isIterable=$iter.is,core.getIterator=$iter.get;
-
-
-},{"./$":27,"./$.iter":26}],36:[function(require,module,exports){
-var $=require("./$"),setUnscope=require("./$.unscope"),ITER=require("./$.uid").safe("iter"),$iter=require("./$.iter"),step=$iter.step,Iterators=$iter.Iterators;$iter.std(Array,"Array",function(e,t){$.set(this,ITER,{o:$.toObject(e),i:0,k:t})},function(){var e=this[ITER],t=e.o,r=e.k,s=e.i++;return!t||s>=t.length?(e.o=void 0,step(1)):"key"==r?step(0,s):"value"==r?step(0,t[s]):step(0,[s,t[s]])},"value"),Iterators.Arguments=Iterators.Array,setUnscope("keys"),setUnscope("values"),setUnscope("entries");
-
-
-},{"./$":27,"./$.iter":26,"./$.uid":32,"./$.unscope":33}],37:[function(require,module,exports){
-"use strict";function getConstructor(e){var t=assertObject(e)[SPECIES];return void 0!=t?t:e}function isThenable(e){var t;return isObject(e)&&(t=e.then),isFunction(t)?t:!1}function isUnhandled(e){var t,r=e[RECORD],n=r.c,s=0;if(r.h)return!1;for(;n.length>s;)if(t=n[s++],t.fail||!isUnhandled(t.P))return!1;return!0}function notify(e,t){var r=e.c;(t||r.length)&&asap(function(){var n=e.p,s=e.v,i=1==e.s,o=0;if(t&&isUnhandled(n))setTimeout(function(){isUnhandled(n)&&("process"==cof(process)?process.emit("unhandledRejection",s,n):global.console&&isFunction(console.error)&&console.error("Unhandled promise rejection",s))},1e3);else for(;r.length>o;)!function(t){var r,n,o=i?t.ok:t.fail;try{o?(i||(e.h=!0),r=o===!0?s:o(s),r===t.P?t.rej(TypeError(PROMISE+"-chain cycle")):(n=isThenable(r))?n.call(r,t.res,t.rej):t.res(r)):t.rej(s)}catch(c){t.rej(c)}}(r[o++]);r.length=0})}function $reject(e){var t=this;t.d||(t.d=!0,t=t.r||t,t.v=e,t.s=2,notify(t,!0))}function $resolve(e){var t,r,n=this;if(!n.d){n.d=!0,n=n.r||n;try{(t=isThenable(e))?(r={r:n,d:!1},t.call(e,ctx($resolve,r,1),ctx($reject,r,1))):(n.v=e,n.s=1,notify(n))}catch(s){$reject.call(r||{r:n,d:!1},s)}}}var $=require("./$"),ctx=require("./$.ctx"),cof=require("./$.cof"),$def=require("./$.def"),assert=require("./$.assert"),$iter=require("./$.iter"),SPECIES=require("./$.wks")("species"),RECORD=require("./$.uid").safe("record"),forOf=$iter.forOf,PROMISE="Promise",global=$.g,process=global.process,asap=process&&process.nextTick||require("./$.task").set,P=global[PROMISE],Base=P,isFunction=$.isFunction,isObject=$.isObject,assertFunction=assert.fn,assertObject=assert.obj,test;isFunction(P)&&isFunction(P.resolve)&&P.resolve(test=new P(function(){}))==test||(P=function(e){assertFunction(e);var t={p:assert.inst(this,P,PROMISE),c:[],s:0,d:!1,v:void 0,h:!1};$.hide(this,RECORD,t);try{e(ctx($resolve,t,1),ctx($reject,t,1))}catch(r){$reject.call(t,r)}},$.mix(P.prototype,{then:function(e,t){var r=assertObject(assertObject(this).constructor)[SPECIES],n={ok:isFunction(e)?e:!0,fail:isFunction(t)?t:!1},s=n.P=new(void 0!=r?r:P)(function(e,t){n.res=assertFunction(e),n.rej=assertFunction(t)}),i=this[RECORD];return i.c.push(n),i.s&&notify(i),s},"catch":function(e){return this.then(void 0,e)}})),$def($def.G+$def.W+$def.F*(P!=Base),{Promise:P}),cof.set(P,PROMISE),require("./$.species")(P),$def($def.S,PROMISE,{reject:function(e){return new(getConstructor(this))(function(t,r){r(e)})},resolve:function(e){return isObject(e)&&RECORD in e&&$.getProto(e)===this.prototype?e:new(getConstructor(this))(function(t){t(e)})}}),$def($def.S+$def.F*!require("./$.iter-detect")(function(e){P.all(e)["catch"](function(){})}),PROMISE,{all:function(e){var t=getConstructor(this),r=[];return new t(function(n,s){forOf(e,!1,r.push,r);var i=r.length,o=Array(i);i?$.each.call(r,function(e,r){t.resolve(e).then(function(e){o[r]=e,--i||n(o)},s)}):n(o)})},race:function(e){var t=getConstructor(this);return new t(function(r,n){forOf(e,!1,function(e){t.resolve(e).then(r,n)})})}});
-
-
-},{"./$":27,"./$.assert":19,"./$.cof":20,"./$.ctx":21,"./$.def":22,"./$.iter":26,"./$.iter-detect":25,"./$.species":29,"./$.task":31,"./$.uid":32,"./$.wks":34}],38:[function(require,module,exports){
-var set=require("./$").set,at=require("./$.string-at")(!0),ITER=require("./$.uid").safe("iter"),$iter=require("./$.iter"),step=$iter.step;$iter.std(String,"String",function(t){set(this,ITER,{o:String(t),i:0})},function(){var t,e=this[ITER],i=e.o,r=e.i;return r>=i.length?step(1):(t=at.call(i,r),e.i+=t.length,step(0,t))});
-
-
-},{"./$":27,"./$.iter":26,"./$.string-at":30,"./$.uid":32}],39:[function(require,module,exports){
-"use strict";function wrap(e){var t=AllSymbols[e]=$.set($.create(Symbol.prototype),TAG,e);return $.DESC&&setter&&$.setDesc(Object.prototype,e,{configurable:!0,set:function(t){hide(this,e,t)}}),t}var $=require("./$"),setTag=require("./$.cof").set,uid=require("./$.uid"),$def=require("./$.def"),keyOf=require("./$.keyof"),has=$.has,hide=$.hide,getNames=$.getNames,toObject=$.toObject,Symbol=$.g.Symbol,Base=Symbol,setter=!1,TAG=uid.safe("tag"),SymbolRegistry={},AllSymbols={};$.isFunction(Symbol)||(Symbol=function e(t){if(this instanceof e)throw TypeError("Symbol is not a constructor");return wrap(uid(t))},hide(Symbol.prototype,"toString",function(){return this[TAG]})),$def($def.G+$def.W,{Symbol:Symbol});var symbolStatics={"for":function(e){return has(SymbolRegistry,e+="")?SymbolRegistry[e]:SymbolRegistry[e]=Symbol(e)},keyFor:function(e){return keyOf(SymbolRegistry,e)},pure:uid.safe,set:$.set,useSetter:function(){setter=!0},useSimple:function(){setter=!1}};$.each.call("hasInstance,isConcatSpreadable,iterator,match,replace,search,species,split,toPrimitive,toStringTag,unscopables".split(","),function(e){var t=require("./$.wks")(e);symbolStatics[e]=Symbol===Base?t:wrap(t)}),setter=!0,$def($def.S,"Symbol",symbolStatics),$def($def.S+$def.F*(Symbol!=Base),"Object",{getOwnPropertyNames:function(e){for(var t,r=getNames(toObject(e)),o=[],s=0;r.length>s;)has(AllSymbols,t=r[s++])||o.push(t);return o},getOwnPropertySymbols:function(e){for(var t,r=getNames(toObject(e)),o=[],s=0;r.length>s;)has(AllSymbols,t=r[s++])&&o.push(AllSymbols[t]);return o}}),setTag(Symbol,"Symbol"),setTag(Math,"Math",!0),setTag($.g.JSON,"JSON",!0);
-
-
-},{"./$":27,"./$.cof":20,"./$.def":22,"./$.keyof":28,"./$.uid":32,"./$.wks":34}],40:[function(require,module,exports){
-require("./es6.array.iterator");var $=require("./$"),Iterators=require("./$.iter").Iterators,ITERATOR=require("./$.wks")("iterator"),NodeList=$.g.NodeList;!$.FW||!NodeList||ITERATOR in NodeList.prototype||$.hide(NodeList.prototype,ITERATOR,Iterators.Array),Iterators.NodeList=Iterators.Array;
-
-
-},{"./$":27,"./$.iter":26,"./$.wks":34,"./es6.array.iterator":36}],41:[function(require,module,exports){
-(function (global){
-var g="object"==typeof global?global:"object"==typeof window?window:this,hasOwn=Object.prototype.hasOwnProperty,hadRuntime=hasOwn.call(g,"regeneratorRuntime"),oldRuntime=hadRuntime&&g.regeneratorRuntime;delete g.regeneratorRuntime,module.exports=require("./runtime"),hadRuntime?g.regeneratorRuntime=oldRuntime:delete g.regeneratorRuntime,module.exports={"default":module.exports,__esModule:!0};
-
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./runtime":42}],42:[function(require,module,exports){
-(function (global){
-"use strict";var _Symbol=require("babel-runtime/core-js/symbol")["default"],_Symbol$iterator=require("babel-runtime/core-js/symbol/iterator")["default"],_Promise=require("babel-runtime/core-js/promise")["default"];!function(t){function r(t,r,e,n){return new i(t,r,e||null,n||[])}function e(t,r,e){try{return{type:"normal",arg:t.call(r,e)}}catch(n){return{type:"throw",arg:n}}}function n(){}function o(){}function i(t,r,n,o){function i(r,o){if(u===m)throw new Error("Generator is already running");if(u===w)return s();for(;;){var i=c.delegate;if(i){var a=e(i.iterator[r],i.iterator,o);if("throw"===a.type){c.delegate=null,r="throw",o=a.arg;continue}r="next",o=f;var l=a.arg;if(!l.done)return u=g,l;c[i.resultName]=l.value,c.next=i.nextLoc,c.delegate=null}if("next"===r){if(u===d&&"undefined"!=typeof o)throw new TypeError("attempt to send "+JSON.stringify(o)+" to newborn generator");u===g?c.sent=o:delete c.sent}else if("throw"===r){if(u===d)throw u=w,o;c.dispatchException(o)&&(r="next",o=f)}else"return"===r&&c.abrupt("return",o);u=m;var a=e(t,n,c);if("normal"===a.type){u=c.done?w:g;var l={value:a.arg,done:c.done};if(a.arg!==b)return l;c.delegate&&"next"===r&&(o=f)}else"throw"===a.type&&(u=w,"next"===r?c.dispatchException(a.arg):o=a.arg)}}var a=r?Object.create(r.prototype):this,c=new l(o),u=d;return a.next=i.bind(a,"next"),a["throw"]=i.bind(a,"throw"),a["return"]=i.bind(a,"return"),a}function a(t){var r={tryLoc:t[0]};1 in t&&(r.catchLoc=t[1]),2 in t&&(r.finallyLoc=t[2],r.afterLoc=t[3]),this.tryEntries.push(r)}function c(t){var r=t.completion||{};r.type="normal",delete r.arg,t.completion=r}function l(t){this.tryEntries=[{tryLoc:"root"}],t.forEach(a,this),this.reset()}function u(t){if(t){var r=t[p];if(r)return r.call(t);if("function"==typeof t.next)return t;if(!isNaN(t.length)){var e=-1,n=function o(){for(;++e<t.length;)if(h.call(t,e))return o.value=t[e],o.done=!1,o;return o.value=f,o.done=!0,o};return n.next=n}}return{next:s}}function s(){return{value:f,done:!0}}var f,h=Object.prototype.hasOwnProperty,p="function"==typeof _Symbol&&_Symbol$iterator||"@@iterator",y="object"==typeof module,v=t.regeneratorRuntime;if(v)return void(y&&(module.exports=v));v=t.regeneratorRuntime=y?module.exports:{},v.wrap=r;var d="suspendedStart",g="suspendedYield",m="executing",w="completed",b={},L=o.prototype=i.prototype;n.prototype=L.constructor=o,o.constructor=n,n.displayName="GeneratorFunction",v.isGeneratorFunction=function(t){var r="function"==typeof t&&t.constructor;return r?r===n||"GeneratorFunction"===(r.displayName||r.name):!1},v.mark=function(t){return t.__proto__=o,t.prototype=Object.create(L),t},v.async=function(t,n,o,i){return new _Promise(function(a,c){function l(t){var r=e(this,null,t);if("throw"===r.type)return void c(r.arg);var n=r.arg;n.done?a(n.value):_Promise.resolve(n.value).then(s,f)}var u=r(t,n,o,i),s=l.bind(u.next),f=l.bind(u["throw"]);s()})},L[p]=function(){return this},L.toString=function(){return"[object Generator]"},v.keys=function(t){var r=[];for(var e in t)r.push(e);return r.reverse(),function n(){for(;r.length;){var e=r.pop();if(e in t)return n.value=e,n.done=!1,n}return n.done=!0,n}},v.values=u,l.prototype={constructor:l,reset:function(){this.prev=0,this.next=0,this.sent=f,this.done=!1,this.delegate=null,this.tryEntries.forEach(c);for(var t,r=0;h.call(this,t="t"+r)||20>r;++r)this[t]=null},stop:function(){this.done=!0;var t=this.tryEntries[0],r=t.completion;if("throw"===r.type)throw r.arg;return this.rval},dispatchException:function(t){function r(r,n){return i.type="throw",i.arg=t,e.next=r,!!n}if(this.done)throw t;for(var e=this,n=this.tryEntries.length-1;n>=0;--n){var o=this.tryEntries[n],i=o.completion;if("root"===o.tryLoc)return r("end");if(o.tryLoc<=this.prev){var a=h.call(o,"catchLoc"),c=h.call(o,"finallyLoc");if(a&&c){if(this.prev<o.catchLoc)return r(o.catchLoc,!0);if(this.prev<o.finallyLoc)return r(o.finallyLoc)}else if(a){if(this.prev<o.catchLoc)return r(o.catchLoc,!0)}else{if(!c)throw new Error("try statement without catch or finally");if(this.prev<o.finallyLoc)return r(o.finallyLoc)}}}},abrupt:function(t,r){for(var e=this.tryEntries.length-1;e>=0;--e){var n=this.tryEntries[e];if(n.tryLoc<=this.prev&&h.call(n,"finallyLoc")&&this.prev<n.finallyLoc){var o=n;break}}o&&("break"===t||"continue"===t)&&o.tryLoc<=r&&r<o.finallyLoc&&(o=null);var i=o?o.completion:{};return i.type=t,i.arg=r,o?this.next=o.finallyLoc:this.complete(i),b},complete:function(t,r){if("throw"===t.type)throw t.arg;return"break"===t.type||"continue"===t.type?this.next=t.arg:"return"===t.type?(this.rval=t.arg,this.next="end"):"normal"===t.type&&r&&(this.next=r),b},finish:function(t){for(var r=this.tryEntries.length-1;r>=0;--r){var e=this.tryEntries[r];if(e.finallyLoc===t)return this.complete(e.completion,e.afterLoc)}},"catch":function(t){for(var r=this.tryEntries.length-1;r>=0;--r){var e=this.tryEntries[r];if(e.tryLoc===t){var n=e.completion;if("throw"===n.type){var o=n.arg;c(e)}return o}}throw new Error("illegal catch attempt")},delegateYield:function(t,r,e){return this.delegate={iterator:u(t),resultName:r,nextLoc:e},b}}}("object"==typeof global?global:"object"==typeof window?window:void 0);
-
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/core-js/promise":7,"babel-runtime/core-js/symbol":8,"babel-runtime/core-js/symbol/iterator":9}],43:[function(require,module,exports){
-function EventEmitter(){this._events=this._events||{},this._maxListeners=this._maxListeners||void 0}function isFunction(e){return"function"==typeof e}function isNumber(e){return"number"==typeof e}function isObject(e){return"object"==typeof e&&null!==e}function isUndefined(e){return void 0===e}module.exports=EventEmitter,EventEmitter.EventEmitter=EventEmitter,EventEmitter.prototype._events=void 0,EventEmitter.prototype._maxListeners=void 0,EventEmitter.defaultMaxListeners=10,EventEmitter.prototype.setMaxListeners=function(e){if(!isNumber(e)||0>e||isNaN(e))throw TypeError("n must be a positive number");return this._maxListeners=e,this},EventEmitter.prototype.emit=function(e){var t,n,s,i,r,o;if(this._events||(this._events={}),"error"===e&&(!this._events.error||isObject(this._events.error)&&!this._events.error.length)){if(t=arguments[1],t instanceof Error)throw t;throw TypeError('Uncaught, unspecified "error" event.')}if(n=this._events[e],isUndefined(n))return!1;if(isFunction(n))switch(arguments.length){case 1:n.call(this);break;case 2:n.call(this,arguments[1]);break;case 3:n.call(this,arguments[1],arguments[2]);break;default:for(s=arguments.length,i=new Array(s-1),r=1;s>r;r++)i[r-1]=arguments[r];n.apply(this,i)}else if(isObject(n)){for(s=arguments.length,i=new Array(s-1),r=1;s>r;r++)i[r-1]=arguments[r];for(o=n.slice(),s=o.length,r=0;s>r;r++)o[r].apply(this,i)}return!0},EventEmitter.prototype.addListener=function(e,t){var n;if(!isFunction(t))throw TypeError("listener must be a function");if(this._events||(this._events={}),this._events.newListener&&this.emit("newListener",e,isFunction(t.listener)?t.listener:t),this._events[e]?isObject(this._events[e])?this._events[e].push(t):this._events[e]=[this._events[e],t]:this._events[e]=t,isObject(this._events[e])&&!this._events[e].warned){var n;n=isUndefined(this._maxListeners)?EventEmitter.defaultMaxListeners:this._maxListeners,n&&n>0&&this._events[e].length>n&&(this._events[e].warned=!0,console.error("(node) warning: possible EventEmitter memory leak detected. %d listeners added. Use emitter.setMaxListeners() to increase limit.",this._events[e].length),"function"==typeof console.trace&&console.trace())}return this},EventEmitter.prototype.on=EventEmitter.prototype.addListener,EventEmitter.prototype.once=function(e,t){function n(){this.removeListener(e,n),s||(s=!0,t.apply(this,arguments))}if(!isFunction(t))throw TypeError("listener must be a function");var s=!1;return n.listener=t,this.on(e,n),this},EventEmitter.prototype.removeListener=function(e,t){var n,s,i,r;if(!isFunction(t))throw TypeError("listener must be a function");if(!this._events||!this._events[e])return this;if(n=this._events[e],i=n.length,s=-1,n===t||isFunction(n.listener)&&n.listener===t)delete this._events[e],this._events.removeListener&&this.emit("removeListener",e,t);else if(isObject(n)){for(r=i;r-->0;)if(n[r]===t||n[r].listener&&n[r].listener===t){s=r;break}if(0>s)return this;1===n.length?(n.length=0,delete this._events[e]):n.splice(s,1),this._events.removeListener&&this.emit("removeListener",e,t)}return this},EventEmitter.prototype.removeAllListeners=function(e){var t,n;if(!this._events)return this;if(!this._events.removeListener)return 0===arguments.length?this._events={}:this._events[e]&&delete this._events[e],this;if(0===arguments.length){for(t in this._events)"removeListener"!==t&&this.removeAllListeners(t);return this.removeAllListeners("removeListener"),this._events={},this}if(n=this._events[e],isFunction(n))this.removeListener(e,n);else for(;n.length;)this.removeListener(e,n[n.length-1]);return delete this._events[e],this},EventEmitter.prototype.listeners=function(e){var t;return t=this._events&&this._events[e]?isFunction(this._events[e])?[this._events[e]]:this._events[e].slice():[]},EventEmitter.listenerCount=function(e,t){var n;return n=e._events&&e._events[t]?isFunction(e._events[t])?1:e._events[t].length:0};
-
-
-},{}],44:[function(require,module,exports){
-function drainQueue(){if(!draining){draining=!0;for(var e,o=queue.length;o;){e=queue,queue=[];for(var r=-1;++r<o;)e[r]();o=queue.length}draining=!1}}function noop(){}var process=module.exports={},queue=[],draining=!1;process.nextTick=function(e){queue.push(e),draining||setTimeout(drainQueue,0)},process.title="browser",process.browser=!0,process.env={},process.argv=[],process.version="",process.versions={},process.on=noop,process.addListener=noop,process.once=noop,process.off=noop,process.removeListener=noop,process.removeAllListeners=noop,process.emit=noop,process.binding=function(e){throw new Error("process.binding is not supported")},process.cwd=function(){return"/"},process.chdir=function(e){throw new Error("process.chdir is not supported")},process.umask=function(){return 0};
-
-
-},{}],45:[function(require,module,exports){
-"use strict";var _interopRequireWildcard=function(e){return e&&e.__esModule?e:{"default":e}},_classCallCheck=function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")},_createClass=function(){function e(e,t){for(var r=0;r<t.length;r++){var a=t[r];a.enumerable=a.enumerable||!1,a.configurable=!0,"value"in a&&(a.writable=!0),Object.defineProperty(e,a.key,a)}}return function(t,r,a){return r&&e(t.prototype,r),a&&e(t,a),t}}(),_inherits=function(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(e.__proto__=t)};Object.defineProperty(exports,"__esModule",{value:!0});var _createElement$Phrase=require("lacona-phrase"),_Validator=require("lacona-phrase-validator"),_Validator2=_interopRequireWildcard(_Validator),Email=function(e){function t(){_classCallCheck(this,t),null!=e&&e.apply(this,arguments)}return _inherits(t,e),_createClass(t,[{key:"getValue",value:function(e){return""+e.firstPart+"@"+e.secondPart+"."+e.thirdPart}},{key:"firstPart",value:function(e){return/^[^\s@]+$/.test(e)}},{key:"secondPart",value:function(e){return/^[^\s@]+$/.test(e)}},{key:"thirdPart",value:function(e){return/^[^\s@\.]+$/.test(e)}},{key:"describe",value:function(){return _createElement$Phrase.createElement("sequence",null,_createElement$Phrase.createElement("placeholder",{text:"example",id:"firstPart"},_createElement$Phrase.createElement(_Validator2["default"],{validate:this.firstPart})),_createElement$Phrase.createElement("literal",{text:"@"}),_createElement$Phrase.createElement("placeholder",{text:"example",id:"secondPart"},_createElement$Phrase.createElement(_Validator2["default"],{validate:this.secondPart,limit:1})),_createElement$Phrase.createElement("literal",{text:"."}),_createElement$Phrase.createElement("placeholder",{text:"com",id:"thirdPart",join:!0},_createElement$Phrase.createElement(_Validator2["default"],{validate:this.thirdPart})))}}]),t}(_createElement$Phrase.Phrase);exports["default"]=Email,module.exports=exports["default"];
-
-
-},{"lacona-phrase":48,"lacona-phrase-validator":46}],46:[function(require,module,exports){
-"use strict";function substrings(e,r){var t,a;return _regeneratorRuntime.wrap(function(i){for(;;)switch(i.prev=i.next){case 0:t=_split2["default"](e,r),a=0;case 2:if(!(a<t.length)){i.next=8;break}return i.next=5,t.slice(0,a+1).join("");case 5:a+=2,i.next=2;break;case 8:case"end":return i.stop()}},marked0$0[0],this)}var _inherits=require("babel-runtime/helpers/inherits")["default"],_createClass=require("babel-runtime/helpers/create-class")["default"],_classCallCheck=require("babel-runtime/helpers/class-call-check")["default"],_getIterator=require("babel-runtime/core-js/get-iterator")["default"],_regeneratorRuntime=require("babel-runtime/regenerator")["default"],_interopRequireWildcard=require("babel-runtime/helpers/interop-require-wildcard")["default"];Object.defineProperty(exports,"__esModule",{value:!0});var marked0$0=[substrings].map(_regeneratorRuntime.mark),_Phrase$createElement=require("lacona-phrase"),_split=require("smart-split"),_split2=_interopRequireWildcard(_split),Validator=function(e){function r(){_classCallCheck(this,r),null!=e&&e.apply(this,arguments)}return _inherits(r,e),_createClass(r,[{key:"validate",value:_regeneratorRuntime.mark(function t(e){var r,a,i,n,s,u;return _regeneratorRuntime.wrap(function(t){for(;;)switch(t.prev=t.next){case 0:r=!0,a=!1,i=void 0,t.prev=3,n=_getIterator(substrings(e,this.props.splitOn));case 5:if(r=(s=n.next()).done){t.next=13;break}if(u=s.value,!this.props.validate(u)){t.next=10;break}return t.next=10,{words:[{text:u,input:!0}],value:u,remaining:e.substring(u.length),score:.1+1/(u.length+2)};case 10:r=!0,t.next=5;break;case 13:t.next=19;break;case 15:t.prev=15,t.t0=t["catch"](3),a=!0,i=t.t0;case 19:t.prev=19,t.prev=20,!r&&n["return"]&&n["return"]();case 22:if(t.prev=22,!a){t.next=25;break}throw i;case 25:return t.finish(22);case 26:return t.finish(19);case 27:case"end":return t.stop()}},t,this,[[3,15,19,27],[20,,22,26]])})},{key:"describe",value:function(){return _Phrase$createElement.createElement("value",{compute:this.validate.bind(this),limit:this.props.limit})}}],[{key:"defaultProps",get:function(){return{validate:function(){return!0},splitOn:""}}}]),r}(_Phrase$createElement.Phrase);exports["default"]=Validator,module.exports=exports["default"];
-
-
-},{"babel-runtime/core-js/get-iterator":6,"babel-runtime/helpers/class-call-check":10,"babel-runtime/helpers/create-class":11,"babel-runtime/helpers/inherits":12,"babel-runtime/helpers/interop-require-wildcard":13,"babel-runtime/regenerator":41,"lacona-phrase":48,"smart-split":47}],47:[function(require,module,exports){
-module.exports=function(e,s){var n=[];if(s instanceof RegExp){for(var t,r=new RegExp(s.toString().slice(1,-1),"g"),u=0;t=r.exec(e);)n.push(e.substring(u,t.index)),n.push(t[0]),u=t.index+t[0].length;n.push(e.substring(u))}else{for(var i,p=e.split(s),g=0,h=p.length;h-1>g;g++)i=p[g],n.push(i),n.push(s);n.push(p[p.length-1])}return n};
-
-
-},{}],48:[function(require,module,exports){
-"use strict";function createElement(e,r){for(var t=arguments.length,a=Array(t>2?t-2:0),o=2;t>o;o++)a[o-2]=arguments[o];return{Constructor:e,props:r,children:a,version:version}}function createFactory(e){return createElement.bind(null,e)}function createPhrase(e){var r=function(){};inherits(r,Phrase),r.translations=e.translations,r.extensions=e.extensions,r.defaultProps=e.defaultProps,r.sources=e.sources;for(var t in e)"function"==typeof e[t]&&(r.prototype[t]=e[t]);return r}var _interopRequire=function(e){return e&&e.__esModule?e["default"]:e},_classCallCheck=function(e,r){if(!(e instanceof r))throw new TypeError("Cannot call a class as a function")};exports.createElement=createElement,exports.createFactory=createFactory,exports.createPhrase=createPhrase,Object.defineProperty(exports,"__esModule",{value:!0});var inherits=_interopRequire(require("inherits")),version=require("../package").version,Phrase=exports.Phrase=function e(){_classCallCheck(this,e)},Source=exports.Source=function r(){_classCallCheck(this,r)},choice=createFactory("choice");exports.choice=choice;var content=createFactory("content");exports.content=content;var literal=createFactory("literal");exports.literal=literal;var separator=createFactory("separator");exports.separator=separator;var sequence=createFactory("sequence");exports.sequence=sequence;var value=createFactory("value");exports.value=value;
-
-
-},{"../package":50,"inherits":49}],49:[function(require,module,exports){
-"function"==typeof Object.create?module.exports=function(t,e){t.super_=e,t.prototype=Object.create(e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}})}:module.exports=function(t,e){t.super_=e;var o=function(){};o.prototype=e.prototype,t.prototype=new o,t.prototype.constructor=t};
-
-
-},{}],50:[function(require,module,exports){
 module.exports={
   "name": "lacona-phrase",
   "version": "0.7.0",
@@ -256,95 +6129,6662 @@ module.exports={
   "_from": "lacona-phrase@>=0.7.0 <0.8.0"
 }
 
-},{}],51:[function(require,module,exports){
-function join(n){return n.reduce(function(n,t){return n+t.string},"")}function match(n){return join(n.match)}function suggestion(n){return join(n.suggestion)}function completion(n){return join(n.completion)}function all(n){return[match(n),suggestion(n),completion(n)].join("")}module.exports={all:all,match:match,suggestion:suggestion,completion:completion};
+},{}],26:[function(require,module,exports){
+arguments[4][23][0].apply(exports,arguments)
+},{"../package":28,"dup":23,"inherits":27}],27:[function(require,module,exports){
+arguments[4][24][0].apply(exports,arguments)
+},{"dup":24}],28:[function(require,module,exports){
+arguments[4][25][0].apply(exports,arguments)
+},{"dup":25}],29:[function(require,module,exports){
+'use strict';
 
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
-},{}],52:[function(require,module,exports){
-"use strict";var _inherits=require("babel-runtime/helpers/inherits")["default"],_classCallCheck=require("babel-runtime/helpers/class-call-check")["default"],_getIterator=require("babel-runtime/core-js/get-iterator")["default"],_regeneratorRuntime=require("babel-runtime/regenerator")["default"],_interopRequireWildcard=require("babel-runtime/helpers/interop-require-wildcard")["default"];exports.__esModule=!0;var _import=require("lodash"),_import2=_interopRequireWildcard(_import),_createElement$Phrase=require("lacona-phrase"),_parse=require("../parse"),_parse2=_interopRequireWildcard(_parse),_reconcile=require("../reconcile"),Choice=function(e){function r(){_classCallCheck(this,r),null!=e&&e.apply(this,arguments)}return _inherits(r,e),r.prototype._handleParse=_regeneratorRuntime.mark(function t(e,r){var a,i,n,s,u,c,l,o,p,h,b,d;return _regeneratorRuntime.wrap(function(t){for(var _=this;;)switch(t.prev=t.next){case 0:if(a=0,i=[],!(this.props.children&&this.props.children.length>0)){t.next=12;break}this.childPhrases=_reconcile.reconcile({descriptor:this.props.children,phrase:this.childPhrases,options:r}),n=_regeneratorRuntime.mark(function f(){var t,i,n,d;return _regeneratorRuntime.wrap(function(_){for(;;)switch(_.prev=_.next){case 0:if(!u){_.next=6;break}if(!(c>=s.length)){_.next=3;break}return _.abrupt("return","break");case 3:l=s[c++],_.next=10;break;case 6:if(c=s.next(),!c.done){_.next=9;break}return _.abrupt("return","break");case 9:l=c.value;case 10:t=l[0],i=l[1],n=!1,o=_parse2["default"]({phrase:i,input:e,options:r}),p=Array.isArray(o),h=0,o=p?o:_getIterator(o);case 14:if(!p){_.next=20;break}if(!(h>=o.length)){_.next=17;break}return _.abrupt("break",29);case 17:b=o[h++],_.next=24;break;case 20:if(h=o.next(),!h.done){_.next=23;break}return _.abrupt("break",29);case 23:b=h.value;case 24:return d=b,_.next=27,_import2["default"].assign({},d,{callbacks:d.callbacks.concat(function(){return n=!0}),result:this.props.value||d.result});case 27:_.next=14;break;case 29:if(n&&a++,!(this.props.limit<=a)){_.next=32;break}return _.abrupt("return","break");case 32:case"end":return _.stop()}},f,_)}),s=_import2["default"].zip(this.props.children,this.childPhrases),u=Array.isArray(s),c=0,s=u?s:_getIterator(s);case 6:return t.delegateYield(n(),"t0",7);case 7:if(d=t.t0,"break"!==d){t.next=10;break}return t.abrupt("break",12);case 10:t.next=6;break;case 12:case"end":return t.stop()}},t,this)}),r}(_createElement$Phrase.Phrase);exports["default"]=Choice,Choice.defaultProps={limit:100},module.exports=exports["default"];
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
 
-},{"../parse":59,"../reconcile":61,"babel-runtime/core-js/get-iterator":6,"babel-runtime/helpers/class-call-check":10,"babel-runtime/helpers/inherits":12,"babel-runtime/helpers/interop-require-wildcard":13,"babel-runtime/regenerator":41,"lacona-phrase":48,"lodash":64}],53:[function(require,module,exports){
-"use strict";var _interopRequire=require("babel-runtime/helpers/interop-require")["default"];exports.__esModule=!0;var _default=require("./choice");exports.choice=_interopRequire(_default);var _default2=require("./literal");exports.literal=_interopRequire(_default2);var _default3=require("./sequence");exports.sequence=_interopRequire(_default3);var _default4=require("./value");exports.value=_interopRequire(_default4);var _default5=require("./placeholder");exports.placeholder=_interopRequire(_default5);
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
 
+var _createElement$Phrase = require('lacona-phrase');
 
-},{"./choice":52,"./literal":54,"./placeholder":55,"./sequence":56,"./value":57,"babel-runtime/helpers/interop-require":14}],54:[function(require,module,exports){
-"use strict";var _inherits=require("babel-runtime/helpers/inherits")["default"],_classCallCheck=require("babel-runtime/helpers/class-call-check")["default"],_interopRequireWildcard=require("babel-runtime/helpers/interop-require-wildcard")["default"];exports.__esModule=!0;var _import=require("lodash"),_import2=_interopRequireWildcard(_import),_match=require("fuz"),_createElement$Phrase=require("lacona-phrase"),Literal=function(e){function t(){_classCallCheck(this,t),null!=e&&e.apply(this,arguments)}return _inherits(t,e),t.prototype.suggest=function(){return null==this.props.text?[]:[{suggestion:this.props.text.replace(/\n/g,""),value:this.props.value,score:1}]},t.prototype.compute=function(e){if(null==this.props.text)return[];var t=e.toLowerCase(),r=this.props.text.replace(/\n/g,""),s=r.toLowerCase();if(_import2["default"].startsWith(t,s))return[{words:[{text:r,input:!0}],remaining:e.substring(r.length),value:this.props.value,score:this.props.score||1}];if(_import2["default"].startsWith(s,t)){var i=[{text:r.substring(0,e.length),input:!0}];return r.length>e.length&&i.push({text:r.substring(e.length),input:!1}),[{words:i,remaining:"",value:this.props.value,score:this.props.score||1}]}if(this.props.fuzzy){var u=_match.match(e,r);if(u)return u.remaining="",u.value=this.props.value,u.score=this.props.score||u.score,[u]}return[]},t.prototype.describe=function(){return _createElement$Phrase.createElement("value",{compute:this.compute.bind(this),suggest:this.suggest.bind(this)})},t}(_createElement$Phrase.Phrase);exports["default"]=Literal,module.exports=exports["default"];
+var Email = (function (_Phrase) {
+  function Email() {
+    _classCallCheck(this, Email);
 
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
 
-},{"babel-runtime/helpers/class-call-check":10,"babel-runtime/helpers/inherits":12,"babel-runtime/helpers/interop-require-wildcard":13,"fuz":63,"lacona-phrase":48,"lodash":64}],55:[function(require,module,exports){
-"use strict";var _inherits=require("babel-runtime/helpers/inherits")["default"],_classCallCheck=require("babel-runtime/helpers/class-call-check")["default"],_getIterator=require("babel-runtime/core-js/get-iterator")["default"],_regeneratorRuntime=require("babel-runtime/regenerator")["default"],_interopRequireWildcard=require("babel-runtime/helpers/interop-require-wildcard")["default"];exports.__esModule=!0;var _import=require("lodash"),_import2=_interopRequireWildcard(_import),_createElement$Phrase=require("lacona-phrase"),_parse=require("../parse"),_parse2=_interopRequireWildcard(_parse),_reconcile=require("../reconcile"),_stackFind=require("../stackfind"),_stackFind2=_interopRequireWildcard(_stackFind),Placeholder=function(e){function r(){_classCallCheck(this,r),null!=e&&e.apply(this,arguments)}return _inherits(r,e),r.prototype._handleParse=_regeneratorRuntime.mark(function t(e,r){var a,i,s,n,o,l,c,u,p,d;return _regeneratorRuntime.wrap(function(t){for(;;)switch(t.prev=t.next){case 0:if(this.childPhrase=_reconcile.reconcile({descriptor:this.props.children[0],phrase:this.childPhrase,options:r}),""===e.text){t.next=5;break}return t.delegateYield(_parse2["default"]({phrase:this.childPhrase,input:e,options:r}),"t1",3);case 3:t.next=32;break;case 5:if(a=!1,!_import2["default"].isEmpty(e.suggestion)){t.next=24;break}i=_parse2["default"]({phrase:this.childPhrase,input:e,options:r}),s=Array.isArray(i),n=0,i=s?i:_getIterator(i);case 8:if(!s){t.next=14;break}if(!(n>=i.length)){t.next=11;break}return t.abrupt("break",24);case 11:o=i[n++],t.next=18;break;case 14:if(n=i.next(),!n.done){t.next=17;break}return t.abrupt("break",24);case 17:o=n.value;case 18:return l=o,a=!0,t.next=22,l;case 22:t.next=8;break;case 24:if(a){t.next=32;break}return c=_stackFind2["default"](e.stack,"category",this.props.category,null),u=_stackFind2["default"](e.stack,"join",this.props.join,!1),p={string:this.props.text,category:c,input:!1,placeholder:!0},d={score:1,result:void 0},_import2["default"].isEmpty(e.suggestion)||_import2["default"].isEmpty(e.completion)&&u?d.suggestion=e.suggestion.concat(p):d.completion=e.completion.concat(p),t.next=32,_import2["default"].assign({},e,d);case 32:case"end":return t.stop()}},t,this)}),r}(_createElement$Phrase.Phrase);exports["default"]=Placeholder,module.exports=exports["default"];
+  _inherits(Email, _Phrase);
 
+  _createClass(Email, [{
+    key: 'displayWhen',
 
-},{"../parse":59,"../reconcile":61,"../stackfind":62,"babel-runtime/core-js/get-iterator":6,"babel-runtime/helpers/class-call-check":10,"babel-runtime/helpers/inherits":12,"babel-runtime/helpers/interop-require-wildcard":13,"babel-runtime/regenerator":41,"lacona-phrase":48,"lodash":64}],56:[function(require,module,exports){
-"use strict";function addSeparator(e,r){if(e.props&&e.props.optional){var t=_import2["default"].merge({},e,{props:{optional:!1}});return _createElement$Phrase.createElement(Sequence,{optional:!0,merge:!0},t,r)}return _createElement$Phrase.createElement(Sequence,{merge:!0},e,r)}function getAccumulatedResult(e,r,t){if(!_import2["default"].isUndefined(t)&&r.props){var a=r.props.id,i=r.props.merge;if(a){var s;return _import2["default"].assign({},e,(s={},s[a]=t,s))}if(i)return _import2["default"].merge({},e,t)}return e}var _inherits=require("babel-runtime/helpers/inherits")["default"],_classCallCheck=require("babel-runtime/helpers/class-call-check")["default"],_getIterator=require("babel-runtime/core-js/get-iterator")["default"],_regeneratorRuntime=require("babel-runtime/regenerator")["default"],_interopRequireWildcard=require("babel-runtime/helpers/interop-require-wildcard")["default"];exports.__esModule=!0;var _import=require("lodash"),_import2=_interopRequireWildcard(_import),_createElement$Phrase=require("lacona-phrase"),_parse=require("../parse"),_parse2=_interopRequireWildcard(_parse),_reconcile=require("../reconcile"),Sequence=function(e){function r(){_classCallCheck(this,r),null!=e&&e.apply(this,arguments)}return _inherits(r,e),r.prototype.describe=function(){var e=void 0,r=void 0;if(this.props.children[0]&&"content"===this.props.children[0].Constructor)return e=this.props.children[0].children,this.props.children[1]&&"separator"===this.props.children[1].Constructor&&(r=this.props.children[1].children[0]),r?_createElement$Phrase.createElement("sequence",this.props,_import2["default"].chain(e.slice(0,-1)).map(_import2["default"].partial(addSeparator,_import2["default"],r)).concat(_import2["default"].last(e)).value()):_createElement$Phrase.createElement("sequence",this.props,e)},r.prototype._handleParse=_regeneratorRuntime.mark(function t(e,r){return _regeneratorRuntime.wrap(function(t){for(;;)switch(t.prev=t.next){case 0:return this.childPhrases=_reconcile.reconcile({descriptor:this.props.children,phrase:this.childPhrases,options:r}),t.delegateYield(this.parseChild(0,_import2["default"].assign({},e,{result:{},score:1}),r),"t2",2);case 2:case"end":return t.stop()}},t,this)}),r.prototype.parseChild=_regeneratorRuntime.mark(function a(e,r,t){var i,s,n,l,o,p,c,u,d,h;return _regeneratorRuntime.wrap(function(a){for(;;)switch(a.prev=a.next){case 0:if(!(e>=this.props.children.length)){a.next=4;break}return a.next=3,r;case 3:return a.abrupt("return");case 4:i=this.props.children[e],s=!1,n=_parse2["default"]({phrase:this.childPhrases[e],input:r,options:t}),l=Array.isArray(n),o=0,n=l?n:_getIterator(n);case 7:if(!l){a.next=13;break}if(!(o>=n.length)){a.next=10;break}return a.abrupt("break",24);case 10:p=n[o++],a.next=17;break;case 13:if(o=n.next(),!o.done){a.next=16;break}return a.abrupt("break",24);case 16:p=o.value;case 17:return c=p,u=this.props.value||getAccumulatedResult(r.result,i,c.result),d=r.score*c.score,h=_import2["default"].assign({},c,{result:u,score:d,callbacks:c.callbacks.concat(function(){return s=!0})}),a.delegateYield(this.parseChild(e+1,h,t),"t3",22);case 22:a.next=7;break;case 24:if(!i.props||!i.props.optional){a.next=26;break}return a.delegateYield(this.parseChild(e+1,r,t),"t4",26);case 26:case"end":return a.stop()}},a,this)}),r}(_createElement$Phrase.Phrase);exports["default"]=Sequence,module.exports=exports["default"];
+    // getValue(result) {
+    // return `${result.firstPart}@${result.secondPart}.${result.thirdPart}`
+    // }
 
+    value: function displayWhen(input) {
+      return /^[\d\w_+.@-]*$/.test(input);
+    }
+  }, {
+    key: 'validate',
+    value: function validate(input) {
+      return /^[\d\w_+.-]+@[\d\w_.-]{1,63}\.\w{2,63}$/.test(input);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'argument',
+        { text: 'email address', displayWhen: this.displayWhen },
+        _createElement$Phrase.createElement('freetext', { validate: this.validate })
+      );
+    }
+  }]);
 
-},{"../parse":59,"../reconcile":61,"babel-runtime/core-js/get-iterator":6,"babel-runtime/helpers/class-call-check":10,"babel-runtime/helpers/inherits":12,"babel-runtime/helpers/interop-require-wildcard":13,"babel-runtime/regenerator":41,"lacona-phrase":48,"lodash":64}],57:[function(require,module,exports){
-"use strict";var _inherits=require("babel-runtime/helpers/inherits")["default"],_classCallCheck=require("babel-runtime/helpers/class-call-check")["default"],_getIterator=require("babel-runtime/core-js/get-iterator")["default"],_regeneratorRuntime=require("babel-runtime/regenerator")["default"],_interopRequireWildcard=require("babel-runtime/helpers/interop-require-wildcard")["default"];exports.__esModule=!0;var _import=require("lodash"),_import2=_interopRequireWildcard(_import),_Phrase2=require("lacona-phrase"),_stackFind=require("../stackfind.js"),_stackFind2=_interopRequireWildcard(_stackFind),Value=function(e){function r(){_classCallCheck(this,r),null!=e&&e.apply(this,arguments)}return _inherits(r,e),r.prototype._handleParse=_regeneratorRuntime.mark(function t(e,r){var a,n,i,s,u,c,o,l,p,b,d,f,g,k,m;return _regeneratorRuntime.wrap(function(r){for(var t=this;;)switch(r.prev=r.next){case 0:if(a=_stackFind2["default"](e.stack,"category",this.props.category,null),n=_stackFind2["default"](e.stack,"join",this.props.join,!1),i=0,""!==e.text){r.next=14;break}s=_regeneratorRuntime.mark(function _(){var r,s,p,b;return _regeneratorRuntime.wrap(function(t){for(;;)switch(t.prev=t.next){case 0:if(!c){t.next=6;break}if(!(o>=u.length)){t.next=3;break}return t.abrupt("return","break");case 3:l=u[o++],t.next=10;break;case 6:if(o=u.next(),!o.done){t.next=9;break}return t.abrupt("return","break");case 9:l=o.value;case 10:return r=l,s=!1,p={result:r.value,score:r.score||1,callbacks:e.callbacks.concat(function(){return s=!0})},b={string:r.suggestion,category:a,input:!1},_import2["default"].isEmpty(e.suggestion)||_import2["default"].isEmpty(e.completion)&&n?p.suggestion=e.suggestion.concat(b):p.completion=e.completion.concat(b),t.next=17,_import2["default"].assign({},e,p);case 17:if(s&&i++,!(this.props.limit<=i)){t.next=20;break}return t.abrupt("return","break");case 20:case"end":return t.stop()}},_,t)}),u=this.props.suggest(),c=Array.isArray(u),o=0,u=c?u:_getIterator(u);case 6:return r.delegateYield(s(),"t5",7);case 7:if(p=r.t5,"break"!==p){r.next=10;break}return r.abrupt("break",12);case 10:r.next=6;break;case 12:r.next=22;break;case 14:b=_regeneratorRuntime.mark(function h(){var r,n,s,u;return _regeneratorRuntime.wrap(function(t){for(;;)switch(t.prev=t.next){case 0:if(!f){t.next=6;break}if(!(g>=d.length)){t.next=3;break}return t.abrupt("return","break");case 3:k=d[g++],t.next=10;break;case 6:if(g=d.next(),!g.done){t.next=9;break}return t.abrupt("return","break");case 9:k=g.value;case 10:return r=k,n=!1,s={result:r.value,score:r.score||1,text:r.remaining,callbacks:e.callbacks.concat(function(){return n=!0})},u=r.words.map(function(e){return{string:e.text,category:a,input:e.input}}),_import2["default"].isEmpty(e.suggestion)&&_import2["default"].every(r.words,"input")?s.match=e.match.concat(u):s.suggestion=e.suggestion.concat(u),t.next=17,_import2["default"].assign({},e,s);case 17:if(n&&i++,!(this.props.limit<=i)){t.next=20;break}return t.abrupt("return","break");case 20:case"end":return t.stop()}},h,t)}),d=this.props.compute(e.text),f=Array.isArray(d),g=0,d=f?d:_getIterator(d);case 16:return r.delegateYield(b(),"t6",17);case 17:if(m=r.t6,"break"!==m){r.next=20;break}return r.abrupt("break",22);case 20:r.next=16;break;case 22:case"end":return r.stop()}},t,this)}),r}(_Phrase2.Phrase);exports["default"]=Value,Value.defaultProps={suggest:function(){return[]},compute:function(){return[]},limit:100},module.exports=exports["default"];
+  return Email;
+})(_createElement$Phrase.Phrase);
 
+exports['default'] = Email;
+module.exports = exports['default'];
+},{"lacona-phrase":30}],30:[function(require,module,exports){
+arguments[4][23][0].apply(exports,arguments)
+},{"../package":32,"dup":23,"inherits":31}],31:[function(require,module,exports){
+arguments[4][24][0].apply(exports,arguments)
+},{"dup":24}],32:[function(require,module,exports){
+module.exports={
+  "name": "lacona-phrase",
+  "version": "0.7.0",
+  "description": "Create lacona phrases",
+  "main": "lib/phrase.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "pretest": "babel test --out-dir tmp ",
+    "test": "mocha tmp",
+    "build": "babel src --out-dir lib",
+    "validate": "npm run build && npm test",
+    "prepublish": "npm run clean && npm run build",
+    "clean": "rimraf lib tmp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lacona/lacona-phrase.git"
+  },
+  "keywords": [
+    "lacona-phrase",
+    "lacona",
+    "phrase",
+    "create",
+    "initialize",
+    "class"
+  ],
+  "author": {
+    "name": "@brandonhorst"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lacona/lacona-phrase/issues"
+  },
+  "homepage": "https://github.com/lacona/lacona-phrase",
+  "devDependencies": {
+    "babel": "^4.7.16",
+    "chai": "^2.2.0",
+    "mocha": "^2.2.1",
+    "rimraf": "^2.3.2"
+  },
+  "dependencies": {
+    "inherits": "^2.0.1"
+  },
+  "readme": "# lacona-phrase\n\nThis package is used to create `lacona` phrases. It works with [`lacona`](https://github.com/lacona/lacona) but is maintained separately to allow libraries to be versioned independently of the parser.\n\nA `lacona` phrase is a Javascript descriptor of some natural language construct. The syntax is modeled after [React](http://facebook.github.io/react/), but rather than specifying HTML output, it specifies a language.\n\nLike React, `lacona` phrases can be specified using [JSX](http://facebook.github.io/jsx/). This is recommended, but not required. While JSX is a much more succinct and readable way to express the phrase's structure, it does necessitate a transpilation step. `lacona` itself is built this way, using the excellent [babel](http://babeljs.io/) transpiler. In addition to transpiling JSX, it also transpiles ES6 functionality, which can result in very simple code. All examples in this document will have two examples - JSX/ES6 code to be transpiled using Babel, and standard ES5. Note that it is possible to ES6 without JS (or vice-versa), but those examples are left as an exercise to the developer (but the tests may point you in the right direction).\n\n## Using Javascript Classes\n\nA `lacona` phrase is expressed as a Javascript class. For use with ES5, a shorthand method is provided that will create this class for you, without requiring you to interact with prototypes.\n\n#### Using ES6\n\n```js\nimport {Phrase} from 'lacona-phrase'\n\nexport default class MyPhrase extends Phrase {\n  constructor() {\n    // no need to call super()\n  }\n  static get defaultProps() {\n    return {a: 'test'}\n  }\n  describe() {\n    return // ...\n  }\n}\n```\n\n#### Using ES5\n\n```js\nvar createPhrase = require('lacona-phrase').createPhrase\n\nmodule.exports = createPhrase({\n  onCreate: function() {\n    // initialize phrase\n  },\n  defaultProps: {a: 'test'},\n  describe: function() {\n    return // ...\n  }\n})\n```\n\n## Describing Language\n\nIn `lacona`, language is described using `Element`s. Each `Element` can be thought of as an instance of a `Phrase`. Each `Element` can have `props` which govern its behavior.\n\nPlease note that `Phrases` should never be instantiated directly, and `Elements` should never be used outside of the context of a `describe()` call. An `Element` is ultimately just a small descriptor of its inputs - the actual `Phrase` instantiation and parsing is all done by `lacona` itself.\n\n#### Using ES6/JSX\n\nIn JSX, all lowercase tags refer to elements built-in to `lacona`. Custom classes must be uppercase. Please note the `@jsx` pragma in the initial comment. Unlike React, this comment is required. It must specify the name of the `createElement` function.\n\n```js\n/** @jsx createElement */\nimport {createElement, Phrase} from 'lacona-phrase'\n\nclass MyPhrase extends Phrase {\n  describe() {\n    return (\n      <choice>\n        <literal text='Google' />\n        <literal text='Yahoo' />\n        <literal text='Bing' />\n      </choice>\n    )\n  }\n}\n```\n\n#### Using ES5\n\nIn ES5, elements are specified in the form `phrase.createElement(constructor, props[, ...children])`. You can also create a factory to free you from continually needing to call `createElement`, using `createFactory`.\n\n```js\nvar phrase = require('lacona-phrase')\nvar factory = phrase.createFactory(MyPhrase)\n// these two lines are equivalent\nfactory({myProp: 'test'}, child1, child2)\nphrase.createElement(MyPhrase, {myProp: 'test'}, child1, child2)\n```\n\nThe module contains shorthand factories for the builtin elements.\n\n```js\nvar phrase = require('lacona-phrase')\n\nmodule.exports = phrase.createPhrase({\n  describe: function() {\n    return phrase.choice(null,\n      phrase.literal({text: 'Google'}),\n      phrase.literal({text: 'Yahoo'}),\n      phrase.literal({text: 'Bing'})\n    )\n  }\n})\n```\n\n## Supporting multiple languages\n\nThe pesky thing about *language* is that there are lots of them. A single phrase can (and should) support as many languages as possible, all expressing the same fundamental thing. This is done using the `translations` property. Note that while `describe()` is specified as a single function, `translations` is specified as a Static Property (see below for more information).\n\n### Using ES6/JSX\n\n```js\n/** @jsx createElement */\nimport {createElement, Phrase} from 'lacona-phrase'\nclass MyPhrase extends Phrase {\n  static get translations () {\n    return [{\n      langs: ['en'],\n      describe() {\n        return <literal text='hello' />\n      }\n    }, {\n      langs: ['zh']\n      describe() {\n        return <literal text='你好' />\n      }\n    }]\n  }\n}\n```\n\n### Using ES5\n\n```js\nvar phrase = require('lacona-phrase')\n\nmodule.exports = phrase.createPhrase({\n  translations: [{\n    langs: ['en'],\n    describe: function() {\n      return phrase.literal({text: 'hello'})\n    }\n  }, {\n    langs: ['zh']\n    describe: function() {\n      return phrase.literal({text: '你好'})\n    }\n  }]\n})\n```\n\n\n## Phrase Properties\n\nA `Phrase` is ultimately just a class - it can have any methods or properties. However, some methods and properties govern the `Phrase`'s behavior, and should not be used outside of that context.\n\n### Static Properties\n\nSome of a `Phrase`'s behavior is governed by Static Properties, which are specific to the `Phrase`, not to any particular `Element`. When using `createPhrase`, these are specified directly as objects. However, because ES6 does not directly support static properties, these cannot be expressed using ES6 class syntax alone. They can set be set as static getters, or directly as properties on the constructor.\n\n* `defaultProps`\n* `supplements`\n* `overrides`\n* `translations`\n\n#### Using ES6\n\nThe two strategies below are precisely equivalent\n\n```js\nimport {Phrase} from 'lacona-phrase'\n\nclass MyPhrase extends Phrase {\n  static get defaultProps() {\n    return {myProp: 'test'}\n  }\n  static get supplements() {\n    return []\n  }\n  describe() {\n    return // ...\n  }\n}\n```\n\n```js\nimport {Phrase} from 'lacona-phrase'\n\nclass MyPhrase extends Phrase {\n  describe() {\n    return // ...\n  }\n}\nMyPhrase.defaultProps = {myProp: 'test'}\nMyPhrase.supplements = []\n```\n\n#### Using ES5\n```js\nvar phrase = require('lacona-phrase')\n\nmodule.exports = phrase.createPhrase({\n  defaultProps: {myProp: 'test'},\n  supplements: [],\n  describe: function () {\n    return // ...\n  }\n})\n```\n",
+  "readmeFilename": "README.md",
+  "gitHead": "bb4dd9a89acdcb8fd00c82af3f66d8ae1055b4c9",
+  "_id": "lacona-phrase@0.7.0",
+  "_shasum": "b707b5c3abc6034137f5d4dafb3da4c22c6e221c",
+  "_from": "lacona-phrase@*"
+}
 
-},{"../stackfind.js":62,"babel-runtime/core-js/get-iterator":6,"babel-runtime/helpers/class-call-check":10,"babel-runtime/helpers/inherits":12,"babel-runtime/helpers/interop-require-wildcard":13,"babel-runtime/regenerator":41,"lacona-phrase":48,"lodash":64}],58:[function(require,module,exports){
-"use strict";var _interopRequire=require("babel-runtime/helpers/interop-require")["default"];exports.__esModule=!0;var _default=require("./parser");exports.Parser=_interopRequire(_default);
+},{}],33:[function(require,module,exports){
+/** @jsx createElement */
+'use strict';
 
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
 
-},{"./parser":60,"babel-runtime/helpers/interop-require":14}],59:[function(require,module,exports){
-"use strict";function parse(e){var r,t,a,n,s,i=e.phrase,o=e.input,u=e.options;return _regeneratorRuntime.wrap(function(e){for(;;)switch(e.prev=e.next){case 0:if(_import2["default"].isEmpty(o.completion)||!_import2["default"].find(o.stack,function(e){return e.Constructor===i.constructor&&!e.Constructor.prototype._handleParse})){e.next=2;break}return e.abrupt("return");case 2:r=parseElement({phrase:i,input:o,options:u}),t=Array.isArray(r),a=0,r=t?r:_getIterator(r);case 3:if(!t){e.next=9;break}if(!(a>=r.length)){e.next=6;break}return e.abrupt("break",18);case 6:n=r[a++],e.next=13;break;case 9:if(a=r.next(),!a.done){e.next=12;break}return e.abrupt("break",18);case 12:n=a.value;case 13:return s=n,e.next=16,_import2["default"].assign({},s,{stack:s.stack.slice(0,-1)});case 16:e.next=3;break;case 18:case"end":return e.stop()}},marked0$0[0],this)}function parseElement(e){var r,t,a,n,s,i,o,u,c=e.phrase,p=e.input,l=e.options;return _regeneratorRuntime.wrap(function(e){for(;;)switch(e.prev=e.next){case 0:if(r=_import2["default"].assign({},p,{stack:p.stack.concat({Constructor:c.constructor,category:c.props.category,join:c.props.join}),path:p.path.concat(c)}),!c.__describedPhrase){e.next=23;break}t=parse({phrase:c.__describedPhrase,input:r,options:l}),a=t,n=Array.isArray(a),s=0,a=n?a:_getIterator(a);case 4:if(!n){e.next=10;break}if(!(s>=a.length)){e.next=7;break}return e.abrupt("break",21);case 7:i=a[s++],e.next=14;break;case 10:if(s=a.next(),!s.done){e.next=13;break}return e.abrupt("break",21);case 13:i=s.value;case 14:if(o=i,c.filter&&!c.filter(o.result)){e.next=19;break}return u=c.getValue?_import2["default"].assign({},o,{result:c.getValue(o.result)}):o,e.next=19,u;case 19:e.next=4;break;case 21:e.next=24;break;case 23:return e.delegateYield(c._handleParse(r,l,parse),"t7",24);case 24:_import2["default"].forEach(c.__sources,function(e){e.lastVersion=e.source.__dataVersion});case 25:case"end":return e.stop()}},marked0$0[1],this)}var _getIterator=require("babel-runtime/core-js/get-iterator")["default"],_regeneratorRuntime=require("babel-runtime/regenerator")["default"],_interopRequireWildcard=require("babel-runtime/helpers/interop-require-wildcard")["default"];exports.__esModule=!0,exports["default"]=parse;var marked0$0=[parse,parseElement].map(_regeneratorRuntime.mark),_import=require("lodash"),_import2=_interopRequireWildcard(_import);module.exports=exports["default"];
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-},{"babel-runtime/core-js/get-iterator":6,"babel-runtime/helpers/interop-require-wildcard":13,"babel-runtime/regenerator":41,"lodash":64}],60:[function(require,module,exports){
-(function (process){
-"use strict";function from(e){for(var r=[],t=e,i=Array.isArray(t),a=0,t=i?t:_getIterator(t);;){var n;if(i){if(a>=t.length)break;n=t[a++]}else{if(a=t.next(),a.done)break;n=a.value}var s=n;r.push(s)}return r}function createOption(e){return _import2["default"].defaults(e,optionDefaults)}function normalizeOutput(e){var r=_import2["default"].pick(e,["match","completion","result","path","score"]),t=e.suggestion,i=[],a=void 0,n=void 0,s=void 0,o=void 0;if(t.length>0)for(i.push(_import2["default"].clone(t[0])),a=1,n=t.length;n>a;a++)s=i[i.length-1],o=_import2["default"].clone(t[a]),s.input===o.input&&s.category===o.category?s.string=s.string+o.string:i.push(o);return r.suggestion=i,r}var _inherits=require("babel-runtime/helpers/inherits")["default"],_classCallCheck=require("babel-runtime/helpers/class-call-check")["default"],_getIterator=require("babel-runtime/core-js/get-iterator")["default"],_regeneratorRuntime=require("babel-runtime/regenerator")["default"],_interopRequireWildcard=require("babel-runtime/helpers/interop-require-wildcard")["default"];exports.__esModule=!0,exports.createOption=createOption;var _import=require("lodash"),_import2=_interopRequireWildcard(_import),_createElement=require("lacona-phrase"),_EventEmitter2=require("events"),_parse2=require("./parse"),_parse3=_interopRequireWildcard(_parse2),_reconcile=require("./reconcile"),optionDefaults={text:"",match:[],suggestion:[],completion:[],stack:[],callbacks:[],path:[]},Parser=function(e){function r(){var t=void 0===arguments[0]?{}:arguments[0],i=t.langs,a=void 0===i?["default"]:i,n=t.grammar,s=t.extensions,o=void 0===s?[]:s;_classCallCheck(this,r),e.call(this),this.langs=a,this.grammar=n,this.extensions=o,this._sources=[],this._reparseNeeded=!1}return _inherits(r,e),r.prototype._getExtensions=function(e){return _import2["default"].reduce(this.extensions,function(r,t){return _import2["default"].includes(t["extends"],e)&&r.push(t),r},[])},r.prototype._triggerReparse=function(){var e=this;this._reparseNeeded=!0,process.nextTick(function(){e._reparseNeeded&&(e._reparseNeeded=!1,e.emit("change"))})},r.prototype._getSource=function(e){var r=this,t=_import2["default"].find(this._sources,function(r){var t=r.descriptor;return _import2["default"].isEqual(t,e)});if(t)return t.instance;var i=new e.Constructor;return i.props=e.props,i.data={},i.__dataVersion=0,i.__subscribers=0,i.setData=function(e){_import2["default"].merge(i.data,e),i.__dataVersion++,r._triggerReparse()},i.replaceData=function(e){i.data=e,i.__dataVersion++,r._triggerReparse()},i.create&&i.create(),this._sources.push({instance:i,descriptor:e}),i},r.prototype._removeSource=function(e){var r=_import2["default"].findIndex(this._sources,function(r){var t=r.descriptor;return _import2["default"].isEqual(t,e)});this._sources.splice(r,1)},r.prototype.parse=function(e){function r(r){var i=arguments;return _regeneratorRuntime.wrap(function(r){for(;;)switch(r.prev=r.next){case 0:return r.delegateYield(e.apply(this,i),"t8",1);case 1:return r.abrupt("return",r.t8);case 2:case"end":return r.stop()}},t[0],this)}var t=[r].map(_regeneratorRuntime.mark);return r.toString=function(){return e.toString()},r}(_regeneratorRuntime.mark(function t(e){var r,i,a,n,s,o,u;return _regeneratorRuntime.wrap(function(t){for(;;)switch(t.prev=t.next){case 0:if(_import2["default"].isString(e)){t.next=2;break}throw new Error("lacona parse input must be a string");case 2:r=createOption({text:e}),i={langs:this.langs,getExtensions:this._getExtensions.bind(this),getSource:this._getSource.bind(this),removeSource:this._removeSource.bind(this)},this._phrase=_reconcile.reconcile({descriptor:this.grammar,phrase:this._phrase,options:i}),a=_parse3["default"]({phrase:this._phrase,input:r,options:i}),n=Array.isArray(a),s=0,a=n?a:_getIterator(a);case 6:if(!n){t.next=12;break}if(!(s>=a.length)){t.next=9;break}return t.abrupt("break",23);case 9:o=a[s++],t.next=16;break;case 12:if(s=a.next(),!s.done){t.next=15;break}return t.abrupt("break",23);case 15:o=s.value;case 16:if(u=o,""!==u.text){t.next=21;break}return u.callbacks.forEach(function(e){return e()}),t.next=21,normalizeOutput(u);case 21:t.next=6;break;case 23:this._reparseNeeded=!1;case 24:case"end":return t.stop()}},t,this)})),r.prototype.parseArray=function(e){return from(this.parse(e))},r}(_EventEmitter2.EventEmitter);exports["default"]=Parser;
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
+var _laconaPhrase = require('lacona-phrase');
 
-}).call(this,require('_process'))
-},{"./parse":59,"./reconcile":61,"_process":44,"babel-runtime/core-js/get-iterator":6,"babel-runtime/helpers/class-call-check":10,"babel-runtime/helpers/inherits":12,"babel-runtime/helpers/interop-require-wildcard":13,"babel-runtime/regenerator":41,"events":43,"lacona-phrase":48,"lodash":64}],61:[function(require,module,exports){
-"use strict";function reconcile(r){var e=r.descriptor,t=r.phrase,o=r.options,s=_import2["default"].isArray(e)?reconcileArray:reconcileOne;return s({descriptor:e,phrase:t,options:o})}function reconcileArray(r){var e=r.descriptor,t=r.phrase,o=r.options;return _import2["default"].chain(e).zip(t).map(function(r){var e=r[0],t=r[1];return reconcile({descriptor:e,phrase:t,options:o})}).value()}function reconcileOne(r){var e=r.descriptor,t=r.phrase,o=r.options;if(null==e&&t)return destroy({phrase:t,removeSource:o.removeSource});var s=getConstructor({Constructor:e.Constructor}),n=getRealProps({descriptor:e,Constructor:s}),i=o.getExtensions(s);if(t&&t.constructor===s&&_import2["default"].isEqual(n,t.props)){if(_import2["default"].some(t.__sources,function(r){return r.lastVersion!==r.source.__dataVersion})||!_import2["default"].isEqual(i,t.__oldExtensions)){var a=getDescribedPhrase({Constructor:s,phrase:t,extensions:i,options:o});return t.__oldExtensions=i,t.__describedPhrase=a,t}return t}t&&destroy({phrase:t,removeSource:o.removeSource});var c=new s;c.props=n;var u=getCall({prop:"source",Constructor:s,langs:o.langs}),l=u?u.call(t):{},p=_import2["default"].defaults({},l,s.__additionalSources);applySources({sources:p,phrase:c,getSource:o.getSource}),create({phrase:c});var a=getDescribedPhrase({Constructor:s,phrase:c,extensions:i,options:o});return c.__oldExtensions=i,c.__describedPhrase=a,c}function getDescribedPhrase(r){var e=r.phrase,t=r.extensions,o=r.options,s=getCall({prop:"describe",Constructor:e.constructor,langs:o.langs}),n=getDescription({describe:s,extensions:t,phrase:e});return n?reconcile({descriptor:n,options:o,phrase:e.__describedPhrase}):null}function getCall(r){var e=r.Constructor,t=r.langs,o=r.prop;return e.prototype[o]?e.prototype[o]:e.translations?getCallFromTranslations({prop:o,langs:t,translations:e.translations}):void 0}function getCallFromTranslations(r){var e=r.prop,t=r.langs,o=r.translations;return _import2["default"].chain(t.concat("default")).map(function(r){return _import2["default"].find(o,function(e){return _import2["default"].includes(e.langs,r)})}).filter(_import2["default"].negate(_import2["default"].isUndefined)).first().value()[e]}function getDescription(r){var e=r.describe,t=r.extensions,o=r.phrase;if(e){var s=e.call(o);if(t.length){var n=t.map(function(r){return _createElement.createElement(r,o.props)});s=_createElement.createElement("choice",null,s,n)}return s}}function getRealProps(r){var e=r.descriptor,t=r.Constructor,o=_import2["default"].defaults(e.props||{},t.defaultProps||{});return e.children&&e.children.length>0&&(o.children=_import2["default"].flattenDeep(e.children)),o}function getConstructor(r){var e=r.Constructor;if(_import2["default"].isString(e)){if(_import2["default"].has(builtins,e))return builtins[e];throw new Error("Invalid phrase. Note: non-builtin phrases must be uppercase")}return e}function destroy(r){var e=r.phrase,t=r.removeSource;e.constructor!==builtins.choice&&e.constructor!==builtins.sequence||!e.childPhrases||e.childPhrases.forEach(function(r){return destroy({phrase:r,removeSource:t})}),_import2["default"].forEach(e.__sources,function(r){var e=r.source,o=r.descriptor;e.__subscribers--,0===e.__subscribers&&e.destroy&&(e.destroy(),t(o))}),e.destroy&&e.destroy()}function create(r){var e=r.phrase;e.create&&e.create()}function applySources(r){var e=r.sources,t=r.phrase,o=r.getSource;t.__sources={},_import2["default"].forEach(e,function(r,e){var s=o(r);s.__subscribers++,t.__sources[e]={source:s,lastVersion:0,descriptor:r},Object.defineProperty(t,e,{get:function(){return t.__sources[e].source.data}})})}var _interopRequireWildcard=require("babel-runtime/helpers/interop-require-wildcard")["default"];exports.__esModule=!0,exports.reconcile=reconcile,exports.destroy=destroy;var _import=require("lodash"),_import2=_interopRequireWildcard(_import),_import3=require("./elements"),builtins=_interopRequireWildcard(_import3),_createElement=require("lacona-phrase");
+var PhoneNumber = (function (_Phrase) {
+  function PhoneNumber() {
+    _classCallCheck(this, PhoneNumber);
 
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
 
-},{"./elements":53,"babel-runtime/helpers/interop-require-wildcard":13,"lacona-phrase":48,"lodash":64}],62:[function(require,module,exports){
-"use strict";function stackFind(r,e,t,i){if(null!=t)return t;var u=_import2["default"].findLast(r,function(r){return null!=r[e]});return u?u[e]:i}var _interopRequireWildcard=require("babel-runtime/helpers/interop-require-wildcard")["default"];exports.__esModule=!0,exports["default"]=stackFind;var _import=require("lodash"),_import2=_interopRequireWildcard(_import);module.exports=exports["default"];
+  _inherits(PhoneNumber, _Phrase);
 
+  _createClass(PhoneNumber, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) return;
 
-},{"babel-runtime/helpers/interop-require-wildcard":13,"lodash":64}],63:[function(require,module,exports){
-"use strict";function match(t,e){var r=anywhereMatch(t,e);if(r)return{words:r,score:.5};var n=fuzzyMatch(t,e);return n?{words:n,score:.25}:null}function wordify(t,e){for(var r=t.length;r>0;r--){var n=match(t.substring(r),e);if(n)return n.words}return[{text:e,input:!1}]}function sort(t,e,r){}function regexEscape(t){return"("+t.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/,"\\$&")+")"}function regexSplit(t){return t.split("").map(regexEscape)}function anywhereMatch(t,e){var r=e.toLowerCase().indexOf(t);if(r>-1){var n=r+t.length;return[{text:e.slice(0,r),input:!1},{text:e.slice(r,n),input:!0},{text:e.slice(n),input:!1}]}return null}function fuzzyMatch(t,e){var r=regexSplit(t),n=r.reduce(function(t,e){return""+t+"([^"+e+"]*)"+e},"^")+"(.*)$",u=new RegExp(n,"i"),i=e.match(u);if(i){for(var o=[],c=1,a=i.length;a>c;c++)i[c].length>0&&o.push({text:i[c],input:c%2===0});return o}return null}Object.defineProperty(exports,"__esModule",{value:!0}),exports.match=match,exports.wordify=wordify,exports.sort=sort;
+      return result.replace(/[ ()/-]/g, '');
+    }
+  }, {
+    key: 'displayWhen',
+    value: function displayWhen(input) {
+      return /^\+?\(?(\d[ ()/-]{0,2}){0,6}$/.test(input);
+    }
+  }, {
+    key: 'validate',
+    value: function validate(input) {
+      return /^\+?\(?(\d[ ()/-]{0,2}){7,15}$/.test(input);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'argument',
+        { text: 'phone number', displayWhen: this.displayWhen },
+        (0, _laconaPhrase.createElement)('freetext', { validate: this.validate, splitOn: /\w/ })
+      );
+    }
+  }]);
 
+  return PhoneNumber;
+})(_laconaPhrase.Phrase);
 
-},{}],64:[function(require,module,exports){
+exports['default'] = PhoneNumber;
+module.exports = exports['default'];
+},{"lacona-phrase":34}],34:[function(require,module,exports){
+arguments[4][23][0].apply(exports,arguments)
+},{"../package":36,"dup":23,"inherits":35}],35:[function(require,module,exports){
+arguments[4][24][0].apply(exports,arguments)
+},{"dup":24}],36:[function(require,module,exports){
+arguments[4][25][0].apply(exports,arguments)
+},{"dup":25}],37:[function(require,module,exports){
 (function (global){
-(function(){function n(n,t){if(n!==t){var r=n===n,e=t===t;if(n>t||!r||"undefined"==typeof n&&e)return 1;if(t>n||!e||"undefined"==typeof t&&r)return-1}return 0}function t(n,t,r){for(var e=n.length,u=r?e:-1;r?u--:++u<e;)if(t(n[u],u,n))return u;return-1}function r(n,t,r){if(t!==t)return h(n,r);for(var e=r-1,u=n.length;++e<u;)if(n[e]===t)return e;return-1}function e(n){return"function"==typeof n||!1}function u(n){return"string"==typeof n?n:null==n?"":n+""}function i(n){return n.charCodeAt(0)}function o(n,t){for(var r=-1,e=n.length;++r<e&&t.indexOf(n.charAt(r))>-1;);return r}function f(n,t){for(var r=n.length;r--&&t.indexOf(n.charAt(r))>-1;);return r}function a(t,r){return n(t.criteria,r.criteria)||t.index-r.index}function c(t,r,e){for(var u=-1,i=t.criteria,o=r.criteria,f=i.length,a=e.length;++u<f;){var c=n(i[u],o[u]);if(c)return u>=a?c:c*(e[u]?1:-1)}return t.index-r.index}function l(n){return Bn[n]}function p(n){return zn[n]}function s(n){return"\\"+Pn[n]}function h(n,t,r){for(var e=n.length,u=t+(r?0:-1);r?u--:++u<e;){var i=n[u];if(i!==i)return u}return-1}function v(n){return!!n&&"object"==typeof n}function _(n){return 160>=n&&n>=9&&13>=n||32==n||160==n||5760==n||6158==n||n>=8192&&(8202>=n||8232==n||8233==n||8239==n||8287==n||12288==n||65279==n)}function g(n,t){for(var r=-1,e=n.length,u=-1,i=[];++r<e;)n[r]===t&&(n[r]=D,i[++u]=r);return i}function y(n,t){for(var r,e=-1,u=n.length,i=-1,o=[];++e<u;){var f=n[e],a=t?t(f,e,n):f;e&&r===a||(r=a,o[++i]=f)}return o}function d(n){for(var t=-1,r=n.length;++t<r&&_(n.charCodeAt(t)););return t}function m(n){for(var t=n.length;t--&&_(n.charCodeAt(t)););return t}function w(n){return Dn[n]}function b(_){function G(n){if(v(n)&&!ff(n)&&!(n instanceof Bn)){if(n instanceof nn)return n;if(Ci.call(n,"__chain__")&&Ci.call(n,"__wrapped__"))return Gr(n)}return new nn(n)}function H(){}function nn(n,t,r){this.__wrapped__=n,this.__actions__=r||[],this.__chain__=!!t}function Bn(n){this.__wrapped__=n,this.__actions__=null,this.__dir__=1,this.__dropCount__=0,this.__filtered__=!1,this.__iteratees__=null,this.__takeCount__=oo,this.__views__=null}function zn(){var n=this.__actions__,t=this.__iteratees__,r=this.__views__,e=new Bn(this.__wrapped__);return e.__actions__=n?Qn(n):null,e.__dir__=this.__dir__,e.__filtered__=this.__filtered__,e.__iteratees__=t?Qn(t):null,e.__takeCount__=this.__takeCount__,e.__views__=r?Qn(r):null,e}function Dn(){if(this.__filtered__){var n=new Bn(this);n.__dir__=-1,n.__filtered__=!0}else n=this.clone(),n.__dir__*=-1;return n}function Mn(){var n=this.__wrapped__.value();if(!ff(n))return Gt(n,this.__actions__);var t=this.__dir__,r=0>t,e=Sr(0,n.length,this.__views__),u=e.start,i=e.end,o=i-u,f=r?i:u-1,a=no(o,this.__takeCount__),c=this.__iteratees__,l=c?c.length:0,p=0,s=[];n:for(;o--&&a>p;){f+=t;for(var h=-1,v=n[f];++h<l;){var _=c[h],g=_.iteratee,y=_.type;if(y==$){if(_.done&&(r?f>_.index:f<_.index)&&(_.count=0,_.done=!1),_.index=f,!_.done){var d=_.limit;if(!(_.done=d>-1?_.count++>=d:!g(v)))continue n}}else{var m=g(v);if(y==B)v=m;else if(!m){if(y==L)continue n;break n}}}s[p++]=v}return s}function Pn(){this.__data__={}}function qn(n){return this.has(n)&&delete this.__data__[n]}function Kn(n){return"__proto__"==n?x:this.__data__[n]}function Vn(n){return"__proto__"!=n&&Ci.call(this.__data__,n)}function Yn(n,t){return"__proto__"!=n&&(this.__data__[n]=t),this}function Gn(n){var t=n?n.length:0;for(this.data={hash:Xi(null),set:new Pi};t--;)this.push(n[t])}function Jn(n,t){var r=n.data,e="string"==typeof t||su(t)?r.set.has(t):r.hash[t];return e?0:-1}function Hn(n){var t=this.data;"string"==typeof n||su(n)?t.set.add(n):t.hash[n]=!0}function Qn(n,t){var r=-1,e=n.length;for(t||(t=vi(e));++r<e;)t[r]=n[r];return t}function nt(n,t){for(var r=-1,e=n.length;++r<e&&t(n[r],r,n)!==!1;);return n}function tt(n,t){for(var r=n.length;r--&&t(n[r],r,n)!==!1;);return n}function rt(n,t){for(var r=-1,e=n.length;++r<e;)if(!t(n[r],r,n))return!1;return!0}function et(n,t){for(var r=-1,e=n.length,u=-1,i=[];++r<e;){var o=n[r];t(o,r,n)&&(i[++u]=o)}return i}function ut(n,t){for(var r=-1,e=n.length,u=vi(e);++r<e;)u[r]=t(n[r],r,n);return u}function it(n){for(var t=-1,r=n.length,e=io;++t<r;){var u=n[t];u>e&&(e=u)}return e}function ot(n){for(var t=-1,r=n.length,e=oo;++t<r;){var u=n[t];e>u&&(e=u)}return e}function ft(n,t,r,e){var u=-1,i=n.length;for(e&&i&&(r=n[++u]);++u<i;)r=t(r,n[u],u,n);return r}function at(n,t,r,e){var u=n.length;for(e&&u&&(r=n[--u]);u--;)r=t(r,n[u],u,n);return r}function ct(n,t){for(var r=-1,e=n.length;++r<e;)if(t(n[r],r,n))return!0;return!1}function lt(n){for(var t=n.length,r=0;t--;)r+=+n[t]||0;return r}function pt(n,t){return"undefined"==typeof n?t:n}function st(n,t,r,e){return"undefined"!=typeof n&&Ci.call(e,r)?n:t}function ht(n,t,r){var e=mf(t);if(!r)return _t(t,n,e);for(var u=-1,i=e.length;++u<i;){var o=e[u],f=n[o],a=r(f,t[o],o,n,t);(a===a?a===f:f!==f)&&("undefined"!=typeof f||o in n)||(n[o]=a)}return n}function vt(n,t){for(var r=-1,e=n.length,u=Lr(e),i=t.length,o=vi(i);++r<i;){var f=t[r];u?(f=parseFloat(f),o[r]=Fr(f,e)?n[f]:x):o[r]=n[f]}return o}function _t(n,t,r){r||(r=t,t={});for(var e=-1,u=r.length;++e<u;){var i=r[e];t[i]=n[i]}return t}function gt(n,t,r){var e=typeof n;return"function"==e?"undefined"==typeof t?n:Zt(n,t,r):null==n?ti:"object"==e?Ut(n):"undefined"==typeof t?$t(n+""):Wt(n+"",t)}function yt(n,t,r,e,u,i,o){var f;if(r&&(f=u?r(n,e,u):r(n)),"undefined"!=typeof f)return f;if(!su(n))return n;var a=ff(n);if(a){if(f=Tr(n),!t)return Qn(n,f)}else{var c=Ti.call(n),l=c==Y;if(c!=X&&c!=M&&(!l||u))return $n[c]?Wr(n,c,t):u?n:{};if(f=Ur(l?{}:n),!t)return _t(n,f,mf(n))}i||(i=[]),o||(o=[]);for(var p=i.length;p--;)if(i[p]==n)return o[p];return i.push(n),o.push(f),(a?nt:It)(n,function(e,u){f[u]=yt(e,t,r,u,n,i,o)}),f}function dt(n,t,r){if("function"!=typeof n)throw new Ai(z);return qi(function(){n.apply(x,r)},t)}function mt(n,t){var e=n?n.length:0,u=[];if(!e)return u;var i=-1,o=Cr(),f=o==r,a=f&&t.length>=200?xo(t):null,c=t.length;a&&(o=Jn,f=!1,t=a);n:for(;++i<e;){var l=n[i];if(f&&l===l){for(var p=c;p--;)if(t[p]===l)continue n;u.push(l)}else o(t,l,0)<0&&u.push(l)}return u}function wt(n,t){var r=!0;return go(n,function(n,e,u){return r=!!t(n,e,u)}),r}function bt(n,t,r,e){var u=n.length;for(r=null==r?0:+r||0,0>r&&(r=-r>u?0:u+r),e="undefined"==typeof e||e>u?u:+e||0,0>e&&(e+=u),u=r>e?0:e>>>0,r>>>=0;u>r;)n[r++]=t;return n}function xt(n,t){var r=[];return go(n,function(n,e,u){t(n,e,u)&&r.push(n)}),r}function At(n,t,r,e){var u;return r(n,function(n,r,i){return t(n,r,i)?(u=e?r:n,!1):void 0}),u}function jt(n,t,r){for(var e=-1,u=n.length,i=-1,o=[];++e<u;){var f=n[e];if(v(f)&&Lr(f.length)&&(ff(f)||iu(f))){t&&(f=jt(f,t,r));var a=-1,c=f.length;for(o.length+=c;++a<c;)o[++i]=f[a]}else r||(o[++i]=f)}return o}function Et(n,t){return mo(n,t,Ru)}function It(n,t){return mo(n,t,mf)}function Ot(n,t){return wo(n,t,mf)}function Rt(n,t){for(var r=-1,e=t.length,u=-1,i=[];++r<e;){var o=t[r];cf(n[o])&&(i[++u]=o)}return i}function kt(n,t,r,e,u,i){if(n===t)return 0!==n||1/n==1/t;var o=typeof n,f=typeof t;return"function"!=o&&"object"!=o&&"function"!=f&&"object"!=f||null==n||null==t?n!==n&&t!==t:Ct(n,t,kt,r,e,u,i)}function Ct(n,t,r,e,u,i,o){var f=ff(n),a=ff(t),c=P,l=P;f||(c=Ti.call(n),c==M?c=X:c!=X&&(f=wu(n))),a||(l=Ti.call(t),l==M?l=X:l!=X&&(a=wu(t)));var p=c==X||u&&c==Y,s=l==X||u&&l==Y,h=c==l;if(h&&!f&&!p)return Ir(n,t,c);if(u){if(!(h||p&&s))return!1}else{var v=p&&Ci.call(n,"__wrapped__"),_=s&&Ci.call(t,"__wrapped__");if(v||_)return r(v?n.value():n,_?t.value():t,e,u,i,o);if(!h)return!1}i||(i=[]),o||(o=[]);for(var g=i.length;g--;)if(i[g]==n)return o[g]==t;i.push(n),o.push(t);var y=(f?Er:Or)(n,t,r,e,u,i,o);return i.pop(),o.pop(),y}function St(n,t,r,e,u){for(var i=-1,o=t.length,f=!u;++i<o;)if(f&&e[i]?r[i]!==n[t[i]]:!(t[i]in n))return!1;for(i=-1;++i<o;){var a=t[i],c=n[a],l=r[i];if(f&&e[i])var p="undefined"!=typeof c||a in n;else p=u?u(c,l,a):x,"undefined"==typeof p&&(p=kt(l,c,u,!0));if(!p)return!1}return!0}function Tt(n,t){var r=[];return go(n,function(n,e,u){r.push(t(n,e,u))}),r}function Ut(n){var t=mf(n),r=t.length;if(!r)return ni(!0);if(1==r){var e=t[0],u=n[e];if(Br(u))return function(n){return null!=n&&n[e]===u&&("undefined"!=typeof u||e in Yr(n))}}for(var i=vi(r),o=vi(r);r--;)u=n[t[r]],i[r]=u,o[r]=Br(u);return function(n){return null!=n&&St(Yr(n),t,i,o)}}function Wt(n,t){return Br(t)?function(r){return null!=r&&r[n]===t&&("undefined"!=typeof t||n in Yr(r))}:function(r){return null!=r&&kt(t,r[n],null,!0)}}function Ft(n,t,r,e,u){if(!su(n))return n;var i=Lr(t.length)&&(ff(t)||wu(t));return(i?nt:It)(t,function(t,o,f){if(v(t))return e||(e=[]),u||(u=[]),Nt(n,f,o,Ft,r,e,u);var a=n[o],c=r?r(a,t,o,n,f):x,l="undefined"==typeof c;l&&(c=t),!i&&"undefined"==typeof c||!l&&(c===c?c===a:a!==a)||(n[o]=c)}),n}function Nt(n,t,r,e,u,i,o){for(var f=i.length,a=t[r];f--;)if(i[f]==a)return void(n[r]=o[f]);var c=n[r],l=u?u(c,a,r,n,t):x,p="undefined"==typeof l;p&&(l=a,Lr(a.length)&&(ff(a)||wu(a))?l=ff(c)?c:c&&c.length?Qn(c):[]:lf(a)||iu(a)?l=iu(c)?Au(c):lf(c)?c:{}:p=!1),i.push(a),o.push(l),p?n[r]=e(l,a,u,i,o):(l===l?l!==c:c===c)&&(n[r]=l)}function $t(n){return function(t){return null==t?x:t[n]}}function Lt(n,t){return n+Bi(uo()*(t-n+1))}function Bt(n,t,r,e,u){return u(n,function(n,u,i){r=e?(e=!1,n):t(r,n,u,i)}),r}function zt(n,t,r){var e=-1,u=n.length;t=null==t?0:+t||0,0>t&&(t=-t>u?0:u+t),r="undefined"==typeof r||r>u?u:+r||0,0>r&&(r+=u),u=t>r?0:r-t>>>0,t>>>=0;for(var i=vi(u);++e<u;)i[e]=n[e+t];return i}function Dt(n,t){var r;return go(n,function(n,e,u){return r=t(n,e,u),!r}),!!r}function Mt(n,t){var r=n.length;for(n.sort(t);r--;)n[r]=n[r].value;return n}function Pt(n,t,r){var e=-1,u=n.length,i=Lr(u)?vi(u):[];return go(n,function(n){for(var r=t.length,u=vi(r);r--;)u[r]=null==n?x:n[t[r]];i[++e]={criteria:u,index:e,value:n}}),Mt(i,function(n,t){return c(n,t,r)})}function qt(n,t){var r=0;return go(n,function(n,e,u){r+=+t(n,e,u)||0}),r}function Kt(n,t){var e=-1,u=Cr(),i=n.length,o=u==r,f=o&&i>=200,a=f?xo():null,c=[];a?(u=Jn,o=!1):(f=!1,a=t?[]:c);n:for(;++e<i;){var l=n[e],p=t?t(l,e,n):l;if(o&&l===l){for(var s=a.length;s--;)if(a[s]===p)continue n;t&&a.push(p),c.push(l)}else u(a,p,0)<0&&((t||f)&&a.push(p),c.push(l))}return c}function Vt(n,t){for(var r=-1,e=t.length,u=vi(e);++r<e;)u[r]=n[t[r]];return u}function Yt(n,t,r,e){for(var u=n.length,i=e?u:-1;(e?i--:++i<u)&&t(n[i],i,n););return r?zt(n,e?0:i,e?i+1:u):zt(n,e?i+1:0,e?u:i)}function Gt(n,t){var r=n;r instanceof Bn&&(r=r.value());for(var e=-1,u=t.length;++e<u;){var i=[r],o=t[e];Di.apply(i,o.args),r=o.func.apply(o.thisArg,i)}return r}function Jt(n,t,r){var e=0,u=n?n.length:e;if("number"==typeof t&&t===t&&co>=u){for(;u>e;){var i=e+u>>>1,o=n[i];(r?t>=o:t>o)?e=i+1:u=i}return u}return Xt(n,t,ti,r)}function Xt(n,t,r,e){t=r(t);for(var u=0,i=n?n.length:0,o=t!==t,f="undefined"==typeof t;i>u;){var a=Bi((u+i)/2),c=r(n[a]),l=c===c;if(o)var p=l||e;else p=f?l&&(e||"undefined"!=typeof c):e?t>=c:t>c;p?u=a+1:i=a}return no(i,ao)}function Zt(n,t,r){if("function"!=typeof n)return ti;if("undefined"==typeof t)return n;switch(r){case 1:return function(r){return n.call(t,r)};case 3:return function(r,e,u){return n.call(t,r,e,u)};case 4:return function(r,e,u,i){return n.call(t,r,e,u,i)};case 5:return function(r,e,u,i,o){return n.call(t,r,e,u,i,o)}}return function(){return n.apply(t,arguments)}}function Ht(n){return Ni.call(n,0)}function Qt(n,t,r){for(var e=r.length,u=-1,i=Qi(n.length-e,0),o=-1,f=t.length,a=vi(i+f);++o<f;)a[o]=t[o];for(;++u<e;)a[r[u]]=n[u];for(;i--;)a[o++]=n[u++];return a}function nr(n,t,r){for(var e=-1,u=r.length,i=-1,o=Qi(n.length-u,0),f=-1,a=t.length,c=vi(o+a);++i<o;)c[i]=n[i];for(var l=i;++f<a;)c[l+f]=t[f];for(;++e<u;)c[l+r[e]]=n[i++];return c}function tr(n,t){return function(r,e,u){var i=t?t():{};if(e=kr(e,u,3),ff(r))for(var o=-1,f=r.length;++o<f;){var a=r[o];n(i,a,e(a,o,r),r)}else go(r,function(t,r,u){n(i,t,e(t,r,u),u)});return i}}function rr(n){return function(){var t=arguments,r=t.length,e=t[0];if(2>r||null==e)return e;var u=t[r-2],i=t[r-1],o=t[3];r>3&&"function"==typeof u?(u=Zt(u,i,5),r-=2):(u=r>2&&"function"==typeof i?i:null,r-=u?1:0),o&&Nr(t[1],t[2],o)&&(u=3==r?null:u,r=2);for(var f=0;++f<r;){var a=t[f];a&&n(e,a,u)}return e}}function er(n,t){return function(r,e){var u=r?r.length:0;if(!Lr(u))return n(r,e);for(var i=t?u:-1,o=Yr(r);(t?i--:++i<u)&&e(o[i],i,o)!==!1;);return r}}function ur(n){return function(t,r,e){for(var u=Yr(t),i=e(t),o=i.length,f=n?o:-1;n?f--:++f<o;){var a=i[f];if(r(u[a],a,u)===!1)break}return t}}function ir(n,t){function r(){var u=this&&this!==Xn&&this instanceof r?e:n;return u.apply(t,arguments)}var e=fr(n);return r}function or(n){return function(t){for(var r=-1,e=Hu(Lu(t)),u=e.length,i="";++r<u;)i=n(i,e[r],r);return i}}function fr(n){return function(){var t=_o(n.prototype),r=n.apply(t,arguments);return su(r)?r:t}}function ar(n){function t(r,e,u){u&&Nr(r,e,u)&&(e=null);var i=jr(r,n,null,null,null,null,null,e);return i.placeholder=t.placeholder,i}return t}function cr(n,t){return function(r,e,u){u&&Nr(r,e,u)&&(e=null);var o=kr(),f=null==e;if(o===gt&&f||(f=!1,e=o(e,u,3)),f){var a=ff(r);if(a||!mu(r))return n(a?r:Vr(r));e=i}return Rr(r,e,t)}}function lr(n,r){return function(e,u,i){if(u=kr(u,i,3),ff(e)){var o=t(e,u,r);return o>-1?e[o]:x}return At(e,u,n)}}function pr(n){return function(r,e,u){return r&&r.length?(e=kr(e,u,3),t(r,e,n)):-1}}function sr(n){return function(t,r,e){return r=kr(r,e,3),At(t,r,n,!0)}}function hr(n){return function(){var t=arguments.length;if(!t)return function(){return arguments[0]};for(var r,e=n?t:-1,u=0,i=vi(t);n?e--:++e<t;){var o=i[u++]=arguments[e];if("function"!=typeof o)throw new Ai(z);var f=r?"":jo(o);r="wrapper"==f?new nn([]):r}for(e=r?-1:t;++e<t;){o=i[e],f=jo(o);var a="wrapper"==f?Ao(o):null;r=a&&$r(a[0])?r[jo(a[0])].apply(r,a[3]):1==o.length&&$r(o)?r[f]():r.thru(o)}return function(){var n=arguments;if(r&&1==n.length&&ff(n[0]))return r.plant(n[0]).value();for(var e=0,u=i[e].apply(this,n);++e<t;)u=i[e].call(this,u);return u}}}function vr(n,t){return function(r,e,u){return"function"==typeof e&&"undefined"==typeof u&&ff(r)?n(r,e):t(r,Zt(e,u,3))}}function _r(n){return function(t,r,e){return("function"!=typeof r||"undefined"!=typeof e)&&(r=Zt(r,e,3)),n(t,r,Ru)}}function gr(n){return function(t,r,e){return("function"!=typeof r||"undefined"!=typeof e)&&(r=Zt(r,e,3)),n(t,r)}}function yr(n){return function(t,r,e){return t=u(t),t&&(n?t:"")+br(t,r,e)+(n?"":t)}}function dr(n){var t=Qe(function(r,e){var u=g(e,t.placeholder);return jr(r,n,null,e,u)});return t}function mr(n,t){return function(r,e,u,i){var o=arguments.length<3;return"function"==typeof e&&"undefined"==typeof i&&ff(r)?n(r,e,u,o):Bt(r,kr(e,i,4),u,o,t)}}function wr(n,t,r,e,u,i,o,f,a,c){function l(){for(var w=arguments.length,b=w,A=vi(w);b--;)A[b]=arguments[b];if(e&&(A=Qt(A,e,u)),i&&(A=nr(A,i,o)),v||y){var I=l.placeholder,O=g(A,I);if(w-=O.length,c>w){var R=f?Qn(f):null,S=Qi(c-w,0),T=v?O:null,U=v?null:O,W=v?A:null,F=v?null:A;t|=v?k:C,t&=~(v?C:k),_||(t&=~(j|E));var N=[n,t,r,W,T,F,U,R,a,S],$=wr.apply(x,N);return $r(n)&&Eo($,N),$.placeholder=I,$}}var L=s?r:this;h&&(n=L[m]),f&&(A=Pr(A,f)),p&&a<A.length&&(A.length=a);var B=this&&this!==Xn&&this instanceof l?d||fr(n):n;return B.apply(L,A)}var p=t&S,s=t&j,h=t&E,v=t&O,_=t&I,y=t&R,d=!h&&fr(n),m=n;return l}function br(n,t,r){var e=n.length;if(t=+t,e>=t||!Zi(t))return"";var u=t-e;return r=null==r?" ":r+"",qu(r,$i(u/r.length)).slice(0,u)}function xr(n,t,r,e){function u(){for(var t=-1,f=arguments.length,a=-1,c=e.length,l=vi(f+c);++a<c;)l[a]=e[a];for(;f--;)l[a++]=arguments[++t];var p=this&&this!==Xn&&this instanceof u?o:n;return p.apply(i?r:this,l)}var i=t&j,o=fr(n);return u}function Ar(n){return function(t,r,e,u){var i=kr(e);return i===gt&&null==e?Jt(t,r,n):Xt(t,r,i(e,u,1),n)}}function jr(n,t,r,e,u,i,o,f){var a=t&E;if(!a&&"function"!=typeof n)throw new Ai(z);var c=e?e.length:0;if(c||(t&=~(k|C),e=u=null),c-=u?u.length:0,t&C){var l=e,p=u;e=u=null}var s=a?null:Ao(n),h=[n,t,r,e,u,l,p,i,o,f];if(s&&(zr(h,s),t=h[1],f=h[9]),h[9]=null==f?a?0:n.length:Qi(f-c,0)||0,t==j)var v=ir(h[0],h[2]);else v=t!=k&&t!=(j|k)||h[4].length?wr.apply(x,h):xr.apply(x,h);var _=s?bo:Eo;return _(v,h)}function Er(n,t,r,e,u,i,o){var f=-1,a=n.length,c=t.length,l=!0;if(a!=c&&!(u&&c>a))return!1;for(;l&&++f<a;){var p=n[f],s=t[f];if(l=x,e&&(l=u?e(s,p,f):e(p,s,f)),"undefined"==typeof l)if(u)for(var h=c;h--&&(s=t[h],!(l=p&&p===s||r(p,s,e,u,i,o))););else l=p&&p===s||r(p,s,e,u,i,o)}return!!l}function Ir(n,t,r){switch(r){case q:case K:return+n==+t;case V:return n.name==t.name&&n.message==t.message;case J:return n!=+n?t!=+t:0==n?1/n==1/t:n==+t;case Z:case Q:return n==t+""}return!1}function Or(n,t,r,e,u,i,o){var f=mf(n),a=f.length,c=mf(t),l=c.length;if(a!=l&&!u)return!1;for(var p=u,s=-1;++s<a;){var h=f[s],v=u?h in t:Ci.call(t,h);if(v){var _=n[h],g=t[h];v=x,e&&(v=u?e(g,_,h):e(_,g,h)),"undefined"==typeof v&&(v=_&&_===g||r(_,g,e,u,i,o))}if(!v)return!1;p||(p="constructor"==h)}if(!p){var y=n.constructor,d=t.constructor;if(y!=d&&"constructor"in n&&"constructor"in t&&!("function"==typeof y&&y instanceof y&&"function"==typeof d&&d instanceof d))return!1}return!0}function Rr(n,t,r){var e=r?oo:io,u=e,i=u;return go(n,function(n,o,f){var a=t(n,o,f);((r?u>a:a>u)||a===e&&a===i)&&(u=a,i=n)}),i}function kr(n,t,r){var e=G.callback||Qu;return e=e===Qu?gt:e,r?e(n,t,r):e}function Cr(n,t,e){var u=G.indexOf||ie;return u=u===ie?r:u,n?u(n,t,e):u}function Sr(n,t,r){for(var e=-1,u=r?r.length:0;++e<u;){var i=r[e],o=i.size;switch(i.type){case"drop":n+=o;break;case"dropRight":t-=o;break;case"take":t=no(t,n+o);break;case"takeRight":n=Qi(n,t-o)}}return{start:n,end:t}}function Tr(n){var t=n.length,r=new n.constructor(t);return t&&"string"==typeof n[0]&&Ci.call(n,"index")&&(r.index=n.index,r.input=n.input),r}function Ur(n){var t=n.constructor;return"function"==typeof t&&t instanceof t||(t=wi),new t}function Wr(n,t,r){var e=n.constructor;switch(t){case tn:return Ht(n);case q:case K:return new e(+n);case rn:case en:case un:case on:case fn:case an:case cn:case ln:case pn:var u=n.buffer;return new e(r?Ht(u):u,n.byteOffset,n.length);case J:case Q:return new e(n);case Z:var i=new e(n.source,jn.exec(n));i.lastIndex=n.lastIndex}return i}function Fr(n,t){return n=+n,t=null==t?po:t,n>-1&&n%1==0&&t>n}function Nr(n,t,r){if(!su(r))return!1;var e=typeof t;if("number"==e)var u=r.length,i=Lr(u)&&Fr(t,u);else i="string"==e&&t in r;if(i){var o=r[t];return n===n?n===o:o!==o}return!1}function $r(n){var t=jo(n);return!!t&&n===G[t]&&t in Bn.prototype}function Lr(n){return"number"==typeof n&&n>-1&&n%1==0&&po>=n}function Br(n){return n===n&&(0===n?1/n>0:!su(n))}function zr(n,t){var r=n[1],e=t[1],u=r|e,i=S>u,o=e==S&&r==O||e==S&&r==T&&n[7].length<=t[8]||e==(S|T)&&r==O;if(!i&&!o)return n;e&j&&(n[2]=t[2],u|=r&j?0:I);var f=t[3];if(f){var a=n[3];n[3]=a?Qt(a,f,t[4]):Qn(f),n[4]=a?g(n[3],D):Qn(t[4])}return f=t[5],f&&(a=n[5],n[5]=a?nr(a,f,t[6]):Qn(f),n[6]=a?g(n[5],D):Qn(t[6])),f=t[7],f&&(n[7]=Qn(f)),e&S&&(n[8]=null==n[8]?t[8]:no(n[8],t[8])),null==n[9]&&(n[9]=t[9]),n[0]=t[0],n[1]=u,n}function Dr(n,t){n=Yr(n);for(var r=-1,e=t.length,u={};++r<e;){var i=t[r];i in n&&(u[i]=n[i])}return u}function Mr(n,t){var r={};return Et(n,function(n,e,u){t(n,e,u)&&(r[e]=n)}),r}function Pr(n,t){for(var r=n.length,e=no(t.length,r),u=Qn(n);e--;){var i=t[e];n[e]=Fr(i,r)?u[i]:x}return n}function qr(n){{var t;G.support}if(!v(n)||Ti.call(n)!=X||!Ci.call(n,"constructor")&&(t=n.constructor,"function"==typeof t&&!(t instanceof t)))return!1;var r;return Et(n,function(n,t){r=t}),"undefined"==typeof r||Ci.call(n,r)}function Kr(n){for(var t=Ru(n),r=t.length,e=r&&n.length,u=G.support,i=e&&Lr(e)&&(ff(n)||u.nonEnumArgs&&iu(n)),o=-1,f=[];++o<r;){var a=t[o];(i&&Fr(a,e)||Ci.call(n,a))&&f.push(a)}return f}function Vr(n){return null==n?[]:Lr(n.length)?su(n)?n:wi(n):Uu(n)}function Yr(n){return su(n)?n:wi(n)}function Gr(n){return n instanceof Bn?n.clone():new nn(n.__wrapped__,n.__chain__,Qn(n.__actions__))}function Jr(n,t,r){t=(r?Nr(n,t,r):null==t)?1:Qi(+t||1,1);for(var e=0,u=n?n.length:0,i=-1,o=vi($i(u/t));u>e;)o[++i]=zt(n,e,e+=t);return o}function Xr(n){for(var t=-1,r=n?n.length:0,e=-1,u=[];++t<r;){var i=n[t];i&&(u[++e]=i)}return u}function Zr(n,t,r){var e=n?n.length:0;return e?((r?Nr(n,t,r):null==t)&&(t=1),zt(n,0>t?0:t)):[]}function Hr(n,t,r){var e=n?n.length:0;return e?((r?Nr(n,t,r):null==t)&&(t=1),t=e-(+t||0),zt(n,0,0>t?0:t)):[]}function Qr(n,t,r){return n&&n.length?Yt(n,kr(t,r,3),!0,!0):[]}function ne(n,t,r){return n&&n.length?Yt(n,kr(t,r,3),!0):[]}function te(n,t,r,e){var u=n?n.length:0;return u?(r&&"number"!=typeof r&&Nr(n,t,r)&&(r=0,e=u),bt(n,t,r,e)):[]}function re(n){return n?n[0]:x}function ee(n,t,r){var e=n?n.length:0;return r&&Nr(n,t,r)&&(t=!1),e?jt(n,t):[]}function ue(n){var t=n?n.length:0;return t?jt(n,!0):[]}function ie(n,t,e){var u=n?n.length:0;if(!u)return-1;if("number"==typeof e)e=0>e?Qi(u+e,0):e;else if(e){var i=Jt(n,t),o=n[i];return(t===t?t===o:o!==o)?i:-1}return r(n,t,e||0)}function oe(n){return Hr(n,1)}function fe(){for(var n=[],t=-1,e=arguments.length,u=[],i=Cr(),o=i==r;++t<e;){var f=arguments[t];(ff(f)||iu(f))&&(n.push(f),u.push(o&&f.length>=120?xo(t&&f):null))}e=n.length;var a=n[0],c=-1,l=a?a.length:0,p=[],s=u[0];n:for(;++c<l;)if(f=a[c],(s?Jn(s,f):i(p,f,0))<0){for(t=e;--t;){var h=u[t];if((h?Jn(h,f):i(n[t],f,0))<0)continue n}s&&s.push(f),p.push(f)}return p}function ae(n){var t=n?n.length:0;return t?n[t-1]:x}function ce(n,t,r){var e=n?n.length:0;if(!e)return-1;var u=e;if("number"==typeof r)u=(0>r?Qi(e+r,0):no(r||0,e-1))+1;else if(r){u=Jt(n,t,!0)-1;var i=n[u];return(t===t?t===i:i!==i)?u:-1}if(t!==t)return h(n,u,!0);for(;u--;)if(n[u]===t)return u;return-1}function le(){var n=arguments,t=n[0];if(!t||!t.length)return t;for(var r=0,e=Cr(),u=n.length;++r<u;)for(var i=0,o=n[r];(i=e(t,o,i))>-1;)Ki.call(t,i,1);return t}function pe(n,t,r){var e=-1,u=n?n.length:0,i=[];for(t=kr(t,r,3);++e<u;){var o=n[e];t(o,e,n)&&(i.push(o),Ki.call(n,e--,1),u--)}return i}function se(n){return Zr(n,1)}function he(n,t,r){var e=n?n.length:0;return e?(r&&"number"!=typeof r&&Nr(n,t,r)&&(t=0,r=e),zt(n,t,r)):[]}function ve(n,t,r){var e=n?n.length:0;return e?((r?Nr(n,t,r):null==t)&&(t=1),zt(n,0,0>t?0:t)):[]}function _e(n,t,r){var e=n?n.length:0;return e?((r?Nr(n,t,r):null==t)&&(t=1),t=e-(+t||0),zt(n,0>t?0:t)):[]}function ge(n,t,r){return n&&n.length?Yt(n,kr(t,r,3),!1,!0):[]}function ye(n,t,r){return n&&n.length?Yt(n,kr(t,r,3)):[]}function de(n,t,e,u){var i=n?n.length:0;if(!i)return[];null!=t&&"boolean"!=typeof t&&(u=e,e=Nr(n,t,u)?null:t,t=!1);var o=kr();return(o!==gt||null!=e)&&(e=o(e,u,3)),t&&Cr()==r?y(n,e):Kt(n,e)}function me(n){for(var t=-1,r=(n&&n.length&&it(ut(n,ki)))>>>0,e=vi(r);++t<r;)e[t]=ut(n,$t(t));return e}function we(){for(var n=-1,t=arguments.length;++n<t;){var r=arguments[n];if(ff(r)||iu(r))var e=e?mt(e,r).concat(mt(r,e)):r}return e?Kt(e):[]}function be(n,t){var r=-1,e=n?n.length:0,u={};for(!e||t||ff(n[0])||(t=[]);++r<e;){var i=n[r];t?u[i]=t[r]:i&&(u[i[0]]=i[1])}return u}function xe(n){var t=G(n);return t.__chain__=!0,t}function Ae(n,t,r){return t.call(r,n),n}function je(n,t,r){return t.call(r,n)}function Ee(){return xe(this)}function Ie(){return new nn(this.value(),this.__chain__)}function Oe(n){for(var t,r=this;r instanceof H;){var e=Gr(r);t?u.__wrapped__=e:t=e;var u=e;r=r.__wrapped__}return u.__wrapped__=n,t}function Re(){var n=this.__wrapped__;return n instanceof Bn?(this.__actions__.length&&(n=new Bn(this)),new nn(n.reverse(),this.__chain__)):this.thru(function(n){return n.reverse()})}function ke(){return this.value()+""}function Ce(){return Gt(this.__wrapped__,this.__actions__)}function Se(n,t,r){var e=ff(n)?rt:wt;return r&&Nr(n,t,r)&&(t=null),("function"!=typeof t||"undefined"!=typeof r)&&(t=kr(t,r,3)),e(n,t)}function Te(n,t,r){var e=ff(n)?et:xt;return t=kr(t,r,3),e(n,t)}function Ue(n,t){return $o(n,Ut(t))}function We(n,t,r,e){var u=n?n.length:0;return Lr(u)||(n=Uu(n),u=n.length),u?(r="number"!=typeof r||e&&Nr(t,r,e)?0:0>r?Qi(u+r,0):r||0,"string"==typeof n||!ff(n)&&mu(n)?u>r&&n.indexOf(t,r)>-1:Cr(n,t,r)>-1):!1}function Fe(n,t,r){var e=ff(n)?ut:Tt;return t=kr(t,r,3),e(n,t)}function Ne(n,t){return Fe(n,$t(t))}function $e(n,t,r){var e=ff(n)?et:xt;return t=kr(t,r,3),e(n,function(n,r,e){return!t(n,r,e)})}function Le(n,t,r){if(r?Nr(n,t,r):null==t){n=Vr(n);var e=n.length;return e>0?n[Lt(0,e-1)]:x}var u=Be(n);return u.length=no(0>t?0:+t||0,u.length),u}function Be(n){n=Vr(n);for(var t=-1,r=n.length,e=vi(r);++t<r;){var u=Lt(0,t);t!=u&&(e[t]=e[u]),e[u]=n[t]}return e}function ze(n){var t=n?n.length:0;return Lr(t)?t:mf(n).length}function De(n,t,r){var e=ff(n)?ct:Dt;return r&&Nr(n,t,r)&&(t=null),("function"!=typeof t||"undefined"!=typeof r)&&(t=kr(t,r,3)),e(n,t)}function Me(n,t,r){if(null==n)return[];var e=-1,u=n.length,i=Lr(u)?vi(u):[];return r&&Nr(n,t,r)&&(t=null),t=kr(t,r,3),go(n,function(n,r,u){i[++e]={criteria:t(n,r,u),index:e,value:n}}),Mt(i,a)}function Pe(){var n=arguments,t=n[0],r=n[3],e=0,u=n.length-1;if(null==t)return[];for(var i=vi(u);u>e;)i[e]=n[++e];return r&&Nr(n[1],n[2],r)&&(i=n[1]),Pt(t,jt(i),[])}function qe(n,t,r,e){return null==n?[]:(e&&Nr(t,r,e)&&(r=null),ff(t)||(t=null==t?[]:[t]),ff(r)||(r=null==r?[]:[r]),Pt(n,t,r))}function Ke(n,t){return Te(n,Ut(t))}function Ve(n,t){if("function"!=typeof t){if("function"!=typeof n)throw new Ai(z);var r=n;n=t,t=r}return n=Zi(n=+n)?n:0,function(){return--n<1?t.apply(this,arguments):void 0}}function Ye(n,t,r){return r&&Nr(n,t,r)&&(t=null),t=n&&null==t?n.length:Qi(+t||0,0),jr(n,S,null,null,null,null,t)}function Ge(n,t){var r;if("function"!=typeof t){if("function"!=typeof n)throw new Ai(z);var e=n;n=t,t=e}return function(){return--n>0?r=t.apply(this,arguments):t=null,r}}function Je(n,t,r){function e(){s&&Li(s),a&&Li(a),a=s=h=x}function u(){var r=t-(Yo()-l);if(0>=r||r>t){a&&Li(a);var e=h;a=s=h=x,e&&(v=Yo(),c=n.apply(p,f),s||a||(f=p=null))}else s=qi(u,r)}function i(){s&&Li(s),a=s=h=x,(g||_!==t)&&(v=Yo(),c=n.apply(p,f),s||a||(f=p=null))}function o(){if(f=arguments,l=Yo(),p=this,h=g&&(s||!y),_===!1)var r=y&&!s;else{a||y||(v=l);var e=_-(l-v),o=0>=e||e>_;o?(a&&(a=Li(a)),v=l,c=n.apply(p,f)):a||(a=qi(i,e))}return o&&s?s=Li(s):s||t===_||(s=qi(u,t)),r&&(o=!0,c=n.apply(p,f)),!o||s||a||(f=p=null),c}var f,a,c,l,p,s,h,v=0,_=!1,g=!0;if("function"!=typeof n)throw new Ai(z);if(t=0>t?0:+t||0,r===!0){var y=!0;g=!1}else su(r)&&(y=r.leading,_="maxWait"in r&&Qi(+r.maxWait||0,t),g="trailing"in r?r.trailing:g);return o.cancel=e,o}function Xe(n,t){if("function"!=typeof n||t&&"function"!=typeof t)throw new Ai(z);var r=function(){var e=arguments,u=r.cache,i=t?t.apply(this,e):e[0];if(u.has(i))return u.get(i);var o=n.apply(this,e);return u.set(i,o),o};return r.cache=new Xe.Cache,r}function Ze(n){if("function"!=typeof n)throw new Ai(z);return function(){return!n.apply(this,arguments)}}function He(n){return Ge(n,2)}function Qe(n,t){if("function"!=typeof n)throw new Ai(z);return t=Qi("undefined"==typeof t?n.length-1:+t||0,0),function(){for(var r=arguments,e=-1,u=Qi(r.length-t,0),i=vi(u);++e<u;)i[e]=r[t+e];switch(t){case 0:return n.call(this,i);case 1:return n.call(this,r[0],i);case 2:return n.call(this,r[0],r[1],i)}var o=vi(t+1);for(e=-1;++e<t;)o[e]=r[e];return o[t]=i,n.apply(this,o)}}function nu(n){if("function"!=typeof n)throw new Ai(z);return function(t){return n.apply(this,t)}}function tu(n,t,r){var e=!0,u=!0;if("function"!=typeof n)throw new Ai(z);return r===!1?e=!1:su(r)&&(e="leading"in r?!!r.leading:e,u="trailing"in r?!!r.trailing:u),Ln.leading=e,Ln.maxWait=+t,Ln.trailing=u,Je(n,t,Ln)}function ru(n,t){return t=null==t?ti:t,jr(t,k,null,[n],[])}function eu(n,t,r,e){return t&&"boolean"!=typeof t&&Nr(n,t,r)?t=!1:"function"==typeof t&&(e=r,r=t,t=!1),r="function"==typeof r&&Zt(r,e,1),yt(n,t,r)}function uu(n,t,r){return t="function"==typeof t&&Zt(t,r,1),yt(n,!0,t)}function iu(n){var t=v(n)?n.length:x;return Lr(t)&&Ti.call(n)==M}function ou(n){return n===!0||n===!1||v(n)&&Ti.call(n)==q}function fu(n){return v(n)&&Ti.call(n)==K}function au(n){return!!n&&1===n.nodeType&&v(n)&&Ti.call(n).indexOf("Element")>-1}function cu(n){if(null==n)return!0;var t=n.length;return Lr(t)&&(ff(n)||mu(n)||iu(n)||v(n)&&cf(n.splice))?!t:!mf(n).length}function lu(n,t,r,e){if(r="function"==typeof r&&Zt(r,e,3),!r&&Br(n)&&Br(t))return n===t;var u=r?r(n,t):x;return"undefined"==typeof u?kt(n,t,r):!!u}function pu(n){return v(n)&&"string"==typeof n.message&&Ti.call(n)==V}function su(n){var t=typeof n;return"function"==t||!!n&&"object"==t}function hu(n,t,r,e){var u=mf(t),i=u.length;if(!i)return!0;if(null==n)return!1;if(r="function"==typeof r&&Zt(r,e,3),!r&&1==i){var o=u[0],f=t[o];if(Br(f))return f===n[o]&&("undefined"!=typeof f||o in Yr(n))}for(var a=vi(i),c=vi(i);i--;)f=a[i]=t[u[i]],c[i]=Br(f);return St(Yr(n),u,a,c,r)}function vu(n){return yu(n)&&n!=+n}function _u(n){return null==n?!1:Ti.call(n)==Y?Wi.test(Ri.call(n)):v(n)&&In.test(n)}function gu(n){return null===n}function yu(n){return"number"==typeof n||v(n)&&Ti.call(n)==J}function du(n){return v(n)&&Ti.call(n)==Z||!1}function mu(n){return"string"==typeof n||v(n)&&Ti.call(n)==Q}function wu(n){return v(n)&&Lr(n.length)&&!!Nn[Ti.call(n)]}function bu(n){return"undefined"==typeof n}function xu(n){var t=n?n.length:0;return Lr(t)?t?Qn(n):[]:Uu(n)}function Au(n){return _t(n,Ru(n))}function ju(n,t,r){var e=_o(n);return r&&Nr(n,t,r)&&(t=null),t?_t(t,e,mf(t)):e}function Eu(n){return Rt(n,Ru(n))}function Iu(n,t){return n?Ci.call(n,t):!1}function Ou(n,t,r){r&&Nr(n,t,r)&&(t=null);for(var e=-1,u=mf(n),i=u.length,o={};++e<i;){var f=u[e],a=n[f];t?Ci.call(o,a)?o[a].push(f):o[a]=[f]:o[a]=f}return o}function Ru(n){if(null==n)return[];su(n)||(n=wi(n));var t=n.length;t=t&&Lr(t)&&(ff(n)||vo.nonEnumArgs&&iu(n))&&t||0;for(var r=n.constructor,e=-1,u="function"==typeof r&&r.prototype===n,i=vi(t),o=t>0;++e<t;)i[e]=e+"";for(var f in n)o&&Fr(f,t)||"constructor"==f&&(u||!Ci.call(n,f))||i.push(f);return i}function ku(n,t,r){var e={};return t=kr(t,r,3),It(n,function(n,r,u){e[r]=t(n,r,u)}),e}function Cu(n){for(var t=-1,r=mf(n),e=r.length,u=vi(e);++t<e;){var i=r[t];u[t]=[i,n[i]]}return u}function Su(n,t,r){var e=null==n?x:n[t];return"undefined"==typeof e&&(e=r),cf(e)?e.call(n):e}function Tu(n,t,r,e){var u=ff(n)||wu(n);if(t=kr(t,e,4),null==r)if(u||su(n)){var i=n.constructor;r=u?ff(n)?new i:[]:_o(cf(i)&&i.prototype)}else r={};return(u?nt:It)(n,function(n,e,u){return t(r,n,e,u)}),r}function Uu(n){return Vt(n,mf(n))}function Wu(n){return Vt(n,Ru(n))}function Fu(n,t,r){return t=+t||0,"undefined"==typeof r?(r=t,t=0):r=+r||0,n>=t&&r>n}function Nu(n,t,r){r&&Nr(n,t,r)&&(t=r=null);var e=null==n,u=null==t;if(null==r&&(u&&"boolean"==typeof n?(r=n,n=1):"boolean"==typeof t&&(r=t,u=!0)),e&&u&&(t=1,u=!1),n=+n||0,u?(t=n,n=0):t=+t||0,r||n%1||t%1){var i=uo();return no(n+i*(t-n+parseFloat("1e-"+((i+"").length-1))),t)}return Lt(n,t)}function $u(n){return n=u(n),n&&n.charAt(0).toUpperCase()+n.slice(1)}function Lu(n){return n=u(n),n&&n.replace(On,l).replace(xn,"")}function Bu(n,t,r){n=u(n),t+="";var e=n.length;return r="undefined"==typeof r?e:no(0>r?0:+r||0,e),r-=t.length,r>=0&&n.indexOf(t,r)==r}function zu(n){return n=u(n),n&&dn.test(n)?n.replace(gn,p):n}function Du(n){return n=u(n),n&&Cn.test(n)?n.replace(kn,"\\$&"):n}function Mu(n,t,r){n=u(n),t=+t;var e=n.length;if(e>=t||!Zi(t))return n;var i=(t-e)/2,o=Bi(i),f=$i(i);return r=br("",f,r),r.slice(0,o)+n+r}function Pu(n,t,r){return r&&Nr(n,t,r)&&(t=0),eo(n,t)}function qu(n,t){var r="";if(n=u(n),t=+t,1>t||!n||!Zi(t))return r;do t%2&&(r+=n),t=Bi(t/2),n+=n;while(t);return r}function Ku(n,t,r){return n=u(n),r=null==r?0:no(0>r?0:+r||0,n.length),n.lastIndexOf(t,r)==r}function Vu(n,t,r){var e=G.templateSettings;r&&Nr(n,t,r)&&(t=r=null),n=u(n),t=ht(ht({},r||t),e,st);var i,o,f=ht(ht({},t.imports),e.imports,st),a=mf(f),c=Vt(f,a),l=0,p=t.interpolate||Rn,h="__p += '",v=bi((t.escape||Rn).source+"|"+p.source+"|"+(p===bn?An:Rn).source+"|"+(t.evaluate||Rn).source+"|$","g"),_="//# sourceURL="+("sourceURL"in t?t.sourceURL:"lodash.templateSources["+ ++Fn+"]")+"\n";n.replace(v,function(t,r,e,u,f,a){return e||(e=u),h+=n.slice(l,a).replace(Sn,s),r&&(i=!0,h+="' +\n__e("+r+") +\n'"),f&&(o=!0,h+="';\n"+f+";\n__p += '"),
-e&&(h+="' +\n((__t = ("+e+")) == null ? '' : __t) +\n'"),l=a+t.length,t}),h+="';\n";var g=t.variable;g||(h="with (obj) {\n"+h+"\n}\n"),h=(o?h.replace(sn,""):h).replace(hn,"$1").replace(vn,"$1;"),h="function("+(g||"obj")+") {\n"+(g?"":"obj || (obj = {});\n")+"var __t, __p = ''"+(i?", __e = _.escape":"")+(o?", __j = Array.prototype.join;\nfunction print() { __p += __j.call(arguments, '') }\n":";\n")+h+"return __p\n}";var y=kf(function(){return yi(a,_+"return "+h).apply(x,c)});if(y.source=h,pu(y))throw y;return y}function Yu(n,t,r){var e=n;return(n=u(n))?(r?Nr(e,t,r):null==t)?n.slice(d(n),m(n)+1):(t+="",n.slice(o(n,t),f(n,t)+1)):n}function Gu(n,t,r){var e=n;return n=u(n),n?n.slice((r?Nr(e,t,r):null==t)?d(n):o(n,t+"")):n}function Ju(n,t,r){var e=n;return n=u(n),n?(r?Nr(e,t,r):null==t)?n.slice(0,m(n)+1):n.slice(0,f(n,t+"")+1):n}function Xu(n,t,r){r&&Nr(n,t,r)&&(t=null);var e=U,i=W;if(null!=t)if(su(t)){var o="separator"in t?t.separator:o;e="length"in t?+t.length||0:e,i="omission"in t?u(t.omission):i}else e=+t||0;if(n=u(n),e>=n.length)return n;var f=e-i.length;if(1>f)return i;var a=n.slice(0,f);if(null==o)return a+i;if(du(o)){if(n.slice(f).search(o)){var c,l,p=n.slice(0,f);for(o.global||(o=bi(o.source,(jn.exec(o)||"")+"g")),o.lastIndex=0;c=o.exec(p);)l=c.index;a=a.slice(0,null==l?f:l)}}else if(n.indexOf(o,f)!=f){var s=a.lastIndexOf(o);s>-1&&(a=a.slice(0,s))}return a+i}function Zu(n){return n=u(n),n&&yn.test(n)?n.replace(_n,w):n}function Hu(n,t,r){return r&&Nr(n,t,r)&&(t=null),n=u(n),n.match(t||Tn)||[]}function Qu(n,t,r){return r&&Nr(n,t,r)&&(t=null),v(n)?ri(n):gt(n,t)}function ni(n){return function(){return n}}function ti(n){return n}function ri(n){return Ut(yt(n,!0))}function ei(n,t){return Wt(n+"",yt(t,!0))}function ui(n,t,r){if(null==r){var e=su(t),u=e&&mf(t),i=u&&u.length&&Rt(t,u);(i?i.length:e)||(i=!1,r=t,t=n,n=this)}i||(i=Rt(t,mf(t)));var o=!0,f=-1,a=cf(n),c=i.length;r===!1?o=!1:su(r)&&"chain"in r&&(o=r.chain);for(;++f<c;){var l=i[f],p=t[l];n[l]=p,a&&(n.prototype[l]=function(t){return function(){var r=this.__chain__;if(o||r){var e=n(this.__wrapped__),u=e.__actions__=Qn(this.__actions__);return u.push({func:t,args:arguments,thisArg:n}),e.__chain__=r,e}var i=[this.value()];return Di.apply(i,arguments),t.apply(n,i)}}(p))}return n}function ii(){return _._=Ui,this}function oi(){}function fi(n){return $t(n+"")}function ai(n){return function(t){return null==n?x:n[t]}}function ci(n,t,r){r&&Nr(n,t,r)&&(t=r=null),n=+n||0,r=null==r?1:+r||0,null==t?(t=n,n=0):t=+t||0;for(var e=-1,u=Qi($i((t-n)/(r||1)),0),i=vi(u);++e<u;)i[e]=n,n+=r;return i}function li(n,t,r){if(n=+n,1>n||!Zi(n))return[];var e=-1,u=vi(no(n,fo));for(t=Zt(t,r,1);++e<n;)fo>e?u[e]=t(e):t(e);return u}function pi(n){var t=++Si;return u(n)+t}function si(n,t){return n+t}function hi(n,t,r){r&&Nr(n,t,r)&&(t=null);var e=kr(),u=null==t;return e===gt&&u||(u=!1,t=e(t,r,3)),u?lt(ff(n)?n:Vr(n)):qt(n,t)}_=_?Zn.defaults(Xn.Object(),_,Zn.pick(Xn,Wn)):Xn;var vi=_.Array,_i=_.Date,gi=_.Error,yi=_.Function,di=_.Math,mi=_.Number,wi=_.Object,bi=_.RegExp,xi=_.String,Ai=_.TypeError,ji=vi.prototype,Ei=wi.prototype,Ii=xi.prototype,Oi=(Oi=_.window)&&Oi.document,Ri=yi.prototype.toString,ki=$t("length"),Ci=Ei.hasOwnProperty,Si=0,Ti=Ei.toString,Ui=_._,Wi=bi("^"+Du(Ti).replace(/toString|(function).*?(?=\\\()| for .+?(?=\\\])/g,"$1.*?")+"$"),Fi=_u(Fi=_.ArrayBuffer)&&Fi,Ni=_u(Ni=Fi&&new Fi(0).slice)&&Ni,$i=di.ceil,Li=_.clearTimeout,Bi=di.floor,zi=_u(zi=wi.getPrototypeOf)&&zi,Di=ji.push,Mi=Ei.propertyIsEnumerable,Pi=_u(Pi=_.Set)&&Pi,qi=_.setTimeout,Ki=ji.splice,Vi=_u(Vi=_.Uint8Array)&&Vi,Yi=_u(Yi=_.WeakMap)&&Yi,Gi=function(){try{var n=_u(n=_.Float64Array)&&n,t=new n(new Fi(10),0,1)&&n}catch(r){}return t}(),Ji=_u(Ji=vi.isArray)&&Ji,Xi=_u(Xi=wi.create)&&Xi,Zi=_.isFinite,Hi=_u(Hi=wi.keys)&&Hi,Qi=di.max,no=di.min,to=_u(to=_i.now)&&to,ro=_u(ro=mi.isFinite)&&ro,eo=_.parseInt,uo=di.random,io=mi.NEGATIVE_INFINITY,oo=mi.POSITIVE_INFINITY,fo=di.pow(2,32)-1,ao=fo-1,co=fo>>>1,lo=Gi?Gi.BYTES_PER_ELEMENT:0,po=di.pow(2,53)-1,so=Yi&&new Yi,ho={},vo=G.support={};!function(n){vo.funcDecomp=/\bthis\b/.test(function(){return this}),vo.funcNames="string"==typeof yi.name;try{vo.dom=11===Oi.createDocumentFragment().nodeType}catch(t){vo.dom=!1}try{vo.nonEnumArgs=!Mi.call(arguments,1)}catch(t){vo.nonEnumArgs=!0}}(0,0),G.templateSettings={escape:mn,evaluate:wn,interpolate:bn,variable:"",imports:{_:G}};var _o=function(){function n(){}return function(t){if(su(t)){n.prototype=t;var r=new n;n.prototype=null}return r||_.Object()}}(),go=er(It),yo=er(Ot,!0),mo=ur(),wo=ur(!0),bo=so?function(n,t){return so.set(n,t),n}:ti;Ni||(Ht=Fi&&Vi?function(n){var t=n.byteLength,r=Gi?Bi(t/lo):0,e=r*lo,u=new Fi(t);if(r){var i=new Gi(u,0,r);i.set(new Gi(n,0,r))}return t!=e&&(i=new Vi(u,e),i.set(new Vi(n,e))),u}:ni(null));var xo=Xi&&Pi?function(n){return new Gn(n)}:ni(null),Ao=so?function(n){return so.get(n)}:oi,jo=function(){return vo.funcNames?"constant"==ni.name?$t("name"):function(n){for(var t=n.name,r=ho[t],e=r?r.length:0;e--;){var u=r[e],i=u.func;if(null==i||i==n)return u.name}return t}:ni("")}(),Eo=function(){var n=0,t=0;return function(r,e){var u=Yo(),i=N-(u-t);if(t=u,i>0){if(++n>=F)return r}else n=0;return bo(r,e)}}(),Io=Qe(function(n,t){return ff(n)||iu(n)?mt(n,jt(t,!1,!0)):[]}),Oo=pr(),Ro=pr(!0),ko=Qe(function(t,r){t||(t=[]),r=jt(r);var e=r.length,u=vt(t,r);for(r.sort(n);e--;){var i=parseFloat(r[e]);if(i!=o&&Fr(i)){var o=i;Ki.call(t,i,1)}}return u}),Co=Ar(),So=Ar(!0),To=Qe(function(n){return Kt(jt(n,!1,!0))}),Uo=Qe(function(n,t){return ff(n)||iu(n)?mt(n,t):[]}),Wo=Qe(me),Fo=Qe(function(n,t){var r=n?n.length:0;return Lr(r)&&(n=Vr(n)),vt(n,jt(t))}),No=tr(function(n,t,r){Ci.call(n,r)?++n[r]:n[r]=1}),$o=lr(go),Lo=lr(yo,!0),Bo=vr(nt,go),zo=vr(tt,yo),Do=tr(function(n,t,r){Ci.call(n,r)?n[r].push(t):n[r]=[t]}),Mo=tr(function(n,t,r){n[r]=t}),Po=Qe(function(n,t,r){var e=-1,u="function"==typeof t,i=n?n.length:0,o=Lr(i)?vi(i):[];return go(n,function(n){var i=u?t:null!=n&&n[t];o[++e]=i?i.apply(n,r):x}),o}),qo=tr(function(n,t,r){n[r?0:1].push(t)},function(){return[[],[]]}),Ko=mr(ft,go),Vo=mr(at,yo),Yo=to||function(){return(new _i).getTime()},Go=Qe(function(n,t,r){var e=j;if(r.length){var u=g(r,Go.placeholder);e|=k}return jr(n,e,t,r,u)}),Jo=Qe(function(n,t){t=t.length?jt(t):Eu(n);for(var r=-1,e=t.length;++r<e;){var u=t[r];n[u]=jr(n[u],j,n)}return n}),Xo=Qe(function(n,t,r){var e=j|E;if(r.length){var u=g(r,Xo.placeholder);e|=k}return jr(t,e,n,r,u)}),Zo=ar(O),Ho=ar(R),Qo=Qe(function(n,t){return dt(n,1,t)}),nf=Qe(function(n,t,r){return dt(n,t,r)}),tf=hr(),rf=hr(!0),ef=dr(k),uf=dr(C),of=Qe(function(n,t){return jr(n,T,null,null,null,jt(t))}),ff=Ji||function(n){return v(n)&&Lr(n.length)&&Ti.call(n)==P};vo.dom||(au=function(n){return!!n&&1===n.nodeType&&v(n)&&!lf(n)});var af=ro||function(n){return"number"==typeof n&&Zi(n)},cf=e(/x/)||Vi&&!e(Vi)?function(n){return Ti.call(n)==Y}:e,lf=zi?function(n){if(!n||Ti.call(n)!=X)return!1;var t=n.valueOf,r=_u(t)&&(r=zi(t))&&zi(r);return r?n==r||zi(n)==r:qr(n)}:qr,pf=rr(ht),sf=Qe(function(n){var t=n[0];return null==t?t:(n.push(pt),pf.apply(x,n))}),hf=sr(It),vf=sr(Ot),_f=_r(mo),gf=_r(wo),yf=gr(It),df=gr(Ot),mf=Hi?function(n){if(n)var t=n.constructor,r=n.length;return"function"==typeof t&&t.prototype===n||"function"!=typeof n&&r&&Lr(r)?Kr(n):su(n)?Hi(n):[]}:Kr,wf=rr(Ft),bf=Qe(function(n,t){if(null==n)return{};if("function"!=typeof t[0]){var t=ut(jt(t),xi);return Dr(n,mt(Ru(n),t))}var r=Zt(t[0],t[1],3);return Mr(n,function(n,t,e){return!r(n,t,e)})}),xf=Qe(function(n,t){return null==n?{}:"function"==typeof t[0]?Mr(n,Zt(t[0],t[1],3)):Dr(n,jt(t))}),Af=or(function(n,t,r){return t=t.toLowerCase(),n+(r?t.charAt(0).toUpperCase()+t.slice(1):t)}),jf=or(function(n,t,r){return n+(r?"-":"")+t.toLowerCase()}),Ef=yr(),If=yr(!0);8!=eo(Un+"08")&&(Pu=function(n,t,r){return(r?Nr(n,t,r):null==t)?t=0:t&&(t=+t),n=Yu(n),eo(n,t||(En.test(n)?16:10))});var Of=or(function(n,t,r){return n+(r?"_":"")+t.toLowerCase()}),Rf=or(function(n,t,r){return n+(r?" ":"")+(t.charAt(0).toUpperCase()+t.slice(1))}),kf=Qe(function(n,t){try{return n.apply(x,t)}catch(r){return pu(r)?r:new gi(r)}}),Cf=cr(it),Sf=cr(ot,!0);return G.prototype=H.prototype,nn.prototype=_o(H.prototype),nn.prototype.constructor=nn,Bn.prototype=_o(H.prototype),Bn.prototype.constructor=Bn,Pn.prototype["delete"]=qn,Pn.prototype.get=Kn,Pn.prototype.has=Vn,Pn.prototype.set=Yn,Gn.prototype.push=Hn,Xe.Cache=Pn,G.after=Ve,G.ary=Ye,G.assign=pf,G.at=Fo,G.before=Ge,G.bind=Go,G.bindAll=Jo,G.bindKey=Xo,G.callback=Qu,G.chain=xe,G.chunk=Jr,G.compact=Xr,G.constant=ni,G.countBy=No,G.create=ju,G.curry=Zo,G.curryRight=Ho,G.debounce=Je,G.defaults=sf,G.defer=Qo,G.delay=nf,G.difference=Io,G.drop=Zr,G.dropRight=Hr,G.dropRightWhile=Qr,G.dropWhile=ne,G.fill=te,G.filter=Te,G.flatten=ee,G.flattenDeep=ue,G.flow=tf,G.flowRight=rf,G.forEach=Bo,G.forEachRight=zo,G.forIn=_f,G.forInRight=gf,G.forOwn=yf,G.forOwnRight=df,G.functions=Eu,G.groupBy=Do,G.indexBy=Mo,G.initial=oe,G.intersection=fe,G.invert=Ou,G.invoke=Po,G.keys=mf,G.keysIn=Ru,G.map=Fe,G.mapValues=ku,G.matches=ri,G.matchesProperty=ei,G.memoize=Xe,G.merge=wf,G.mixin=ui,G.negate=Ze,G.omit=bf,G.once=He,G.pairs=Cu,G.partial=ef,G.partialRight=uf,G.partition=qo,G.pick=xf,G.pluck=Ne,G.property=fi,G.propertyOf=ai,G.pull=le,G.pullAt=ko,G.range=ci,G.rearg=of,G.reject=$e,G.remove=pe,G.rest=se,G.restParam=Qe,G.shuffle=Be,G.slice=he,G.sortBy=Me,G.sortByAll=Pe,G.sortByOrder=qe,G.spread=nu,G.take=ve,G.takeRight=_e,G.takeRightWhile=ge,G.takeWhile=ye,G.tap=Ae,G.throttle=tu,G.thru=je,G.times=li,G.toArray=xu,G.toPlainObject=Au,G.transform=Tu,G.union=To,G.uniq=de,G.unzip=me,G.values=Uu,G.valuesIn=Wu,G.where=Ke,G.without=Uo,G.wrap=ru,G.xor=we,G.zip=Wo,G.zipObject=be,G.backflow=rf,G.collect=Fe,G.compose=rf,G.each=Bo,G.eachRight=zo,G.extend=pf,G.iteratee=Qu,G.methods=Eu,G.object=be,G.select=Te,G.tail=se,G.unique=de,ui(G,G),G.add=si,G.attempt=kf,G.camelCase=Af,G.capitalize=$u,G.clone=eu,G.cloneDeep=uu,G.deburr=Lu,G.endsWith=Bu,G.escape=zu,G.escapeRegExp=Du,G.every=Se,G.find=$o,G.findIndex=Oo,G.findKey=hf,G.findLast=Lo,G.findLastIndex=Ro,G.findLastKey=vf,G.findWhere=Ue,G.first=re,G.has=Iu,G.identity=ti,G.includes=We,G.indexOf=ie,G.inRange=Fu,G.isArguments=iu,G.isArray=ff,G.isBoolean=ou,G.isDate=fu,G.isElement=au,G.isEmpty=cu,G.isEqual=lu,G.isError=pu,G.isFinite=af,G.isFunction=cf,G.isMatch=hu,G.isNaN=vu,G.isNative=_u,G.isNull=gu,G.isNumber=yu,G.isObject=su,G.isPlainObject=lf,G.isRegExp=du,G.isString=mu,G.isTypedArray=wu,G.isUndefined=bu,G.kebabCase=jf,G.last=ae,G.lastIndexOf=ce,G.max=Cf,G.min=Sf,G.noConflict=ii,G.noop=oi,G.now=Yo,G.pad=Mu,G.padLeft=Ef,G.padRight=If,G.parseInt=Pu,G.random=Nu,G.reduce=Ko,G.reduceRight=Vo,G.repeat=qu,G.result=Su,G.runInContext=b,G.size=ze,G.snakeCase=Of,G.some=De,G.sortedIndex=Co,G.sortedLastIndex=So,G.startCase=Rf,G.startsWith=Ku,G.sum=hi,G.template=Vu,G.trim=Yu,G.trimLeft=Gu,G.trimRight=Ju,G.trunc=Xu,G.unescape=Zu,G.uniqueId=pi,G.words=Hu,G.all=Se,G.any=De,G.contains=We,G.detect=$o,G.foldl=Ko,G.foldr=Vo,G.head=re,G.include=We,G.inject=Ko,ui(G,function(){var n={};return It(G,function(t,r){G.prototype[r]||(n[r]=t)}),n}(),!1),G.sample=Le,G.prototype.sample=function(n){return this.__chain__||null!=n?this.thru(function(t){return Le(t,n)}):Le(this.value())},G.VERSION=A,nt(["bind","bindKey","curry","curryRight","partial","partialRight"],function(n){G[n].placeholder=G}),nt(["dropWhile","filter","map","takeWhile"],function(n,t){var r=t!=B,e=t==$;Bn.prototype[n]=function(n,u){var i=this.__filtered__,o=i&&e?new Bn(this):this.clone(),f=o.__iteratees__||(o.__iteratees__=[]);return f.push({done:!1,count:0,index:0,iteratee:kr(n,u,1),limit:-1,type:t}),o.__filtered__=i||r,o}}),nt(["drop","take"],function(n,t){var r=n+"While";Bn.prototype[n]=function(r){var e=this.__filtered__,u=e&&!t?this.dropWhile():this.clone();if(r=null==r?1:Qi(Bi(r)||0,0),e)t?u.__takeCount__=no(u.__takeCount__,r):ae(u.__iteratees__).limit=r;else{var i=u.__views__||(u.__views__=[]);i.push({size:r,type:n+(u.__dir__<0?"Right":"")})}return u},Bn.prototype[n+"Right"]=function(t){return this.reverse()[n](t).reverse()},Bn.prototype[n+"RightWhile"]=function(n,t){return this.reverse()[r](n,t).reverse()}}),nt(["first","last"],function(n,t){var r="take"+(t?"Right":"");Bn.prototype[n]=function(){return this[r](1).value()[0]}}),nt(["initial","rest"],function(n,t){var r="drop"+(t?"":"Right");Bn.prototype[n]=function(){return this[r](1)}}),nt(["pluck","where"],function(n,t){var r=t?"filter":"map",e=t?Ut:$t;Bn.prototype[n]=function(n){return this[r](e(n))}}),Bn.prototype.compact=function(){return this.filter(ti)},Bn.prototype.reject=function(n,t){return n=kr(n,t,1),this.filter(function(t){return!n(t)})},Bn.prototype.slice=function(n,t){n=null==n?0:+n||0;var r=0>n?this.takeRight(-n):this.drop(n);return"undefined"!=typeof t&&(t=+t||0,r=0>t?r.dropRight(-t):r.take(t-n)),r},Bn.prototype.toArray=function(){return this.drop(0)},It(Bn.prototype,function(n,t){var r=G[t];if(r){var e=/^(?:filter|map|reject)|While$/.test(t),u=/^(?:first|last)$/.test(t);G.prototype[t]=function(){var t=arguments,i=(t.length,this.__chain__),o=this.__wrapped__,f=!!this.__actions__.length,a=o instanceof Bn,c=t[0],l=a||ff(o);l&&e&&"function"==typeof c&&1!=c.length&&(a=l=!1);var p=a&&!f;if(u&&!i)return p?n.call(o):r.call(G,this.value());var s=function(n){var e=[n];return Di.apply(e,t),r.apply(G,e)};if(l){var h=p?o:new Bn(this),v=n.apply(h,t);if(!u&&(f||v.__actions__)){var _=v.__actions__||(v.__actions__=[]);_.push({func:je,args:[s],thisArg:G})}return new nn(v,i)}return this.thru(s)}}}),nt(["concat","join","pop","push","replace","shift","sort","splice","split","unshift"],function(n){var t=(/^(?:replace|split)$/.test(n)?Ii:ji)[n],r=/^(?:push|sort|unshift)$/.test(n)?"tap":"thru",e=/^(?:join|pop|replace|shift)$/.test(n);G.prototype[n]=function(){var n=arguments;return e&&!this.__chain__?t.apply(this.value(),n):this[r](function(r){return t.apply(r,n)})}}),It(Bn.prototype,function(n,t){var r=G[t];if(r){var e=r.name,u=ho[e]||(ho[e]=[]);u.push({name:t,func:r})}}),ho[wr(null,E).name]=[{name:"wrapper",func:null}],Bn.prototype.clone=zn,Bn.prototype.reverse=Dn,Bn.prototype.value=Mn,G.prototype.chain=Ee,G.prototype.commit=Ie,G.prototype.plant=Oe,G.prototype.reverse=Re,G.prototype.toString=ke,G.prototype.run=G.prototype.toJSON=G.prototype.valueOf=G.prototype.value=Ce,G.prototype.collect=G.prototype.map,G.prototype.head=G.prototype.first,G.prototype.select=G.prototype.filter,G.prototype.tail=G.prototype.rest,G}var x,A="3.6.0",j=1,E=2,I=4,O=8,R=16,k=32,C=64,S=128,T=256,U=30,W="...",F=150,N=16,$=0,L=1,B=2,z="Expected a function",D="__lodash_placeholder__",M="[object Arguments]",P="[object Array]",q="[object Boolean]",K="[object Date]",V="[object Error]",Y="[object Function]",G="[object Map]",J="[object Number]",X="[object Object]",Z="[object RegExp]",H="[object Set]",Q="[object String]",nn="[object WeakMap]",tn="[object ArrayBuffer]",rn="[object Float32Array]",en="[object Float64Array]",un="[object Int8Array]",on="[object Int16Array]",fn="[object Int32Array]",an="[object Uint8Array]",cn="[object Uint8ClampedArray]",ln="[object Uint16Array]",pn="[object Uint32Array]",sn=/\b__p \+= '';/g,hn=/\b(__p \+=) '' \+/g,vn=/(__e\(.*?\)|\b__t\)) \+\n'';/g,_n=/&(?:amp|lt|gt|quot|#39|#96);/g,gn=/[&<>"'`]/g,yn=RegExp(_n.source),dn=RegExp(gn.source),mn=/<%-([\s\S]+?)%>/g,wn=/<%([\s\S]+?)%>/g,bn=/<%=([\s\S]+?)%>/g,xn=/[\u0300-\u036f\ufe20-\ufe23]/g,An=/\$\{([^\\}]*(?:\\.[^\\}]*)*)\}/g,jn=/\w*$/,En=/^0[xX]/,In=/^\[object .+?Constructor\]$/,On=/[\xc0-\xd6\xd8-\xde\xdf-\xf6\xf8-\xff]/g,Rn=/($^)/,kn=/[.*+?^${}()|[\]\/\\]/g,Cn=RegExp(kn.source),Sn=/['\n\r\u2028\u2029\\]/g,Tn=function(){var n="[A-Z\\xc0-\\xd6\\xd8-\\xde]",t="[a-z\\xdf-\\xf6\\xf8-\\xff]+";return RegExp(n+"+(?="+n+t+")|"+n+"?"+t+"|"+n+"+|[0-9]+","g")}(),Un=" 	\f \ufeff\n\r\u2028\u2029 ᠎             　",Wn=["Array","ArrayBuffer","Date","Error","Float32Array","Float64Array","Function","Int8Array","Int16Array","Int32Array","Math","Number","Object","RegExp","Set","String","_","clearTimeout","document","isFinite","parseInt","setTimeout","TypeError","Uint8Array","Uint8ClampedArray","Uint16Array","Uint32Array","WeakMap","window"],Fn=-1,Nn={};Nn[rn]=Nn[en]=Nn[un]=Nn[on]=Nn[fn]=Nn[an]=Nn[cn]=Nn[ln]=Nn[pn]=!0,Nn[M]=Nn[P]=Nn[tn]=Nn[q]=Nn[K]=Nn[V]=Nn[Y]=Nn[G]=Nn[J]=Nn[X]=Nn[Z]=Nn[H]=Nn[Q]=Nn[nn]=!1;var $n={};$n[M]=$n[P]=$n[tn]=$n[q]=$n[K]=$n[rn]=$n[en]=$n[un]=$n[on]=$n[fn]=$n[J]=$n[X]=$n[Z]=$n[Q]=$n[an]=$n[cn]=$n[ln]=$n[pn]=!0,$n[V]=$n[Y]=$n[G]=$n[H]=$n[nn]=!1;var Ln={leading:!1,maxWait:0,trailing:!1},Bn={"À":"A","Á":"A","Â":"A","Ã":"A","Ä":"A","Å":"A","à":"a","á":"a","â":"a","ã":"a","ä":"a","å":"a","Ç":"C","ç":"c","Ð":"D","ð":"d","È":"E","É":"E","Ê":"E","Ë":"E","è":"e","é":"e","ê":"e","ë":"e","Ì":"I","Í":"I","Î":"I","Ï":"I","ì":"i","í":"i","î":"i","ï":"i","Ñ":"N","ñ":"n","Ò":"O","Ó":"O","Ô":"O","Õ":"O","Ö":"O","Ø":"O","ò":"o","ó":"o","ô":"o","õ":"o","ö":"o","ø":"o","Ù":"U","Ú":"U","Û":"U","Ü":"U","ù":"u","ú":"u","û":"u","ü":"u","Ý":"Y","ý":"y","ÿ":"y","Æ":"Ae","æ":"ae","Þ":"Th","þ":"th","ß":"ss"},zn={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;","`":"&#96;"},Dn={"&amp;":"&","&lt;":"<","&gt;":">","&quot;":'"',"&#39;":"'","&#96;":"`"},Mn={"function":!0,object:!0},Pn={"\\":"\\","'":"'","\n":"n","\r":"r","\u2028":"u2028","\u2029":"u2029"},qn=Mn[typeof exports]&&exports&&!exports.nodeType&&exports,Kn=Mn[typeof module]&&module&&!module.nodeType&&module,Vn=qn&&Kn&&"object"==typeof global&&global,Yn=Mn[typeof self]&&self&&self.Object&&self,Gn=Mn[typeof window]&&window&&window.Object&&window,Jn=Kn&&Kn.exports===qn&&qn,Xn=Vn||Gn!==(this&&this.window)&&Gn||Yn||this,Zn=b();"function"==typeof define&&"object"==typeof define.amd&&define.amd?(Xn._=Zn,define(function(){return Zn})):qn&&Kn?Jn?(Kn.exports=Zn)._=Zn:qn._=Zn:Xn._=Zn}).call(this);
+"use strict";
 
+var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _inherits = function (subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
+/** @jsx createElement */
+
+var _ = _interopRequire((typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null));
+
+var _laconaPhrase = require("lacona-phrase");
+
+var createElement = _laconaPhrase.createElement;
+var Phrase = _laconaPhrase.Phrase;
+
+var Repeat = (function (_Phrase) {
+  function Repeat() {
+    _classCallCheck(this, Repeat);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(Repeat, _Phrase);
+
+  _createClass(Repeat, {
+    filter: {
+      value: function filter(result) {
+        if (this.props.unique && _.isPlainObject(result) && result.repeat) {
+          return !_.includes(result.repeat, result.child);
+        }
+        return true;
+      }
+    },
+    getValue: {
+      value: function getValue(result) {
+        if (_.isPlainObject(result) && result.repeat) {
+          if (result.child) {
+            return [result.child].concat(result.repeat);
+          } else {
+            return result.repeat;
+          }
+        } else {
+          return [result];
+        }
+      }
+    },
+    describe: {
+      value: function describe() {
+        var child = undefined,
+            separator = undefined,
+            firstContent = undefined;
+        var trueChildren = this.props.children;
+
+        if (this.props.children[0] && this.props.children[0].Constructor === "content") {
+          child = this.props.children[0].children[0];
+          if (this.props.children[1] && this.props.children[1].Constructor === "separator") {
+            separator = this.props.children[1].children[0];
+          }
+          if (this.props.children[2] && this.props.children[2].Constructor === "firstContent") {
+            firstContent = this.props.children[2].children[0];
+            trueChildren = this.props.children.slice(0, 2);
+          }
+        } else {
+          child = this.props.children[0];
+        }
+
+        if (this.props.max === 1) {
+          return firstContent || child;
+        } else {
+          var childWithId = _.merge({}, child, { props: { id: "child" } });
+          var content = separator ? createElement(
+            "sequence",
+            { merge: true },
+            childWithId,
+            separator
+          ) : childWithId;
+
+          var recurse = createElement(
+            "sequence",
+            null,
+            content,
+            createElement(
+              Repeat,
+              { id: "repeat", unique: this.props.unique, max: this.props.max - 1, min: this.props.min - 1 },
+              trueChildren
+            )
+          );
+
+          if (this.props.min <= 1) {
+            return createElement(
+              "choice",
+              null,
+              firstContent || child,
+              createElement(
+                "placeholder",
+                null,
+                recurse
+              )
+            );
+          } else {
+            return recurse;
+          }
+        }
+      }
+    }
+  });
+
+  return Repeat;
+})(Phrase);
+
+module.exports = Repeat;
+
+Repeat.defaultProps = {
+  max: Number.MAX_SAFE_INTEGER,
+  min: 1,
+  unique: false
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"lacona-phrase":38}],38:[function(require,module,exports){
+"use strict";
+
+var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
+exports.createElement = createElement;
+exports.createFactory = createFactory;
+exports.createPhrase = createPhrase;
+
+var inherits = _interopRequire(require("inherits"));
+
+var version = require("../package").version;
+
+function createElement(Constructor, props) {
+  for (var _len = arguments.length, children = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    children[_key - 2] = arguments[_key];
+  }
+
+  return {
+    Constructor: Constructor,
+    props: props,
+    children: children,
+    version: version
+  };
+}
+
+function createFactory(constructor) {
+  return createElement.bind(null, constructor);
+}
+
+var Phrase = exports.Phrase = function Phrase() {
+  _classCallCheck(this, Phrase);
+};
+
+function createPhrase(options) {
+  var Constructor = options.onCreate || function () {};
+
+  inherits(Constructor, Phrase);
+
+  Constructor.translations = options.translations;
+  Constructor.supplements = options.supplements;
+  Constructor.overrides = options.overrides;
+  Constructor.defaultProps = options.defaultProps;
+  Constructor.initialState = options.initialState;
+
+  for (var key in options) {
+    if (typeof options[key] === "function") {
+      Constructor.prototype[key] = options[key];
+    }
+  }
+  return Constructor;
+}
+
+var choice = exports.choice = createFactory("choice");
+var content = exports.content = createFactory("content");
+var literal = exports.literal = createFactory("literal");
+var separator = exports.separator = createFactory("separator");
+var sequence = exports.sequence = createFactory("sequence");
+var value = exports.value = createFactory("value");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+},{"../package":40,"inherits":39}],39:[function(require,module,exports){
+arguments[4][24][0].apply(exports,arguments)
+},{"dup":24}],40:[function(require,module,exports){
+module.exports={
+  "name": "lacona-phrase",
+  "version": "0.6.1",
+  "description": "Create lacona phrases",
+  "main": "lib/phrase.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "pretest": "babel test --out-dir tmp ",
+    "test": "mocha tmp",
+    "build": "babel src --out-dir lib",
+    "validate": "npm run build && npm test",
+    "prepublish": "npm run clean && npm run build",
+    "clean": "rimraf lib tmp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lacona/lacona-phrase.git"
+  },
+  "keywords": [
+    "lacona-phrase",
+    "lacona",
+    "phrase",
+    "create",
+    "initialize",
+    "class"
+  ],
+  "author": {
+    "name": "@brandonhorst"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lacona/lacona-phrase/issues"
+  },
+  "homepage": "https://github.com/lacona/lacona-phrase",
+  "devDependencies": {
+    "babel": "^4.6.6",
+    "chai": "^2.1.0",
+    "mocha": "^2.1.0",
+    "rimraf": "^2.2.8"
+  },
+  "dependencies": {
+    "inherits": "^2.0.1"
+  },
+  "readme": "# lacona-phrase\n\nThis package is used to create `lacona` phrases. It works with [`lacona`](https://github.com/lacona/lacona) but is maintained separately to allow libraries to be versioned independently of the parser.\n\nA `lacona` phrase is a Javascript descriptor of some natural language construct. The syntax is modeled after [React](http://facebook.github.io/react/), but rather than specifying HTML output, it specifies a language.\n\nLike React, `lacona` phrases can be specified using [JSX](http://facebook.github.io/jsx/). This is recommended, but not required. While JSX is a much more succinct and readable way to express the phrase's structure, it does necessitate a transpilation step. `lacona` itself is built this way, using the excellent [babel](http://babeljs.io/) transpiler. In addition to transpiling JSX, it also transpiles ES6 functionality, which can result in very simple code. All examples in this document will have two examples - JSX/ES6 code to be transpiled using Babel, and standard ES5. Note that it is possible to ES6 without JS (or vice-versa), but those examples are left as an exercise to the developer (but the tests may point you in the right direction).\n\n## Using Javascript Classes\n\nA `lacona` phrase is expressed as a Javascript class. For use with ES5, a shorthand method is provided that will create this class for you, without requiring you to interact with prototypes.\n\n#### Using ES6\n\n```js\nimport {Phrase} from 'lacona-phrase'\n\nexport default class MyPhrase extends Phrase {\n  constructor() {\n    // no need to call super()\n  }\n  static get defaultProps() {\n    return {a: 'test'}\n  }\n  describe() {\n    return // ...\n  }\n}\n```\n\n#### Using ES5\n\n```js\nvar createPhrase = require('lacona-phrase').createPhrase\n\nmodule.exports = createPhrase({\n  onCreate: function() {\n    // initialize phrase\n  },\n  defaultProps: {a: 'test'},\n  describe: function() {\n    return // ...\n  }\n})\n```\n\n## Describing Language\n\nIn `lacona`, language is described using `Element`s. Each `Element` can be thought of as an instance of a `Phrase`. Each `Element` can have `props` which govern its behavior.\n\nPlease note that `Phrases` should never be instantiated directly, and `Elements` should never be used outside of the context of a `describe()` call. An `Element` is ultimately just a small descriptor of its inputs - the actual `Phrase` instantiation and parsing is all done by `lacona` itself.\n\n#### Using ES6/JSX\n\nIn JSX, all lowercase tags refer to elements built-in to `lacona`. Custom classes must be uppercase. Please note the `@jsx` pragma in the initial comment. Unlike React, this comment is required. It must specify the name of the `createElement` function.\n\n```js\n/** @jsx createElement */\nimport {createElement, Phrase} from 'lacona-phrase'\n\nclass MyPhrase extends Phrase {\n  describe() {\n    return (\n      <choice>\n        <literal text='Google' />\n        <literal text='Yahoo' />\n        <literal text='Bing' />\n      </choice>\n    )\n  }\n}\n```\n\n#### Using ES5\n\nIn ES5, elements are specified in the form `phrase.createElement(constructor, props[, ...children])`. You can also create a factory to free you from continually needing to call `createElement`, using `createFactory`.\n\n```js\nvar phrase = require('lacona-phrase')\nvar factory = phrase.createFactory(MyPhrase)\n// these two lines are equivalent\nfactory({myProp: 'test'}, child1, child2)\nphrase.createElement(MyPhrase, {myProp: 'test'}, child1, child2)\n```\n\nThe module contains shorthand factories for the builtin elements.\n\n```js\nvar phrase = require('lacona-phrase')\n\nmodule.exports = phrase.createPhrase({\n  describe: function() {\n    return phrase.choice(null,\n      phrase.literal({text: 'Google'}),\n      phrase.literal({text: 'Yahoo'}),\n      phrase.literal({text: 'Bing'})\n    )\n  }\n})\n```\n\n## Supporting multiple languages\n\nThe pesky thing about *language* is that there are lots of them. A single phrase can (and should) support as many languages as possible, all expressing the same fundamental thing. This is done using the `translations` property. Note that while `describe()` is specified as a single function, `translations` is specified as a Static Property (see below for more information).\n\n### Using ES6/JSX\n\n```js\n/** @jsx createElement */\nimport {createElement, Phrase} from 'lacona-phrase'\nclass MyPhrase extends Phrase {\n  static get translations () {\n    return [{\n      langs: ['en'],\n      describe() {\n        return <literal text='hello' />\n      }\n    }, {\n      langs: ['zh']\n      describe() {\n        return <literal text='你好' />\n      }\n    }]\n  }\n}\n```\n\n### Using ES5\n\n```js\nvar phrase = require('lacona-phrase')\n\nmodule.exports = phrase.createPhrase({\n  translations: [{\n    langs: ['en'],\n    describe: function() {\n      return phrase.literal({text: 'hello'})\n    }\n  }, {\n    langs: ['zh']\n    describe: function() {\n      return phrase.literal({text: '你好'})\n    }\n  }]\n})\n```\n\n\n## Phrase Properties\n\nA `Phrase` is ultimately just a class - it can have any methods or properties. However, some methods and properties govern the `Phrase`'s behavior, and should not be used outside of that context.\n\n### Static Properties\n\nSome of a `Phrase`'s behavior is governed by Static Properties, which are specific to the `Phrase`, not to any particular `Element`. When using `createPhrase`, these are specified directly as objects. However, because ES6 does not directly support static properties, these cannot be expressed using ES6 class syntax alone. They can set be set as static getters, or directly as properties on the constructor.\n\n* `defaultProps`\n* `supplements`\n* `overrides`\n* `translations`\n\n#### Using ES6\n\nThe two strategies below are precisely equivalent\n\n```js\nimport {Phrase} from 'lacona-phrase'\n\nclass MyPhrase extends Phrase {\n  static get defaultProps() {\n    return {myProp: 'test'}\n  }\n  static get supplements() {\n    return []\n  }\n  describe() {\n    return // ...\n  }\n}\n```\n\n```js\nimport {Phrase} from 'lacona-phrase'\n\nclass MyPhrase extends Phrase {\n  describe() {\n    return // ...\n  }\n}\nMyPhrase.defaultProps = {myProp: 'test'}\nMyPhrase.supplements = []\n```\n\n#### Using ES5\n```js\nvar phrase = require('lacona-phrase')\n\nmodule.exports = phrase.createPhrase({\n  defaultProps: {myProp: 'test'},\n  supplements: [],\n  describe: function () {\n    return // ...\n  }\n})\n```\n",
+  "readmeFilename": "README.md",
+  "gitHead": "c8b8807038b18b65556627510d1e5a8401630614",
+  "_id": "lacona-phrase@0.6.1",
+  "_shasum": "0116fb838b021f5b7158bd734a81d5a7433ff564",
+  "_from": "lacona-phrase@*"
+}
+
+},{}],41:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var URL = (function () {
+  function URL() {
+    _classCallCheck(this, URL);
+  }
+
+  _createClass(URL, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!_import2['default'].startsWith(result, 'http')) {
+        return 'http://' + result;
+      } else {
+        return result;
+      }
+    }
+  }, {
+    key: 'validateWithProtocol',
+
+    // validate (input) {
+    //   return /^(?:(?:https?):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i.test(input)
+    // }
+    //
+    // displayWhen (input) {
+    //   return /^(https?:\/\/|h$|ht$|htt$|https?$|https?:$|https?:\/$|https?:\/\/$)?([\w\d-]+(\.\w{0,18}\S*)?)?$/i.test(input)
+    // }
+    value: function validateWithProtocol(input) {
+      return /^(https?\:\/\/)([-_a-z0-9]+\.)+[-a-z0-9]+\S*$/i.test(input);
+    }
+  }, {
+    key: 'displayWhen',
+    value: function displayWhen(input) {
+      return /^(https?:\/\/|h$|ht$|htt$|http$|https$|http:$|http:\/$|https:$|https:\/$)?[-_a-z0-9]*(\.\S*)?$/.test(input)
+      // return /^(\w{3,8}:\/\/|\w{3,8}$|\w{3,8}:$|\w{3,8}:\/$)?([\w\d-]+(\.\w{0,18}\S*)?)?$/i.test(input)
+      ;
+    }
+  }, {
+    key: 'validateWithoutProtocol',
+    value: function validateWithoutProtocol(input) {
+      return /^([-a-z0-9]+\.)+[-_a-z0-9]+\S*$/i.test(input);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'argument',
+        { text: 'URL', displayWhen: this.displayWhen },
+        _createElement$Phrase.createElement(
+          'choice',
+          { limit: 1 },
+          _createElement$Phrase.createElement(
+            'sequence',
+            null,
+            _createElement$Phrase.createElement(
+              'choice',
+              { limit: 1 },
+              _createElement$Phrase.createElement('decorator', { text: 'http://' }),
+              _createElement$Phrase.createElement('decorator', { text: 'https://' })
+            ),
+            _createElement$Phrase.createElement('freetext', { validate: this.validateWithoutProtocol, splitOn: ' ' })
+          ),
+          _createElement$Phrase.createElement('freetext', { validate: this.validateWithProtocol, splitOn: '' })
+        )
+      );
+    }
+  }]);
+
+  return URL;
+})();
+
+exports['default'] = URL;
+
+URL.defaultProps = { splitOn: /\s/ }
+/*
+        <sequence>
+          <choice id='protocol' optional={true}>
+            <literal text='http://' value='http://' />
+            <literal text='https://' value='https://' />
+          </choice>
+          <choice>
+            <placeholder text='ip address'>
+                <content>
+                  <DigitString min={0} max={255} allowLeadingZeros={false} />
+                </content>
+                <separator><literal text='.' /></separator>
+            </placeholder>
+            <placeholder text='domain'>
+              <freetext limit={1} validate={this.noSpace} />
+              </sequence>
+            </placeholder>
+          </choice>
+          <sequence optional={true} merge={true}>
+            <literal text=':' />
+            <DigitString id='port' min={1} max={65535} />
+          </sequence>
+        </sequence>
+        */
+;module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"lacona-phrase":42}],42:[function(require,module,exports){
+arguments[4][23][0].apply(exports,arguments)
+},{"../package":44,"dup":23,"inherits":43}],43:[function(require,module,exports){
+arguments[4][24][0].apply(exports,arguments)
+},{"dup":24}],44:[function(require,module,exports){
+arguments[4][25][0].apply(exports,arguments)
+},{"dup":25}],45:[function(require,module,exports){
+arguments[4][23][0].apply(exports,arguments)
+},{"../package":47,"dup":23,"inherits":46}],46:[function(require,module,exports){
+arguments[4][24][0].apply(exports,arguments)
+},{"dup":24}],47:[function(require,module,exports){
+arguments[4][25][0].apply(exports,arguments)
+},{"dup":25}],48:[function(require,module,exports){
+function join(array) {
+  return array.reduce(function (acc, val) {
+    return acc + val.string;
+  }, '');
+}
+
+function match(option) { return join(option.match); }
+function suggestion(option) { return join(option.suggestion); }
+function completion(option) { return join(option.completion); }
+
+function all(option) {
+  return [match(option), suggestion(option), completion(option)].join('');
+}
+
+module.exports = {
+  all: all,
+  match: match,
+  suggestion: suggestion,
+  completion: completion
+};
+
+},{}],49:[function(require,module,exports){
+'use strict';
+
+var _extends = require('babel-runtime/helpers/extends')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var Placeholder = (function (_Phrase) {
+  function Placeholder() {
+    _classCallCheck(this, Placeholder);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(Placeholder, _Phrase);
+
+  _createClass(Placeholder, [{
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement('descriptor', _extends({}, this.props, { argument: true, placeholder: true }));
+    }
+  }]);
+
+  return Placeholder;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = Placeholder;
+module.exports = exports['default'];
+},{"babel-runtime/helpers/class-call-check":73,"babel-runtime/helpers/create-class":74,"babel-runtime/helpers/extends":76,"babel-runtime/helpers/inherits":78,"lacona-phrase":116}],50:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _defineProperty = require('babel-runtime/helpers/define-property')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var _parse = require('../parse');
+
+var _parse2 = _interopRequireWildcard(_parse);
+
+var _reconcile = require('../reconcile');
+
+var Choice = (function (_Phrase) {
+  function Choice() {
+    _classCallCheck(this, Choice);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(Choice, _Phrase);
+
+  _createClass(Choice, [{
+    key: '_handleParse',
+    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
+      var successes, scoredOutputs, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, _ret;
+
+      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
+        var _this = this;
+
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            successes = 0;
+            scoredOutputs = [];
+
+            if (!(this.props.children && this.props.children.length > 0)) {
+              context$2$0.next = 32;
+              break;
+            }
+
+            this.childPhrases = _reconcile.reconcile({ descriptor: this.props.children, phrase: this.childPhrases, options: options });
+
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 7;
+            _loop = _regeneratorRuntime.mark(function callee$2$0() {
+              var childPhrase, success, output, newResult, modifications;
+              return _regeneratorRuntime.wrap(function callee$2$0$(context$3$0) {
+                while (1) switch (context$3$0.prev = context$3$0.next) {
+                  case 0:
+                    childPhrase = _step.value;
+                    success = false;
+                    _iteratorNormalCompletion2 = true;
+                    _didIteratorError2 = false;
+                    _iteratorError2 = undefined;
+                    context$3$0.prev = 5;
+                    _iterator2 = _getIterator(_parse2['default']({ phrase: childPhrase, input: input, options: options }));
+
+                  case 7:
+                    if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+                      context$3$0.next = 17;
+                      break;
+                    }
+
+                    output = _step2.value;
+                    newResult = this.props.value || (childPhrase.props.id ? _defineProperty({}, childPhrase.props.id, output.result) : output.result);
+                    modifications = { result: newResult };
+
+                    if (this.props.limit) modifications.callbacks = output.callbacks.concat(function () {
+                      return success = true;
+                    });
+
+                    context$3$0.next = 14;
+                    return _import2['default'].assign({}, output, modifications);
+
+                  case 14:
+                    _iteratorNormalCompletion2 = true;
+                    context$3$0.next = 7;
+                    break;
+
+                  case 17:
+                    context$3$0.next = 23;
+                    break;
+
+                  case 19:
+                    context$3$0.prev = 19;
+                    context$3$0.t0 = context$3$0['catch'](5);
+                    _didIteratorError2 = true;
+                    _iteratorError2 = context$3$0.t0;
+
+                  case 23:
+                    context$3$0.prev = 23;
+                    context$3$0.prev = 24;
+
+                    if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+                      _iterator2['return']();
+                    }
+
+                  case 26:
+                    context$3$0.prev = 26;
+
+                    if (!_didIteratorError2) {
+                      context$3$0.next = 29;
+                      break;
+                    }
+
+                    throw _iteratorError2;
+
+                  case 29:
+                    return context$3$0.finish(26);
+
+                  case 30:
+                    return context$3$0.finish(23);
+
+                  case 31:
+                    if (!this.props.limit) {
+                      context$3$0.next = 35;
+                      break;
+                    }
+
+                    if (success) successes++;
+
+                    if (!(this.props.limit <= successes)) {
+                      context$3$0.next = 35;
+                      break;
+                    }
+
+                    return context$3$0.abrupt('return', 'break');
+
+                  case 35:
+                  case 'end':
+                    return context$3$0.stop();
+                }
+              }, callee$2$0, _this, [[5, 19, 23, 31], [24,, 26, 30]]);
+            });
+            _iterator = _getIterator(this.childPhrases);
+
+          case 10:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 18;
+              break;
+            }
+
+            return context$2$0.delegateYield(_loop(), 't1', 12);
+
+          case 12:
+            _ret = context$2$0.t1;
+
+            if (!(_ret === 'break')) {
+              context$2$0.next = 15;
+              break;
+            }
+
+            return context$2$0.abrupt('break', 18);
+
+          case 15:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 10;
+            break;
+
+          case 18:
+            context$2$0.next = 24;
+            break;
+
+          case 20:
+            context$2$0.prev = 20;
+            context$2$0.t2 = context$2$0['catch'](7);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t2;
+
+          case 24:
+            context$2$0.prev = 24;
+            context$2$0.prev = 25;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 27:
+            context$2$0.prev = 27;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 30;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 30:
+            return context$2$0.finish(27);
+
+          case 31:
+            return context$2$0.finish(24);
+
+          case 32:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, _handleParse, this, [[7, 20, 24, 32], [25,, 27, 31]]);
+    })
+  }]);
+
+  return Choice;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = Choice;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../parse":62,"../reconcile":64,"babel-runtime/core-js/get-iterator":66,"babel-runtime/helpers/class-call-check":73,"babel-runtime/helpers/create-class":74,"babel-runtime/helpers/define-property":75,"babel-runtime/helpers/inherits":78,"babel-runtime/helpers/interop-require-wildcard":79,"babel-runtime/regenerator":114,"lacona-phrase":116}],51:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+var _match = require('../fuzzy');
+
+var _createElement$Phrase = require('lacona-phrase');
+
+//
+// class TrueDecorator extends Phrase {
+//   _handleParse(input, options) {
+//     // const category = stackFind(input.stack, 'category', this.props.category, null)
+//     // const qualifier = stackFind(input.stack, 'qualifier', this.props.qualifier, null)
+//     // const descriptors = _.chain(input.stack).map('descriptor').filter().value(
+//   }
+//
+// }
+
+var Decorator = (function (_Phrase) {
+  function Decorator() {
+    _classCallCheck(this, Decorator);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(Decorator, _Phrase);
+
+  _createClass(Decorator, [{
+    key: 'compute',
+    value: function compute(input) {
+      return [{
+        words: [{ text: this.props.text, input: false, decorator: true }],
+        value: this.props.value,
+        remaining: input,
+        score: 1
+      }];
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'choice',
+        { limit: 1 },
+        _createElement$Phrase.createElement('literal', { text: this.props.text, value: this.props.value }),
+        _createElement$Phrase.createElement('value', { compute: this.compute.bind(this) })
+      );
+    }
+  }]);
+
+  return Decorator;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = Decorator;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../fuzzy":60,"babel-runtime/helpers/class-call-check":73,"babel-runtime/helpers/create-class":74,"babel-runtime/helpers/inherits":78,"babel-runtime/helpers/interop-require-wildcard":79,"lacona-phrase":116}],52:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var _parse = require('../parse');
+
+var _parse2 = _interopRequireWildcard(_parse);
+
+var _reconcile = require('../reconcile');
+
+var _stackFind = require('../stackfind');
+
+var _stackFind2 = _interopRequireWildcard(_stackFind);
+
+var Descriptor = (function (_Phrase) {
+  function Descriptor() {
+    _classCallCheck(this, Descriptor);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(Descriptor, _Phrase);
+
+  _createClass(Descriptor, [{
+    key: 'parseChild',
+    value: _regeneratorRuntime.mark(function parseChild(input, options) {
+      var showPlaceholder, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, output;
+
+      return _regeneratorRuntime.wrap(function parseChild$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            if (this.props.trigger) this.props.trigger(input.text);
+
+            if (!(this.props.showForEmpty && input.text === '')) {
+              context$2$0.next = 3;
+              break;
+            }
+
+            return context$2$0.abrupt('return', true);
+
+          case 3:
+            showPlaceholder = true;
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 7;
+            _iterator = _getIterator(_parse2['default']({ phrase: this.childPhrase, input: input, options: options }));
+
+          case 9:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 22;
+              break;
+            }
+
+            output = _step.value;
+
+            showPlaceholder = false;
+
+            if (!this.props.argument) {
+              context$2$0.next = 17;
+              break;
+            }
+
+            context$2$0.next = 15;
+            return _import2['default'].assign({}, output, { currentArgument: undefined });
+
+          case 15:
+            context$2$0.next = 19;
+            break;
+
+          case 17:
+            context$2$0.next = 19;
+            return output;
+
+          case 19:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 9;
+            break;
+
+          case 22:
+            context$2$0.next = 28;
+            break;
+
+          case 24:
+            context$2$0.prev = 24;
+            context$2$0.t3 = context$2$0['catch'](7);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t3;
+
+          case 28:
+            context$2$0.prev = 28;
+            context$2$0.prev = 29;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 31:
+            context$2$0.prev = 31;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 34;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 34:
+            return context$2$0.finish(31);
+
+          case 35:
+            return context$2$0.finish(28);
+
+          case 36:
+            if (showPlaceholder) {
+              context$2$0.next = 38;
+              break;
+            }
+
+            return context$2$0.abrupt('return', false);
+
+          case 38:
+            if (!(this.props.displayWhen && this.props.displayWhen(input.text))) {
+              context$2$0.next = 40;
+              break;
+            }
+
+            return context$2$0.abrupt('return', true);
+
+          case 40:
+            return context$2$0.abrupt('return', false);
+
+          case 41:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, parseChild, this, [[7, 24, 28, 36], [29,, 31, 35]]);
+    })
+  }, {
+    key: 'yieldSelf',
+    value: _regeneratorRuntime.mark(function yieldSelf(input, options) {
+      var word, modification;
+      return _regeneratorRuntime.wrap(function yieldSelf$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            word = {
+              text: this.props.text,
+              input: false,
+              placeholder: true,
+              argument: input.currentArgument
+            };
+            modification = {
+              score: 0.01,
+              result: undefined,
+              text: ''
+            };
+
+            modification.words = input.words.concat(word);
+
+            context$2$0.next = 5;
+            return _import2['default'].assign({}, input, modification);
+
+          case 5:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, yieldSelf, this);
+    })
+  }, {
+    key: '_handleParse',
+    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
+      var inputWithArgument, showPlaceholder;
+      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            this.childPhrase = _reconcile.reconcile({ descriptor: this.props.children[0], phrase: this.childPhrase, options: options });
+
+            inputWithArgument = input;
+
+            if (this.props.argument && !input.currentArgument) {
+              inputWithArgument = _import2['default'].assign({}, input, { currentArgument: this.props.text });
+            }
+
+            if (!this.props.placeholder) {
+              context$2$0.next = 14;
+              break;
+            }
+
+            if (!(input.text !== '' || _import2['default'].all(input.words, 'input'))) {
+              context$2$0.next = 11;
+              break;
+            }
+
+            return context$2$0.delegateYield(this.parseChild(inputWithArgument, options), 't4', 6);
+
+          case 6:
+            showPlaceholder = context$2$0.t4;
+
+            if (!showPlaceholder) {
+              context$2$0.next = 9;
+              break;
+            }
+
+            return context$2$0.delegateYield(this.yieldSelf(input, options), 't5', 9);
+
+          case 9:
+            context$2$0.next = 12;
+            break;
+
+          case 11:
+            return context$2$0.delegateYield(this.yieldSelf(input, options), 't6', 12);
+
+          case 12:
+            context$2$0.next = 15;
+            break;
+
+          case 14:
+            return context$2$0.delegateYield(this.parseChild(inputWithArgument, options), 't7', 15);
+
+          case 15:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, _handleParse, this);
+    })
+  }]);
+
+  return Descriptor;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = Descriptor;
+
+Descriptor.defaultProps = {
+  placeholder: false,
+  argument: false,
+  showForEmpty: false,
+  displayWhen: function displayWhen(input) {
+    return input === '';
+  }
+};
+module.exports = exports['default'];
+// if (_.isEmpty(input.suggestion)) {
+//   modification.suggestion = input.suggestion.concat(word)
+// } else {
+//   modification.completion = input.completion.concat(word)
+// }
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../parse":62,"../reconcile":64,"../stackfind":65,"babel-runtime/core-js/get-iterator":66,"babel-runtime/helpers/class-call-check":73,"babel-runtime/helpers/create-class":74,"babel-runtime/helpers/inherits":78,"babel-runtime/helpers/interop-require-wildcard":79,"babel-runtime/regenerator":114,"lacona-phrase":116}],53:[function(require,module,exports){
+'use strict';
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+var marked0$0 = [substrings].map(_regeneratorRuntime.mark);
+/** @jsx createElement */
+
+var _Phrase$createElement = require('lacona-phrase');
+
+var _split = require('smart-split');
+
+var _split2 = _interopRequireWildcard(_split);
+
+function substrings(input, _ref) {
+  var splitOn = _ref.splitOn;
+  var noSplit = _ref.noSplit;
+  var inputs, i;
+  return _regeneratorRuntime.wrap(function substrings$(context$1$0) {
+    while (1) switch (context$1$0.prev = context$1$0.next) {
+      case 0:
+        if (!noSplit) {
+          context$1$0.next = 4;
+          break;
+        }
+
+        context$1$0.next = 3;
+        return input;
+
+      case 3:
+        return context$1$0.abrupt('return');
+
+      case 4:
+        inputs = _split2['default'](input, splitOn);
+        i = 0;
+
+      case 6:
+        if (!(i < inputs.length)) {
+          context$1$0.next = 12;
+          break;
+        }
+
+        context$1$0.next = 9;
+        return inputs.slice(0, i + 1).join('');
+
+      case 9:
+        i += 2;
+        context$1$0.next = 6;
+        break;
+
+      case 12:
+      case 'end':
+        return context$1$0.stop();
+    }
+  }, marked0$0[0], this);
+}
+
+var Freetext = (function (_Phrase) {
+  function Freetext() {
+    _classCallCheck(this, Freetext);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(Freetext, _Phrase);
+
+  _createClass(Freetext, [{
+    key: 'validate',
+    value: _regeneratorRuntime.mark(function validate(input) {
+      var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, stringPart;
+
+      return _regeneratorRuntime.wrap(function validate$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 3;
+            _iterator = _getIterator(substrings(input, { splitOn: this.props.splitOn, noSplit: this.props.consumeAll }));
+
+          case 5:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 13;
+              break;
+            }
+
+            stringPart = _step.value;
+
+            if (!this.props.validate(stringPart)) {
+              context$2$0.next = 10;
+              break;
+            }
+
+            context$2$0.next = 10;
+            return {
+              words: [{ text: stringPart, input: true }],
+              value: stringPart,
+              remaining: input.substring(stringPart.length),
+              score: this.props.score || 0.1 + 1 / (stringPart.length + 2)
+            };
+
+          case 10:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 5;
+            break;
+
+          case 13:
+            context$2$0.next = 19;
+            break;
+
+          case 15:
+            context$2$0.prev = 15;
+            context$2$0.t8 = context$2$0['catch'](3);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t8;
+
+          case 19:
+            context$2$0.prev = 19;
+            context$2$0.prev = 20;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 22:
+            context$2$0.prev = 22;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 25;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 25:
+            return context$2$0.finish(22);
+
+          case 26:
+            return context$2$0.finish(19);
+
+          case 27:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, validate, this, [[3, 15, 19, 27], [20,, 22, 26]]);
+    })
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _Phrase$createElement.createElement('value', { compute: this.validate.bind(this), limit: this.props.limit });
+    }
+  }]);
+
+  return Freetext;
+})(_Phrase$createElement.Phrase);
+
+exports['default'] = Freetext;
+
+Freetext.defaultProps = {
+  validate: function validate() {
+    return true;
+  },
+  splitOn: '',
+  consumeAll: false
+};
+module.exports = exports['default'];
+},{"babel-runtime/core-js/get-iterator":66,"babel-runtime/helpers/class-call-check":73,"babel-runtime/helpers/create-class":74,"babel-runtime/helpers/inherits":78,"babel-runtime/helpers/interop-require-wildcard":79,"babel-runtime/regenerator":114,"lacona-phrase":116,"smart-split":119}],54:[function(require,module,exports){
+'use strict';
+
+var _interopRequire = require('babel-runtime/helpers/interop-require')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _default = require('./argument');
+
+exports.argument = _interopRequire(_default);
+
+var _default2 = require('./choice');
+
+exports.choice = _interopRequire(_default2);
+
+var _default3 = require('./decorator');
+
+exports.decorator = _interopRequire(_default3);
+
+var _default4 = require('./descriptor');
+
+exports.descriptor = _interopRequire(_default4);
+
+var _default5 = require('./freetext');
+
+exports.freetext = _interopRequire(_default5);
+
+var _default6 = require('./list');
+
+exports.list = _interopRequire(_default6);
+
+var _default7 = require('./literal');
+
+exports.literal = _interopRequire(_default7);
+
+var _default8 = require('./placeholder');
+
+exports.placeholder = _interopRequire(_default8);
+
+var _default9 = require('./sequence');
+
+exports.sequence = _interopRequire(_default9);
+
+var _default10 = require('./value');
+
+exports.value = _interopRequire(_default10);
+},{"./argument":49,"./choice":50,"./decorator":51,"./descriptor":52,"./freetext":53,"./list":55,"./literal":56,"./placeholder":57,"./sequence":58,"./value":59,"babel-runtime/helpers/interop-require":80}],55:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+var _sort = require('../fuzzy');
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var List = (function (_Phrase) {
+  function List() {
+    _classCallCheck(this, List);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(List, _Phrase);
+
+  _createClass(List, [{
+    key: 'itemify',
+    value: function itemify(item) {
+      var trueItem = _import2['default'].isString(item) ? { text: item } : item;
+      if (!_import2['default'].isUndefined(this.props.value)) trueItem.value = this.props.value;
+      if (!_import2['default'].isUndefined(this.props.qualifier)) trueItem.qualifier = this.props.qualifier;
+      return trueItem;
+    }
+  }, {
+    key: 'compute',
+    value: _regeneratorRuntime.mark(function compute(input) {
+      var trueItems, itemsForFuzzy, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, item, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, result;
+
+      return _regeneratorRuntime.wrap(function compute$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            trueItems = _import2['default'].map(this.props.items, this.itemify.bind(this));
+            itemsForFuzzy = [];
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 5;
+            _iterator = _getIterator(trueItems);
+
+          case 7:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 18;
+              break;
+            }
+
+            item = _step.value;
+
+            if (!_import2['default'].startsWith(input.toLowerCase(), item.text.toLowerCase())) {
+              context$2$0.next = 14;
+              break;
+            }
+
+            context$2$0.next = 12;
+            return {
+              remaining: input.slice(item.text.length),
+              words: [{ text: item.text, input: true, qualifier: item.qualifier }],
+              value: item.value
+            };
+
+          case 12:
+            context$2$0.next = 15;
+            break;
+
+          case 14:
+            itemsForFuzzy.push(item);
+
+          case 15:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 7;
+            break;
+
+          case 18:
+            context$2$0.next = 24;
+            break;
+
+          case 20:
+            context$2$0.prev = 20;
+            context$2$0.t9 = context$2$0['catch'](5);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t9;
+
+          case 24:
+            context$2$0.prev = 24;
+            context$2$0.prev = 25;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 27:
+            context$2$0.prev = 27;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 30;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 30:
+            return context$2$0.finish(27);
+
+          case 31:
+            return context$2$0.finish(24);
+
+          case 32:
+            _iteratorNormalCompletion2 = true;
+            _didIteratorError2 = false;
+            _iteratorError2 = undefined;
+            context$2$0.prev = 35;
+            _iterator2 = _getIterator(_sort.sort(input, itemsForFuzzy));
+
+          case 37:
+            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+              context$2$0.next = 45;
+              break;
+            }
+
+            result = _step2.value;
+
+            result.remaining = '';
+
+            context$2$0.next = 42;
+            return result;
+
+          case 42:
+            _iteratorNormalCompletion2 = true;
+            context$2$0.next = 37;
+            break;
+
+          case 45:
+            context$2$0.next = 51;
+            break;
+
+          case 47:
+            context$2$0.prev = 47;
+            context$2$0.t10 = context$2$0['catch'](35);
+            _didIteratorError2 = true;
+            _iteratorError2 = context$2$0.t10;
+
+          case 51:
+            context$2$0.prev = 51;
+            context$2$0.prev = 52;
+
+            if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+              _iterator2['return']();
+            }
+
+          case 54:
+            context$2$0.prev = 54;
+
+            if (!_didIteratorError2) {
+              context$2$0.next = 57;
+              break;
+            }
+
+            throw _iteratorError2;
+
+          case 57:
+            return context$2$0.finish(54);
+
+          case 58:
+            return context$2$0.finish(51);
+
+          case 59:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, compute, this, [[5, 20, 24, 32], [25,, 27, 31], [35, 47, 51, 59], [52,, 54, 58]]);
+    })
+  }, {
+    key: 'suggest',
+    value: _regeneratorRuntime.mark(function suggest(input) {
+      var _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, item;
+
+      return _regeneratorRuntime.wrap(function suggest$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            _iteratorNormalCompletion3 = true;
+            _didIteratorError3 = false;
+            _iteratorError3 = undefined;
+            context$2$0.prev = 3;
+            _iterator3 = _getIterator(this.props.items);
+
+          case 5:
+            if (_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done) {
+              context$2$0.next = 12;
+              break;
+            }
+
+            item = _step3.value;
+            context$2$0.next = 9;
+            return this.itemify(item);
+
+          case 9:
+            _iteratorNormalCompletion3 = true;
+            context$2$0.next = 5;
+            break;
+
+          case 12:
+            context$2$0.next = 18;
+            break;
+
+          case 14:
+            context$2$0.prev = 14;
+            context$2$0.t11 = context$2$0['catch'](3);
+            _didIteratorError3 = true;
+            _iteratorError3 = context$2$0.t11;
+
+          case 18:
+            context$2$0.prev = 18;
+            context$2$0.prev = 19;
+
+            if (!_iteratorNormalCompletion3 && _iterator3['return']) {
+              _iterator3['return']();
+            }
+
+          case 21:
+            context$2$0.prev = 21;
+
+            if (!_didIteratorError3) {
+              context$2$0.next = 24;
+              break;
+            }
+
+            throw _iteratorError3;
+
+          case 24:
+            return context$2$0.finish(21);
+
+          case 25:
+            return context$2$0.finish(18);
+
+          case 26:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, suggest, this, [[3, 14, 18, 26], [19,, 21, 25]]);
+    })
+  }, {
+    key: 'describe',
+    value: function describe() {
+      var _this = this;
+
+      if (this.props.fuzzy) {
+        return _createElement$Phrase.createElement('value', { compute: this.compute.bind(this), suggest: this.suggest.bind(this), limit: this.props.limit, category: this.props.category });
+      } else {
+        var literals = _import2['default'].chain(this.props.items).map(this.itemify.bind(this)).map(function (item) {
+          return _createElement$Phrase.createElement('literal', { text: item.text, value: item.value, qualifier: item.qualifier, category: _this.props.category });
+        }).value();
+
+        return _createElement$Phrase.createElement(
+          'choice',
+          { limit: this.props.limit, value: this.props.value },
+          literals
+        );
+      }
+    }
+  }]);
+
+  return List;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = List;
+module.exports = exports['default'];
+
+// first check for exact matches
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../fuzzy":60,"babel-runtime/core-js/get-iterator":66,"babel-runtime/helpers/class-call-check":73,"babel-runtime/helpers/create-class":74,"babel-runtime/helpers/inherits":78,"babel-runtime/helpers/interop-require-wildcard":79,"babel-runtime/regenerator":114,"lacona-phrase":116}],56:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+var _match = require('../fuzzy');
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var Literal = (function (_Phrase) {
+  function Literal() {
+    _classCallCheck(this, Literal);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(Literal, _Phrase);
+
+  _createClass(Literal, [{
+    key: 'suggest',
+    value: function suggest() {
+      if (this.props.text == null) {
+        return [];
+      }return [{ text: this.props.text.replace(/\n/g, ''), value: this.props.value, score: this.props.score || 1 }];
+    }
+  }, {
+    key: 'compute',
+    value: function compute(input) {
+      if (this.props.text == null) {
+        return [];
+      }var inputLower = input.toLowerCase();
+      var thisTextLine = this.props.text.replace(/\n/g, '');
+      var thisTextLower = thisTextLine.toLowerCase();
+      if (_import2['default'].startsWith(inputLower, thisTextLower)) {
+        return [{
+          words: [{ text: thisTextLine, input: true }],
+          remaining: input.substring(thisTextLine.length),
+          value: this.props.value,
+          score: this.props.score || 1
+        }];
+      } else if (_import2['default'].startsWith(thisTextLower, inputLower)) {
+        var words = [{ text: thisTextLine.substring(0, input.length), input: true }];
+        if (thisTextLine.length > input.length) {
+          words.push({ text: thisTextLine.substring(input.length), input: false });
+        }
+        return [{
+          words: words,
+          remaining: '',
+          value: this.props.value,
+          score: this.props.score || 1
+        }];
+      } else if (this.props.fuzzy) {
+        var result = _match.match(input, thisTextLine);
+        if (result) {
+          result.remaining = '';
+          result.value = this.props.value;
+          result.score = this.props.score || result.score;
+          return [result];
+        }
+      }
+      return [];
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement('value', {
+        compute: this.compute.bind(this),
+        suggest: this.suggest.bind(this),
+        qualifier: this.props.qualifier,
+        category: this.props.category });
+    }
+  }]);
+
+  return Literal;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = Literal;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../fuzzy":60,"babel-runtime/helpers/class-call-check":73,"babel-runtime/helpers/create-class":74,"babel-runtime/helpers/inherits":78,"babel-runtime/helpers/interop-require-wildcard":79,"lacona-phrase":116}],57:[function(require,module,exports){
+'use strict';
+
+var _extends = require('babel-runtime/helpers/extends')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var Placeholder = (function (_Phrase) {
+  function Placeholder() {
+    _classCallCheck(this, Placeholder);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(Placeholder, _Phrase);
+
+  _createClass(Placeholder, [{
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement('descriptor', _extends({}, this.props, { placeholder: true }));
+    }
+  }]);
+
+  return Placeholder;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = Placeholder;
+module.exports = exports['default'];
+},{"babel-runtime/helpers/class-call-check":73,"babel-runtime/helpers/create-class":74,"babel-runtime/helpers/extends":76,"babel-runtime/helpers/inherits":78,"lacona-phrase":116}],58:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _extends = require('babel-runtime/helpers/extends')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _defineProperty = require('babel-runtime/helpers/define-property')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/** @jsx createElement */
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+var _createElement$Phrase = require('lacona-phrase');
+
+var _parse = require('../parse');
+
+var _parse2 = _interopRequireWildcard(_parse);
+
+var _reconcile = require('../reconcile');
+
+function addSeparator(child, separator) {
+  if (child.props && child.props.optional) {
+    var newChild = _import2['default'].merge({}, child, { props: { optional: false } });
+    //TODO there are likely some problems with separators and optional
+    return _createElement$Phrase.createElement(
+      Sequence,
+      { optional: true, merge: true },
+      newChild,
+      separator
+    );
+  } else {
+    return _createElement$Phrase.createElement(
+      Sequence,
+      { merge: true },
+      child,
+      separator
+    );
+  }
+}
+
+var Sequence = (function (_Phrase) {
+  function Sequence() {
+    _classCallCheck(this, Sequence);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(Sequence, _Phrase);
+
+  _createClass(Sequence, [{
+    key: 'describe',
+    value: function describe() {
+      //get the content and the separator
+      var content = undefined,
+          separator = undefined;
+      if (this.props.children[0] && this.props.children[0].Constructor === 'content') {
+        content = this.props.children[0].children;
+        if (this.props.children[1] && this.props.children[1].Constructor === 'separator') {
+          //apply separators
+          separator = this.props.children[1].children[0];
+          return _createElement$Phrase.createElement(
+            'sequence',
+            this.props,
+            _import2['default'].chain(content.slice(0, -1)).map(_import2['default'].partial(addSeparator, _import2['default'], separator)).concat(_import2['default'].last(content)).value()
+          );
+        } else {
+          return _createElement$Phrase.createElement(
+            'sequence',
+            this.props,
+            content
+          );
+        }
+      }
+
+      //replace optionals with replacements
+      if (_import2['default'].some(this.props.children, _import2['default'].property('props.optional'))) {
+        var newChildren = _import2['default'].map(this.props.children, function (child) {
+          if (child && child.props && child.props.optional) {
+
+            var newChild = _import2['default'].merge({}, child, { props: { optional: false } });
+            delete newChild.props.id;
+            delete newChild.props.merge;
+
+            var choiceChildren = [_createElement$Phrase.createElement('literal', { text: '' }), newChild];
+
+            if (child.props.preferred) choiceChildren.reverse();
+
+            return _createElement$Phrase.createElement(
+              'choice',
+              { limit: child.props.limited ? 1 : undefined, id: child.props.id, merge: child.props.merge },
+              choiceChildren
+            );
+          }
+
+          return child;
+        });
+
+        return _createElement$Phrase.createElement(
+          'sequence',
+          _extends({}, this.props, { children: undefined }),
+          newChildren
+        );
+      }
+    }
+  }, {
+    key: '_handleParse',
+    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
+      var modifications;
+      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            this.childPhrases = _reconcile.reconcile({ descriptor: this.props.children, phrase: this.childPhrases, options: options });
+
+            modifications = {
+              result: {},
+              score: 1
+            };
+            return context$2$0.delegateYield(this.parseChild(0, _import2['default'].assign({}, input, modifications), options), 't12', 3);
+
+          case 3:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, _handleParse, this);
+    })
+  }, {
+    key: 'parseChild',
+    value: _regeneratorRuntime.mark(function parseChild(childIndex, input, options) {
+      var child, success, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, output, accumulatedResult, newScore, nextOutput;
+
+      return _regeneratorRuntime.wrap(function parseChild$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            if (!(childIndex >= this.childPhrases.length)) {
+              context$2$0.next = 4;
+              break;
+            }
+
+            context$2$0.next = 3;
+            return input;
+
+          case 3:
+            return context$2$0.abrupt('return');
+
+          case 4:
+            child = this.childPhrases[childIndex];
+            success = false;
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 9;
+            _iterator = _getIterator(_parse2['default']({ phrase: this.childPhrases[childIndex], input: input, options: options }));
+
+          case 11:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 20;
+              break;
+            }
+
+            output = _step.value;
+            accumulatedResult = this.props.value || getAccumulatedResult(input.result, child, output.result);
+            newScore = input.score * output.score;
+            nextOutput = _import2['default'].assign({}, output, {
+              result: accumulatedResult,
+              score: newScore,
+              callbacks: output.callbacks.concat(function () {
+                return success = true;
+              })
+            });
+            return context$2$0.delegateYield(this.parseChild(childIndex + 1, nextOutput, options), 't13', 17);
+
+          case 17:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 11;
+            break;
+
+          case 20:
+            context$2$0.next = 26;
+            break;
+
+          case 22:
+            context$2$0.prev = 22;
+            context$2$0.t14 = context$2$0['catch'](9);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t14;
+
+          case 26:
+            context$2$0.prev = 26;
+            context$2$0.prev = 27;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 29:
+            context$2$0.prev = 29;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 32;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 32:
+            return context$2$0.finish(29);
+
+          case 33:
+            return context$2$0.finish(26);
+
+          case 34:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, parseChild, this, [[9, 22, 26, 34], [27,, 29, 33]]);
+    })
+  }]);
+
+  return Sequence;
+})(_createElement$Phrase.Phrase);
+
+exports['default'] = Sequence;
+
+function getAccumulatedResult(inputResult, child, childResult) {
+  if (!_import2['default'].isUndefined(childResult)) {
+    var childId = child.props.id;
+    var childMerge = child.props.merge;
+    if (childId) {
+      return _import2['default'].assign({}, inputResult, _defineProperty({}, childId, childResult));
+    } else if (childMerge) {
+      if (_import2['default'].isPlainObject(childResult)) {
+        return _import2['default'].merge({}, inputResult, childResult);
+      } else {
+        return childResult;
+      }
+    }
+  }
+  return inputResult;
+}
+module.exports = exports['default'];
+
+// if (child.props && child.props.optional) {
+//   yield* this.parseChild(childIndex + 1, input, options)
+// }
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../parse":62,"../reconcile":64,"babel-runtime/core-js/get-iterator":66,"babel-runtime/helpers/class-call-check":73,"babel-runtime/helpers/create-class":74,"babel-runtime/helpers/define-property":75,"babel-runtime/helpers/extends":76,"babel-runtime/helpers/inherits":78,"babel-runtime/helpers/interop-require-wildcard":79,"babel-runtime/regenerator":114,"lacona-phrase":116}],59:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+// import {handleString} from '../input-option'
+
+var _Phrase2 = require('lacona-phrase');
+
+var _stackFind = require('../stackfind.js');
+
+var _stackFind2 = _interopRequireWildcard(_stackFind);
+
+var Value = (function (_Phrase) {
+  function Value() {
+    _classCallCheck(this, Value);
+
+    if (_Phrase != null) {
+      _Phrase.apply(this, arguments);
+    }
+  }
+
+  _inherits(Value, _Phrase);
+
+  _createClass(Value, [{
+    key: '_handleParse',
+    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
+      var successes, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _loop2, _iterator2, _step2, _ret2;
+
+      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
+        var _this = this;
+
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            successes = 0;
+
+            if (!(input.text === '')) {
+              context$2$0.next = 32;
+              break;
+            }
+
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 5;
+            _loop = _regeneratorRuntime.mark(function callee$2$0() {
+              var output, success, modification, word;
+              return _regeneratorRuntime.wrap(function callee$2$0$(context$3$0) {
+                while (1) switch (context$3$0.prev = context$3$0.next) {
+                  case 0:
+                    output = _step.value;
+                    success = false;
+                    modification = {
+                      result: output.value,
+                      score: output.score || 1
+                    };
+
+                    if (this.props.limit) modification.callbacks = input.callbacks.concat(function () {
+                      return success = true;
+                    });
+
+                    word = {
+                      text: output.text,
+                      // category,
+                      input: false,
+                      argument: input.currentArgument,
+                      category: this.props.category
+                      // qualifier,
+                      // descriptors
+                    };
+
+                    modification.words = input.words.concat(word);
+
+                    context$3$0.next = 8;
+                    return _import2['default'].assign({}, input, modification);
+
+                  case 8:
+                    if (!this.props.limit) {
+                      context$3$0.next = 12;
+                      break;
+                    }
+
+                    if (success) successes++;
+
+                    if (!(this.props.limit <= successes)) {
+                      context$3$0.next = 12;
+                      break;
+                    }
+
+                    return context$3$0.abrupt('return', 'break');
+
+                  case 12:
+                  case 'end':
+                    return context$3$0.stop();
+                }
+              }, callee$2$0, _this);
+            });
+            _iterator = _getIterator(this.props.suggest());
+
+          case 8:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 16;
+              break;
+            }
+
+            return context$2$0.delegateYield(_loop(), 't15', 10);
+
+          case 10:
+            _ret = context$2$0.t15;
+
+            if (!(_ret === 'break')) {
+              context$2$0.next = 13;
+              break;
+            }
+
+            return context$2$0.abrupt('break', 16);
+
+          case 13:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 8;
+            break;
+
+          case 16:
+            context$2$0.next = 22;
+            break;
+
+          case 18:
+            context$2$0.prev = 18;
+            context$2$0.t16 = context$2$0['catch'](5);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t16;
+
+          case 22:
+            context$2$0.prev = 22;
+            context$2$0.prev = 23;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 25:
+            context$2$0.prev = 25;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 28;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 28:
+            return context$2$0.finish(25);
+
+          case 29:
+            return context$2$0.finish(22);
+
+          case 30:
+            context$2$0.next = 60;
+            break;
+
+          case 32:
+            _iteratorNormalCompletion2 = true;
+            _didIteratorError2 = false;
+            _iteratorError2 = undefined;
+            context$2$0.prev = 35;
+            _loop2 = _regeneratorRuntime.mark(function callee$2$1() {
+              var output, success, modification;
+              return _regeneratorRuntime.wrap(function callee$2$1$(context$3$0) {
+                var _this2 = this;
+
+                while (1) switch (context$3$0.prev = context$3$0.next) {
+                  case 0:
+                    output = _step2.value;
+                    success = false;
+                    modification = {
+                      result: output.value,
+                      score: output.score || 1,
+                      text: output.remaining,
+                      words: input.words.concat(_import2['default'].map(output.words, function (word) {
+                        return _import2['default'].assign(word, {
+                          argument: input.currentArgument,
+                          category: _this2.props.category
+                        });
+                      }))
+                    };
+
+                    if (this.props.limit) modification.callbacks = input.callbacks.concat(function () {
+                      return success = true;
+                    });
+                    context$3$0.next = 6;
+                    return _import2['default'].assign({}, input, modification);
+
+                  case 6:
+                    if (!this.props.limit) {
+                      context$3$0.next = 10;
+                      break;
+                    }
+
+                    if (success) successes++;
+
+                    if (!(this.props.limit <= successes)) {
+                      context$3$0.next = 10;
+                      break;
+                    }
+
+                    return context$3$0.abrupt('return', 'break');
+
+                  case 10:
+                  case 'end':
+                    return context$3$0.stop();
+                }
+              }, callee$2$1, _this);
+            });
+            _iterator2 = _getIterator(this.props.compute(input.text));
+
+          case 38:
+            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+              context$2$0.next = 46;
+              break;
+            }
+
+            return context$2$0.delegateYield(_loop2(), 't17', 40);
+
+          case 40:
+            _ret2 = context$2$0.t17;
+
+            if (!(_ret2 === 'break')) {
+              context$2$0.next = 43;
+              break;
+            }
+
+            return context$2$0.abrupt('break', 46);
+
+          case 43:
+            _iteratorNormalCompletion2 = true;
+            context$2$0.next = 38;
+            break;
+
+          case 46:
+            context$2$0.next = 52;
+            break;
+
+          case 48:
+            context$2$0.prev = 48;
+            context$2$0.t18 = context$2$0['catch'](35);
+            _didIteratorError2 = true;
+            _iteratorError2 = context$2$0.t18;
+
+          case 52:
+            context$2$0.prev = 52;
+            context$2$0.prev = 53;
+
+            if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+              _iterator2['return']();
+            }
+
+          case 55:
+            context$2$0.prev = 55;
+
+            if (!_didIteratorError2) {
+              context$2$0.next = 58;
+              break;
+            }
+
+            throw _iteratorError2;
+
+          case 58:
+            return context$2$0.finish(55);
+
+          case 59:
+            return context$2$0.finish(52);
+
+          case 60:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, _handleParse, this, [[5, 18, 22, 30], [23,, 25, 29], [35, 48, 52, 60], [53,, 55, 59]]);
+    })
+  }]);
+
+  return Value;
+})(_Phrase2.Phrase);
+
+exports['default'] = Value;
+
+Value.defaultProps = {
+  suggest: function suggest() {
+    return [];
+  },
+  compute: function compute() {
+    return [];
+  }
+};
+module.exports = exports['default'];
+
+// if this has a category use that, else the last category on the stack
+// const category = stackFind(input.stack, 'category', this.props.category, null)
+// const qualifier = stackFind(input.stack, 'qualifier', this.props.qualifier, null)
+// const descriptors = _.chain(input.stack).map('descriptor').filter().value()
+
+// TODO this is **super** WET
+// if (_.isEmpty(input.suggestion)) {
+//   modification.suggestion = input.suggestion.concat(word)
+// } else {
+//   modification.completion = input.completion.concat(word)
+// }
+//
+//
+// const trueWords = output.words.map(word => ({
+//   text: word.text,
+//   // category,
+//   input: word.input
+//   // qualifier: word.qualifier || qualifier,
+//   // descriptors
+// }))
+
+// modification.words = output.words
+
+// if (_.isEmpty(input.suggestion) && (_.every(output.words, 'input') || output.decorator)) {
+//   modification.match = input.match.concat(trueWords)
+// } else {
+//   modification.suggestion = input.suggestion.concat(trueWords)
+// }
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../stackfind.js":65,"babel-runtime/core-js/get-iterator":66,"babel-runtime/helpers/class-call-check":73,"babel-runtime/helpers/create-class":74,"babel-runtime/helpers/inherits":78,"babel-runtime/helpers/interop-require-wildcard":79,"babel-runtime/regenerator":114,"lacona-phrase":116}],60:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _slicedToArray = require('babel-runtime/helpers/sliced-to-array')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+// returns a `words` object if its a match, else null
+
+exports.match = match;
+exports.sort = sort;
+var marked0$0 = [sort, sortFunction].map(_regeneratorRuntime.mark);
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+function match(input, text) {
+  var anywhere = anywhereMatch({ input: input, text: text });
+  if (anywhere) {
+    return { words: anywhere, score: 0.5 };
+  } // const fullFuzzy = fuzzyMatch({input, text})
+  // if (fullFuzzy) return {words: fullFuzzy, score: 0.25}
+
+  return null;
+}
+
+function sort(input, items) {
+  var results, itemSet, _arr, _i, _arr$_i, func, score;
+
+  return _regeneratorRuntime.wrap(function sort$(context$1$0) {
+    while (1) switch (context$1$0.prev = context$1$0.next) {
+      case 0:
+        results = [];
+        itemSet = _import2['default'].map(items, function (item) {
+          return { item: item, matched: false };
+        });
+        _arr = [[beginningMatch, 1], [anywhereMatch, 0.5] /*, [fuzzyMatch, 0.25]*/];
+        _i = 0;
+
+      case 4:
+        if (!(_i < _arr.length)) {
+          context$1$0.next = 12;
+          break;
+        }
+
+        _arr$_i = _slicedToArray(_arr[_i], 2);
+        func = _arr$_i[0];
+        score = _arr$_i[1];
+        return context$1$0.delegateYield(sortFunction({ input: input, itemSet: itemSet, func: func, score: score }), 't19', 9);
+
+      case 9:
+        _i++;
+        context$1$0.next = 4;
+        break;
+
+      case 12:
+      case 'end':
+        return context$1$0.stop();
+    }
+  }, marked0$0[0], this);
+}
+
+function sortFunction(_ref) {
+  var input = _ref.input;
+  var itemSet = _ref.itemSet;
+  var func = _ref.func;
+  var score = _ref.score;
+
+  var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step;
+
+  return _regeneratorRuntime.wrap(function sortFunction$(context$1$0) {
+    var _this = this;
+
+    while (1) switch (context$1$0.prev = context$1$0.next) {
+      case 0:
+        _iteratorNormalCompletion = true;
+        _didIteratorError = false;
+        _iteratorError = undefined;
+        context$1$0.prev = 3;
+        _loop = _regeneratorRuntime.mark(function callee$1$0() {
+          var obj, words;
+          return _regeneratorRuntime.wrap(function callee$1$0$(context$2$0) {
+            while (1) switch (context$2$0.prev = context$2$0.next) {
+              case 0:
+                obj = _step.value;
+
+                if (obj.matched) {
+                  context$2$0.next = 8;
+                  break;
+                }
+
+                words = func({ input: input, text: obj.item.text, qualifier: obj.item.qualifier });
+
+                if (!words) {
+                  context$2$0.next = 8;
+                  break;
+                }
+
+                obj.matched = true;
+                _import2['default'].forEach(words, function (word) {
+                  return word.descriptor = obj.item.descriptor;
+                });
+                context$2$0.next = 8;
+                return { words: words, value: obj.item.value, score: score };
+
+              case 8:
+              case 'end':
+                return context$2$0.stop();
+            }
+          }, callee$1$0, _this);
+        });
+        _iterator = _getIterator(itemSet);
+
+      case 6:
+        if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+          context$1$0.next = 11;
+          break;
+        }
+
+        return context$1$0.delegateYield(_loop(), 't20', 8);
+
+      case 8:
+        _iteratorNormalCompletion = true;
+        context$1$0.next = 6;
+        break;
+
+      case 11:
+        context$1$0.next = 17;
+        break;
+
+      case 13:
+        context$1$0.prev = 13;
+        context$1$0.t21 = context$1$0['catch'](3);
+        _didIteratorError = true;
+        _iteratorError = context$1$0.t21;
+
+      case 17:
+        context$1$0.prev = 17;
+        context$1$0.prev = 18;
+
+        if (!_iteratorNormalCompletion && _iterator['return']) {
+          _iterator['return']();
+        }
+
+      case 20:
+        context$1$0.prev = 20;
+
+        if (!_didIteratorError) {
+          context$1$0.next = 23;
+          break;
+        }
+
+        throw _iteratorError;
+
+      case 23:
+        return context$1$0.finish(20);
+
+      case 24:
+        return context$1$0.finish(17);
+
+      case 25:
+      case 'end':
+        return context$1$0.stop();
+    }
+  }, marked0$0[1], this, [[3, 13, 17, 25], [18,, 20, 24]]);
+}
+
+// escape special characters, and wrap in parens (for matching)
+function regexEscape(str) {
+  return '(' + str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/, '\\$&') + ')';
+}
+
+function regexSplit(str) {
+  return str.split('').map(regexEscape);
+}
+
+function beginningMatch(_ref2) {
+  var input = _ref2.input;
+  var text = _ref2.text;
+  var qualifier = _ref2.qualifier;
+
+  if (_import2['default'].startsWith(text.toLowerCase(), input)) {
+    var matches = [{ text: text.slice(0, input.length), input: true, qualifier: qualifier }];
+    if (input.length < text.length) {
+      matches.push({ text: text.slice(input.length), input: false, qualifier: qualifier });
+    }
+    return matches;
+  }
+  return null;
+}
+
+function anywhereMatch(_ref3) {
+  var input = _ref3.input;
+  var text = _ref3.text;
+  var qualifier = _ref3.qualifier;
+
+  var index = text.toLowerCase().indexOf(input);
+
+  if (index > -1) {
+    var matches = [];
+    var endIndex = index + input.length;
+
+    if (index > 0) {
+      matches.push({ text: text.slice(0, index), input: false, qualifier: qualifier });
+    }
+
+    matches.push({ text: text.slice(index, endIndex), input: true, qualifier: qualifier });
+
+    if (endIndex <= text.length - 1) {
+      matches.push({ text: text.slice(endIndex), input: false, qualifier: qualifier });
+    }
+
+    return matches;
+  }
+  return null;
+}
+
+// function fuzzyMatch({input, text}) {
+//   const chars = regexSplit(input)
+//   const fuzzyString = chars.reduce((a, b) => (`${a}([^${b}]*)${b}`), '^') + '(.*)$'
+//   const fuzzyRegex = new RegExp(fuzzyString, 'i')
+//   const fuzzyMatches = text.match(fuzzyRegex)
+//
+//   if (fuzzyMatches) {
+//     const words = []
+//     for (let i = 1, l = fuzzyMatches.length; i < l; i++) {
+//       if (fuzzyMatches[i].length > 0) {
+//         words.push({
+//           text: fuzzyMatches[i],
+//           input: i % 2 === 0
+//         })
+//       }
+//     }
+//     return words
+//   }
+//   return null
+// }
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"babel-runtime/core-js/get-iterator":66,"babel-runtime/helpers/interop-require-wildcard":79,"babel-runtime/helpers/sliced-to-array":81,"babel-runtime/regenerator":114}],61:[function(require,module,exports){
+'use strict';
+
+var _interopRequire = require('babel-runtime/helpers/interop-require')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _default = require('./parser');
+
+exports.Parser = _interopRequire(_default);
+},{"./parser":63,"babel-runtime/helpers/interop-require":80}],62:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports['default'] = parse;
+var marked0$0 = [parse, parseElement].map(_regeneratorRuntime.mark);
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+function parse(_ref) {
+  var phrase = _ref.phrase;
+  var input = _ref.input;
+  var options = _ref.options;
+  return _regeneratorRuntime.wrap(function parse$(context$1$0) {
+    while (1) switch (context$1$0.prev = context$1$0.next) {
+      case 0:
+        return context$1$0.delegateYield(parseElement({ phrase: phrase, input: input, options: options }),
+
+        // for (let output of parseElement({phrase, input, options})) {
+        //   yield _.assign({}, output, {stack: output.stack.slice(0, -1)}) //pop stack
+        // }
+        't22', 1);
+
+      case 1:
+      case 'end':
+        return context$1$0.stop();
+    }
+  }, marked0$0[0], this);
+}
+
+function parseElement(_ref2) {
+  var phrase = _ref2.phrase;
+  var input = _ref2.input;
+  var options = _ref2.options;
+
+  var iterator, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, output, newOutput;
+
+  return _regeneratorRuntime.wrap(function parseElement$(context$1$0) {
+    while (1) switch (context$1$0.prev = context$1$0.next) {
+      case 0:
+        if (!phrase.__describedPhrase) {
+          context$1$0.next = 32;
+          break;
+        }
+
+        iterator = parse({ phrase: phrase.__describedPhrase, input: input, options: options });
+        _iteratorNormalCompletion = true;
+        _didIteratorError = false;
+        _iteratorError = undefined;
+        context$1$0.prev = 5;
+        _iterator = _getIterator(iterator);
+
+      case 7:
+        if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+          context$1$0.next = 16;
+          break;
+        }
+
+        output = _step.value;
+
+        if (!(!phrase.filter || phrase.filter(output.result))) {
+          context$1$0.next = 13;
+          break;
+        }
+
+        newOutput = phrase.getValue ? _import2['default'].assign({}, output, { result: phrase.getValue(output.result) }) : output;
+        context$1$0.next = 13;
+        return newOutput;
+
+      case 13:
+        _iteratorNormalCompletion = true;
+        context$1$0.next = 7;
+        break;
+
+      case 16:
+        context$1$0.next = 22;
+        break;
+
+      case 18:
+        context$1$0.prev = 18;
+        context$1$0.t23 = context$1$0['catch'](5);
+        _didIteratorError = true;
+        _iteratorError = context$1$0.t23;
+
+      case 22:
+        context$1$0.prev = 22;
+        context$1$0.prev = 23;
+
+        if (!_iteratorNormalCompletion && _iterator['return']) {
+          _iterator['return']();
+        }
+
+      case 25:
+        context$1$0.prev = 25;
+
+        if (!_didIteratorError) {
+          context$1$0.next = 28;
+          break;
+        }
+
+        throw _iteratorError;
+
+      case 28:
+        return context$1$0.finish(25);
+
+      case 29:
+        return context$1$0.finish(22);
+
+      case 30:
+        context$1$0.next = 36;
+        break;
+
+      case 32:
+        if (!phrase._handleParse) {
+          context$1$0.next = 36;
+          break;
+        }
+
+        return context$1$0.delegateYield(phrase._handleParse(input, options, parse), 't24', 34);
+
+      case 34:
+        context$1$0.next = 36;
+        break;
+
+      case 36:
+
+        _import2['default'].forEach(phrase.__sources, function (obj) {
+          obj.lastVersion = obj.source.__dataVersion;
+        });
+
+      case 37:
+      case 'end':
+        return context$1$0.stop();
+    }
+  }, marked0$0[1], this, [[5, 18, 22, 30], [23,, 25, 29]]);
+}
+module.exports = exports['default'];
+
+//prevent unbounded recursion. Once we have a completion, do not allow user
+// phrases to continue looping
+// if (!_.isEmpty(input.completion) &&
+//     _.find(input.stack, entry => {
+//       return entry.Constructor === phrase.constructor &&
+//         !entry.Constructor.prototype._handleParse
+//     })) {
+//   return
+// }
+
+// add this to the stack before doing anything
+// const inputWithStack = _.assign({}, input, {
+//   stack: input.stack.concat({
+//     // Constructor: phrase.constructor,
+//     // category: phrase.props.category,
+//     // qualifier: phrase.props.qualifier
+//   // })
+//   // path: input.path.concat(phrase)
+// })
+// const inputWithStack = input //just testing to see how this works
+
+//noop
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"babel-runtime/core-js/get-iterator":66,"babel-runtime/helpers/interop-require-wildcard":79,"babel-runtime/regenerator":114}],63:[function(require,module,exports){
+(function (process,global){
+'use strict';
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports.createOption = createOption;
+/** @jsx createElement */
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+var _createElement = require('lacona-phrase');
+
+var _EventEmitter2 = require('events');
+
+var _parse2 = require('./parse');
+
+var _parse3 = _interopRequireWildcard(_parse2);
+
+var _reconcile = require('./reconcile');
+
+function from(i) {
+  var a = [];var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = _getIterator(i), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var x = _step.value;
+      a.push(x);
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator['return']) {
+        _iterator['return']();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  return a;
+}
+
+var optionDefaults = {
+  text: '',
+  words: [],
+  // match: [],
+  // suggestion: [],
+  // completion: [],
+  // stack: [],
+  callbacks: [] };
+
+function createOption(options) {
+  return _import2['default'].defaults(options, optionDefaults);
+}
+
+function normalizeOutput(option) {
+  var output = _import2['default'].pick(option, ['words', 'score', 'result']);
+  // const suggestion = option.suggestion
+  // let newSuggestions = []
+  // let i, l, lastSuggestion, oldSuggestion
+
+  // if (suggestion.length > 0) {
+  //   newSuggestions.push(_.clone(suggestion[0]))
+  //   for (i = 1, l = suggestion.length; i < l; i++) {
+  //     lastSuggestion = newSuggestions[newSuggestions.length - 1]
+  //     oldSuggestion = _.clone(suggestion[i])
+  //     if (lastSuggestion.input === oldSuggestion.input && lastSuggestion.category === oldSuggestion.category) {
+  //       lastSuggestion.string = lastSuggestion.string + oldSuggestion.string
+  //     } else {
+  //       newSuggestions.push(oldSuggestion)
+  //     }
+  //   }
+  // }
+  // output.suggestion = newSuggestions
+  //
+  return output;
+}
+
+var Parser = (function (_EventEmitter) {
+  function Parser() {
+    var _ref = arguments[0] === undefined ? {} : arguments[0];
+
+    var _ref$langs = _ref.langs;
+    var langs = _ref$langs === undefined ? ['default'] : _ref$langs;
+    var grammar = _ref.grammar;
+    var _ref$extensions = _ref.extensions;
+    var extensions = _ref$extensions === undefined ? [] : _ref$extensions;
+
+    _classCallCheck(this, Parser);
+
+    _get(Object.getPrototypeOf(Parser.prototype), 'constructor', this).call(this);
+
+    this.langs = langs;
+    this.grammar = grammar;
+    this.extensions = extensions;
+    this._sources = [];
+    this._reparseNeeded = false;
+  }
+
+  _inherits(Parser, _EventEmitter);
+
+  _createClass(Parser, [{
+    key: '_getExtensions',
+    value: function _getExtensions(Constructor) {
+      return _import2['default'].reduce(this.extensions, function (acc, Extension) {
+        if (_import2['default'].includes(Extension['extends'], Constructor)) {
+          acc.push(Extension);
+        }
+        return acc;
+      }, []);
+    }
+  }, {
+    key: '_triggerReparse',
+    value: function _triggerReparse() {
+      var _this = this;
+
+      this._reparseNeeded = true;
+      process.nextTick(function () {
+        if (_this._reparseNeeded) {
+          _this._reparseNeeded = false;
+          _this.emit('change');
+        }
+      });
+    }
+  }, {
+    key: '_getSource',
+    value: function _getSource(sourceDescriptor) {
+      var _this2 = this;
+
+      var possibleSource = _import2['default'].find(this._sources, function (_ref2) {
+        var descriptor = _ref2.descriptor;
+        return _import2['default'].isEqual(descriptor, sourceDescriptor);
+      });
+      if (possibleSource) {
+        return possibleSource.instance;
+      }var instance = new sourceDescriptor.Constructor();
+      instance.props = sourceDescriptor.props;
+
+      instance.data = {};
+      instance.__dataVersion = 0;
+      instance.__subscribers = 0;
+      instance.setData = function (newData) {
+        _import2['default'].merge(instance.data, newData);
+        instance.__dataVersion++;
+        _this2._triggerReparse();
+      };
+      instance.replaceData = function (newData) {
+        instance.data = newData;
+        instance.__dataVersion++;
+        _this2._triggerReparse();
+      };
+
+      if (instance.create) instance.create();
+
+      this._sources.push({ instance: instance, descriptor: sourceDescriptor });
+      return instance;
+    }
+  }, {
+    key: '_removeSource',
+    value: function _removeSource(sourceDescriptor) {
+      var index = _import2['default'].findIndex(this._sources, function (_ref3) {
+        var descriptor = _ref3.descriptor;
+        return _import2['default'].isEqual(descriptor, sourceDescriptor);
+      });
+      this._sources.splice(index, 1);
+    }
+  }, {
+    key: 'parse',
+    value: (function (_parse) {
+      var marked2$0 = [parse].map(_regeneratorRuntime.mark);
+
+      function parse(_x) {
+        var args$3$0 = arguments;
+        return _regeneratorRuntime.wrap(function parse$(context$3$0) {
+          while (1) switch (context$3$0.prev = context$3$0.next) {
+            case 0:
+              return context$3$0.delegateYield(_parse.apply(this, args$3$0), 't25', 1);
+
+            case 1:
+              return context$3$0.abrupt('return', context$3$0.t25);
+
+            case 2:
+            case 'end':
+              return context$3$0.stop();
+          }
+        }, marked2$0[0], this);
+      }
+
+      parse.toString = function () {
+        return _parse.toString();
+      };
+
+      return parse;
+    })(_regeneratorRuntime.mark(function callee$1$0(inputString) {
+      var input, options, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, output;
+
+      return _regeneratorRuntime.wrap(function callee$1$0$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            if (_import2['default'].isString(inputString)) {
+              context$2$0.next = 2;
+              break;
+            }
+
+            throw new Error('lacona parse input must be a string');
+
+          case 2:
+            input = createOption({ text: inputString });
+            options = {
+              langs: this.langs,
+              getExtensions: this._getExtensions.bind(this),
+              getSource: this._getSource.bind(this),
+              removeSource: this._removeSource.bind(this)
+            };
+
+            this._phrase = _reconcile.reconcile({ descriptor: this.grammar, phrase: this._phrase, options: options });
+
+            _iteratorNormalCompletion2 = true;
+            _didIteratorError2 = false;
+            _iteratorError2 = undefined;
+            context$2$0.prev = 8;
+            _iterator2 = _getIterator(_parse3['default']({ phrase: this._phrase, input: input, options: options }));
+
+          case 10:
+            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+              context$2$0.next = 19;
+              break;
+            }
+
+            output = _step2.value;
+
+            if (!(output.text === '')) {
+              context$2$0.next = 16;
+              break;
+            }
+
+            // call each callback (used for limiting)
+            output.callbacks.forEach(function (callback) {
+              return callback();
+            });
+            context$2$0.next = 16;
+            return normalizeOutput(output);
+
+          case 16:
+            _iteratorNormalCompletion2 = true;
+            context$2$0.next = 10;
+            break;
+
+          case 19:
+            context$2$0.next = 25;
+            break;
+
+          case 21:
+            context$2$0.prev = 21;
+            context$2$0.t26 = context$2$0['catch'](8);
+            _didIteratorError2 = true;
+            _iteratorError2 = context$2$0.t26;
+
+          case 25:
+            context$2$0.prev = 25;
+            context$2$0.prev = 26;
+
+            if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+              _iterator2['return']();
+            }
+
+          case 28:
+            context$2$0.prev = 28;
+
+            if (!_didIteratorError2) {
+              context$2$0.next = 31;
+              break;
+            }
+
+            throw _iteratorError2;
+
+          case 31:
+            return context$2$0.finish(28);
+
+          case 32:
+            return context$2$0.finish(25);
+
+          case 33:
+
+            this._reparseNeeded = false;
+
+          case 34:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, callee$1$0, this, [[8, 21, 25, 33], [26,, 28, 32]]);
+    }))
+  }, {
+    key: 'parseArray',
+    value: function parseArray(inputString) {
+      return from(this.parse(inputString));
+    }
+  }]);
+
+  return Parser;
+})(_EventEmitter2.EventEmitter);
+
+exports['default'] = Parser;
+
+// path: []
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./parse":62,"./reconcile":64,"_process":8,"babel-runtime/core-js/get-iterator":66,"babel-runtime/helpers/class-call-check":73,"babel-runtime/helpers/create-class":74,"babel-runtime/helpers/get":77,"babel-runtime/helpers/inherits":78,"babel-runtime/helpers/interop-require-wildcard":79,"babel-runtime/regenerator":114,"events":7,"lacona-phrase":116}],64:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _extends = require('babel-runtime/helpers/extends')['default'];
+
+var _slicedToArray = require('babel-runtime/helpers/sliced-to-array')['default'];
+
+var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports.reconcile = reconcile;
+exports.destroy = destroy;
+/** @jsx createElement */
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+var _import3 = require('./elements');
+
+var builtins = _interopRequireWildcard(_import3);
+
+var _createElement = require('lacona-phrase');
+
+function reconcile(_ref) {
+  var descriptor = _ref.descriptor;
+  var phrase = _ref.phrase;
+  var options = _ref.options;
+
+  var func = _import2['default'].isArray(descriptor) ? reconcileArray : reconcileOne;
+  return func({ descriptor: descriptor, phrase: phrase, options: options });
+}
+
+function reconcileArray(_ref2) {
+  var descriptor = _ref2.descriptor;
+  var phrase = _ref2.phrase;
+  var options = _ref2.options;
+
+  return _import2['default'].chain(descriptor).reject(_import2['default'].isNull).reject(_import2['default'].isString).zip(phrase).map(function (_ref3) {
+    var _ref32 = _slicedToArray(_ref3, 2);
+
+    var descriptor = _ref32[0];
+    var phrase = _ref32[1];
+    return reconcile({ descriptor: descriptor, phrase: phrase, options: options });
+  }).value();
+}
+
+function reconcileOne(_ref4) {
+  var descriptor = _ref4.descriptor;
+  var phrase = _ref4.phrase;
+  var options = _ref4.options;
+
+  if (descriptor == null && phrase) {
+    return destroy({ phrase: phrase, removeSource: options.removeSource });
+  }var Constructor = getConstructor({ Constructor: descriptor.Constructor });
+  var props = getRealProps({ descriptor: descriptor, Constructor: Constructor });
+  var extensions = options.getExtensions(Constructor);
+
+  if (phrase && phrase.constructor === Constructor && _import2['default'].isEqual(props, phrase.props)) {
+    if (_import2['default'].some(phrase.__sources, function (obj) {
+      return obj.lastVersion !== obj.source.__dataVersion;
+    }) || !_import2['default'].isEqual(extensions, phrase.__oldExtensions)) {
+      var describedPhrase = getDescribedPhrase({ Constructor: Constructor, phrase: phrase, extensions: extensions, options: options });
+
+      phrase.__oldExtensions = extensions;
+      phrase.__describedPhrase = describedPhrase;
+
+      return phrase;
+    } else {
+      return phrase;
+    }
+  } else {
+    if (phrase) destroy({ phrase: phrase, removeSource: options.removeSource });
+
+    var newPhrase = new Constructor();
+    newPhrase.props = props;
+
+    var sourceCall = getCall({ prop: 'source', Constructor: Constructor, langs: options.langs });
+    var sources = sourceCall ? sourceCall.call(newPhrase) : {};
+    var allSources = _import2['default'].defaults({}, sources, Constructor.__additionalSources);
+    applySources({ sources: allSources, phrase: newPhrase, getSource: options.getSource });
+
+    create({ phrase: newPhrase });
+
+    var describedPhrase = getDescribedPhrase({ Constructor: Constructor, phrase: newPhrase, extensions: extensions, options: options });
+
+    newPhrase.__oldExtensions = extensions;
+    newPhrase.__describedPhrase = describedPhrase;
+
+    return newPhrase;
+  }
+}
+
+function getDescribedPhrase(_ref5) {
+  var phrase = _ref5.phrase;
+  var extensions = _ref5.extensions;
+  var options = _ref5.options;
+
+  var describe = getCall({ prop: 'describe', Constructor: phrase.constructor, langs: options.langs });
+  var description = getDescription({ describe: describe, extensions: extensions, phrase: phrase });
+  return description ? reconcile({ descriptor: description, options: options, phrase: phrase.__describedPhrase }) : null;
+}
+
+function getCall(_ref6) {
+  var Constructor = _ref6.Constructor;
+  var langs = _ref6.langs;
+  var prop = _ref6.prop;
+
+  if (Constructor.prototype[prop]) {
+    return Constructor.prototype[prop];
+  } else if (Constructor.translations) {
+    return getCallFromTranslations({ prop: prop, langs: langs, translations: Constructor.translations });
+  }
+}
+
+function getCallFromTranslations(_ref7) {
+  var prop = _ref7.prop;
+  var langs = _ref7.langs;
+  var translations = _ref7.translations;
+
+  return _import2['default'].chain(langs.concat('default')).map(function (lang) {
+    return _import2['default'].find(translations, function (obj) {
+      return _import2['default'].includes(obj.langs, lang);
+    });
+  }).filter(_import2['default'].negate(_import2['default'].isUndefined)).first().value()[prop];
+}
+//
+// function setPropsAndState({phrase, props, state, changed}) {
+//   phrase.props = props
+//
+//   if (!phrase.setState) {
+//     phrase.state = state || {}
+//     phrase.setState = function (nextState) {
+//       _.merge(this.state, nextState)
+//       this._stateChanged = true
+//       changed(this)
+//     }
+//   }
+// }
+
+function getDescription(_ref8) {
+  var describe = _ref8.describe;
+  var extensions = _ref8.extensions;
+  var phrase = _ref8.phrase;
+
+  if (describe) {
+    var description = describe.call(phrase);
+    if (extensions.length) {
+      var extensionElements = extensions.map(function (Extension) {
+        return _createElement.createElement(Extension, _extends({}, phrase.props, { id: null }));
+      });
+      description = _createElement.createElement(
+        'choice',
+        null,
+        description,
+        extensionElements
+      );
+    }
+    return description;
+  }
+}
+
+function getRealProps(_ref9) {
+  var descriptor = _ref9.descriptor;
+  var Constructor = _ref9.Constructor;
+
+  var realProps = _import2['default'].defaults(descriptor.props || {}, Constructor.defaultProps || {});
+  if (descriptor.children && descriptor.children.length > 0) {
+    realProps.children = _import2['default'].flattenDeep(descriptor.children);
+  }
+  return realProps;
+}
+
+function getConstructor(_ref10) {
+  var Constructor = _ref10.Constructor;
+
+  if (_import2['default'].isString(Constructor)) {
+    if (_import2['default'].has(builtins, Constructor)) {
+      return builtins[Constructor];
+    } else {
+      throw new Error('Invalid phrase. Note: non-builtin phrases must be uppercase');
+    }
+  }
+  return Constructor;
+}
+
+function destroy(_ref11) {
+  var phrase = _ref11.phrase;
+  var removeSource = _ref11.removeSource;
+
+  if ((phrase.constructor === builtins.choice || phrase.constructor === builtins.sequence) && phrase.childPhrases) {
+    phrase.childPhrases.forEach(function (phrase) {
+      return destroy({ phrase: phrase, removeSource: removeSource });
+    });
+  }
+
+  _import2['default'].forEach(phrase.__sources, function (_ref12) {
+    var source = _ref12.source;
+    var descriptor = _ref12.descriptor;
+
+    source.__subscribers--;
+    if (source.__subscribers === 0 && source.destroy) {
+      source.destroy();
+      removeSource(descriptor);
+    }
+  });
+
+  if (phrase.destroy) phrase.destroy();
+}
+
+function create(_ref13) {
+  var phrase = _ref13.phrase;
+
+  if (phrase.create) phrase.create();
+}
+
+function applySources(_ref14) {
+  var sources = _ref14.sources;
+  var phrase = _ref14.phrase;
+  var getSource = _ref14.getSource;
+
+  phrase.__sources = {};
+
+  _import2['default'].forEach(sources, function (descriptor, name) {
+    var source = getSource(descriptor);
+    source.__subscribers++;
+    phrase.__sources[name] = { source: source, lastVersion: 0, descriptor: descriptor };
+    Object.defineProperty(phrase, name, { get: function get() {
+        return phrase.__sources[name].source.data;
+      } });
+  });
+}
+
+//TODO debug validation would be nice
+// function validate(Constructor) {
+//   let hasDefault = false
+//   if (!_.every(Constructor.translations, _.partial(_.has, _, 'describe'))) {
+//     throw new Error('Every translation must have a describe method')
+//   }
+//   if (!_.every(Constructor.translations, _.partial(_.has, _, 'langs'))) {
+//     throw new Error('Every translation must have a langs property')
+//   }
+//   if (!_.some(Constructor.translations, translation => _.indexOf(translation.langs, 'default') > -1)) {
+//     throw new Error('All elements must have a describe method defined for the default language')
+//   }
+//   return true
+// }
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./elements":54,"babel-runtime/helpers/extends":76,"babel-runtime/helpers/interop-require-wildcard":79,"babel-runtime/helpers/sliced-to-array":81,"lacona-phrase":116}],65:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports['default'] = stackFind;
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireWildcard(_import);
+
+function stackFind(stack, property, override, otherwise) {
+  if (override != null) {
+    return override;
+  }var stackEntry = _import2['default'].findLast(stack, function (entry) {
+    return entry[property] != null;
+  });
+  return stackEntry ? stackEntry[property] : otherwise;
+}
+
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"babel-runtime/helpers/interop-require-wildcard":79}],66:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/get-iterator"), __esModule: true };
+},{"core-js/library/fn/get-iterator":82}],67:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/is-iterable"), __esModule: true };
+},{"core-js/library/fn/is-iterable":83}],68:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/object/assign"), __esModule: true };
+},{"core-js/library/fn/object/assign":84}],69:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/object/get-own-property-descriptor"), __esModule: true };
+},{"core-js/library/fn/object/get-own-property-descriptor":85}],70:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/promise"), __esModule: true };
+},{"core-js/library/fn/promise":86}],71:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/symbol"), __esModule: true };
+},{"core-js/library/fn/symbol":87}],72:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/symbol/iterator"), __esModule: true };
+},{"core-js/library/fn/symbol/iterator":88}],73:[function(require,module,exports){
+"use strict";
+
+exports["default"] = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+exports.__esModule = true;
+},{}],74:[function(require,module,exports){
+"use strict";
+
+exports["default"] = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+})();
+
+exports.__esModule = true;
+},{}],75:[function(require,module,exports){
+"use strict";
+
+var _Symbol = require("babel-runtime/core-js/symbol")["default"];
+
+exports["default"] = function (obj, key, value) {
+  return Object.defineProperty(obj, key, {
+    value: value,
+    enumerable: key == null || typeof _Symbol == "undefined" || key.constructor !== _Symbol,
+    configurable: true,
+    writable: true
+  });
+};
+
+exports.__esModule = true;
+},{"babel-runtime/core-js/symbol":71}],76:[function(require,module,exports){
+"use strict";
+
+var _Object$assign = require("babel-runtime/core-js/object/assign")["default"];
+
+exports["default"] = _Object$assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+exports.__esModule = true;
+},{"babel-runtime/core-js/object/assign":68}],77:[function(require,module,exports){
+"use strict";
+
+var _Object$getOwnPropertyDescriptor = require("babel-runtime/core-js/object/get-own-property-descriptor")["default"];
+
+exports["default"] = function get(_x, _x2, _x3) {
+  var _again = true;
+
+  _function: while (_again) {
+    desc = parent = getter = undefined;
+    _again = false;
+    var object = _x,
+        property = _x2,
+        receiver = _x3;
+
+    var desc = _Object$getOwnPropertyDescriptor(object, property);
+
+    if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);
+
+      if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;
+        _x2 = property;
+        _x3 = receiver;
+        _again = true;
+        continue _function;
+      }
+    } else if ("value" in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;
+
+      if (getter === undefined) {
+        return undefined;
+      }
+
+      return getter.call(receiver);
+    }
+  }
+};
+
+exports.__esModule = true;
+},{"babel-runtime/core-js/object/get-own-property-descriptor":69}],78:[function(require,module,exports){
+"use strict";
+
+exports["default"] = function (subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) subClass.__proto__ = superClass;
+};
+
+exports.__esModule = true;
+},{}],79:[function(require,module,exports){
+"use strict";
+
+exports["default"] = function (obj) {
+  return obj && obj.__esModule ? obj : {
+    "default": obj
+  };
+};
+
+exports.__esModule = true;
+},{}],80:[function(require,module,exports){
+"use strict";
+
+exports["default"] = function (obj) {
+  return obj && obj.__esModule ? obj["default"] : obj;
+};
+
+exports.__esModule = true;
+},{}],81:[function(require,module,exports){
+"use strict";
+
+var _isIterable = require("babel-runtime/core-js/is-iterable")["default"];
+
+var _getIterator = require("babel-runtime/core-js/get-iterator")["default"];
+
+exports["default"] = function (arr, i) {
+  if (Array.isArray(arr)) {
+    return arr;
+  } else if (_isIterable(Object(arr))) {
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+
+    try {
+      for (var _i = _getIterator(arr), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);
+
+        if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;
+      _e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"]) _i["return"]();
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+
+    return _arr;
+  } else {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance");
+  }
+};
+
+exports.__esModule = true;
+},{"babel-runtime/core-js/get-iterator":66,"babel-runtime/core-js/is-iterable":67}],82:[function(require,module,exports){
+require('../modules/web.dom.iterable');
+require('../modules/es6.string.iterator');
+require('../modules/core.iter-helpers');
+module.exports = require('../modules/$').core.getIterator;
+},{"../modules/$":98,"../modules/core.iter-helpers":106,"../modules/es6.string.iterator":111,"../modules/web.dom.iterable":113}],83:[function(require,module,exports){
+require('../modules/web.dom.iterable');
+require('../modules/es6.string.iterator');
+require('../modules/core.iter-helpers');
+module.exports = require('../modules/$').core.isIterable;
+},{"../modules/$":98,"../modules/core.iter-helpers":106,"../modules/es6.string.iterator":111,"../modules/web.dom.iterable":113}],84:[function(require,module,exports){
+require('../../modules/es6.object.assign');
+module.exports = require('../../modules/$').core.Object.assign;
+},{"../../modules/$":98,"../../modules/es6.object.assign":108}],85:[function(require,module,exports){
+require('../../modules/es6.object.statics-accept-primitives');
+module.exports = require('../../modules/$').core.Object.getOwnPropertyDescriptor;
+},{"../../modules/$":98,"../../modules/es6.object.statics-accept-primitives":109}],86:[function(require,module,exports){
+require('../modules/es6.string.iterator');
+require('../modules/web.dom.iterable');
+require('../modules/es6.promise');
+module.exports = require('../modules/$').core.Promise;
+},{"../modules/$":98,"../modules/es6.promise":110,"../modules/es6.string.iterator":111,"../modules/web.dom.iterable":113}],87:[function(require,module,exports){
+require('../../modules/es6.symbol');
+module.exports = require('../../modules/$').core.Symbol;
+},{"../../modules/$":98,"../../modules/es6.symbol":112}],88:[function(require,module,exports){
+require('../../modules/es6.string.iterator');
+require('../../modules/web.dom.iterable');
+module.exports = require('../../modules/$.wks')('iterator');
+},{"../../modules/$.wks":105,"../../modules/es6.string.iterator":111,"../../modules/web.dom.iterable":113}],89:[function(require,module,exports){
+var $ = require('./$');
+function assert(condition, msg1, msg2){
+  if(!condition)throw TypeError(msg2 ? msg1 + msg2 : msg1);
+}
+assert.def = $.assertDefined;
+assert.fn = function(it){
+  if(!$.isFunction(it))throw TypeError(it + ' is not a function!');
+  return it;
+};
+assert.obj = function(it){
+  if(!$.isObject(it))throw TypeError(it + ' is not an object!');
+  return it;
+};
+assert.inst = function(it, Constructor, name){
+  if(!(it instanceof Constructor))throw TypeError(name + ": use the 'new' operator!");
+  return it;
+};
+module.exports = assert;
+},{"./$":98}],90:[function(require,module,exports){
+var $ = require('./$');
+// 19.1.2.1 Object.assign(target, source, ...)
+/*eslint-disable no-unused-vars */
+module.exports = Object.assign || function assign(target, source){
+/*eslint-enable no-unused-vars */
+  var T = Object($.assertDefined(target))
+    , l = arguments.length
+    , i = 1;
+  while(l > i){
+    var S      = $.ES5Object(arguments[i++])
+      , keys   = $.getKeys(S)
+      , length = keys.length
+      , j      = 0
+      , key;
+    while(length > j)T[key = keys[j++]] = S[key];
+  }
+  return T;
+};
+},{"./$":98}],91:[function(require,module,exports){
+var $        = require('./$')
+  , TAG      = require('./$.wks')('toStringTag')
+  , toString = {}.toString;
+function cof(it){
+  return toString.call(it).slice(8, -1);
+}
+cof.classof = function(it){
+  var O, T;
+  return it == undefined ? it === undefined ? 'Undefined' : 'Null'
+    : typeof (T = (O = Object(it))[TAG]) == 'string' ? T : cof(O);
+};
+cof.set = function(it, tag, stat){
+  if(it && !$.has(it = stat ? it : it.prototype, TAG))$.hide(it, TAG, tag);
+};
+module.exports = cof;
+},{"./$":98,"./$.wks":105}],92:[function(require,module,exports){
+// Optional / simple context binding
+var assertFunction = require('./$.assert').fn;
+module.exports = function(fn, that, length){
+  assertFunction(fn);
+  if(~length && that === undefined)return fn;
+  switch(length){
+    case 1: return function(a){
+      return fn.call(that, a);
+    };
+    case 2: return function(a, b){
+      return fn.call(that, a, b);
+    };
+    case 3: return function(a, b, c){
+      return fn.call(that, a, b, c);
+    };
+  } return function(/* ...args */){
+      return fn.apply(that, arguments);
+    };
+};
+},{"./$.assert":89}],93:[function(require,module,exports){
+var $          = require('./$')
+  , global     = $.g
+  , core       = $.core
+  , isFunction = $.isFunction;
+function ctx(fn, that){
+  return function(){
+    return fn.apply(that, arguments);
+  };
+}
+// type bitmap
+$def.F = 1;  // forced
+$def.G = 2;  // global
+$def.S = 4;  // static
+$def.P = 8;  // proto
+$def.B = 16; // bind
+$def.W = 32; // wrap
+function $def(type, name, source){
+  var key, own, out, exp
+    , isGlobal = type & $def.G
+    , target   = isGlobal ? global : type & $def.S
+        ? global[name] : (global[name] || {}).prototype
+    , exports  = isGlobal ? core : core[name] || (core[name] = {});
+  if(isGlobal)source = name;
+  for(key in source){
+    // contains in native
+    own = !(type & $def.F) && target && key in target;
+    if(own && key in exports)continue;
+    // export native or passed
+    out = own ? target[key] : source[key];
+    // prevent global pollution for namespaces
+    if(isGlobal && !isFunction(target[key]))exp = source[key];
+    // bind timers to global for call from export context
+    else if(type & $def.B && own)exp = ctx(out, global);
+    // wrap global constructors for prevent change them in library
+    else if(type & $def.W && target[key] == out)!function(C){
+      exp = function(param){
+        return this instanceof C ? new C(param) : C(param);
+      };
+      exp.prototype = C.prototype;
+    }(out);
+    else exp = type & $def.P && isFunction(out) ? ctx(Function.call, out) : out;
+    // export
+    $.hide(exports, key, exp);
+  }
+}
+module.exports = $def;
+},{"./$":98}],94:[function(require,module,exports){
+module.exports = function($){
+  $.FW   = false;
+  $.path = $.core;
+  return $;
+};
+},{}],95:[function(require,module,exports){
+// Fast apply
+// http://jsperf.lnkit.com/fast-apply/5
+module.exports = function(fn, args, that){
+  var un = that === undefined;
+  switch(args.length){
+    case 0: return un ? fn()
+                      : fn.call(that);
+    case 1: return un ? fn(args[0])
+                      : fn.call(that, args[0]);
+    case 2: return un ? fn(args[0], args[1])
+                      : fn.call(that, args[0], args[1]);
+    case 3: return un ? fn(args[0], args[1], args[2])
+                      : fn.call(that, args[0], args[1], args[2]);
+    case 4: return un ? fn(args[0], args[1], args[2], args[3])
+                      : fn.call(that, args[0], args[1], args[2], args[3]);
+    case 5: return un ? fn(args[0], args[1], args[2], args[3], args[4])
+                      : fn.call(that, args[0], args[1], args[2], args[3], args[4]);
+  } return              fn.apply(that, args);
+};
+},{}],96:[function(require,module,exports){
+var SYMBOL_ITERATOR = require('./$.wks')('iterator')
+  , SAFE_CLOSING    = false;
+try {
+  var riter = [7][SYMBOL_ITERATOR]();
+  riter['return'] = function(){ SAFE_CLOSING = true; };
+  Array.from(riter, function(){ throw 2; });
+} catch(e){ /* empty */ }
+module.exports = function(exec){
+  if(!SAFE_CLOSING)return false;
+  var safe = false;
+  try {
+    var arr  = [7]
+      , iter = arr[SYMBOL_ITERATOR]();
+    iter.next = function(){ safe = true; };
+    arr[SYMBOL_ITERATOR] = function(){ return iter; };
+    exec(arr);
+  } catch(e){ /* empty */ }
+  return safe;
+};
+},{"./$.wks":105}],97:[function(require,module,exports){
+'use strict';
+var $                 = require('./$')
+  , ctx               = require('./$.ctx')
+  , cof               = require('./$.cof')
+  , $def              = require('./$.def')
+  , assertObject      = require('./$.assert').obj
+  , SYMBOL_ITERATOR   = require('./$.wks')('iterator')
+  , FF_ITERATOR       = '@@iterator'
+  , Iterators         = {}
+  , IteratorPrototype = {};
+// Safari has byggy iterators w/o `next`
+var BUGGY = 'keys' in [] && !('next' in [].keys());
+// 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
+setIterator(IteratorPrototype, $.that);
+function setIterator(O, value){
+  $.hide(O, SYMBOL_ITERATOR, value);
+  // Add iterator for FF iterator protocol
+  if(FF_ITERATOR in [])$.hide(O, FF_ITERATOR, value);
+}
+function defineIterator(Constructor, NAME, value, DEFAULT){
+  var proto = Constructor.prototype
+    , iter  = proto[SYMBOL_ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT] || value;
+  // Define iterator
+  if($.FW)setIterator(proto, iter);
+  if(iter !== value){
+    var iterProto = $.getProto(iter.call(new Constructor));
+    // Set @@toStringTag to native iterators
+    cof.set(iterProto, NAME + ' Iterator', true);
+    // FF fix
+    if($.FW)$.has(proto, FF_ITERATOR) && setIterator(iterProto, $.that);
+  }
+  // Plug for library
+  Iterators[NAME] = iter;
+  // FF & v8 fix
+  Iterators[NAME + ' Iterator'] = $.that;
+  return iter;
+}
+function getIterator(it){
+  var Symbol  = $.g.Symbol
+    , ext     = it[Symbol && Symbol.iterator || FF_ITERATOR]
+    , getIter = ext || it[SYMBOL_ITERATOR] || Iterators[cof.classof(it)];
+  return assertObject(getIter.call(it));
+}
+function closeIterator(iterator){
+  var ret = iterator['return'];
+  if(ret !== undefined)assertObject(ret.call(iterator));
+}
+function stepCall(iterator, fn, value, entries){
+  try {
+    return entries ? fn(assertObject(value)[0], value[1]) : fn(value);
+  } catch(e){
+    closeIterator(iterator);
+    throw e;
+  }
+}
+var $iter = module.exports = {
+  BUGGY: BUGGY,
+  Iterators: Iterators,
+  prototype: IteratorPrototype,
+  step: function(done, value){
+    return {value: value, done: !!done};
+  },
+  stepCall: stepCall,
+  close: closeIterator,
+  is: function(it){
+    var O      = Object(it)
+      , Symbol = $.g.Symbol
+      , SYM    = Symbol && Symbol.iterator || FF_ITERATOR;
+    return SYM in O || SYMBOL_ITERATOR in O || $.has(Iterators, cof.classof(O));
+  },
+  get: getIterator,
+  set: setIterator,
+  create: function(Constructor, NAME, next, proto){
+    Constructor.prototype = $.create(proto || $iter.prototype, {next: $.desc(1, next)});
+    cof.set(Constructor, NAME + ' Iterator');
+  },
+  define: defineIterator,
+  std: function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCE){
+    function createIter(kind){
+      return function(){
+        return new Constructor(this, kind);
+      };
+    }
+    $iter.create(Constructor, NAME, next);
+    var entries = createIter('key+value')
+      , values  = createIter('value')
+      , proto   = Base.prototype
+      , methods, key;
+    if(DEFAULT == 'value')values = defineIterator(Base, NAME, values, 'values');
+    else entries = defineIterator(Base, NAME, entries, 'entries');
+    if(DEFAULT){
+      methods = {
+        entries: entries,
+        keys:    IS_SET ? values : createIter('key'),
+        values:  values
+      };
+      $def($def.P + $def.F * BUGGY, NAME, methods);
+      if(FORCE)for(key in methods){
+        if(!(key in proto))$.hide(proto, key, methods[key]);
+      }
+    }
+  },
+  forOf: function(iterable, entries, fn, that){
+    var iterator = getIterator(iterable)
+      , f = ctx(fn, that, entries ? 2 : 1)
+      , step;
+    while(!(step = iterator.next()).done){
+      if(stepCall(iterator, f, step.value, entries) === false){
+        return closeIterator(iterator);
+      }
+    }
+  }
+};
+},{"./$":98,"./$.assert":89,"./$.cof":91,"./$.ctx":92,"./$.def":93,"./$.wks":105}],98:[function(require,module,exports){
+'use strict';
+var global = typeof self != 'undefined' ? self : Function('return this')()
+  , core   = {}
+  , defineProperty = Object.defineProperty
+  , hasOwnProperty = {}.hasOwnProperty
+  , ceil  = Math.ceil
+  , floor = Math.floor
+  , max   = Math.max
+  , min   = Math.min;
+// The engine works fine with descriptors? Thank's IE8 for his funny defineProperty.
+var DESC = !!function(){
+  try {
+    return defineProperty({}, 'a', {get: function(){ return 2; }}).a == 2;
+  } catch(e){ /* empty */ }
+}();
+var hide = createDefiner(1);
+// 7.1.4 ToInteger
+function toInteger(it){
+  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
+}
+function desc(bitmap, value){
+  return {
+    enumerable  : !(bitmap & 1),
+    configurable: !(bitmap & 2),
+    writable    : !(bitmap & 4),
+    value       : value
+  };
+}
+function simpleSet(object, key, value){
+  object[key] = value;
+  return object;
+}
+function createDefiner(bitmap){
+  return DESC ? function(object, key, value){
+    return $.setDesc(object, key, desc(bitmap, value)); // eslint-disable-line no-use-before-define
+  } : simpleSet;
+}
+
+function isObject(it){
+  return it !== null && (typeof it == 'object' || typeof it == 'function');
+}
+function isFunction(it){
+  return typeof it == 'function';
+}
+function assertDefined(it){
+  if(it == undefined)throw TypeError("Can't call method on  " + it);
+  return it;
+}
+
+var $ = module.exports = require('./$.fw')({
+  g: global,
+  core: core,
+  html: global.document && document.documentElement,
+  // http://jsperf.com/core-js-isobject
+  isObject:   isObject,
+  isFunction: isFunction,
+  it: function(it){
+    return it;
+  },
+  that: function(){
+    return this;
+  },
+  // 7.1.4 ToInteger
+  toInteger: toInteger,
+  // 7.1.15 ToLength
+  toLength: function(it){
+    return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
+  },
+  toIndex: function(index, length){
+    index = toInteger(index);
+    return index < 0 ? max(index + length, 0) : min(index, length);
+  },
+  has: function(it, key){
+    return hasOwnProperty.call(it, key);
+  },
+  create:     Object.create,
+  getProto:   Object.getPrototypeOf,
+  DESC:       DESC,
+  desc:       desc,
+  getDesc:    Object.getOwnPropertyDescriptor,
+  setDesc:    defineProperty,
+  getKeys:    Object.keys,
+  getNames:   Object.getOwnPropertyNames,
+  getSymbols: Object.getOwnPropertySymbols,
+  // Dummy, fix for not array-like ES3 string in es5 module
+  assertDefined: assertDefined,
+  ES5Object: Object,
+  toObject: function(it){
+    return $.ES5Object(assertDefined(it));
+  },
+  hide: hide,
+  def: createDefiner(0),
+  set: global.Symbol ? simpleSet : hide,
+  mix: function(target, src){
+    for(var key in src)hide(target, key, src[key]);
+    return target;
+  },
+  each: [].forEach
+});
+if(typeof __e != 'undefined')__e = core;
+if(typeof __g != 'undefined')__g = global;
+},{"./$.fw":94}],99:[function(require,module,exports){
+var $ = require('./$');
+module.exports = function(object, el){
+  var O      = $.toObject(object)
+    , keys   = $.getKeys(O)
+    , length = keys.length
+    , index  = 0
+    , key;
+  while(length > index)if(O[key = keys[index++]] === el)return key;
+};
+},{"./$":98}],100:[function(require,module,exports){
+var $ = require('./$');
+module.exports = function(C){
+  if($.DESC && $.FW)$.setDesc(C, require('./$.wks')('species'), {
+    configurable: true,
+    get: $.that
+  });
+};
+},{"./$":98,"./$.wks":105}],101:[function(require,module,exports){
+'use strict';
+// true  -> String#at
+// false -> String#codePointAt
+var $ = require('./$');
+module.exports = function(TO_STRING){
+  return function(pos){
+    var s = String($.assertDefined(this))
+      , i = $.toInteger(pos)
+      , l = s.length
+      , a, b;
+    if(i < 0 || i >= l)return TO_STRING ? '' : undefined;
+    a = s.charCodeAt(i);
+    return a < 0xd800 || a > 0xdbff || i + 1 === l
+      || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
+        ? TO_STRING ? s.charAt(i) : a
+        : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
+  };
+};
+},{"./$":98}],102:[function(require,module,exports){
+'use strict';
+var $      = require('./$')
+  , ctx    = require('./$.ctx')
+  , cof    = require('./$.cof')
+  , invoke = require('./$.invoke')
+  , global             = $.g
+  , isFunction         = $.isFunction
+  , html               = $.html
+  , document           = global.document
+  , process            = global.process
+  , setTask            = global.setImmediate
+  , clearTask          = global.clearImmediate
+  , postMessage        = global.postMessage
+  , addEventListener   = global.addEventListener
+  , MessageChannel     = global.MessageChannel
+  , counter            = 0
+  , queue              = {}
+  , ONREADYSTATECHANGE = 'onreadystatechange'
+  , defer, channel, port;
+function run(){
+  var id = +this;
+  if($.has(queue, id)){
+    var fn = queue[id];
+    delete queue[id];
+    fn();
+  }
+}
+function listner(event){
+  run.call(event.data);
+}
+// Node.js 0.9+ & IE10+ has setImmediate, otherwise:
+if(!isFunction(setTask) || !isFunction(clearTask)){
+  setTask = function(fn){
+    var args = [], i = 1;
+    while(arguments.length > i)args.push(arguments[i++]);
+    queue[++counter] = function(){
+      invoke(isFunction(fn) ? fn : Function(fn), args);
+    };
+    defer(counter);
+    return counter;
+  };
+  clearTask = function(id){
+    delete queue[id];
+  };
+  // Node.js 0.8-
+  if(cof(process) == 'process'){
+    defer = function(id){
+      process.nextTick(ctx(run, id, 1));
+    };
+  // Modern browsers, skip implementation for WebWorkers
+  // IE8 has postMessage, but it's sync & typeof its postMessage is object
+  } else if(addEventListener && isFunction(postMessage) && !global.importScripts){
+    defer = function(id){
+      postMessage(id, '*');
+    };
+    addEventListener('message', listner, false);
+  // WebWorkers
+  } else if(isFunction(MessageChannel)){
+    channel = new MessageChannel;
+    port    = channel.port2;
+    channel.port1.onmessage = listner;
+    defer = ctx(port.postMessage, port, 1);
+  // IE8-
+  } else if(document && ONREADYSTATECHANGE in document.createElement('script')){
+    defer = function(id){
+      html.appendChild(document.createElement('script'))[ONREADYSTATECHANGE] = function(){
+        html.removeChild(this);
+        run.call(id);
+      };
+    };
+  // Rest old browsers
+  } else {
+    defer = function(id){
+      setTimeout(ctx(run, id, 1), 0);
+    };
+  }
+}
+module.exports = {
+  set:   setTask,
+  clear: clearTask
+};
+},{"./$":98,"./$.cof":91,"./$.ctx":92,"./$.invoke":95}],103:[function(require,module,exports){
+var sid = 0;
+function uid(key){
+  return 'Symbol(' + key + ')_' + (++sid + Math.random()).toString(36);
+}
+uid.safe = require('./$').g.Symbol || uid;
+module.exports = uid;
+},{"./$":98}],104:[function(require,module,exports){
+// 22.1.3.31 Array.prototype[@@unscopables]
+var $           = require('./$')
+  , UNSCOPABLES = require('./$.wks')('unscopables');
+if($.FW && !(UNSCOPABLES in []))$.hide(Array.prototype, UNSCOPABLES, {});
+module.exports = function(key){
+  if($.FW)[][UNSCOPABLES][key] = true;
+};
+},{"./$":98,"./$.wks":105}],105:[function(require,module,exports){
+var global = require('./$').g
+  , store  = {};
+module.exports = function(name){
+  return store[name] || (store[name] =
+    global.Symbol && global.Symbol[name] || require('./$.uid').safe('Symbol.' + name));
+};
+},{"./$":98,"./$.uid":103}],106:[function(require,module,exports){
+var core  = require('./$').core
+  , $iter = require('./$.iter');
+core.isIterable  = $iter.is;
+core.getIterator = $iter.get;
+},{"./$":98,"./$.iter":97}],107:[function(require,module,exports){
+var $          = require('./$')
+  , setUnscope = require('./$.unscope')
+  , ITER       = require('./$.uid').safe('iter')
+  , $iter      = require('./$.iter')
+  , step       = $iter.step
+  , Iterators  = $iter.Iterators;
+
+// 22.1.3.4 Array.prototype.entries()
+// 22.1.3.13 Array.prototype.keys()
+// 22.1.3.29 Array.prototype.values()
+// 22.1.3.30 Array.prototype[@@iterator]()
+$iter.std(Array, 'Array', function(iterated, kind){
+  $.set(this, ITER, {o: $.toObject(iterated), i: 0, k: kind});
+// 22.1.5.2.1 %ArrayIteratorPrototype%.next()
+}, function(){
+  var iter  = this[ITER]
+    , O     = iter.o
+    , kind  = iter.k
+    , index = iter.i++;
+  if(!O || index >= O.length){
+    iter.o = undefined;
+    return step(1);
+  }
+  if(kind == 'key'  )return step(0, index);
+  if(kind == 'value')return step(0, O[index]);
+  return step(0, [index, O[index]]);
+}, 'value');
+
+// argumentsList[@@iterator] is %ArrayProto_values% (9.4.4.6, 9.4.4.7)
+Iterators.Arguments = Iterators.Array;
+
+setUnscope('keys');
+setUnscope('values');
+setUnscope('entries');
+},{"./$":98,"./$.iter":97,"./$.uid":103,"./$.unscope":104}],108:[function(require,module,exports){
+// 19.1.3.1 Object.assign(target, source)
+var $def = require('./$.def');
+$def($def.S, 'Object', {assign: require('./$.assign')});
+},{"./$.assign":90,"./$.def":93}],109:[function(require,module,exports){
+var $        = require('./$')
+  , $def     = require('./$.def')
+  , isObject = $.isObject
+  , toObject = $.toObject;
+function wrapObjectMethod(METHOD, MODE){
+  var fn  = ($.core.Object || {})[METHOD] || Object[METHOD]
+    , f   = 0
+    , o   = {};
+  o[METHOD] = MODE == 1 ? function(it){
+    return isObject(it) ? fn(it) : it;
+  } : MODE == 2 ? function(it){
+    return isObject(it) ? fn(it) : true;
+  } : MODE == 3 ? function(it){
+    return isObject(it) ? fn(it) : false;
+  } : MODE == 4 ? function getOwnPropertyDescriptor(it, key){
+    return fn(toObject(it), key);
+  } : MODE == 5 ? function getPrototypeOf(it){
+    return fn(Object($.assertDefined(it)));
+  } : function(it){
+    return fn(toObject(it));
+  };
+  try {
+    fn('z');
+  } catch(e){
+    f = 1;
+  }
+  $def($def.S + $def.F * f, 'Object', o);
+}
+wrapObjectMethod('freeze', 1);
+wrapObjectMethod('seal', 1);
+wrapObjectMethod('preventExtensions', 1);
+wrapObjectMethod('isFrozen', 2);
+wrapObjectMethod('isSealed', 2);
+wrapObjectMethod('isExtensible', 3);
+wrapObjectMethod('getOwnPropertyDescriptor', 4);
+wrapObjectMethod('getPrototypeOf', 5);
+wrapObjectMethod('keys');
+wrapObjectMethod('getOwnPropertyNames');
+},{"./$":98,"./$.def":93}],110:[function(require,module,exports){
+'use strict';
+var $       = require('./$')
+  , ctx     = require('./$.ctx')
+  , cof     = require('./$.cof')
+  , $def    = require('./$.def')
+  , assert  = require('./$.assert')
+  , $iter   = require('./$.iter')
+  , SPECIES = require('./$.wks')('species')
+  , RECORD  = require('./$.uid').safe('record')
+  , forOf   = $iter.forOf
+  , PROMISE = 'Promise'
+  , global  = $.g
+  , process = global.process
+  , asap    = process && process.nextTick || require('./$.task').set
+  , P       = global[PROMISE]
+  , Base    = P
+  , isFunction     = $.isFunction
+  , isObject       = $.isObject
+  , assertFunction = assert.fn
+  , assertObject   = assert.obj
+  , test;
+
+// helpers
+function getConstructor(C){
+  var S = assertObject(C)[SPECIES];
+  return S != undefined ? S : C;
+}
+function isThenable(it){
+  var then;
+  if(isObject(it))then = it.then;
+  return isFunction(then) ? then : false;
+}
+function isUnhandled(promise){
+  var record = promise[RECORD]
+    , chain  = record.c
+    , i      = 0
+    , react;
+  if(record.h)return false;
+  while(chain.length > i){
+    react = chain[i++];
+    if(react.fail || !isUnhandled(react.P))return false;
+  } return true;
+}
+function notify(record, isReject){
+  var chain = record.c;
+  if(isReject || chain.length)asap(function(){
+    var promise = record.p
+      , value   = record.v
+      , ok      = record.s == 1
+      , i       = 0;
+    if(isReject && isUnhandled(promise)){
+      setTimeout(function(){
+        if(isUnhandled(promise)){
+          if(cof(process) == 'process'){
+            process.emit('unhandledRejection', value, promise);
+          } else if(global.console && isFunction(console.error)){
+            console.error('Unhandled promise rejection', value);
+          }
+        }
+      }, 1e3);
+    } else while(chain.length > i)!function(react){
+      var cb = ok ? react.ok : react.fail
+        , ret, then;
+      try {
+        if(cb){
+          if(!ok)record.h = true;
+          ret = cb === true ? value : cb(value);
+          if(ret === react.P){
+            react.rej(TypeError(PROMISE + '-chain cycle'));
+          } else if(then = isThenable(ret)){
+            then.call(ret, react.res, react.rej);
+          } else react.res(ret);
+        } else react.rej(value);
+      } catch(err){
+        react.rej(err);
+      }
+    }(chain[i++]);
+    chain.length = 0;
+  });
+}
+function $reject(value){
+  var record = this;
+  if(record.d)return;
+  record.d = true;
+  record = record.r || record; // unwrap
+  record.v = value;
+  record.s = 2;
+  notify(record, true);
+}
+function $resolve(value){
+  var record = this
+    , then, wrapper;
+  if(record.d)return;
+  record.d = true;
+  record = record.r || record; // unwrap
+  try {
+    if(then = isThenable(value)){
+      wrapper = {r: record, d: false}; // wrap
+      then.call(value, ctx($resolve, wrapper, 1), ctx($reject, wrapper, 1));
+    } else {
+      record.v = value;
+      record.s = 1;
+      notify(record);
+    }
+  } catch(err){
+    $reject.call(wrapper || {r: record, d: false}, err); // wrap
+  }
+}
+
+// constructor polyfill
+if(!(isFunction(P) && isFunction(P.resolve) && P.resolve(test = new P(function(){})) == test)){
+  // 25.4.3.1 Promise(executor)
+  P = function Promise(executor){
+    assertFunction(executor);
+    var record = {
+      p: assert.inst(this, P, PROMISE),       // <- promise
+      c: [],                                  // <- chain
+      s: 0,                                   // <- state
+      d: false,                               // <- done
+      v: undefined,                           // <- value
+      h: false                                // <- handled rejection
+    };
+    $.hide(this, RECORD, record);
+    try {
+      executor(ctx($resolve, record, 1), ctx($reject, record, 1));
+    } catch(err){
+      $reject.call(record, err);
+    }
+  };
+  $.mix(P.prototype, {
+    // 25.4.5.3 Promise.prototype.then(onFulfilled, onRejected)
+    then: function then(onFulfilled, onRejected){
+      var S = assertObject(assertObject(this).constructor)[SPECIES];
+      var react = {
+        ok:   isFunction(onFulfilled) ? onFulfilled : true,
+        fail: isFunction(onRejected)  ? onRejected  : false
+      };
+      var promise = react.P = new (S != undefined ? S : P)(function(res, rej){
+        react.res = assertFunction(res);
+        react.rej = assertFunction(rej);
+      });
+      var record = this[RECORD];
+      record.c.push(react);
+      record.s && notify(record);
+      return promise;
+    },
+    // 25.4.5.1 Promise.prototype.catch(onRejected)
+    'catch': function(onRejected){
+      return this.then(undefined, onRejected);
+    }
+  });
+}
+
+// export
+$def($def.G + $def.W + $def.F * (P != Base), {Promise: P});
+cof.set(P, PROMISE);
+require('./$.species')(P);
+
+// statics
+$def($def.S, PROMISE, {
+  // 25.4.4.5 Promise.reject(r)
+  reject: function reject(r){
+    return new (getConstructor(this))(function(res, rej){
+      rej(r);
+    });
+  },
+  // 25.4.4.6 Promise.resolve(x)
+  resolve: function resolve(x){
+    return isObject(x) && RECORD in x && $.getProto(x) === this.prototype
+      ? x : new (getConstructor(this))(function(res){
+        res(x);
+      });
+  }
+});
+$def($def.S + $def.F * !require('./$.iter-detect')(function(iter){
+  P.all(iter)['catch'](function(){});
+}), PROMISE, {
+  // 25.4.4.1 Promise.all(iterable)
+  all: function all(iterable){
+    var C      = getConstructor(this)
+      , values = [];
+    return new C(function(res, rej){
+      forOf(iterable, false, values.push, values);
+      var remaining = values.length
+        , results   = Array(remaining);
+      if(remaining)$.each.call(values, function(promise, index){
+        C.resolve(promise).then(function(value){
+          results[index] = value;
+          --remaining || res(results);
+        }, rej);
+      });
+      else res(results);
+    });
+  },
+  // 25.4.4.4 Promise.race(iterable)
+  race: function race(iterable){
+    var C = getConstructor(this);
+    return new C(function(res, rej){
+      forOf(iterable, false, function(promise){
+        C.resolve(promise).then(res, rej);
+      });
+    });
+  }
+});
+},{"./$":98,"./$.assert":89,"./$.cof":91,"./$.ctx":92,"./$.def":93,"./$.iter":97,"./$.iter-detect":96,"./$.species":100,"./$.task":102,"./$.uid":103,"./$.wks":105}],111:[function(require,module,exports){
+var set   = require('./$').set
+  , at    = require('./$.string-at')(true)
+  , ITER  = require('./$.uid').safe('iter')
+  , $iter = require('./$.iter')
+  , step  = $iter.step;
+
+// 21.1.3.27 String.prototype[@@iterator]()
+$iter.std(String, 'String', function(iterated){
+  set(this, ITER, {o: String(iterated), i: 0});
+// 21.1.5.2.1 %StringIteratorPrototype%.next()
+}, function(){
+  var iter  = this[ITER]
+    , O     = iter.o
+    , index = iter.i
+    , point;
+  if(index >= O.length)return step(1);
+  point = at.call(O, index);
+  iter.i += point.length;
+  return step(0, point);
+});
+},{"./$":98,"./$.iter":97,"./$.string-at":101,"./$.uid":103}],112:[function(require,module,exports){
+'use strict';
+// ECMAScript 6 symbols shim
+var $        = require('./$')
+  , setTag   = require('./$.cof').set
+  , uid      = require('./$.uid')
+  , $def     = require('./$.def')
+  , keyOf    = require('./$.keyof')
+  , has      = $.has
+  , hide     = $.hide
+  , getNames = $.getNames
+  , toObject = $.toObject
+  , Symbol   = $.g.Symbol
+  , Base     = Symbol
+  , setter   = false
+  , TAG      = uid.safe('tag')
+  , SymbolRegistry = {}
+  , AllSymbols     = {};
+
+function wrap(tag){
+  var sym = AllSymbols[tag] = $.set($.create(Symbol.prototype), TAG, tag);
+  $.DESC && setter && $.setDesc(Object.prototype, tag, {
+    configurable: true,
+    set: function(value){
+      hide(this, tag, value);
+    }
+  });
+  return sym;
+}
+
+// 19.4.1.1 Symbol([description])
+if(!$.isFunction(Symbol)){
+  Symbol = function Symbol(description){
+    if(this instanceof Symbol)throw TypeError('Symbol is not a constructor');
+    return wrap(uid(description));
+  };
+  hide(Symbol.prototype, 'toString', function(){
+    return this[TAG];
+  });
+}
+$def($def.G + $def.W, {Symbol: Symbol});
+
+var symbolStatics = {
+  // 19.4.2.1 Symbol.for(key)
+  'for': function(key){
+    return has(SymbolRegistry, key += '')
+      ? SymbolRegistry[key]
+      : SymbolRegistry[key] = Symbol(key);
+  },
+  // 19.4.2.5 Symbol.keyFor(sym)
+  keyFor: function keyFor(key){
+    return keyOf(SymbolRegistry, key);
+  },
+  pure: uid.safe,
+  set: $.set,
+  useSetter: function(){ setter = true; },
+  useSimple: function(){ setter = false; }
+};
+// 19.4.2.2 Symbol.hasInstance
+// 19.4.2.3 Symbol.isConcatSpreadable
+// 19.4.2.4 Symbol.iterator
+// 19.4.2.6 Symbol.match
+// 19.4.2.8 Symbol.replace
+// 19.4.2.9 Symbol.search
+// 19.4.2.10 Symbol.species
+// 19.4.2.11 Symbol.split
+// 19.4.2.12 Symbol.toPrimitive
+// 19.4.2.13 Symbol.toStringTag
+// 19.4.2.14 Symbol.unscopables
+$.each.call((
+    'hasInstance,isConcatSpreadable,iterator,match,replace,search,' +
+    'species,split,toPrimitive,toStringTag,unscopables'
+  ).split(','), function(it){
+    var sym = require('./$.wks')(it);
+    symbolStatics[it] = Symbol === Base ? sym : wrap(sym);
+  }
+);
+
+setter = true;
+
+$def($def.S, 'Symbol', symbolStatics);
+
+$def($def.S + $def.F * (Symbol != Base), 'Object', {
+  // 19.1.2.7 Object.getOwnPropertyNames(O)
+  getOwnPropertyNames: function getOwnPropertyNames(it){
+    var names = getNames(toObject(it)), result = [], key, i = 0;
+    while(names.length > i)has(AllSymbols, key = names[i++]) || result.push(key);
+    return result;
+  },
+  // 19.1.2.8 Object.getOwnPropertySymbols(O)
+  getOwnPropertySymbols: function getOwnPropertySymbols(it){
+    var names = getNames(toObject(it)), result = [], key, i = 0;
+    while(names.length > i)has(AllSymbols, key = names[i++]) && result.push(AllSymbols[key]);
+    return result;
+  }
+});
+
+setTag(Symbol, 'Symbol');
+// 20.2.1.9 Math[@@toStringTag]
+setTag(Math, 'Math', true);
+// 24.3.3 JSON[@@toStringTag]
+setTag($.g.JSON, 'JSON', true);
+},{"./$":98,"./$.cof":91,"./$.def":93,"./$.keyof":99,"./$.uid":103,"./$.wks":105}],113:[function(require,module,exports){
+require('./es6.array.iterator');
+var $           = require('./$')
+  , Iterators   = require('./$.iter').Iterators
+  , ITERATOR    = require('./$.wks')('iterator')
+  , ArrayValues = Iterators.Array
+  , NodeList    = $.g.NodeList;
+if($.FW && NodeList && !(ITERATOR in NodeList.prototype)){
+  $.hide(NodeList.prototype, ITERATOR, ArrayValues);
+}
+Iterators.NodeList = ArrayValues;
+},{"./$":98,"./$.iter":97,"./$.wks":105,"./es6.array.iterator":107}],114:[function(require,module,exports){
+(function (global){
+// This method of obtaining a reference to the global object needs to be
+// kept identical to the way it is obtained in runtime.js
+var g =
+  typeof global === "object" ? global :
+  typeof window === "object" ? window : this;
+
+var hasOwn = Object.prototype.hasOwnProperty;
+var hadRuntime = hasOwn.call(g, "regeneratorRuntime");
+var oldRuntime = hadRuntime && g.regeneratorRuntime;
+delete g.regeneratorRuntime; // Force reevalutation of runtime.js.
+
+module.exports = require("./runtime");
+
+if (hadRuntime) {
+  // Restore the original runtime.
+  g.regeneratorRuntime = oldRuntime;
+} else {
+  // Remove the global property added by runtime.js.
+  delete g.regeneratorRuntime;
+}
+
+module.exports = { "default": module.exports, __esModule: true };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],65:[function(require,module,exports){
+},{"./runtime":115}],115:[function(require,module,exports){
 (function (global){
-var React,ga,script,scriptIsAdded,_name,__slice=[].slice;React=(typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null),script=React.DOM.script,"undefined"!=typeof window&&null!==window&&null==window.GoogleAnalyticsObject&&(window.GoogleAnalyticsObject="ga"),"undefined"!=typeof window&&null!==window&&null==window.ga&&(window.ga=ga),ga=function(){var e;return e=1<=arguments.length?__slice.call(arguments,0):[],"undefined"!=typeof window&&null!==window?window[window.GoogleAnalyticsObject].apply(window,e):void 0},"undefined"!=typeof window&&null!==window&&null==window[_name=window.GoogleAnalyticsObject]&&(window[_name]=function(){var e,n;n=1<=arguments.length?__slice.call(arguments,0):[],e=window[window.GoogleAnalyticsObject],(e.q||(e.q=[])).push(n)}),scriptIsAdded=!1,ga.Initializer=React.createClass({displayName:"GAInitializer",componentDidMount:function(){return window[window.GoogleAnalyticsObject].l=(new Date).getTime(),scriptIsAdded?void 0:this.addScript()},addScript:function(){var e,n;return scriptIsAdded=!0,e=document.createElement("script"),e.type="text/javascript",e.async=!0,e.src="//www.google-analytics.com/analytics.js",n=document.getElementsByTagName("script")[0],n.parentNode.insertBefore(e,n)},render:function(){return script(null)}}),module.exports=ga;
+/**
+ * Copyright (c) 2014, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * https://raw.github.com/facebook/regenerator/master/LICENSE file. An
+ * additional grant of patent rights can be found in the PATENTS file in
+ * the same directory.
+ */
 
+"use strict";
+
+var _Symbol = require("babel-runtime/core-js/symbol")["default"];
+
+var _Symbol$iterator = require("babel-runtime/core-js/symbol/iterator")["default"];
+
+var _Promise = require("babel-runtime/core-js/promise")["default"];
+
+!(function (global) {
+  "use strict";
+
+  var hasOwn = Object.prototype.hasOwnProperty;
+  var undefined; // More compressible than void 0.
+  var iteratorSymbol = typeof _Symbol === "function" && _Symbol$iterator || "@@iterator";
+
+  var inModule = typeof module === "object";
+  var runtime = global.regeneratorRuntime;
+  if (runtime) {
+    if (inModule) {
+      // If regeneratorRuntime is defined globally and we're in a module,
+      // make the exports object identical to regeneratorRuntime.
+      module.exports = runtime;
+    }
+    // Don't bother evaluating the rest of this file if the runtime was
+    // already defined globally.
+    return;
+  }
+
+  // Define the runtime globally (as expected by generated code) as either
+  // module.exports (if we're in a module) or a new, empty object.
+  runtime = global.regeneratorRuntime = inModule ? module.exports : {};
+
+  function wrap(innerFn, outerFn, self, tryLocsList) {
+    return new Generator(innerFn, outerFn, self || null, tryLocsList || []);
+  }
+  runtime.wrap = wrap;
+
+  // Try/catch helper to minimize deoptimizations. Returns a completion
+  // record like context.tryEntries[i].completion. This interface could
+  // have been (and was previously) designed to take a closure to be
+  // invoked without arguments, but in all the cases we care about we
+  // already have an existing method we want to call, so there's no need
+  // to create a new function object. We can even get away with assuming
+  // the method takes exactly one argument, since that happens to be true
+  // in every case, so we don't have to touch the arguments object. The
+  // only additional allocation required is the completion record, which
+  // has a stable shape and so hopefully should be cheap to allocate.
+  function tryCatch(fn, obj, arg) {
+    try {
+      return { type: "normal", arg: fn.call(obj, arg) };
+    } catch (err) {
+      return { type: "throw", arg: err };
+    }
+  }
+
+  var GenStateSuspendedStart = "suspendedStart";
+  var GenStateSuspendedYield = "suspendedYield";
+  var GenStateExecuting = "executing";
+  var GenStateCompleted = "completed";
+
+  // Returning this object from the innerFn has the same effect as
+  // breaking out of the dispatch switch statement.
+  var ContinueSentinel = {};
+
+  // Dummy constructor functions that we use as the .constructor and
+  // .constructor.prototype properties for functions that return Generator
+  // objects. For full spec compliance, you may wish to configure your
+  // minifier not to mangle the names of these two functions.
+  function GeneratorFunction() {}
+  function GeneratorFunctionPrototype() {}
+
+  var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype;
+  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
+  GeneratorFunctionPrototype.constructor = GeneratorFunction;
+  GeneratorFunction.displayName = "GeneratorFunction";
+
+  runtime.isGeneratorFunction = function (genFun) {
+    var ctor = typeof genFun === "function" && genFun.constructor;
+    return ctor ? ctor === GeneratorFunction ||
+    // For the native GeneratorFunction constructor, the best we can
+    // do is to check its .name property.
+    (ctor.displayName || ctor.name) === "GeneratorFunction" : false;
+  };
+
+  runtime.mark = function (genFun) {
+    genFun.__proto__ = GeneratorFunctionPrototype;
+    genFun.prototype = Object.create(Gp);
+    return genFun;
+  };
+
+  runtime.async = function (innerFn, outerFn, self, tryLocsList) {
+    return new _Promise(function (resolve, reject) {
+      var generator = wrap(innerFn, outerFn, self, tryLocsList);
+      var callNext = step.bind(generator.next);
+      var callThrow = step.bind(generator["throw"]);
+
+      function step(arg) {
+        var record = tryCatch(this, null, arg);
+        if (record.type === "throw") {
+          reject(record.arg);
+          return;
+        }
+
+        var info = record.arg;
+        if (info.done) {
+          resolve(info.value);
+        } else {
+          _Promise.resolve(info.value).then(callNext, callThrow);
+        }
+      }
+
+      callNext();
+    });
+  };
+
+  function Generator(innerFn, outerFn, self, tryLocsList) {
+    var generator = outerFn ? Object.create(outerFn.prototype) : this;
+    var context = new Context(tryLocsList);
+    var state = GenStateSuspendedStart;
+
+    function invoke(method, arg) {
+      if (state === GenStateExecuting) {
+        throw new Error("Generator is already running");
+      }
+
+      if (state === GenStateCompleted) {
+        // Be forgiving, per 25.3.3.3.3 of the spec:
+        // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
+        return doneResult();
+      }
+
+      while (true) {
+        var delegate = context.delegate;
+        if (delegate) {
+          var record = tryCatch(delegate.iterator[method], delegate.iterator, arg);
+
+          if (record.type === "throw") {
+            context.delegate = null;
+
+            // Like returning generator.throw(uncaught), but without the
+            // overhead of an extra function call.
+            method = "throw";
+            arg = record.arg;
+
+            continue;
+          }
+
+          // Delegate generator ran and handled its own exceptions so
+          // regardless of what the method was, we continue as if it is
+          // "next" with an undefined arg.
+          method = "next";
+          arg = undefined;
+
+          var info = record.arg;
+          if (info.done) {
+            context[delegate.resultName] = info.value;
+            context.next = delegate.nextLoc;
+          } else {
+            state = GenStateSuspendedYield;
+            return info;
+          }
+
+          context.delegate = null;
+        }
+
+        if (method === "next") {
+          if (state === GenStateSuspendedStart && typeof arg !== "undefined") {
+            // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
+            throw new TypeError("attempt to send " + JSON.stringify(arg) + " to newborn generator");
+          }
+
+          if (state === GenStateSuspendedYield) {
+            context.sent = arg;
+          } else {
+            delete context.sent;
+          }
+        } else if (method === "throw") {
+          if (state === GenStateSuspendedStart) {
+            state = GenStateCompleted;
+            throw arg;
+          }
+
+          if (context.dispatchException(arg)) {
+            // If the dispatched exception was caught by a catch block,
+            // then let that catch block handle the exception normally.
+            method = "next";
+            arg = undefined;
+          }
+        } else if (method === "return") {
+          context.abrupt("return", arg);
+        }
+
+        state = GenStateExecuting;
+
+        var record = tryCatch(innerFn, self, context);
+        if (record.type === "normal") {
+          // If an exception is thrown from innerFn, we leave state ===
+          // GenStateExecuting and loop back for another invocation.
+          state = context.done ? GenStateCompleted : GenStateSuspendedYield;
+
+          var info = {
+            value: record.arg,
+            done: context.done
+          };
+
+          if (record.arg === ContinueSentinel) {
+            if (context.delegate && method === "next") {
+              // Deliberately forget the last sent value so that we don't
+              // accidentally pass it on to the delegate.
+              arg = undefined;
+            }
+          } else {
+            return info;
+          }
+        } else if (record.type === "throw") {
+          state = GenStateCompleted;
+
+          if (method === "next") {
+            context.dispatchException(record.arg);
+          } else {
+            arg = record.arg;
+          }
+        }
+      }
+    }
+
+    generator.next = invoke.bind(generator, "next");
+    generator["throw"] = invoke.bind(generator, "throw");
+    generator["return"] = invoke.bind(generator, "return");
+
+    return generator;
+  }
+
+  Gp[iteratorSymbol] = function () {
+    return this;
+  };
+
+  Gp.toString = function () {
+    return "[object Generator]";
+  };
+
+  function pushTryEntry(locs) {
+    var entry = { tryLoc: locs[0] };
+
+    if (1 in locs) {
+      entry.catchLoc = locs[1];
+    }
+
+    if (2 in locs) {
+      entry.finallyLoc = locs[2];
+      entry.afterLoc = locs[3];
+    }
+
+    this.tryEntries.push(entry);
+  }
+
+  function resetTryEntry(entry) {
+    var record = entry.completion || {};
+    record.type = "normal";
+    delete record.arg;
+    entry.completion = record;
+  }
+
+  function Context(tryLocsList) {
+    // The root entry object (effectively a try statement without a catch
+    // or a finally block) gives us a place to store values thrown from
+    // locations where there is no enclosing try statement.
+    this.tryEntries = [{ tryLoc: "root" }];
+    tryLocsList.forEach(pushTryEntry, this);
+    this.reset();
+  }
+
+  runtime.keys = function (object) {
+    var keys = [];
+    for (var key in object) {
+      keys.push(key);
+    }
+    keys.reverse();
+
+    // Rather than returning an object with a next method, we keep
+    // things simple and return the next function itself.
+    return function next() {
+      while (keys.length) {
+        var key = keys.pop();
+        if (key in object) {
+          next.value = key;
+          next.done = false;
+          return next;
+        }
+      }
+
+      // To avoid creating an additional object, we just hang the .value
+      // and .done properties off the next function object itself. This
+      // also ensures that the minifier will not anonymize the function.
+      next.done = true;
+      return next;
+    };
+  };
+
+  function values(iterable) {
+    if (iterable) {
+      var iteratorMethod = iterable[iteratorSymbol];
+      if (iteratorMethod) {
+        return iteratorMethod.call(iterable);
+      }
+
+      if (typeof iterable.next === "function") {
+        return iterable;
+      }
+
+      if (!isNaN(iterable.length)) {
+        var i = -1,
+            next = function next() {
+          while (++i < iterable.length) {
+            if (hasOwn.call(iterable, i)) {
+              next.value = iterable[i];
+              next.done = false;
+              return next;
+            }
+          }
+
+          next.value = undefined;
+          next.done = true;
+
+          return next;
+        };
+
+        return next.next = next;
+      }
+    }
+
+    // Return an iterator with no values.
+    return { next: doneResult };
+  }
+  runtime.values = values;
+
+  function doneResult() {
+    return { value: undefined, done: true };
+  }
+
+  Context.prototype = {
+    constructor: Context,
+
+    reset: function reset() {
+      this.prev = 0;
+      this.next = 0;
+      this.sent = undefined;
+      this.done = false;
+      this.delegate = null;
+
+      this.tryEntries.forEach(resetTryEntry);
+
+      // Pre-initialize at least 20 temporary variables to enable hidden
+      // class optimizations for simple generators.
+      for (var tempIndex = 0, tempName; hasOwn.call(this, tempName = "t" + tempIndex) || tempIndex < 20; ++tempIndex) {
+        this[tempName] = null;
+      }
+    },
+
+    stop: function stop() {
+      this.done = true;
+
+      var rootEntry = this.tryEntries[0];
+      var rootRecord = rootEntry.completion;
+      if (rootRecord.type === "throw") {
+        throw rootRecord.arg;
+      }
+
+      return this.rval;
+    },
+
+    dispatchException: function dispatchException(exception) {
+      if (this.done) {
+        throw exception;
+      }
+
+      var context = this;
+      function handle(loc, caught) {
+        record.type = "throw";
+        record.arg = exception;
+        context.next = loc;
+        return !!caught;
+      }
+
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        var record = entry.completion;
+
+        if (entry.tryLoc === "root") {
+          // Exception thrown outside of any try block that could handle
+          // it, so set the completion value of the entire function to
+          // throw the exception.
+          return handle("end");
+        }
+
+        if (entry.tryLoc <= this.prev) {
+          var hasCatch = hasOwn.call(entry, "catchLoc");
+          var hasFinally = hasOwn.call(entry, "finallyLoc");
+
+          if (hasCatch && hasFinally) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            } else if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+          } else if (hasCatch) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            }
+          } else if (hasFinally) {
+            if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+          } else {
+            throw new Error("try statement without catch or finally");
+          }
+        }
+      }
+    },
+
+    abrupt: function abrupt(type, arg) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) {
+          var finallyEntry = entry;
+          break;
+        }
+      }
+
+      if (finallyEntry && (type === "break" || type === "continue") && finallyEntry.tryLoc <= arg && arg < finallyEntry.finallyLoc) {
+        // Ignore the finally entry if control is not jumping to a
+        // location outside the try/catch block.
+        finallyEntry = null;
+      }
+
+      var record = finallyEntry ? finallyEntry.completion : {};
+      record.type = type;
+      record.arg = arg;
+
+      if (finallyEntry) {
+        this.next = finallyEntry.finallyLoc;
+      } else {
+        this.complete(record);
+      }
+
+      return ContinueSentinel;
+    },
+
+    complete: function complete(record, afterLoc) {
+      if (record.type === "throw") {
+        throw record.arg;
+      }
+
+      if (record.type === "break" || record.type === "continue") {
+        this.next = record.arg;
+      } else if (record.type === "return") {
+        this.rval = record.arg;
+        this.next = "end";
+      } else if (record.type === "normal" && afterLoc) {
+        this.next = afterLoc;
+      }
+
+      return ContinueSentinel;
+    },
+
+    finish: function finish(finallyLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.finallyLoc === finallyLoc) {
+          return this.complete(entry.completion, entry.afterLoc);
+        }
+      }
+    },
+
+    "catch": function _catch(tryLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc === tryLoc) {
+          var record = entry.completion;
+          if (record.type === "throw") {
+            var thrown = record.arg;
+            resetTryEntry(entry);
+          }
+          return thrown;
+        }
+      }
+
+      // The context.catch method must only be called with a location
+      // argument that corresponds to a known catch block.
+      throw new Error("illegal catch attempt");
+    },
+
+    delegateYield: function delegateYield(iterable, resultName, nextLoc) {
+      this.delegate = {
+        iterator: values(iterable),
+        resultName: resultName,
+        nextLoc: nextLoc
+      };
+
+      return ContinueSentinel;
+    }
+  };
+})(
+// Among the various tricks for obtaining a reference to the global
+// object, this seems to be the most reliable technique that does not
+// use indirect eval (which violates Content Security Policy).
+typeof global === "object" ? global : typeof window === "object" ? window : undefined);
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"babel-runtime/core-js/promise":70,"babel-runtime/core-js/symbol":71,"babel-runtime/core-js/symbol/iterator":72}],116:[function(require,module,exports){
+arguments[4][23][0].apply(exports,arguments)
+},{"../package":118,"dup":23,"inherits":117}],117:[function(require,module,exports){
+arguments[4][24][0].apply(exports,arguments)
+},{"dup":24}],118:[function(require,module,exports){
+module.exports={
+  "name": "lacona-phrase",
+  "version": "0.7.0",
+  "description": "Create lacona phrases",
+  "main": "lib/phrase.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "pretest": "babel test --out-dir tmp ",
+    "test": "mocha tmp",
+    "build": "babel src --out-dir lib",
+    "validate": "npm run build && npm test",
+    "prepublish": "npm run clean && npm run build",
+    "clean": "rimraf lib tmp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lacona/lacona-phrase.git"
+  },
+  "keywords": [
+    "lacona-phrase",
+    "lacona",
+    "phrase",
+    "create",
+    "initialize",
+    "class"
+  ],
+  "author": {
+    "name": "@brandonhorst"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lacona/lacona-phrase/issues"
+  },
+  "homepage": "https://github.com/lacona/lacona-phrase",
+  "devDependencies": {
+    "babel": "^4.7.16",
+    "chai": "^2.2.0",
+    "mocha": "^2.2.1",
+    "rimraf": "^2.3.2"
+  },
+  "dependencies": {
+    "inherits": "^2.0.1"
+  },
+  "readme": "# lacona-phrase\n\nThis package is used to create `lacona` phrases. It works with [`lacona`](https://github.com/lacona/lacona) but is maintained separately to allow libraries to be versioned independently of the parser.\n\nA `lacona` phrase is a Javascript descriptor of some natural language construct. The syntax is modeled after [React](http://facebook.github.io/react/), but rather than specifying HTML output, it specifies a language.\n\nLike React, `lacona` phrases can be specified using [JSX](http://facebook.github.io/jsx/). This is recommended, but not required. While JSX is a much more succinct and readable way to express the phrase's structure, it does necessitate a transpilation step. `lacona` itself is built this way, using the excellent [babel](http://babeljs.io/) transpiler. In addition to transpiling JSX, it also transpiles ES6 functionality, which can result in very simple code. All examples in this document will have two examples - JSX/ES6 code to be transpiled using Babel, and standard ES5. Note that it is possible to ES6 without JS (or vice-versa), but those examples are left as an exercise to the developer (but the tests may point you in the right direction).\n\n## Using Javascript Classes\n\nA `lacona` phrase is expressed as a Javascript class. For use with ES5, a shorthand method is provided that will create this class for you, without requiring you to interact with prototypes.\n\n#### Using ES6\n\n```js\nimport {Phrase} from 'lacona-phrase'\n\nexport default class MyPhrase extends Phrase {\n  constructor() {\n    // no need to call super()\n  }\n  static get defaultProps() {\n    return {a: 'test'}\n  }\n  describe() {\n    return // ...\n  }\n}\n```\n\n#### Using ES5\n\n```js\nvar createPhrase = require('lacona-phrase').createPhrase\n\nmodule.exports = createPhrase({\n  onCreate: function() {\n    // initialize phrase\n  },\n  defaultProps: {a: 'test'},\n  describe: function() {\n    return // ...\n  }\n})\n```\n\n## Describing Language\n\nIn `lacona`, language is described using `Element`s. Each `Element` can be thought of as an instance of a `Phrase`. Each `Element` can have `props` which govern its behavior.\n\nPlease note that `Phrases` should never be instantiated directly, and `Elements` should never be used outside of the context of a `describe()` call. An `Element` is ultimately just a small descriptor of its inputs - the actual `Phrase` instantiation and parsing is all done by `lacona` itself.\n\n#### Using ES6/JSX\n\nIn JSX, all lowercase tags refer to elements built-in to `lacona`. Custom classes must be uppercase. Please note the `@jsx` pragma in the initial comment. Unlike React, this comment is required. It must specify the name of the `createElement` function.\n\n```js\n/** @jsx createElement */\nimport {createElement, Phrase} from 'lacona-phrase'\n\nclass MyPhrase extends Phrase {\n  describe() {\n    return (\n      <choice>\n        <literal text='Google' />\n        <literal text='Yahoo' />\n        <literal text='Bing' />\n      </choice>\n    )\n  }\n}\n```\n\n#### Using ES5\n\nIn ES5, elements are specified in the form `phrase.createElement(constructor, props[, ...children])`. You can also create a factory to free you from continually needing to call `createElement`, using `createFactory`.\n\n```js\nvar phrase = require('lacona-phrase')\nvar factory = phrase.createFactory(MyPhrase)\n// these two lines are equivalent\nfactory({myProp: 'test'}, child1, child2)\nphrase.createElement(MyPhrase, {myProp: 'test'}, child1, child2)\n```\n\nThe module contains shorthand factories for the builtin elements.\n\n```js\nvar phrase = require('lacona-phrase')\n\nmodule.exports = phrase.createPhrase({\n  describe: function() {\n    return phrase.choice(null,\n      phrase.literal({text: 'Google'}),\n      phrase.literal({text: 'Yahoo'}),\n      phrase.literal({text: 'Bing'})\n    )\n  }\n})\n```\n\n## Supporting multiple languages\n\nThe pesky thing about *language* is that there are lots of them. A single phrase can (and should) support as many languages as possible, all expressing the same fundamental thing. This is done using the `translations` property. Note that while `describe()` is specified as a single function, `translations` is specified as a Static Property (see below for more information).\n\n### Using ES6/JSX\n\n```js\n/** @jsx createElement */\nimport {createElement, Phrase} from 'lacona-phrase'\nclass MyPhrase extends Phrase {\n  static get translations () {\n    return [{\n      langs: ['en'],\n      describe() {\n        return <literal text='hello' />\n      }\n    }, {\n      langs: ['zh']\n      describe() {\n        return <literal text='你好' />\n      }\n    }]\n  }\n}\n```\n\n### Using ES5\n\n```js\nvar phrase = require('lacona-phrase')\n\nmodule.exports = phrase.createPhrase({\n  translations: [{\n    langs: ['en'],\n    describe: function() {\n      return phrase.literal({text: 'hello'})\n    }\n  }, {\n    langs: ['zh']\n    describe: function() {\n      return phrase.literal({text: '你好'})\n    }\n  }]\n})\n```\n\n\n## Phrase Properties\n\nA `Phrase` is ultimately just a class - it can have any methods or properties. However, some methods and properties govern the `Phrase`'s behavior, and should not be used outside of that context.\n\n### Static Properties\n\nSome of a `Phrase`'s behavior is governed by Static Properties, which are specific to the `Phrase`, not to any particular `Element`. When using `createPhrase`, these are specified directly as objects. However, because ES6 does not directly support static properties, these cannot be expressed using ES6 class syntax alone. They can set be set as static getters, or directly as properties on the constructor.\n\n* `defaultProps`\n* `supplements`\n* `overrides`\n* `translations`\n\n#### Using ES6\n\nThe two strategies below are precisely equivalent\n\n```js\nimport {Phrase} from 'lacona-phrase'\n\nclass MyPhrase extends Phrase {\n  static get defaultProps() {\n    return {myProp: 'test'}\n  }\n  static get supplements() {\n    return []\n  }\n  describe() {\n    return // ...\n  }\n}\n```\n\n```js\nimport {Phrase} from 'lacona-phrase'\n\nclass MyPhrase extends Phrase {\n  describe() {\n    return // ...\n  }\n}\nMyPhrase.defaultProps = {myProp: 'test'}\nMyPhrase.supplements = []\n```\n\n#### Using ES5\n```js\nvar phrase = require('lacona-phrase')\n\nmodule.exports = phrase.createPhrase({\n  defaultProps: {myProp: 'test'},\n  supplements: [],\n  describe: function () {\n    return // ...\n  }\n})\n```\n",
+  "readmeFilename": "README.md",
+  "gitHead": "bb4dd9a89acdcb8fd00c82af3f66d8ae1055b4c9",
+  "_id": "lacona-phrase@0.7.0",
+  "_shasum": "b707b5c3abc6034137f5d4dafb3da4c22c6e221c",
+  "_from": "lacona-phrase@0.7.0"
+}
+
+},{}],119:[function(require,module,exports){
+module.exports = function split (input, strOrRegex) {
+  var results = []
+
+  if (strOrRegex instanceof RegExp) {
+    var regex = new RegExp(strOrRegex.toString().slice(1, -1), 'g')
+    var oldIndex = 0
+    var match
+    while ((match = regex.exec(input))) {
+      results.push(input.substring(oldIndex, match.index))
+      results.push(match[0])
+      oldIndex = match.index + match[0].length
+    }
+    results.push(input.substring(oldIndex))
+  } else {
+    var splits = input.split(strOrRegex)
+    var item
+    for (var i = 0, l = splits.length; i < l - 1; i++) {
+      item = splits[i]
+      results.push(item)
+      results.push(strOrRegex)
+    }
+    results.push(splits[splits.length - 1])
+  }
+
+  return results
+}
+
+},{}],120:[function(require,module,exports){
+(function (global){
+/*! Moment Duration Format v1.3.0
+ *  https://github.com/jsmreese/moment-duration-format 
+ *  Date: 2014-07-15
+ *
+ *  Duration format plugin function for the Moment.js library
+ *  http://momentjs.com/
+ *
+ *  Copyright 2014 John Madhavan-Reese
+ *  Released under the MIT license
+ */
+
+(function (root, undefined) {
+
+	// repeatZero(qty)
+	// returns "0" repeated qty times
+	function repeatZero(qty) {
+		var result = "";
+		
+		// exit early
+		// if qty is 0 or a negative number
+		// or doesn't coerce to an integer
+		qty = parseInt(qty, 10);
+		if (!qty || qty < 1) { return result; }
+		
+		while (qty) {
+			result += "0";
+			qty -= 1;
+		}
+		
+		return result;
+	}
+	
+	// padZero(str, len [, isRight])
+	// pads a string with zeros up to a specified length
+	// will not pad a string if its length is aready
+	// greater than or equal to the specified length
+	// default output pads with zeros on the left
+	// set isRight to `true` to pad with zeros on the right
+	function padZero(str, len, isRight) {
+		if (str == null) { str = ""; }
+		str = "" + str;
+		
+		return (isRight ? str : "") + repeatZero(len - str.length) + (isRight ? "" : str);
+	}
+	
+	// isArray
+	function isArray(array) {
+		return Object.prototype.toString.call(array) === "[object Array]";
+	}
+	
+	// isObject
+	function isObject(obj) {
+		return Object.prototype.toString.call(obj) === "[object Object]";
+	}
+	
+	// findLast
+	function findLast(array, callback) {
+		var index = array.length;
+
+		while (index -= 1) {
+			if (callback(array[index])) { return array[index]; }
+		}
+	}
+
+	// find
+	function find(array, callback) {
+		var index = 0,
+			max = array.length,
+			match;
+			
+		if (typeof callback !== "function") {
+			match = callback;
+			callback = function (item) {
+				return item === match;
+			};
+		}
+
+		while (index < max) {
+			if (callback(array[index])) { return array[index]; }
+			index += 1;
+		}
+	}
+	
+	// each
+	function each(array, callback) {
+		var index = 0,
+			max = array.length;
+			
+		if (!array || !max) { return; }
+
+		while (index < max) {
+			if (callback(array[index], index) === false) { return; }
+			index += 1;
+		}
+	}
+	
+	// map
+	function map(array, callback) {
+		var index = 0,
+			max = array.length,
+			ret = [];
+
+		if (!array || !max) { return ret; }
+				
+		while (index < max) {
+			ret[index] = callback(array[index], index);
+			index += 1;
+		}
+		
+		return ret;
+	}
+	
+	// pluck
+	function pluck(array, prop) {
+		return map(array, function (item) {
+			return item[prop];
+		});
+	}
+	
+	// compact
+	function compact(array) {
+		var ret = [];
+		
+		each(array, function (item) {
+			if (item) { ret.push(item); }
+		});
+		
+		return ret;
+	}
+	
+	// unique
+	function unique(array) {
+		var ret = [];
+		
+		each(array, function (_a) {
+			if (!find(ret, _a)) { ret.push(_a); }
+		});
+		
+		return ret;
+	}
+	
+	// intersection
+	function intersection(a, b) {
+		var ret = [];
+		
+		each(a, function (_a) {
+			each(b, function (_b) {
+				if (_a === _b) { ret.push(_a); }
+			});
+		});
+		
+		return unique(ret);
+	}
+	
+	// rest
+	function rest(array, callback) {
+		var ret = [];
+		
+		each(array, function (item, index) {
+			if (!callback(item)) {
+				ret = array.slice(index);
+				return false;
+			}
+		});
+		
+		return ret;
+	}
+
+	// initial
+	function initial(array, callback) {
+		var reversed = array.slice().reverse();
+		
+		return rest(reversed, callback).reverse();
+	}
+	
+	// extend
+	function extend(a, b) {
+		for (var key in b) {
+			if (b.hasOwnProperty(key)) { a[key] = b[key]; }
+		}
+		
+		return a;
+	}
+			
+	// define internal moment reference
+	var moment;
+
+	if (typeof require === "function") {
+		try { moment = (typeof window !== "undefined" ? window.moment : typeof global !== "undefined" ? global.moment : null); } 
+		catch (e) {}
+	} 
+	
+	if (!moment && root.moment) {
+		moment = root.moment;
+	}
+	
+	if (!moment) {
+		throw "Moment Duration Format cannot find Moment.js";
+	}
+	
+	// moment.duration.format([template] [, precision] [, settings])
+	moment.duration.fn.format = function () {
+
+		var tokenizer, tokens, types, typeMap, momentTypes, foundFirst, trimIndex,
+			args = [].slice.call(arguments),
+			settings = extend({}, this.format.defaults),
+			// keep a shadow copy of this moment for calculating remainders
+			remainder = moment.duration(this);
+
+		// add a reference to this duration object to the settings for use
+		// in a template function
+		settings.duration = this;
+
+		// parse arguments
+		each(args, function (arg) {
+			if (typeof arg === "string" || typeof arg === "function") {
+				settings.template = arg;
+				return;
+			}
+
+			if (typeof arg === "number") {
+				settings.precision = arg;
+				return;
+			}
+
+			if (isObject(arg)) {
+				extend(settings, arg);
+			}
+		});
+
+		// types
+		types = settings.types = (isArray(settings.types) ? settings.types : settings.types.split(" "));
+
+		// template
+		if (typeof settings.template === "function") {
+			settings.template = settings.template.apply(settings);
+		}
+
+		// tokenizer regexp
+		tokenizer = new RegExp(map(types, function (type) {
+			return settings[type].source;
+		}).join("|"), "g");
+
+		// token type map function
+		typeMap = function (token) {
+			return find(types, function (type) {
+				return settings[type].test(token);
+			});
+		};
+
+		// tokens array
+		tokens = map(settings.template.match(tokenizer), function (token, index) {
+			var type = typeMap(token),
+				length = token.length;
+
+			return {
+				index: index,
+				length: length,
+
+				// replace escaped tokens with the non-escaped token text
+				token: (type === "escape" ? token.replace(settings.escape, "$1") : token),
+
+				// ignore type on non-moment tokens
+				type: ((type === "escape" || type === "general") ? null : type)
+
+				// calculate base value for all moment tokens
+				//baseValue: ((type === "escape" || type === "general") ? null : this.as(type))
+			};
+		}, this);
+
+		// unique moment token types in the template (in order of descending magnitude)
+		momentTypes = intersection(types, unique(compact(pluck(tokens, "type"))));
+
+		// exit early if there are no momentTypes
+		if (!momentTypes.length) {
+			return pluck(tokens, "token").join("");
+		}
+
+		// calculate values for each token type in the template
+		each(momentTypes, function (momentType, index) {
+			var value, wholeValue, decimalValue, isLeast, isMost;
+
+			// calculate integer and decimal value portions
+			value = remainder.as(momentType);
+			wholeValue = (value > 0 ? Math.floor(value) : Math.ceil(value));
+			decimalValue = value - wholeValue;
+
+			// is this the least-significant moment token found?
+			isLeast = ((index + 1) === momentTypes.length);
+
+			// is this the most-significant moment token found?
+			isMost = (!index);
+
+			// update tokens array
+			// using this algorithm to not assume anything about
+			// the order or frequency of any tokens
+			each(tokens, function (token) {
+				if (token.type === momentType) {
+					extend(token, {
+						value: value,
+						wholeValue: wholeValue,
+						decimalValue: decimalValue,
+						isLeast: isLeast,
+						isMost: isMost
+					});
+
+					if (isMost) {
+						// note the length of the most-significant moment token:
+						// if it is greater than one and forceLength is not set, default forceLength to `true`
+						if (settings.forceLength == null && token.length > 1) {
+							settings.forceLength = true;
+						}
+
+						// rationale is this:
+						// if the template is "h:mm:ss" and the moment value is 5 minutes, the user-friendly output is "5:00", not "05:00"
+						// shouldn't pad the `minutes` token even though it has length of two
+						// if the template is "hh:mm:ss", the user clearly wanted everything padded so we should output "05:00"
+						// if the user wanted the full padded output, they can set `{ trim: false }` to get "00:05:00"
+					}
+				}
+			});
+
+			// update remainder
+			remainder.subtract(wholeValue, momentType);
+		});
+	
+		// trim tokens array
+		if (settings.trim) {
+			tokens = (settings.trim === "left" ? rest : initial)(tokens, function (token) {
+				// return `true` if:
+				// the token is not the least moment token (don't trim the least moment token)
+				// the token is a moment token that does not have a value (don't trim moment tokens that have a whole value)
+				return !(token.isLeast || (token.type != null && token.wholeValue));
+			});
+		}
+		
+		
+		// build output
+
+		// the first moment token can have special handling
+		foundFirst = false;
+
+		// run the map in reverse order if trimming from the right
+		if (settings.trim === "right") {
+			tokens.reverse();
+		}
+
+		tokens = map(tokens, function (token) {
+			var val,
+				decVal;
+
+			if (!token.type) {
+				// if it is not a moment token, use the token as its own value
+				return token.token;
+			}
+
+			// apply negative precision formatting to the least-significant moment token
+			if (token.isLeast && (settings.precision < 0)) {
+				val = (Math.floor(token.wholeValue * Math.pow(10, settings.precision)) * Math.pow(10, -settings.precision)).toString();
+			} else {
+				val = token.wholeValue.toString();
+			}
+			
+			// remove negative sign from the beginning
+			val = val.replace(/^\-/, "");
+
+			// apply token length formatting
+			// special handling for the first moment token that is not the most significant in a trimmed template
+			if (token.length > 1 && (foundFirst || token.isMost || settings.forceLength)) {
+				val = padZero(val, token.length);
+			}
+
+			// add decimal value if precision > 0
+			if (token.isLeast && (settings.precision > 0)) {
+				decVal = token.decimalValue.toString().replace(/^\-/, "").split(/\.|e\-/);
+				switch (decVal.length) {
+					case 1:
+						val += "." + padZero(decVal[0], settings.precision, true).slice(0, settings.precision);
+						break;
+						
+					case 2:
+						val += "." + padZero(decVal[1], settings.precision, true).slice(0, settings.precision);		
+						break;
+						
+					case 3:
+						val += "." + padZero(repeatZero((+decVal[2]) - 1) + (decVal[0] || "0") + decVal[1], settings.precision, true).slice(0, settings.precision);		
+						break;
+					
+					default:
+						throw "Moment Duration Format: unable to parse token decimal value.";
+				}
+			}
+			
+			// add a negative sign if the value is negative and token is most significant
+			if (token.isMost && token.value < 0) {
+				val = "-" + val;
+			}
+
+			foundFirst = true;
+
+			return val;
+		});
+
+		// undo the reverse if trimming from the right
+		if (settings.trim === "right") {
+			tokens.reverse();
+		}
+
+		return tokens.join("");
+	};
+
+	moment.duration.fn.format.defaults = {
+		// token definitions
+		escape: /\[(.+?)\]/,
+		years: /[Yy]+/,
+		months: /M+/,
+		weeks: /[Ww]+/,
+		days: /[Dd]+/,
+		hours: /[Hh]+/,
+		minutes: /m+/,
+		seconds: /s+/,
+		milliseconds: /S+/,
+		general: /.+?/,
+
+		// token type names
+		// in order of descending magnitude
+		// can be a space-separated token name list or an array of token names
+		types: "escape years months weeks days hours minutes seconds milliseconds general",
+
+		// format options
+
+		// trim
+		// "left" - template tokens are trimmed from the left until the first moment token that has a value >= 1
+		// "right" - template tokens are trimmed from the right until the first moment token that has a value >= 1
+		// (the final moment token is not trimmed, regardless of value)
+		// `false` - template tokens are not trimmed
+		trim: "left",
+
+		// precision
+		// number of decimal digits to include after (to the right of) the decimal point (positive integer)
+		// or the number of digits to truncate to 0 before (to the left of) the decimal point (negative integer)
+		precision: 0,
+
+		// force first moment token with a value to render at full length even when template is trimmed and first moment token has length of 1
+		forceLength: null,
+
+		// template used to format duration
+		// may be a function or a string
+		// template functions are executed with the `this` binding of the settings object
+		// so that template strings may be dynamically generated based on the duration object
+		// (accessible via `this.duration`)
+		// or any of the other settings
+		template: function () {
+			var types = this.types,
+				dur = this.duration,
+				lastType = findLast(types, function (type) {
+					return dur._data[type];
+				});
+
+			// default template strings for each duration dimension type
+			switch (lastType) {
+				case "seconds":
+					return "h:mm:ss";
+				case "minutes":
+					return "d[d] h:mm";
+				case "hours":
+					return "d[d] h[h]";
+				case "days":
+					return "M[m] d[d]";
+				case "weeks":
+					return "y[y] w[w]";
+				case "months":
+					return "y[y] M[m]";
+				case "years":
+					return "y[y]";
+				default:
+					return "y[y] M[m] d[d] h:mm:ss";
+			}
+		}
+	};
+
+})(this);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],66:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 (function (global){
-"use strict";var _interopRequireWildcard=function(e){return e&&e.__esModule?e:{"default":e}},_classCallCheck=function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")},_createClass=function(){function e(e,t){for(var n=0;n<t.length;n++){var o=t[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,o.key,o)}}return function(t,n,o){return n&&e(t.prototype,n),o&&e(t,o),t}}(),_inherits=function(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(e.__proto__=t)};Object.defineProperty(exports,"__esModule",{value:!0});var _React=(typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null),_React2=_interopRequireWildcard(_React),LaconaInput=function(e){function t(){_classCallCheck(this,t),null!=e&&e.apply(this,arguments)}return _inherits(t,e),_createClass(t,[{key:"componentDidMount",value:function(){this.props.autoFocus&&_React2["default"].findDOMNode(this).focus()}},{key:"change",value:function(e){this.props.update(e.target.value)}},{key:"focus",value:function(){_React2["default"].findDOMNode(this.refs.input).focus()}},{key:"blur",value:function(){_React2["default"].findDOMNode(this.refs.input).blur()}},{key:"keyDown",value:function(e){if(9===e.keyCode)this.props.completeSelection();else if(38===e.keyCode)this.props.moveSelection(-1);else if(40===e.keyCode)this.props.moveSelection(1);else if(13===e.keyCode)this.props.execute();else if(27===e.keyCode)this.props.cancel();else{if(39!==e.keyCode)return;var t=_React2["default"].findDOMNode(this.refs.input);if(t.selectionStart!==t.selectionEnd||t.selectionStart!==this.props.userInput.length)return;this.props.completeSelection()}e.preventDefault()}},{key:"render",value:function(){return _React2["default"].createElement("input",{type:"text",autoCorrect:!1,spellCheck:!1,onFocus:this.props.focus,onBlur:this.props.blur,autoCapitalize:!1,className:"input",value:this.props.userInput,onChange:this.change.bind(this),onKeyDown:this.keyDown.bind(this),placeholder:this.props.placeholder,ref:"input"})}}]),t}(_React2["default"].Component);exports["default"]=LaconaInput,module.exports=exports["default"];
+var React, ga, script, scriptIsAdded, _name,
+  __slice = [].slice;
 
+React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null);
+
+script = React.DOM.script;
+
+if (typeof window !== "undefined" && window !== null) {
+  if (window.GoogleAnalyticsObject == null) {
+    window.GoogleAnalyticsObject = 'ga';
+  }
+}
+
+if (typeof window !== "undefined" && window !== null) {
+  if (window.ga == null) {
+    window.ga = ga;
+  }
+}
+
+ga = function() {
+  var args;
+  args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+  return typeof window !== "undefined" && window !== null ? window[window.GoogleAnalyticsObject].apply(window, args) : void 0;
+};
+
+if (typeof window !== "undefined" && window !== null) {
+  if (window[_name = window.GoogleAnalyticsObject] == null) {
+    window[_name] = function() {
+      var api, args;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      api = window[window.GoogleAnalyticsObject];
+      (api.q || (api.q = [])).push(args);
+    };
+  }
+}
+
+scriptIsAdded = false;
+
+ga.Initializer = React.createClass({
+  displayName: 'GAInitializer',
+  componentDidMount: function() {
+    window[window.GoogleAnalyticsObject].l = new Date().getTime();
+    if (!scriptIsAdded) {
+      return this.addScript();
+    }
+  },
+  addScript: function() {
+    var el, s;
+    scriptIsAdded = true;
+    el = document.createElement('script');
+    el.type = 'text/javascript';
+    el.async = true;
+    el.src = '//www.google-analytics.com/analytics.js';
+    s = document.getElementsByTagName('script')[0];
+    return s.parentNode.insertBefore(el, s);
+  },
+  render: function() {
+    return script(null);
+  }
+});
+
+module.exports = ga;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],67:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 (function (global){
-"use strict";function bound(e,t){return Math.max(Math.min(e,t-1),0)}function toPlaceholder(e){return _fulltext2["default"].match(e)+_import2["default"].chain(e.suggestion).concat(e.completion).takeWhile(function(e){return!e.placeholder}).reduce(function(e,t){return""+e+t.string},"").value()}var _interopRequireWildcard=function(e){return e&&e.__esModule?e:{"default":e}},_classCallCheck=function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")},_createClass=function(){function e(e,t){for(var o=0;o<t.length;o++){var n=t[o];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,o,n){return o&&e(t.prototype,o),n&&e(t,n),t}}(),_get=function e(t,o,n){var i=Object.getOwnPropertyDescriptor(t,o);if(void 0===i){var u=Object.getPrototypeOf(t);return null===u?void 0:e(u,o,n)}if("value"in i)return i.value;var s=i.get;return void 0===s?void 0:s.call(n)},_inherits=function(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(e.__proto__=t)};Object.defineProperty(exports,"__esModule",{value:!0});var _import=require("lodash"),_import2=_interopRequireWildcard(_import),_React=(typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null),_React2=_interopRequireWildcard(_React),_fulltext=require("lacona-util-fulltext"),_fulltext2=_interopRequireWildcard(_fulltext),_LaconaOptions=require("./options"),_LaconaOptions2=_interopRequireWildcard(_LaconaOptions),_LaconaInput=require("./input"),_LaconaInput2=_interopRequireWildcard(_LaconaInput),LaconaView=function(e){function t(e){_classCallCheck(this,t),_get(Object.getPrototypeOf(t.prototype),"constructor",this).call(this,e);var o=this.props.outputs.length>0;this.state={selection:o?0:-1}}return _inherits(t,e),_createClass(t,[{key:"componentWillReceiveProps",value:function(e){e.outputs!==this.props.outputs&&(e.outputs.length>0?0!==this.state.selection&&this.setSelection(0):this.setState({selection:-1}))}},{key:"componentDidMount",value:function(){this.props.change()}},{key:"componentDidUpdate",value:function(){this.props.change()}},{key:"completeSelection",value:function(){if(this.state.selection>-1){var e=_fulltext2["default"].match(this.props.outputs[this.state.selection])+_fulltext2["default"].suggestion(this.props.outputs[this.state.selection]);this.update(e)}}},{key:"focusBar",value:function(){this.refs.input.focus()}},{key:"moveSelection",value:function(e){var t=bound(this.state.selection+e,this.props.outputs.length);this.setSelection(t)}},{key:"setSelection",value:function(e){this.setState({selection:e}),this.props.select(e)}},{key:"execute",value:function(){var e=void 0===arguments[0]?this.state.selection:arguments[0];if(e>-1){var t=this.props.outputs[e];if(_import2["default"].some(t.suggestion.concat(t.completion),"placeholder")){var o=toPlaceholder(t);this.update(o),this.refs.input.focus()}else this.props.execute(e),this.refs.input.blur()}}},{key:"cancel",value:function(){this.props.cancel()}},{key:"update",value:function(e){this.props.update(e)}},{key:"render",value:function(){return _React2["default"].createElement("div",{className:"lacona-view"},_React2["default"].createElement(_LaconaInput2["default"],{ref:"input",update:this.update.bind(this),completeSelection:this.completeSelection.bind(this),moveSelection:this.moveSelection.bind(this),focus:this.props.focus,blur:this.props.blur,userInput:this.props.userInput,execute:this.execute.bind(this),cancel:this.cancel.bind(this),placeholder:this.props.placeholder,autoFocus:this.props.autoFocus}),_React2["default"].createElement(_LaconaOptions2["default"],{outputs:this.props.outputs,selection:this.state.selection,select:this.setSelection.bind(this),execute:this.execute.bind(this)}))}}]),t}(_React2["default"].Component);exports["default"]=LaconaView,LaconaView.defaultProps={outputs:[],update:function(){},cancel:function(){},change:function(){},execute:function(){},select:function(){}},module.exports=exports["default"];
+'use strict';
 
+var _interopRequireDefault = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null);
+
+var _React2 = _interopRequireDefault(_React);
+
+var LaconaInput = (function (_React$Component) {
+  function LaconaInput() {
+    _classCallCheck(this, LaconaInput);
+
+    if (_React$Component != null) {
+      _React$Component.apply(this, arguments);
+    }
+  }
+
+  _inherits(LaconaInput, _React$Component);
+
+  _createClass(LaconaInput, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      if (this.props.autoFocus) {
+        _React2['default'].findDOMNode(this).focus();
+      }
+    }
+  }, {
+    key: 'change',
+    value: function change(e) {
+      this.props.update(e.target.value);
+    }
+  }, {
+    key: 'focus',
+    value: function focus() {
+      _React2['default'].findDOMNode(this.refs.input).focus();
+    }
+  }, {
+    key: 'focusEnd',
+    value: function focusEnd() {
+      var elem = _React2['default'].findDOMNode(this.refs.input);
+      var pos = this.props.userInput.length;
+
+      if (elem.createTextRange) {
+        var range = elem.createTextRange();
+        range.move('character', pos);
+        range.select();
+      } else {
+        if (elem.selectionStart) {
+          elem.focus();
+          elem.setSelectionRange(pos, pos);
+        } else {
+          elem.focus();
+        }
+      }
+      elem.scrollLeft = elem.scrollWidth //just pretty big
+      ;
+    }
+  }, {
+    key: 'blur',
+    value: function blur() {
+      _React2['default'].findDOMNode(this.refs.input).blur();
+    }
+  }, {
+    key: 'keyDown',
+    value: function keyDown(e) {
+      this.props.userInteracted();
+      if (e.keyCode === 9) {
+        // tab
+        this.props.completeSelection();
+      } else if (e.keyCode === 38) {
+        // up
+        this.props.moveSelection(-1);
+      } else if (e.keyCode === 40) {
+        // down
+        this.props.moveSelection(1);
+      } else if (e.keyCode === 13) {
+        // return
+        e.preventDefault();
+        e.stopPropagation();
+        this.props.execute();
+      } else if (e.keyCode === 27) {
+        // escape
+        this.props.cancel();
+      } else if (e.keyCode === 39) {
+        //right
+        var node = _React2['default'].findDOMNode(this.refs.input);
+        if (node.selectionStart === node.selectionEnd && node.selectionStart === this.props.userInput.length) {
+          this.props.completeSelection();
+        } else {
+          return;
+        }
+      } else {
+        return;
+      }
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _React2['default'].createElement(
+        'div',
+        { className: 'input' },
+        _React2['default'].createElement(
+          'div',
+          { className: 'prefix' + (this.props.prefix ? '' : ' hidden') },
+          this.props.prefix
+        ),
+        _React2['default'].createElement('input', {
+          type: 'text',
+          ref: 'input',
+          tabIndex: this.props.tabIndex,
+          autoCorrect: false,
+          spellCheck: false,
+          autoCapitalize: false,
+          className: 'true-input' + (this.props.prefix ? ' prefixed' : ''),
+          value: this.props.userInput,
+          onChange: this.change.bind(this),
+          onKeyDown: this.keyDown.bind(this),
+          onFocus: this.props.onFocus,
+          onBlur: this.props.onBlur,
+          onClick: this.props.userInteracted,
+          placeholder: this.props.placeholder })
+      );
+    }
+  }]);
+
+  return LaconaInput;
+})(_React2['default'].Component);
+
+exports['default'] = LaconaInput;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],123:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _interopRequireDefault = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(object, property, receiver) { var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireDefault(_import);
+
+var _React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null);
+
+var _React2 = _interopRequireDefault(_React);
+
+var _fulltext = require('lacona-util-fulltext');
+
+var _fulltext2 = _interopRequireDefault(_fulltext);
+
+var _LaconaOptions = require('./options');
+
+var _LaconaOptions2 = _interopRequireDefault(_LaconaOptions);
+
+var _LaconaInput = require('./input');
+
+var _LaconaInput2 = _interopRequireDefault(_LaconaInput);
+
+function bound(number, max) {
+  return Math.max(Math.min(number, max - 1), 0);
+}
+
+var LaconaView = (function (_React$Component) {
+  function LaconaView(props) {
+    _classCallCheck(this, LaconaView);
+
+    _get(Object.getPrototypeOf(LaconaView.prototype), 'constructor', this).call(this, props);
+
+    this.blurMatters = true;
+
+    var hasOutputs = props.length > 0;
+    this.state = { selection: hasOutputs ? 0 : -1 };
+  }
+
+  _inherits(LaconaView, _React$Component);
+
+  _createClass(LaconaView, [{
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      var hasOutputs = nextProps.outputs.length > 0;
+      this.setState({ selection: hasOutputs ? 0 : -1 });
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.props.change();
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
+      this.props.change();
+    }
+  }, {
+    key: 'completeSelection',
+    value: function completeSelection() {
+      var index = arguments[0] === undefined ? this.state.selection : arguments[0];
+
+      if (index > -1) {
+        var result = this.props.outputs[index];
+        var newString = _import2['default'].chain(result.words).takeWhile(function (item) {
+          return !item.placeholder;
+        }).map('text').join('').value();
+
+        this.props.clearPrefix();
+
+        this.update(newString);
+      }
+    }
+  }, {
+    key: 'moveSelection',
+    value: function moveSelection(steps) {
+      var selection = bound(this.state.selection + steps, this.props.outputs.length);
+      this.setState({ selection: selection });
+    }
+  }, {
+    key: 'execute',
+    value: function execute() {
+      var index = arguments[0] === undefined ? this.state.selection : arguments[0];
+
+      if (index > -1) {
+        var result = this.props.outputs[index];
+        if (_import2['default'].some(result.words, 'placeholder')) {
+          this.completeSelection(index);
+          this.refs.input.focusEnd();
+        } else {
+          this.update('');
+          this.setState({ showHints: false });
+          this.props.onBlur();
+          this.props.execute(index);
+        }
+      }
+    }
+  }, {
+    key: 'select',
+    value: function select(index) {
+      var selection = bound(index, this.props.outputs.length);
+      this.setState({ selection: selection });
+    }
+  }, {
+    key: 'cancel',
+    value: function cancel() {
+      this.props.cancel();
+    }
+  }, {
+    key: 'update',
+    value: function update(newText) {
+      this.props.update(newText);
+    }
+  }, {
+    key: 'focusEnd',
+    value: function focusEnd() {
+      this.refs.input.focusEnd();
+    }
+  }, {
+    key: 'onFocus',
+    value: function onFocus(event) {
+      this.setState({ showHints: true });
+      this.props.onFocus(event);
+    }
+  }, {
+    key: 'onBlur',
+    value: function onBlur(event) {
+      if (!this.blurMatters) {
+        return;
+      }this.setState({ showHints: false });
+      this.props.onBlur(event);
+    }
+  }, {
+    key: 'mouseDown',
+    value: function mouseDown() {
+      this.blurMatters = false;
+      this.props.userInteracted();
+    }
+  }, {
+    key: 'mouseUp',
+    value: function mouseUp() {
+      this.blurMatters = true;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _React2['default'].createElement(
+        'div',
+        { className: 'lacona-view' },
+        _React2['default'].createElement(_LaconaInput2['default'], {
+          ref: 'input',
+          update: this.update.bind(this),
+          prefix: this.props.prefix,
+          suffix: this.props.suffix,
+          tabIndex: this.props.tabIndex,
+          completeSelection: this.completeSelection.bind(this),
+          moveSelection: this.moveSelection.bind(this),
+          userInput: this.props.userInput,
+          execute: this.execute.bind(this),
+          cancel: this.cancel.bind(this),
+          onFocus: this.onFocus.bind(this),
+          onBlur: this.onBlur.bind(this),
+          userInteracted: this.props.userInteracted,
+          placeholder: this.props.placeholder }),
+        _React2['default'].createElement(_LaconaOptions2['default'], {
+          outputs: this.props.outputs,
+          selection: this.state.selection,
+          execute: this.execute.bind(this),
+          select: this.select.bind(this),
+          showHints: this.state.showHints,
+          onMouseDown: this.mouseDown.bind(this),
+          onMouseUp: this.mouseUp.bind(this) })
+      );
+    }
+  }]);
+
+  return LaconaView;
+})(_React2['default'].Component);
+
+exports['default'] = LaconaView;
+
+LaconaView.defaultProps = {
+  outputs: [],
+  update: function update() {},
+  cancel: function cancel() {},
+  change: function change() {},
+  execute: function execute() {},
+  select: function select() {},
+  onFocus: function onFocus() {},
+  onBlur: function onBlur() {},
+  userInteracted: function userInteracted() {},
+  clearPrefix: function clearPrefix() {}
+};
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./input":122,"./options":125,"lacona-util-fulltext":48}],124:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _interopRequireDefault = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
+var _slicedToArray = function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _import = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var _import2 = _interopRequireDefault(_import);
+
+var _React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null);
+
+var _React2 = _interopRequireDefault(_React);
+
+var Placeholder = (function (_React$Component) {
+  function Placeholder() {
+    _classCallCheck(this, Placeholder);
+
+    if (_React$Component != null) {
+      _React$Component.apply(this, arguments);
+    }
+  }
+
+  _inherits(Placeholder, _React$Component);
+
+  _createClass(Placeholder, [{
+    key: 'render',
+    value: function render() {
+      var _this = this;
+
+      return _React2['default'].createElement(
+        'div',
+        { className: 'placeholder' },
+        _import2['default'].chain(this.props.item.placeholderTexts).map(function (desc, index) {
+          var className = 'placeholder-component descriptor-' + (_this.props.item.argument ? '' : _import2['default'].kebabCase(desc));
+          return [_React2['default'].createElement(
+            'div',
+            { className: 'placeholder-component category-conjunction', key: index + ',' },
+            ', '
+          ), _React2['default'].createElement(
+            'div',
+            { className: className, key: index },
+            desc
+          )];
+        }).flatten().rest().value()
+      );
+    }
+  }]);
+
+  return Placeholder;
+})(_React2['default'].Component);
+
+//
+// function getCorners(elem, parentBoundingRect) {
+//   const rects = elem.getClientRects()
+//   const bounds = elem.getBoundingClientRect()
+//
+//   return {
+//     topLeft: rects[0].left - parentBoundingRect.left,
+//     topTop: rects[0].top - parentBoundingRect.top,
+//     bottomRight: _.last(rects).right - parentBoundingRect.left,
+//     bottomTop: _.last(rects).top - parentBoundingRect.top,
+//     boundRight: bounds.right - parentBoundingRect.left,
+//     wrapped: rects.length > 1
+//   }
+// }
+
+var LaconaOption = (function (_React$Component2) {
+  function LaconaOption() {
+    _classCallCheck(this, LaconaOption);
+
+    if (_React$Component2 != null) {
+      _React$Component2.apply(this, arguments);
+    }
+  }
+
+  _inherits(LaconaOption, _React$Component2);
+
+  _createClass(LaconaOption, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.componentDidUpdate();
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
+      var nextProps = arguments[0] === undefined ? {} : arguments[0];
+
+      var words = _React2['default'].findDOMNode(this.refs.words);
+      var descs = _React2['default'].findDOMNode(this.refs.descriptors);
+      //
+      var wordsRect = words.getBoundingClientRect();
+      // const descsRect = descs.getBoundingClientRect()
+
+      var all = _import2['default'].zip(_import2['default'].toArray(words.children), _import2['default'].toArray(descs.children));
+      // _.toArray(descs.getElementsByClassName('spacer-left')),
+      // _.toArray(descs.getElementsByClassName('spacer-right'))
+
+      // let lastWordTop, lastDescTop
+
+      _import2['default'].forEach(all, function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2);
+
+        var word = _ref2[0];
+        var desc = _ref2[1];
+
+        var rects = word.getClientRects();
+        var rect = rects[0];
+        var lines = _import2['default'].groupBy(rects, 'top');
+        var keys = Object.keys(lines);
+        if (keys.length > 1) {
+          var firstLineRects = lines[keys[0]];
+          var secondLineRects = lines[keys[1]];
+          if (_import2['default'].last(firstLineRects).right - firstLineRects[0].left < 50 && _import2['default'].last(secondLineRects).right - secondLineRects[0].left >= 50) {
+            rect = secondLineRects[0];
+          }
+        }
+
+        // if (rects[0].right - rects[0].left < 100) {
+        //   i = _.findIndex(rects, rect => rect.top > rects[0].top)
+        //   if (i === -1) i = 0
+        // }
+
+        desc.style.left = '' + (rect.left - wordsRect.left) + 'px';
+        desc.style.top = '' + (rect.top - wordsRect.top + 6) + 'px';
+      });
+    }
+  }, {
+    key: 'render',
+
+    //   if (nextProps.option === this.props.option) return
+    //
+    //   const items = _.zip(
+    //     _.toArray(React.findDOMNode(this.refs.descriptors).children),
+    //     _.toArray(React.findDOMNode(this.refs.words).children)
+    //     // _.toArray(React.findDOMNode(this.refs.invisDescriptors).children),
+    //     // _.toArray(React.findDOMNode(this.refs.invisWords).children)
+    //   )
+    //
+    //   let descriptorPositions = [0, 0]
+    //   let previousTop = 0
+    //   let previousEnd = 0
+    //
+    //   _.forEach(items, ([descriptor, word]) => {
+    //     if (word.offsetTop > previousTop) previousEnd = 0
+    //
+    //     previousTop = word.offsetTop
+    //     const max = Math.max(word.offsetLeft, previousEnd)
+    //     const vert = word.offsetTop - 20
+    //     descriptor.style.textIndent = `${max + 5}px`
+    //     previousEnd = descriptor.offsetWidth
+    //     descriptor.style.top = `${vert}px`
+    //
+    //     // if (wordTop > descriptorPositions[1]) {
+    //     //   descriptorPositions[0] = 0
+    //     // }
+    //     // const xPos = Math.max(descriptorPositions[0], word.offsetLeft)
+    //     // descriptorPositions = [
+    //     //   xPos + (descriptor.offsetWidth - (parseInt(descriptor.style.textIndent) || 0)),
+    //     //   wordTop
+    //     // ]
+    //     // descriptor.style.textIndent = `${xPos}px`
+    //     // descriptor.style.top = `${word.offsetTop - 20}px`
+    //     // if (annoPos == null) annoPos = iDescriptor.offsetLeft
+    //     // const marg = Math.max(iWord.offsetLeft - annoPos + iWord.offsetWidth - iDescriptor.offsetWidth, 0)
+    //     // descriptor.style.marginRight = `${marg}px`
+    //     // annoPos += iDescriptor.offsetWidth + marg + 5
+    //     //
+    //     // annotation.style.width = 'auto'
+    //     // const max = Math.max(content.offsetLeft - annotation.offsetLeft + content.offsetWidth, annotation.offsetWidth + 1)
+    //     // annotation.style.width = `${max}px`
+    //   })
+    // }
+    //
+    value: function render() {
+      // const words = _.chain(['match', 'suggestion', 'completion'])
+      //   .map(type => this.props.option[type])
+      //   .flatten()
+      //   .map((item, index) => {
+      //     const className = `word descriptor-${_.kebabCase(item.topLevelDescriptor)}`
+      //     return (
+      //       <div className={className} key={index}>
+      //         {item.placeholder ?
+      //           <Placeholder item={item} key={index} /> :
+      //           <div className={`word-component ${item.input ? ' highlighted' : ''} category-${item.category}`} key={index}>{item.string}</div>
+      //         }
+      //       </div>
+      //     )
+      //   })
+      //   // .map(type => _.map(this.props.option[type], word => ({word, type})))
+      //   // .flatten()
+      //   // .reduce((acc, item) => {
+      //   //   const last = _.last(_.last(acc))
+      //   //   if (last && last.word.topLevelDescriptor === item.word.topLevelDescriptor) {
+      //   //     _.last(acc).push(item)
+      //   //   } else {
+      //   //     acc.push([item]);
+      //   //   }
+      //   //   return acc
+      //   // }, [])
+      //   .value()
+      var itemGroups = _import2['default'].chain(this.props.option.words).reduce(function (acc, item) {
+        var last = _import2['default'].last(_import2['default'].last(acc));
+        if (last && last.argument === item.argument) {
+          _import2['default'].last(acc).push(item);
+        } else {
+          acc.push([item]);
+        }
+        return acc;
+      }, []).value();
+
+      var descriptors = _import2['default'].chain(itemGroups).map(function (itemGroup, index) {
+        if (itemGroup.length === 1 && itemGroup[0].placeholder) {
+          return _React2['default'].createElement('div', { className: 'descriptor', key: index });
+        } else {
+          var first = _import2['default'].first(itemGroup);
+          var _className = 'descriptor descriptor-' + _import2['default'].kebabCase(first.argument) + ' category-' + first.category;
+          return _React2['default'].createElement(
+            'div',
+            { className: _className, key: index },
+            first.argument
+          );
+        }
+      })
+      // .map(elem => [<div className='spacer-left' />, elem, <div className='spacer-right' />])
+      .flatten().value();
+
+      var words = _import2['default'].map(itemGroups, function (itemGroup, index) {
+        var first = _import2['default'].first(itemGroup);
+        var className = 'word descriptor-' + _import2['default'].kebabCase(first.argument);
+
+        return _React2['default'].createElement(
+          'div',
+          { className: className, key: index },
+          _import2['default'].map(itemGroup, function (item, index) {
+            if (item.placeholder) {
+              return _React2['default'].createElement(Placeholder, { item: item, key: index });
+            } else {
+              var _className2 = 'word-component' + (item.input ? ' highlighted' : '') + ' category-' + item.category + '' + (item.fallthrough ? ' fallthrough' : '');
+              return _React2['default'].createElement(
+                'div',
+                { className: _className2, key: index },
+                item.text
+              );
+            }
+          })
+        );
+      });
+
+      var className = 'option' + (this.props.selected ? ' selected' : '');
+      return _React2['default'].createElement(
+        'div',
+        {
+          className: className,
+          onMouseOver: this.props.select,
+          onClick: this.props.execute,
+          onMouseDown: this.props.onMouseDown,
+          onMouseUp: this.props.onMouseUp },
+        _React2['default'].createElement(
+          'div',
+          { className: 'hint' },
+          this.props.hint
+        ),
+        _React2['default'].createElement(
+          'div',
+          { className: 'descriptors', ref: 'descriptors' },
+          descriptors
+        ),
+        _React2['default'].createElement(
+          'div',
+          { className: 'words', ref: 'words' },
+          words
+        )
+      );
+    }
+  }]);
+
+  return LaconaOption;
+})(_React2['default'].Component);
+
+exports['default'] = LaconaOption;
+module.exports = exports['default'];
+//   const descCorners = getCorners(desc, descsRect)
+//   const wordWrappedBetween = wordCorners.topTop > lastWordTop
+//   const descWrappedBetween = descCorners.topTop > lastDescTop
+//   lastWordTop = wordCorners.topTop
+//   lastDescTop = descCorners.topTop
+//
+//   let leftSpacing = 0, rightSpacing = 0
+//
+//   // if (!descWrappedBetween) {
+//     leftSpacing = Math.max(wordCorners.topLeft - descCorners.topLeft, 0)
+//   // }
+//
+//   rightSpacing = Math.max(wordCorners.bottomRight - descCorners.bottomRight - leftSpacing, 0)
+//
+//   leftSpacer.style.width = `${leftSpacing}px`
+//   rightSpacer.style.width = `${rightSpacing}px`
+// })
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],125:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _interopRequireDefault = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null);
+
+var _React2 = _interopRequireDefault(_React);
+
+var _Option = require('./option');
+
+var _Option2 = _interopRequireDefault(_Option);
+
+var _fulltext = require('lacona-util-fulltext');
+
+var _fulltext2 = _interopRequireDefault(_fulltext);
+
+var Options = (function (_React$Component) {
+  function Options() {
+    _classCallCheck(this, Options);
+
+    if (_React$Component != null) {
+      _React$Component.apply(this, arguments);
+    }
+  }
+
+  _inherits(Options, _React$Component);
+
+  _createClass(Options, [{
+    key: 'render',
+
+    // componentDidUpdate() {
+    //   const scrolledDiv = React.findDOMNode(this.refs.options)
+    //   const scrolledAmount = scrolledDiv.scrollTop
+    //   const scrollHeight = 400
+    //
+    //   const selectedDiv = React.findDOMNode(this.refs.selection)
+    //   const divHeight = 40
+    //   const divPos = this.props.selection * 40
+    //
+    //
+    //   if (divPos < scrolledAmount) {
+    //     scrolledDiv.scrollTop = divPos
+    //   } else if (divPos > scrollHeight + scrolledAmount - divHeight) {
+    //     scrolledDiv.scrollTop = divPos - (scrollHeight - divHeight)
+    //   }
+    // }
+    //
+    value: function render() {
+      var _this = this;
+
+      var divs = this.props.outputs.map(function (option, index) {
+        var select = function select() {
+          return _this.props.select(index);
+        };
+        var execute = function execute() {
+          return _this.props.execute(index);
+        };
+
+        var hint = _this.props.showHints ? index === _this.props.selection ? '↩' : index < 10 ? '⌥' + index : '' : '';
+
+        return _React2['default'].createElement(_Option2['default'], {
+          key: index,
+          selected: index === _this.props.selection,
+          option: option,
+          select: select,
+          execute: execute,
+          onMouseDown: _this.props.onMouseDown,
+          onMouseUp: _this.props.onMouseUp,
+          hint: hint });
+      });
+
+      return _React2['default'].createElement(
+        'div',
+        { className: 'options', ref: 'options' },
+        divs
+      );
+    }
+  }]);
+
+  return Options;
+})(_React2['default'].Component);
+
+exports['default'] = Options;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./option":124,"lacona-util-fulltext":48}],126:[function(require,module,exports){
+(function (global){
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _reactAddons = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null);
+
+var _reactAddons2 = _interopRequireDefault(_reactAddons);
+
+var _pageJsx = require('./page.jsx');
+
+var _pageJsx2 = _interopRequireDefault(_pageJsx);
+
+var _detect = require('./detect');
+
+var _detect2 = _interopRequireDefault(_detect);
+
+_reactAddons2['default'].render(_reactAddons2['default'].createElement(_pageJsx2['default'], { isMobile: _detect2['default'] }), document.getElementById('page'));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./input":66,"./options":69,"lacona-util-fulltext":51,"lodash":64}],68:[function(require,module,exports){
-(function (global){
-"use strict";var _interopRequireWildcard=function(e){return e&&e.__esModule?e:{"default":e}},_classCallCheck=function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")},_createClass=function(){function e(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,r,n){return r&&e(t.prototype,r),n&&e(t,n),t}}(),_inherits=function(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(e.__proto__=t)};Object.defineProperty(exports,"__esModule",{value:!0});var _React=(typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null),_React2=_interopRequireWildcard(_React),LaconaOption=function(e){function t(){_classCallCheck(this,t),null!=e&&e.apply(this,arguments)}return _inherits(t,e),_createClass(t,[{key:"click",value:function(e){e.preventDefault(),e.stopPropagation(),this.props.execute()}},{key:"render",value:function(){var e=this,t=["match","suggestion","completion"].map(function(t){var r=e.props.option[t].map(function(e,t){var r=e.category||"",n=r.split(" ").map(function(e){return"category-"+e}).join(" "),a=""+n+(e.input?" highlighted":"")+(e.placeholder?" placeholder":"");return _React2["default"].createElement("div",{className:a,key:t},e.string)});return _React2["default"].createElement("div",{className:t,key:t},r)}),r="option"+(this.props.selected?" selected":""),n=this.props.selected?"↩":"";return _React2["default"].createElement("div",{onMouseDown:this.click.bind(this),onMouseMove:this.props.select,className:r},_React2["default"].createElement("div",{className:"hint"},n),_React2["default"].createElement("div",{className:"words"},t))}}]),t}(_React2["default"].Component);exports["default"]=LaconaOption,module.exports=exports["default"];
-
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],69:[function(require,module,exports){
-(function (global){
-"use strict";var _interopRequireWildcard=function(e){return e&&e.__esModule?e:{"default":e}},_classCallCheck=function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")},_createClass=function(){function e(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,r,n){return r&&e(t.prototype,r),n&&e(t,n),t}}(),_inherits=function(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(e.__proto__=t)};Object.defineProperty(exports,"__esModule",{value:!0});var _React=(typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null),_React2=_interopRequireWildcard(_React),_Option=require("./option"),_Option2=_interopRequireWildcard(_Option),_fulltext=require("lacona-util-fulltext"),_fulltext2=_interopRequireWildcard(_fulltext),Options=function(e){function t(){_classCallCheck(this,t),null!=e&&e.apply(this,arguments)}return _inherits(t,e),_createClass(t,[{key:"componentDidUpdate",value:function(){var e=_React2["default"].findDOMNode(this.refs.options),t=e.scrollTop,r=400,n=(_React2["default"].findDOMNode(this.refs.selection),40),o=40*this.props.selection;t>o?e.scrollTop=o:o>r+t-n&&(e.scrollTop=o-(r-n))}},{key:"render",value:function(){var e=this,t=this.props.outputs.map(function(t,r){var n=function(){e.props.execute(r)},o=function(){e.props.select(r)},l=r===e.props.selection;return _React2["default"].createElement(_Option2["default"],{execute:n,select:o,key:_fulltext2["default"].all(t),selected:l,option:t,ref:l?"selection":null})});return _React2["default"].createElement("div",{className:"options",ref:"options"},t)}}]),t}(_React2["default"].Component);exports["default"]=Options,module.exports=exports["default"];
-
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./option":68,"lacona-util-fulltext":51}]},{},[4]);
+},{"./detect":1,"./page.jsx":4}]},{},[126]);

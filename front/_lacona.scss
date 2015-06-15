@@ -1,0 +1,301 @@
+@import "theme";
+
+.input, .options {
+  position: relative;
+}
+
+.lacona-view, .input {
+  font-family: $lacona-font;
+  font-size: 24px;
+  line-height: normal;
+}
+
+.lacona-view {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.input {
+  width: 100%;
+  text-align: left;
+  margin: 10px 0 0 0;
+  padding: 0;
+  height: 60px;
+  border-radius: 4px;
+  display: flex;
+  z-index: 100;
+
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+
+.prefix {
+  padding: 15px 0 7px 20px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  margin-right: -4px;
+}
+
+.prefix, .suffix {
+}
+
+.prefix.hidden, .suffix.hidden {
+  width: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.prefix, .true-input, .suffix {
+  display: inline-block;
+  white-space: pre;
+}
+
+.true-input {
+  margin: 0;
+  padding: 7px 20px;
+  width: 100%;
+  outline: none;
+  border: none;
+  border-radius: 4px;
+  height: 46px;
+}
+
+.true-input.prefixed {
+  padding-left: 4px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.options {
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+  width: calc(100% - 20px);
+  margin: 0 10px;
+  display: inline-block;
+  text-align: left;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+  max-height: 290px;
+  overflow-y: scroll;
+}
+
+.option {
+  display: block;
+  word-break: break-word;
+  cursor: pointer;
+  padding: 15px;
+  position: relative;
+  overflow: hidden;
+  // min-height: 60px;
+}
+
+.fallthrough {
+  border-radius: 4px;
+  margin: -5px 0 -5px -50px;
+  padding: 5px 0 5px 50px;
+  height: 0;
+}
+
+.word, .word-component, .placeholder-component {
+  white-space: pre-wrap;
+}
+
+.word, .word-component, .placeholder-component {
+  display: inline;
+}
+
+.placeholder, .descriptor, .spacer-left, .spacer-right {
+  display: inline-block;
+}
+
+.descriptor {
+  position: absolute;
+  padding: 0 200px 0 20px;
+  width: 400px;
+  // z-index: -20;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.descriptors {
+  font-size: 12px;
+}
+
+.words {
+  position: relative;
+  line-height: 42px;
+  // overflow-y: hidden;
+  // padding-bottom: 10px;
+  // line-height: 32px;
+  // margin-top: 20px;
+  // position: relative;
+}
+
+.word {
+  // position: relative;
+}
+
+.placeholder {
+  font-size: 15px;
+  padding: 2px 10px;
+  margin: 0;
+  border-radius: 4px;
+  line-height: normal;
+  position: relative;
+  top: -2px;
+}
+
+.category-symbol {
+  font-style: italic;
+}
+
+.hint {
+  float: right;
+  margin-top: 5px;
+  width: 40px;
+  height: 0;
+}
+
+@mixin category($name, $color) {
+  .category-#{$name}:not(.highlighted) {
+    color: transparentize($color, 0.25);
+  }
+  .category-#{$name}, .examples .category-#{$name} {
+    color: $color;
+  }
+}
+
+@mixin descriptor($name, $color) {
+  .descriptor-#{$name} .word-component:not(.highlighted) {
+    color: transparentize($color, 0.25);
+  }
+  .descriptor-#{$name}, .examples .category-#{$name} {
+    color: $color;
+  }
+}
+
+
+@mixin input-placeholder {
+  ::-webkit-input-placeholder {@content}
+  :-moz-placeholder           {@content}
+  ::-moz-placeholder          {@content}
+  :-ms-input-placeholder      {@content}
+}
+
+@mixin theme($class, $theme) {
+  .#{$class} {
+    @include category(action, map-get($theme, action));
+
+    @include category(argument0, map-get($theme, argument0));
+    @include category(argument1, map-get($theme, argument1));
+    @include category(argument2, map-get($theme, argument2));
+    @include category(argument3, map-get($theme, argument3));
+    @include category(argument4, map-get($theme, argument4));
+    @include category(argument5, map-get($theme, argument5));
+    @include category(argument6, map-get($theme, argument6));
+    @include category(conjunction, map-get($theme, conjunction));
+
+    @include descriptor(file, map-get($theme, argument0));
+    @include descriptor(artist, map-get($theme, argument0));
+    @include descriptor(location, map-get($theme, argument0));
+
+    @include descriptor(date, map-get($theme, argument1));
+    @include descriptor(song, map-get($theme, argument1));
+    @include descriptor(email-address, map-get($theme, argument1));
+    @include descriptor(path, map-get($theme, argument1));
+
+    @include descriptor(message, map-get($theme, argument2));
+    @include descriptor(query, map-get($theme, argument2));
+    @include descriptor(reminder-title, map-get($theme, argument2));
+    @include descriptor(calendar-event, map-get($theme, argument2));
+    @include descriptor(query, map-get($theme, argument2));
+    @include descriptor(playlist, map-get($theme, argument2));
+
+    @include descriptor(contact, map-get($theme, argument3));
+    @include descriptor(date-and-time, map-get($theme, argument3));
+    @include descriptor(url, map-get($theme, argument3));
+    @include descriptor(search-engine, map-get($theme, argument3));
+    @include descriptor(composer, map-get($theme, argument3));
+
+    @include descriptor(phone-number, map-get($theme, argument4));
+    @include descriptor(album, map-get($theme, argument4));
+    @include descriptor(application, map-get($theme, argument4));
+    @include descriptor(time, map-get($theme, argument4));
+
+    @include descriptor(relationship, map-get($theme, argument5));
+    @include descriptor(current-song, map-get($theme, argument5));
+    @include descriptor(next-song, map-get($theme, argument5));
+    @include descriptor(previous-song, map-get($theme, argument5));
+    @include descriptor(period-of-time, map-get($theme, argument5));
+
+    @include descriptor(bookmark, map-get($theme, argument6));
+    @include descriptor(genre, map-get($theme, argument6));
+
+    .placeholder {
+      border: 2px solid lighten(map-get($theme, input-bg), 10%);
+    }
+
+    .placeholder, .descriptor {
+      color: map-get($theme, descriptor);
+    }
+
+    .item {
+      color: white;
+    }
+
+    .fallthrough {
+      color: map-get($theme, input-bg);
+      background-color: map-get($theme, action);
+    }
+
+    input {
+      background-color: map-get($theme, input-bg);
+      color: map-get($theme, input-text);
+    }
+
+    .true-input {
+      background-color: map-get($theme, input-bg);
+      color: map-get($theme, input-text);
+    }
+
+    .prefix {
+      background-color: map-get($theme, action);
+      color: map-get($theme, input-bg);
+      // color: transparentize(map-get($theme, input-text), 0.5);
+    }
+
+    .options {
+      color: map-get($theme, conjunction);
+      background-color: map-get($theme, input-bg);
+
+      .descriptor {
+        background: linear-gradient(to right, transparent 0%, map-get($theme, input-bg) 15px);
+      }
+    }
+
+
+    .option.selected {
+      background-color: map-get($theme, selection-bg);
+
+      .descriptor {
+        background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, map-get($theme, selection-bg) 15px);
+      }
+    }
+
+
+    .hint {
+      color: map-get($theme, input-text);
+    }
+
+    @include input-placeholder {
+      color: map-get($theme, conjunction);
+    }
+  }
+}
+
+@include theme('theme-eighties-dark', $theme-eighties-dark);

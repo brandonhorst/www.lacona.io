@@ -1,6 +1,6 @@
 import Page from './front/page.jsx'
 import preprocess from 'preprocess'
-import React from 'react'
+import React from 'react/addons'
 import {readFileSync, writeFileSync} from 'fs'
 
 const string = React.renderToString(<Page isMobile={false} />)
