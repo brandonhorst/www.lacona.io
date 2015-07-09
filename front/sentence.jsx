@@ -2,7 +2,7 @@
 
 import _ from 'lodash'
 import {createElement, Phrase} from 'lacona-phrase'
-import {Date, DateTime, Time, TimePeriod} from 'lacona-phrase-datetime'
+import {Date as DatePhrase, DateTime, Time, TimePeriod} from 'lacona-phrase-datetime'
 import URL from 'lacona-phrase-url'
 import Email from 'lacona-phrase-email'
 import PhoneNumber from 'lacona-phrase-phonenumber'
@@ -1037,22 +1037,26 @@ const tunes = [ { name: 'I\'m Good',
     artist: 'Jason Derulo',
     album: 'Want To Want Me',
     genre: 'Pop' },
+  { name: 'Iron Man',
+    artist: 'Black Sabbath',
+    album: 'Paranoid',
+    genre: 'Metal' },
   { name: 'Stronger',
     artist: 'Clean Bandit',
     album: 'New Eyes',
-    genre: 'Pop' },
+    genre: 'Rock' },
   { name: 'Stole the Show',
     artist: 'Kygo',
     album: 'Stole the Show',
-    genre: 'Pop' },
+    genre: 'Jazz' },
   { name: 'In Your Arms',
     artist: 'Nico & Vinz',
     album: 'Black Star Elephant',
-    genre: 'Pop' },
+    genre: 'Folk' },
   { name: 'Intoxicated',
     artist: 'Martin Solveig',
     album: 'Intoxicated (Radio Edit)',
-    genre: 'Pop' },
+    genre: 'Indie' },
   { name: 'Runaway (U & I)',
     artist: 'Galantis',
     album: 'Runaway (U & I)',
@@ -1108,7 +1112,8 @@ const tunes = [ { name: 'I\'m Good',
   { name: 'Cold Cold Man',
     artist: 'Saint Motel',
     album: 'My Type EP',
-    genre: 'Pop' } ]
+    genre: 'Pop' },
+  { name: 'Theme Music'} ]
 
 class FileList extends Phrase {
   getValue (result) {
@@ -1153,8 +1158,9 @@ class File extends Phrase {
         </argument>
         <argument text='file' showForEmpty={true}>
           <list items={[
-            {text: 'logo.jpg', value: '/Users/LaconaUser/Documents/logo.jpg'},
-            {text: 'logo.png', value: '/Users/LaconaUser/Documents/logo.png'},
+            {text: 'log.csv', value: '/Users/LaconaUser/Documents/log.csv'},
+            {text: 'lacona-logo.png', value: '/Users/LaconaUser/Documents/lacona-logo.png'},
+            {text: 'kickstarter-video.m4v', value: '/Users/LaconaUser/Documents/kickstarter-video.m4v'},
             {text: 'document.docx', value: '/Users/LaconaUser/Documents/document.docx'},
             {text: 'my-document.docx', value: '/Users/LaconaUser/Documents/my-document.docx'},
             {text: 'main.js', value: '/Users/LaconaUser/Projects/test/main.js'},
@@ -1179,6 +1185,50 @@ class File extends Phrase {
   }
 }
 
+class SystemPreference extends Phrase {
+  describe () {
+    return (
+      <argument text='preference pane' showForEmpty={true}>
+        <list items={[
+          {text: 'Displays', value: 'Displays'},
+          {text: 'Desktop & Screen Saver', value: 'Desktop & Screen Saver'},
+          {text: 'Extensions', value: 'Extensions'},
+          {text: 'Energy Saver', value: 'Energy Saver'},
+          {text: 'Sound', value: 'Sound'},
+          {text: 'Keyboard', value: 'Keyboard'},
+          {text: 'Internet Accounts', value: 'Internet Accounts'},
+          {text: 'Date & Time', value: 'Date & Time'},
+          {text: 'Accessibility', value: 'Accessibility'},
+          {text: 'Security & Privacy', value: 'Security & Privacy'},
+          {text: 'Dock', value: 'Dock'},
+          {text: 'Profiles', value: 'Profiles'},
+          {text: 'Network', value: 'Network'},
+          {text: 'Notifications', value: 'Notifications'},
+          {text: 'Fibre Channel', value: 'Fibre Channel'},
+          {text: 'App Store', value: 'App Store'},
+          {text: 'Time Machine', value: 'Time Machine'},
+          {text: 'General', value: 'General'},
+          {text: 'Dictation & Speech', value: 'Dictation & Speech'},
+          {text: 'Spotlight', value: 'Spotlight'},
+          {text: 'Ink', value: 'Ink'},
+          {text: 'Language & Region', value: 'Language & Region'},
+          {text: 'CDs & DVDs', value: 'CDs & DVDs'},
+          {text: 'Sharing', value: 'Sharing'},
+          {text: 'Users & Groups', value: 'Users & Groups'},
+          {text: 'Bluetooth', value: 'Bluetooth'},
+          {text: 'Mouse', value: 'Mouse'},
+          {text: 'Trackpad', value: 'Trackpad'},
+          {text: 'Mission Control', value: 'Mission Control'},
+          {text: 'Startup Disk', value: 'Startup Disk'},
+          {text: 'Parental Controls', value: 'Parental Controls'},
+          {text: 'Printers & Scanners', value: 'Printers & Scanners'},
+          {text: 'iCloud', value: 'iCloud'}
+        ]} />
+      </argument>
+    )
+  }
+}
+
 class Application extends Phrase {
   describe () {
     return (
@@ -1187,6 +1237,7 @@ class Application extends Phrase {
           {text: 'Calendar', value: 'Calendar'},
           {text: 'Contacts', value: 'Contacts'},
           {text: 'FaceTime', value: 'FaceTime'},
+          {text: 'Finder', value: 'Finder'},
           {text: 'Game Center', value: 'Game Center'},
           {text: 'GarageBand', value: 'GarageBand'},
           {text: 'iBooks', value: 'iBooks'},
@@ -1204,6 +1255,8 @@ class Application extends Phrase {
           {text: 'Photo Booth', value: 'Photo Booth'},
           {text: 'Reminders', value: 'Reminders'},
           {text: 'Safari', value: 'Safari'},
+          {text: 'Google Chrome', value: 'Google Chrome'},
+          {text: 'Firefox', value: 'Firefox'},
           {text: 'Automator', value: 'Automator'},
           {text: 'Calculator', value: 'Calculator'},
           {text: 'Chess', value: 'Chess'},
@@ -1245,46 +1298,133 @@ class Bookmark extends Phrase {
 
 export const open = {
   grammar: (
-    <sequence id='open'>
-      <literal text='open ' category='action' />
-      <choice merge={true}>
-        <Application id='app' />
-        <URL id='url' />
-        <Bookmark id='url' />
-        <File id='file' />
-        <sequence>
-          <choice merge={true}>
-            <URL id='url' />
-            <Bookmark id='url' />
-            <File id='file' />
-          </choice>
-          <list items={[' with ', ' using ', ' in ']} limit={1} category='conjunction' />
+    <choice id='open'>
+      <sequence>
+        <list items={[
+            {text: 'switch to ', value: 'switch'},
+            {text: 'quit ', value: 'quit'},
+            {text: 'close ', value: 'close'},
+            {text: 'launch ', value: 'open'}
+          ]} id='verb' category='action' />
+        <repeat id='apps' unique={true} separator={<list items={[' and ', ', ', ', and ']} limit={1} />}>
           <Application id='app' />
-        </sequence>
-      </choice>
-    </sequence>
+        </repeat>
+      </sequence>
+      <sequence>
+        <literal text='open ' category='action' value='open' id='verb' />
+        <choice merge={true}>
+          <repeat unique={true} separator={<list items={[' and ', ', ', ', and ']} limit={1} />}>
+            <choice>
+              <Application id='app' />
+              <URL id='url' />
+              <Bookmark id='url' />
+              <File id='file' />
+              <SystemPreference id='pref' />
+            </choice>
+          </repeat>
+          <sequence>
+            <repeat unique={true} separator={<list items={[' and ', ', ', ', and ']} limit={1} />}>
+              <choice merge={true}>
+                <URL id='url' />
+                <Bookmark id='url' />
+                <File id='file' />
+              </choice>
+            </repeat>
+            <list items={[' with ', ' using ', ' in ']} limit={1} category='conjunction' />
+            <repeat unique={true} separator={<list items={[' and ', ', ', ', and ']} limit={1} />}>
+              <Application id='app' />
+            </repeat>
+          </sequence>
+        </choice>
+      </sequence>
+    </choice>
   )
+}
+
+class Birthday extends Phrase {
+  describe () {
+    return (
+      <sequence>
+        <literal text='on ' optional={true} prefered={true} limited={true} />
+        <argument text='birthday'>
+          <choice>
+            <sequence>
+              <Contact argument={false} />
+              <literal text="'s birthday" />
+            </sequence>
+            <sequence>
+              <Relationship argument={false} />
+              <literal text="'s birthday" />
+            </sequence>
+          </choice>
+        </argument>
+      </sequence>
+    )
+  }
+}
+Birthday.extends = [DatePhrase]
+
+class Holiday extends Phrase {
+  describe () {
+    return (
+      <argument text='holiday' showForEmpty={true}>
+        <list items={[
+          {text: 'New Years Day', value: new Date(2016, 0, 1)},
+          {text: 'Martin Luther King Jr. Day', value: new Date(2016, 0, 18)},
+          {text: 'Martin Luther King Day', value: new Date(2016, 0, 18)},
+          {text: 'Dr. Martin Luther King Jr. Day', value: new Date(2016, 0, 18)},
+          {text: 'Dr. Martin Luther King Day', value: new Date(2016, 0, 18)},
+          {text: 'Valentines Day', value: new Date(2016, 1, 14)},
+          {text: "Washington's Birthday", value: new Date(2016, 1, 15)},
+          {text: 'Presidents Day', value: new Date(2016, 1, 15)},
+          {text: 'Presidents Day', value: new Date(2016, 1, 15)},
+          {text: 'Memorial Day', value: new Date(2016, 4, 30)},
+          {text: 'Independence Day', value: new Date(2016, 6, 4)},
+          {text: 'The Fourth of July', value: new Date(2016, 6, 4)},
+          {text: 'Labor Day', value: new Date(2015, 8, 7)},
+          {text: 'Columbus Day', value: new Date(2015, 9, 10)},
+          {text: 'American Indian Day', value: new Date(2015, 9, 10)},
+          {text: 'Native American Day', value: new Date(2015, 9, 10)},
+          {text: "Indigenous People's Day ", value: new Date(2015, 9, 10)},
+          {text: 'Veterans Day', value: new Date(2015, 10, 11)},
+          {text: 'Thanksgiving Day', value: new Date(2015, 10, 26)},
+          {text: 'Christmas Eve', value: new Date(2015, 11, 24)},
+          {text: 'Christmas Day', value: new Date(2015, 11, 25)},
+          {text: 'New Years Eve', value: new Date(2015, 11, 31)}]} />
+      </argument>
+    )
+  }
+}
+Holiday.extends = [DatePhrase]
+
+class LocationWithAt extends Phrase {
+  describe () {
+    return (
+      <sequence>
+        <list items={[' at ', ' on ', ' in ']} limit={1} category='conjunction' />
+        <argument text='location' merge={true}>
+          <freetext limit={1} splitOn=' ' />
+        </argument>
+      </sequence>
+    )
+  }
 }
 
 export const date = {
   grammar: (
     <choice id='date'>
-      <sequence id='event'>
+      <sequence id='event' unique={true}>
         <list items={['schedule ', 'create an event ', 'create event ', 'add an event ', 'add event ']} limit={1} category='action' />
         <argument text='calendar event' id='title'>
           <freetext limit={1} splitOn=' ' />
         </argument>
-        <sequence optional={true} id='location'>
-          <list items={[' at ', ' on ', ' in ']} limit={1} category='conjunction' />
-          <argument text='location' merge={true}>
-            <freetext limit={1} splitOn=' ' />
-          </argument>
-        </sequence>
-        <list items={[' for ', ' ']} category='conjunction' limit={1} />
+        <LocationWithAt optional={true} id='location' />
+        <list items={[' for ', ' at ', ' ']} category='conjunction' limit={1} />
         <choice limit={1} merge={true}>
-          <DateTime includeAt={true} />
-          <TimePeriod />
+          <DateTime id='datetime' />
+          <TimePeriod id='period' />
         </choice>
+        <LocationWithAt optional={true} id='location' />
       </sequence>
       <sequence id='reminder'>
         <literal text='remind me to ' category='action' />
@@ -1294,19 +1434,15 @@ export const date = {
         <sequence optional={true} merge={true}>
           <literal text=' ' category='conjunction' />
           <choice merge={true}>
-            <argument text='time' id='time'>
-              <sequence>
-                <literal text='at ' />
-                <Time allowPast={false} merge={true} />
-              </sequence>
-            </argument>
-            <Date allowPast={false} />
-            <DateTime includeAt={true} allowPast={false} />
+            <Time id='time' includeAt={true} allowPast={false} merge={true} />
+            <DatePhrase id='date' allowPast={false} />
+            <DateTime id='datetime' includeAt={true} allowPast={false} />
           </choice>
         </sequence>
       </sequence>
     </choice>
-  )
+  ),
+  extensions: [Birthday, Holiday]
 }
 
 const engines = [
@@ -1315,35 +1451,34 @@ const engines = [
   {text: 'Bing', value: 'Bing'},
   {text: 'Yahoo', value: 'Yahoo'},
   {text: 'Amazon', value: 'Amazon'},
+  {text: 'Google Images', value: 'Google Images'},
+  {text: 'DuckDuckGo', value: 'DuckDuckGo'},
+  {text: 'Pinterest', value: 'Pinterest'},
+  {text: 'Google Maps', value: 'Google Maps'},
+  {text: 'Gmail', value: 'Gmail'},
+  {text: 'Google Drive', value: 'Google Drive'},
+  {text: 'Apple Maps', value: 'Apple Maps'},
+  {text: 'Twitter', value: 'Twitter'},
+  {text: 'IMDB', value: 'IMDB'},
+  {text: 'LinkedIn', value: 'LinkedIn'},
+  {text: 'Youtube', value: 'Youtube'},
+  {text: 'Rotten Tomatoes', value: 'Rotten Tomatoes'},
+  {text: 'Yubnub', value: 'Yubnub'},
+  {text: 'Wolfram Alpha', value: 'Wolfram|Alpha'},
+  {text: 'Facebook', value: 'Facebook'},
   {text: 'eBay', value: 'eBay'}
 ]
 
 class SearchEngines extends Phrase {
   describe () {
     return (
-      <Repeat unique={true}>
-        <content>
-          <argument text='search engine'>
-            <list items={engines} />
-          </argument>
-        </content>
-        <separator>
-          <list items={[' and ', ', ', ', and']} limit={1} category='conjunction' />
-        </separator>
-        {this.props.firstArgument ? undefined :
-          <firstContent>
-            <descriptor text='search engine' argument={true}>
-              <list items={engines} />
-            </descriptor>
-          </firstContent>
-        }
-      </Repeat>
+      <repeat unique={true} separator={<list items={[' and ', ', ', ', and']} limit={1} />}>
+        <argument text='search engine'>
+          <list items={engines} fuzzy={true} limit={5} />
+        </argument>
+      </repeat>
     )
   }
-}
-
-SearchEngines.defaultProps = {
-  firstArgument: true
 }
 
 export const search = {
@@ -1365,7 +1500,76 @@ export const search = {
           <freetext splitOn={' '} limit={1} />
         </argument>
         <list items={[' on ', ' with ', ' using ']} limit={1} />
-        <SearchEngines id='engines' firstArgument={false} />
+        <descriptor text='search engine' argument={true}>
+          <list items={engines} fuzzy={true} limit={5} />
+        </descriptor>
+        <sequence optional={true}>
+          <list items={[' and ', ', ', ', and']} limit={1} />
+          <SearchEngines id='engines'/>
+        </sequence>
+      </sequence>
+    </choice>
+  )
+}
+
+if (global.location && global.location.hash === '#videodemo') {
+  search.grammar = (
+    <choice>
+      <sequence>
+        <literal text='ابحث ' category='action' />
+        <literal text='في ' category='conjunction' />
+        <argument text='محرك البحث'>
+          <choice>
+            <literal text='جوجل' />
+            <literal text='يملي' />
+          </choice>
+        </argument>
+        <literal text=' ' />
+        <argument text='بحث'>
+          <freetext />
+        </argument>
+      </sequence>
+
+      <sequence>
+        <literal text='найти ' category='action' />
+        <literal text='в ' category='conjunction' />
+        <argument text='поисковик'>
+          <choice>
+            <literal text='Яндексе' />
+            <literal text='Гугле' />
+          </choice>
+        </argument>
+        <literal text=' ' />
+        <argument text='запрос'>
+          <freetext />
+        </argument>
+      </sequence>
+
+      <sequence>
+        <literal text='buscar ' category='action' />
+        <literal text='en ' category='conjunction' />
+        <argument text='buscador'>
+          <literal text='Google' />
+        </argument>
+        <literal text=' ' category='conjunction' />
+        <argument text='consulta'>
+          <freetext />
+        </argument>
+      </sequence>
+
+      <sequence>
+        <literal text='在' category='conjunction' />
+        <argument text='搜寻引擎'>
+          <choice>
+            <literal text='百度' />
+            <literal text='Google' />
+          </choice>
+        </argument>
+        <literal text='上' category='conjunction' />
+        <literal text='搜索' category='action' />
+        <argument text='查询'>
+          <freetext />
+        </argument>
       </sequence>
     </choice>
   )
@@ -1375,37 +1579,48 @@ function itemify (x) {
   return {text: x, value: x}
 }
 
+class MusicItems extends Phrase {
+  describe () {
+    return (
+      <repeat unique={true} separator={<list items={[' and ', ', ', ', and ']} limit={1} />}>
+        <choice>
+          <argument text='song' showForEmpty={true} id='song'>
+            <list items={_.chain(tunes).map('name').map(itemify).value()} limit={10} />
+          </argument>
+          <argument text='album' showForEmpty={true} id='album'>
+            <list items={_.chain(tunes).map('album').unique().map(itemify).value()} limit={10} />
+          </argument>
+          <argument text='artist' showForEmpty={true} id='artist'>
+            <list items={_.chain(tunes).map('artist').unique().map(itemify).value()} limit={10} />
+          </argument>
+          <argument text='genre' showForEmpty={true} id='genre'>
+            <list items={_.chain(tunes).map('genre').unique().map(itemify).value()} limit={10} />
+          </argument>
+          <argument text='playlist' showForEmpty={true} id='playlist'>
+            <list items={['Jams', 'Chill', 'Workout', 'Driving'].map(itemify)} />
+          </argument>
+          <argument text='composer' showForEmpty={true} id='composer'><literal /></argument>
+        </choice>
+      </repeat>
+    )
+  }
+}
+
 export const play = {
   grammar: (
     <choice id='play'>
       <sequence>
         <literal text='play ' category='action'/>
         <choice merge={true}>
-          <Repeat id='something' unique={true}>
-            <content>
-              <choice>
-                <argument text='song' showForEmpty={true} id='song'>
-                  <list items={_.chain(tunes).map('name').map(itemify).value()} limit={10} />
-                </argument>
-                <argument text='album' showForEmpty={true} id='album'>
-                  <list items={_.chain(tunes).map('album').unique().map(itemify).value()} limit={10} />
-                </argument>
-                <argument text='artist' showForEmpty={true} id='artist'>
-                  <list items={_.chain(tunes).map('artist').unique().map(itemify).value()} limit={10} />
-                </argument>
-                <argument text='genre' showForEmpty={true} id='genre'>
-                  <list items={_.chain(tunes).map('genre').unique().map(itemify).value()} limit={10} />
-                </argument>
-                <argument text='playlist' showForEmpty={true} id='playlist'>
-                  <list items={['Jams', 'Chill', 'Workout', 'Driving'].map(itemify)} />
-                </argument>
-                <argument text='composer' showForEmpty={true} id='composer'><literal /></argument>
-              </choice>
-            </content>
-            <separator>
-              <list items={[' and ', ', ', ', and ']} limit={1} category='conjunction' />
-            </separator>
-          </Repeat>
+          <sequence>
+            <MusicItems id='something' />
+            <sequence merge={true} optional={true} id='shuffled' value={true}>
+              <literal text=' ' />
+              <descriptor argument={true} text='shuffled'>
+                <literal text='shuffled' />
+              </descriptor>
+            </sequence>
+          </sequence>
           <list id='previous' value={true} items={['previous track', 'previous song']} limit={1} category='argument5' />
         </choice>
       </sequence>
@@ -1425,51 +1640,65 @@ export const play = {
   )
 }
 
+const contacts = [
+  {text: 'Tony Stark', value: 'Tony Stark'},
+  {text: 'Donald Blake', value: 'Donald Blake'},
+  {text: 'Henry Pym', value: 'Henry Pym'},
+  {text: 'Bruce Banner', value: 'Bruce Banner'},
+  {text: 'Steve Rogers', value: 'Steve Rogers'},
+  {text: 'Clinton Barton', value: 'Clinton Barton'},
+  {text: 'Wanda Maximoff', value: 'Wanda Maximoff'},
+  {text: 'Victor Shade', value: 'Victor Shade'},
+  {text: 'Natalia Romanova', value: 'Natalia Romanova'},
+  {text: 'Jennifer Walters', value: 'Jennifer Walters'},
+  {text: 'Hank McCoy', value: 'Hank McCoy'},
+  {text: 'Reed Richards', value: 'Reed Richards'},
+  {text: 'Susan Richards', value: 'Susan Richards'},
+  {text: 'Jim Hammond', value: 'Jim Hammond'},
+  {text: 'Benjamin Grimm', value: 'Benjamin Grimm'},
+  {text: 'Peter Parker', value: 'Peter Parker'},
+  {text: 'Luke Cage', value: 'Luke Cage'},
+  {text: 'Logan Howlett', value: 'Logan Howlett'},
+  {text: 'James Barnes', value: 'James Barnes'},
+  {text: 'Steven Strange', value: 'Steven Strange'},
+  {text: 'Matt Murdock', value: 'Matt Murdock'},
+  {text: 'Scott Summers', value: 'Scott Summers'},
+  {text: 'Charles Xavier', value: 'Charles Xavier'},
+  {text: 'Bobby Drake', value: 'Bobby Drake'},
+  {text: 'Jean Grey-Summers', value: 'Jean Grey-Summers'},
+  {text: 'Kurt Wagner', value: 'Kurt Wagner'},
+  {text: 'Ororo Monroe', value: 'Ororo Monroe'},
+  {text: 'Anna Marie', value: 'Anna Marie'},
+  {text: 'Erik Lehnsherr', value: 'Erik Lehnsherr'}
+]
+
 class Contact extends Phrase {
   describe () {
+    const firstNames = _.map(contacts, ({text, value}) => ({
+      text: text.split(' ')[0],
+      value,
+      qualifier: text
+    }))
+
     return (
-      <argument text='contact' showForEmpty={true}>
-        <list items={[
-          {text: 'Tony Stark', value: 'Tony Stark'},
-          {text: 'Thor Odinson', value: 'Thor Odinson'},
-          {text: 'Henry Pym', value: 'Henry Pym'},
-          {text: 'Bruce Banner', value: 'Bruce Banner'},
-          {text: 'Steve Rogers', value: 'Steve Rogers'},
-          {text: 'Clinton Barton', value: 'Clinton Barton'},
-          {text: 'Wanda Maximoff', value: 'Wanda Maximoff'},
-          {text: 'Victor Shade', value: 'Victor Shade'},
-          {text: 'Natalia Romanova', value: 'Natalia Romanova'},
-          {text: 'Jennifer Walters', value: 'Jennifer Walters'},
-          {text: 'Hank McCoy', value: 'Hank McCoy'},
-          {text: 'Reed Richards', value: 'Reed Richards'},
-          {text: 'Susan Richards', value: 'Susan Richards'},
-          {text: 'Jim Hammond', value: 'Jim Hammond'},
-          {text: 'Benjamin Grimm', value: 'Benjamin Grimm'},
-          {text: 'Peter Parker', value: 'Peter Parker'},
-          {text: 'Luke Cage', value: 'Luke Cage'},
-          {text: 'Logan Howlett', value: 'Logan Howlett'},
-          {text: 'James Barnes', value: 'James Barnes'},
-          {text: 'Steven Strange', value: 'Steven Strange'},
-          {text: 'Matt Murdock', value: 'Matt Murdock'},
-          {text: 'Scott Summers', value: 'Scott Summers'},
-          {text: 'Charles Xavier', value: 'Charles Xavier'},
-          {text: 'Bobby Drake', value: 'Bobby Drake'},
-          {text: 'Jean Grey-Summers', value: 'Jean Grey-Summers'},
-          {text: 'Kurt Wagner', value: 'Kurt Wagner'},
-          {text: 'Ororo Monroe', value: 'Ororo Monroe'},
-          {text: 'Anna Marie', value: 'Anna Marie'},
-          {text: 'Erik Lehnsherr', value: 'Erik Lehnsherr'}
-        ]} />
-    </argument>
+      <descriptor placeholder={true} argument={this.props.argument} text='contact' showForEmpty={true}>
+        <choice limit={1}>
+          <list items={contacts} />
+          <list items={firstNames} />
+        </choice>
+      </descriptor>
     )
   }
+}
+Contact.defaultProps = {
+  argument: true
 }
 
 
 class Relationship extends Phrase {
   describe () {
     return (
-      <argument text='relationship' showForEmpty={true}>
+      <descriptor placeholder={true} argument={this.props.argument} text='relationship' showForEmpty={true}>
         <sequence>
           <literal text='my ' optional={true} limited={true} />
           <list merge={true} items={[
@@ -1477,12 +1706,63 @@ class Relationship extends Phrase {
             {text: 'Dad', value: 'your dad'},
             {text: 'Landlord', value: 'your landlord'},
             {text: 'Boss', value: 'your boss'},
+            {text: 'Girlfriend', value: 'your girlfriend'},
+            {text: 'Wife', value: 'your wife'},
+            {text: 'Boyfriend', value: 'your boyfriend'},
+            {text: 'Husband', value: 'your husband'}
           ]} />
         </sequence>
-      </argument>
+      </descriptor>
     )
   }
 }
+Relationship.defaultProps = {
+  argument: true
+}
+
+class EmailGroup extends Phrase {
+  describe () {
+    return (
+      <repeat unique={true} separator={<list items={[' and ', ', and ', ', ']} limit={1} />}>
+        <choice>
+          <Email id='address' />
+          <Relationship id='relationship' />
+          <Contact id='contact' />
+        </choice>
+      </repeat>
+    )
+  }
+}
+
+class NumberGroup extends Phrase {
+  describe () {
+    return (
+      <repeat unique={true} separator={<list items={[' and ', ', and ', ', ']} limit={1} />}>
+        <choice>
+          <PhoneNumber id='number' />
+          <Relationship id='relationship' />
+          <Contact id='contact' />
+        </choice>
+      </repeat>
+    )
+  }
+}
+
+class AllGroup extends Phrase {
+  describe () {
+    return (
+      <repeat unique={true} separator={<list items={[' and ', ', and ', ', ']} limit={1} />}>
+        <choice>
+          <Relationship id='relationship' />
+          <Contact id='contact' />
+          <PhoneNumber id='number' />
+          <Email id='address' />
+        </choice>
+      </repeat>
+    )
+  }
+}
+
 
 export const contact = {
   grammar: (
@@ -1490,61 +1770,54 @@ export const contact = {
       <sequence id='email'>
         <literal text='email ' category='action' />
         <choice merge={true}>
-          <choice>
-            <Email id='address' />
-            <Relationship id='relationship' />
-            <Contact id='contact' />
-          </choice>
+          <EmailGroup />
           <sequence>
             <argument text='message' id='message'>
-              <freetext splitOn=' ' />
+              <freetext splitOn=' ' limit={1} />
             </argument>
             <literal text=' to ' category='conjunction' />
-            <choice merge={true}>
-              <Email id='address' />
-              <Relationship id='relationship' />
-              <Contact id='contact' />
+            <EmailGroup merge={true} />
+          </sequence>
+          <sequence>
+            <EmailGroup merge={true} />
+            <choice limit={1}>
+              <literal text=' about ' />
+              <literal text=' ' />
             </choice>
+            <argument text='message' id='message'>
+              <freetext splitOn=' ' limit={1} />
+            </argument>
           </sequence>
         </choice>
       </sequence>
       <sequence id='call'>
         <literal text='call ' category='action' />
-        <choice merge={true}>
-          <PhoneNumber id='number' />
-          <Relationship id='relationship' />
-          <Contact id='contact' />
-        </choice>
+        <NumberGroup merge={true} />
       </sequence>
       <sequence id='facetime'>
         <literal text='facetime ' category='action' />
-        <choice merge={true}>
-          <Relationship id='relationship' />
-          <Contact id='contact' />
-          <PhoneNumber id='number' />
-          <Email id='address' />
-        </choice>
+        <AllGroup merge={true} />
       </sequence>
       <sequence id='text'>
         <list items={['text ', 'iMessage ']} limit={1} category='action' />
         <choice merge={true}>
-          <choice>
-            <Relationship id='relationship' />
-            <Contact id='contact' />
-            <PhoneNumber id='number' />
-            <Email id='address' />
-          </choice>
+          <AllGroup />
           <sequence>
             <argument text='message' id='message'>
-              <freetext splitOn=' ' />
+              <freetext splitOn=' ' limit={1} />
             </argument>
             <literal text=' to ' category='conjunction' />
-            <choice merge={true}>
-              <Relationship id='relationship' />
-              <Contact id='contact' />
-              <PhoneNumber id='number' />
-              <Email id='address' />
+            <AllGroup merge={true} />
+          </sequence>
+          <sequence>
+            <AllGroup merge={true} />
+            <choice limit={1}>
+              <literal text=' saying ' />
+              <literal text=' ' />
             </choice>
+            <argument text='message' id='message'>
+              <freetext splitOn=' ' limit={1} />
+            </argument>
           </sequence>
         </choice>
       </sequence>
@@ -1561,7 +1834,8 @@ export const all = {
       {play.grammar}
       {contact.grammar}
     </choice>
-  )
+  ),
+  extensions: [Birthday, Holiday]
 }
 
 // export default class Sentence extends Phrase {

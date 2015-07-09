@@ -21,19 +21,31 @@ function intersperse(array, something) {
 }
 
 export default function getExecute (showNotification) {
+  if (global.location && global.location.hash === '#videodemo') return
+
   return function (result) {
     let message
     if (result.open) {
       if (result.open.app && result.open.url) {
-        message = [<span className='category-action'>load</span>, ' ', <span className='descriptor-url'>{result.open.url}</span>, ' in ', <span className='descriptor-application'>{result.open.app}</span>]
+        message = [<span className='category-action'>load </span>, <span className='descriptor-url'>{result.open.url}</span>, ' in ', <span className='descriptor-application'>{result.open.app}</span>]
       } else if (result.open.app && result.open.file) {
-        message = [<span className='category-action'>open</span>, ' ', <span className='descriptor-file'>{result.open.file}</span>, ' in ', <span className='descriptor-application'>{result.open.app}</span>]
+        message = [<span className='category-action'>open </span>, <span className='descriptor-file'>{result.open.file}</span>, ' in ', <span className='descriptor-application'>{result.open.app}</span>]
       } else if (result.open.app) {
-        message = [<span className='category-action'>launch</span>, ' ', <span className='descriptor-application'>{result.open.app}</span>]
+        if (result.open.verb === 'open') {
+          message = [<span className='category-action'>launch </span>, <span className='descriptor-application'>{result.open.app}</span>]
+        } else if (result.open.verb === 'switch') {
+          message = [<span className='category-action'>switch focus to </span>, <span className='descriptor-application'>{result.open.app}</span>]
+        } else if (result.open.verb === 'close') {
+          message = [<span className='category-action'>close the frontmost window of </span>, <span className='descriptor-application'>{result.open.app}</span>]
+        } else if (result.open.verb === 'quit') {
+          message = [<span className='category-action'>quit </span>, <span className='descriptor-application'>{result.open.app}</span>]
+        }
       } else if (result.open.file) {
-        message = [<span className='category-action'>open</span>, ' ', <span className='descriptor-file'>{result.open.file}</span>, ' in ', <span className='descriptor-application'>the default application</span>]
+        message = [<span className='category-action'>open </span>, <span className='descriptor-file'>{result.open.file}</span>, ' in ', <span className='descriptor-application'>the default application</span>]
       } else if (result.open.url) {
-        message = [<span className='category-action'>load</span>, ' ', <span className='descriptor-url'>{result.open.url}</span>, ' in ', <span className='descriptor-application'>the default browser</span>]
+        message = [<span className='category-action'>load </span>, <span className='descriptor-url'>{result.open.url}</span>, ' in ', <span className='descriptor-application'>the default browser</span>]
+      } else if (result.open.pref) {
+        message = [<span className='category-action'>open </span>, ' the ', <span className='descriptor-preference-pane'>{result.open.pref}</span>, 'system preference pane']
       }
     } else if (result.date) {
       if (result.date.reminder) {
@@ -56,16 +68,14 @@ export default function getExecute (showNotification) {
 
         let time
         if (result.date.event.datetime) {
-          time = [<span className='descriptor-date-and-time'>{moment(result.date.event.datetime).format('dddd, MMMM Do, YYYY [at] h:mma')}</span>, ' that is ', <span className='descriptor-period-of-time'>an hour</span>, ' long']
+          time = [<span className='descriptor-date'>{moment(result.date.event.datetime).format('dddd, MMMM Do, YYYY')}</span>, ' at ', <span className='descriptor-time'>{moment(result.date.event.datetime).format('h:mma')}</span>, ' that is ', <span className='descriptor-duration'>an hour</span>, ' long']
         } else if (result.date.event.period) {
-          console.log(result.date.event.period.duration)
-          time = [<span className='descriptor-date-and-time'>{moment(result.date.event.period.start).format('dddd, MMMM Do, YYYY [at] h:mma')}</span>, ' that is ', <span className='descriptor-period-of-time'>{moment.duration(result.date.event.period.duration).format('Y [years], M [months], D [days], H [hours] [and] m [minutes]')}</span>, ' long']
+          time = [<span className='descriptor-date'>{moment(result.date.event.period.start).format('dddd, MMMM Do, YYYY')}</span>, ' at ', <span className='descriptor-time'>{moment(result.date.event.period.start).format('h:mma')}</span>, ' that is ', <span className='descriptor-duration'>{moment.duration(result.date.event.period.duration).format('Y [years], M [months], D [days], H [hours] [and] m [minutes]')}</span>, ' long']
         }
 
         message = [<span className='category-action'>create an event</span>, ' called ', <span className='descriptor-calendar-event'>{result.date.event.title}</span>, ' ', location, ' on ', time]
       }
     } else if (result.search) {
-      console.log(result.search)
       if (result.search.engines.length === 1) {
         message = [<span className='category-action'>open</span>, ' a ', <span className='descriptor-search-engine'>{result.search.engines[0]}</span>, ' search for ', <span className='descriptor-query'>{result.search.query}</span>, ' in ', <span className='descriptor-application'>the default browser</span>]
       } else {
@@ -102,7 +112,11 @@ export default function getExecute (showNotification) {
         } else {
           allDescriptions = [intersperse(descriptions.slice(0, -1), ', '), ', and ', _.last(descriptions)]
         }
-        message = [<span className='category-action'>play</span>, ' ', allDescriptions, ' in ', <span className='descriptor-application'>iTunes</span>]
+        if (result.play.shuffled) {
+          message = [<span className='category-action'>play</span>, ' ', allDescriptions, ' ', <span className='descriptor-shuffled'>shuffled</span>, ' in ', <span className='descriptor-application'>iTunes</span>]
+        } else {
+          message = [<span className='category-action'>play</span>, ' ', allDescriptions, ' in ', <span className='descriptor-application'>iTunes</span>]
+        }
       } else if (result.play.next) {
         message = [<span className='category-action'>play</span>, ' ', <span className='category-argument5'>the next song</span>, ' in ', <span className='descriptor-application'>iTunes</span>]
       } else if (result.play.previous) {

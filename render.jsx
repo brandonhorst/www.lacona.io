@@ -1,5 +1,5 @@
+require('babel/polyfill')
 import Page from './front/page.jsx'
-import preprocess from 'preprocess'
 import React from 'react/addons'
 import {readFileSync, writeFileSync} from 'fs'
 

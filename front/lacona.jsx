@@ -5,7 +5,9 @@ import ReactLacona from 'react-lacona'
 
 function groupPlaceholders (result) {
   return _.chain(result.words)
+    .filter(item => item.placeholder || item.text)
     .map(item => item.placeholder ? '\uFFFC' : `\uFFF9${item.text}\uFFFA${item.argument}\uFFFB`)
+    .join('')
     .value()
 }
 
@@ -120,11 +122,17 @@ export default class Lacona extends React.Component {
         .value()
     }
 
+
     return []
   }
 
   update (input) {
     this.setState({input})
+
+    if (global.location && global.location.hash === '#videodemo' && input === '') {
+      this.setState({output: []})
+      return
+    }
 
     const checkDone = () => input !== this.state.input
 
@@ -143,6 +151,7 @@ export default class Lacona extends React.Component {
   }
 
   execute (index) {
+    this.refs.lacona.blur()
     const result = this.state.output[index].result
     this.props.execute(result)
   }
@@ -166,10 +175,11 @@ export default class Lacona extends React.Component {
 
   render () {
     return (
-      <div className='lacona'>
-        <Keys visible={this.state.focused} />
+      <React.addons.CSSTransitionGroup component='div' className='lacona' transitionName='lacona' transitionAppear={true}>
+        <Keys visible={this.state.focused} key='keys' />
         <ReactLacona
           ref='lacona'
+          key='lacona'
           onFocus={this.focus.bind(this)}
           onBlur={this.blur.bind(this)}
           userInput={this.state.input}
@@ -182,7 +192,7 @@ export default class Lacona extends React.Component {
           userInteracted={this.props.userInteracted}
           tabIndex={this.props.tabIndex}
           placeholder={this.props.placeholder} />
-      </div>
+      </React.addons.CSSTransitionGroup>
     )
   }
 }

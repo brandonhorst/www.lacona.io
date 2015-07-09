@@ -1,4 +1,5 @@
-@import "theme";
+@import 'theme';
+@import 'bourbon/bourbon';
 
 .input, .options {
   position: relative;
@@ -17,59 +18,24 @@
 }
 
 .input {
-  width: 100%;
+  @include calc(width, '100% - 40px');
   text-align: left;
   margin: 10px 0 0 0;
-  padding: 0;
-  height: 60px;
+  padding: 7px 20px;
+  height: 46px;
   border-radius: 4px;
-  display: flex;
+
   z-index: 100;
+  border: none;
+  outline: none;
 
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 
-.prefix {
-  padding: 15px 0 7px 20px;
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
-  margin-right: -4px;
-}
-
-.prefix, .suffix {
-}
-
-.prefix.hidden, .suffix.hidden {
-  width: 0;
-  padding: 0;
-  margin: 0;
-}
-
-.prefix, .true-input, .suffix {
-  display: inline-block;
-  white-space: pre;
-}
-
-.true-input {
-  margin: 0;
-  padding: 7px 20px;
-  width: 100%;
-  outline: none;
-  border: none;
-  border-radius: 4px;
-  height: 46px;
-}
-
-.true-input.prefixed {
-  padding-left: 4px;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
 .options {
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
-  width: calc(100% - 20px);
+  @include calc(width, '100% - 20px');
   margin: 0 10px;
   display: inline-block;
   text-align: left;
@@ -77,6 +43,7 @@
   border-bottom-left-radius: 4px;
   max-height: 290px;
   overflow-y: scroll;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
 .option {
@@ -88,6 +55,10 @@
   overflow: hidden;
   // min-height: 60px;
 }
+
+
+
+
 
 .fallthrough {
   border-radius: 4px;
@@ -156,9 +127,9 @@
 
 .hint {
   float: right;
-  margin-top: 5px;
-  width: 40px;
-  height: 0;
+  margin: 10px 0 0 10px;
+  width: 35px;
+  font-size: 80%;
 }
 
 @mixin category($name, $color) {
@@ -177,14 +148,6 @@
   .descriptor-#{$name}, .examples .category-#{$name} {
     color: $color;
   }
-}
-
-
-@mixin input-placeholder {
-  ::-webkit-input-placeholder {@content}
-  :-moz-placeholder           {@content}
-  ::-moz-placeholder          {@content}
-  :-ms-input-placeholder      {@content}
 }
 
 @mixin theme($class, $theme) {
@@ -215,11 +178,20 @@
     @include descriptor(calendar-event, map-get($theme, argument2));
     @include descriptor(query, map-get($theme, argument2));
     @include descriptor(playlist, map-get($theme, argument2));
+    @include descriptor(查询, map-get($theme, argument2));
+    @include descriptor(بحث, map-get($theme, argument2));
+    @include descriptor(запрос, map-get($theme, argument2));
+    @include descriptor(consulta, map-get($theme, argument2));
 
     @include descriptor(contact, map-get($theme, argument3));
+    @include descriptor(birthday, map-get($theme, argument3));
     @include descriptor(date-and-time, map-get($theme, argument3));
     @include descriptor(url, map-get($theme, argument3));
     @include descriptor(search-engine, map-get($theme, argument3));
+    @include descriptor(搜寻引擎, map-get($theme, argument3));
+    @include descriptor(محرك-البحث, map-get($theme, argument3));
+    @include descriptor(поисковик, map-get($theme, argument3));
+    @include descriptor(buscador, map-get($theme, argument3));
     @include descriptor(composer, map-get($theme, argument3));
 
     @include descriptor(phone-number, map-get($theme, argument4));
@@ -228,13 +200,17 @@
     @include descriptor(time, map-get($theme, argument4));
 
     @include descriptor(relationship, map-get($theme, argument5));
+    @include descriptor(holiday, map-get($theme, argument5));
+    @include descriptor(preference-pane, map-get($theme, argument5));
     @include descriptor(current-song, map-get($theme, argument5));
     @include descriptor(next-song, map-get($theme, argument5));
     @include descriptor(previous-song, map-get($theme, argument5));
-    @include descriptor(period-of-time, map-get($theme, argument5));
+    @include descriptor(duration, map-get($theme, argument5));
+    @include descriptor(shuffled, map-get($theme, argument5));
 
     @include descriptor(bookmark, map-get($theme, argument6));
     @include descriptor(genre, map-get($theme, argument6));
+    @include descriptor(offset, map-get($theme, argument6));
 
     .placeholder {
       border: 2px solid lighten(map-get($theme, input-bg), 10%);
@@ -256,6 +232,7 @@
     input {
       background-color: map-get($theme, input-bg);
       color: map-get($theme, input-text);
+      border: 1px solid map-get($theme, input-bg);
     }
 
     .true-input {
@@ -274,7 +251,8 @@
       background-color: map-get($theme, input-bg);
 
       .descriptor {
-        background: linear-gradient(to right, transparent 0%, map-get($theme, input-bg) 15px);
+        //you have to transparentize the bg because safari is just the dumbest
+        @include linear-gradient(to right, transparentize(map-get($theme, input-bg), 1) 0%, map-get($theme, input-bg) 15px);
       }
     }
 
@@ -283,7 +261,7 @@
       background-color: map-get($theme, selection-bg);
 
       .descriptor {
-        background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, map-get($theme, selection-bg) 15px);
+        @include linear-gradient(to right, transparentize(map-get($theme, selection-bg), 1) 0%, map-get($theme, selection-bg) 15px);
       }
     }
 
@@ -292,10 +270,41 @@
       color: map-get($theme, input-text);
     }
 
-    @include input-placeholder {
+    @include placeholder {
       color: map-get($theme, conjunction);
     }
   }
 }
 
 @include theme('theme-eighties-dark', $theme-eighties-dark);
+
+
+
+
+
+
+/*
+// RTL RTL RTL
+.input {
+  direction: rtl;
+  text-align: right;
+}
+.options {
+  text-align: right;
+}
+.words {
+  direction:rtl;
+}
+.descriptor {
+  padding: 0 20px 0 200px !important;
+}
+
+.placeholder-component {
+  white-space: pre !important;
+}
+
+.hint {
+  float: left;
+  margin: 10px 10px 0 0;
+}
+*/

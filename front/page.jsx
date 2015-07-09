@@ -16,12 +16,12 @@ const examples = [
   'open todo.txt',
   'open my-document.docx with Pages',
   'open lacona.io in Safari',
-  'schedule Dinner with Vicky at The Friendly Toast for 7pm tomorrow',
+  "schedule Dinner with Vicky at Sacco's Flatbread for 7pm tomorrow",
   'schedule Vacation 10a Monday to 6:30p Thursday',
   'remind me to Pick up the car September 12 at 11:30am',
   'remind me to Buy a gift 7 days before 12/1',
   'search Google for pictures of cats',
-  'search Wikipedia for Laconia',
+  'search Wikipedia for Pluto',
   'Google stormtroopers',
   'Amazon Avengers',
   'play Robot Love',
@@ -45,7 +45,7 @@ class Lightbox {
       <div className='lightbox-total'>
         <div className='lightbox-cover' onClick={this.props.hide} />
         <div className='lightbox'>
-          <div className='closeButton' onClick={this.props.hide}>×</div>
+          <div tabIndex='0' className='closeButton' onClick={this.props.hide}>×</div>
           <h3>Thanks for trying the Lacona demo!</h3>
           <p>If this were a real copy of Lacona, it would {this.props.message}.</p>
           <ShareSheet />
@@ -61,7 +61,7 @@ class ShareSheet {
     return (
       <div className='share-sheet'>
         {this.props.includeTry ?
-          <div className='share-item extend'>
+          <div className='share-item extend' onClick={this.props.focusTry}>
             <div className='share-desc'>
               Try
             </div>
@@ -110,7 +110,8 @@ class ShareSheet {
   }
 }
 ShareSheet.defaultProps = {
-  includeTry: false
+  includeTry: false,
+  focusTry: () => {}
 }
 
 export default class Page extends React.Component {
@@ -119,19 +120,18 @@ export default class Page extends React.Component {
 
     this.state = {
       theme: 'theme-eighties-dark',
-      initialLoad: true
+      initialLoad: true,
+      demoRunning: true
     }
 
     this.execute = getExecute(this.showLightbox.bind(this))
-
-    this.demoRunning = true
   }
 
   showLightbox (text) {
     this.setState({lightBoxMessage: text})
   }
 
-  hideLightbox () {
+  hideLightBox () {
     this.setState({lightBoxMessage: null})
   }
 
@@ -139,14 +139,22 @@ export default class Page extends React.Component {
     ga('create', 'UA-61643321-1', 'auto')
     ga('send', 'pageview')
 
+
+    window.addEventListener('keydown', this.checkEscape.bind(this));
+
     this.setState({initialLoad: false})
 
-    this.startDemo()
+    setTimeout(this.startDemo.bind(this), 2000)
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('keydown', this.checkEscape.bind(this));
   }
 
 
   startDemo () {
     const shuffledExamples = _.shuffle(examples)
+    this.demoRunning = true
 
     const shouldStop = () => !this.demoRunning
 
@@ -158,12 +166,13 @@ export default class Page extends React.Component {
 
   stopDemo () {
     this.demoRunning = false
+    // this.setState({demoRunning: false})
   }
 
-  erase (elem, shouldStop, focus, done) {
+  erase (elem, shouldStop, focus = true, done = () => {}) {
     const input = elem.getInput()
 
-    for (let i = 0; i < input.length; i++) {
+    for (let i = 0; i <= input.length; i++) {
       _.delay(() => {
         if (shouldStop()) return
         elem.update(input.substr(0, (input.length - i)))
@@ -189,32 +198,45 @@ export default class Page extends React.Component {
     })
   }
 
+  checkEscape (event) {
+    if (this.state.lightBoxMessage && (event.keyCode === 27 || event.keyCode === 13)) {
+      this.hideLightBox()
+      event.preventDefault()
+      event.stopPropagation()
+    }
+  }
+
+  focusTry () {
+    this.stopDemo()
+    this.erase(this.refs.big, () => false)
+  }
+
   render() {
     return (
-      <div className={`page${this.state.fixedMode ? ' fixed' : ''}${this.state.initialLoad ? ' initial-load' : ''}${this.state.active ? '' : ' inactive'} ${this.props.isMobile ? 'mobile' : 'desktop'} theme-eighties-dark`}>
-
-        <React.addons.CSSTransitionGroup transitionName='lightbox'>
-          {this.state.lightBoxMessage ? <Lightbox key='1' message={this.state.lightBoxMessage} hide={this.hideLightbox.bind(this)} /> : null}
-        </React.addons.CSSTransitionGroup>
+      <div className={`page ${this.props.isMobile ? 'mobile' : 'desktop'} theme-eighties-dark${this.state.initialLoad ? ' initial-load' : ''}`}>
 
         <header>
           <h1><a href="#" tabIndex="-1">Lacona</a></h1>
-          <h2><span className='category-action highlighted'>Natural Language Commands</span> <span className='category-conjunction highlighted'>for your</span> <span className='category-argument2 highlighted'>Mac</span></h2>
-          <p>Call up Lacona with a keypress, and type whatever you want to do.</p>
-          <p>It gives intelligent suggestions as you type and then follows your orders.</p>
+          <h2 className='category-action highlighted'>Natural Language Commands for your Mac</h2>
+          <p>Call up Lacona with a keypress, and type whatever you want to do. It gives intelligent suggestions as you type and then follows your orders.</p>
+          <p>This page just a demo of Lacona's power. <a href='#'>Support the project on Kickstarter</a> to vote for new features and help make it a reality.</p>
         </header>
 
         <content>
           <section className='full green'>
             <div className='text'>
+              <p className='well mobileOnly'>
+                Lacona is designed for use with a keyboard on a full desktop operating system, not for mobile devices. For the full experience, visit this page on your computer!
+              </p>
               {/*<p>Lacona will be available for download <em>late summer, 2015</em>. Until then, check out the demos below, <a href='https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458' target='_blank' onClick={this.openWindow}>follow @lacona on Twitter</a>, or <a href='http://eepurl.com/bjPRjD' target='_blank'>sign up for the newsletter</a>.</p>*/}
-              <ShareSheet includeTry={true} />
+              <ShareSheet includeTry={true} focusTry={this.focusTry.bind(this)} />
             </div>
           </section>
           <section className='full'>
             <Lacona
               userInteracted={this.stopDemo.bind(this)}
               grammar={all.grammar}
+              extensions={all.extensions}
               execute={this.execute}
               ref='big'
               tryMe={true}
@@ -224,10 +246,13 @@ export default class Page extends React.Component {
           <section className='textLeft'>
             <div className='text'>
               <h3>Ditch the Dock</h3>
-              <p>With Lacona, your Apps, Bookmarks, Files, and more are just a few keystrokes away.</p>
+              <p>With Lacona, your Apps, Bookmarks, Files, System Preferences, and more are only a few keystrokes away. You can also manage your open Mission Control Desktops, apps, windows, and browser tabs.</p>
               <ul className='examples'>
                 <li onClick={this.type.bind(this, '0', () => false, 'open Calendar')}>
                   <span className='category-action'>open</span> <span className='descriptor-application'>Calendar</span>
+                </li>
+                <li onClick={this.type.bind(this, '0', () => false, 'open Parental Controls')}>
+                  <span className='category-action'>open</span> <span className='descriptor-preference-pane'>Parental Controls</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'open Facebook')}>
                   <span className='category-action'>open</span> <span className='descriptor-bookmark'>Facebook</span>
@@ -235,17 +260,26 @@ export default class Page extends React.Component {
                 <li onClick={this.type.bind(this, '0', () => false, 'iTunes')}>
                   <span className='descriptor-application'>iTunes</span>
                 </li>
-                <li onClick={this.type.bind(this, '0', () => false, 'open kickstarter.com')}>
-                  <span className='category-action'>open</span> <span className='descriptor-url'>kickstarter.com</span>
+                <li onClick={this.type.bind(this, '0', () => false, 'quit Safari')}>
+                  <span className='category-action'>quit</span> <span className='descriptor-application'>Safari</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'open lacona.io in Safari')}>
                   <span className='category-action'>open</span> <span className='descriptor-url'>lacona.io</span> <span className='category-conjunction'>in</span> <span className='descriptor-application'>Safari</span>
+                </li>
+                <li onClick={this.type.bind(this, '0', () => false, 'switch to Messages')}>
+                  <span className='category-action'>switch to</span> <span className='descriptor-application'>Messages</span>
+                </li>
+                <li onClick={this.type.bind(this, '0', () => false, 'open kickstarter.com')}>
+                  <span className='category-action'>open</span> <span className='descriptor-url'>kickstarter.com</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'lifehacker.com')}>
                   <span className='descriptor-url'>lifehacker.com</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'open ~/Downloads/Lacona.dmg')}>
                   <span className='category-action'>open</span> <span className='descriptor-path'>~/Downloads/Lacona.dmg</span>
+                </li>
+                <li onClick={this.type.bind(this, '0', () => false, 'close Reminders')}>
+                  <span className='category-action'>close</span> <span className='descriptor-application'>Reminders</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'open todo.txt')}>
                   <span className='category-action'>open</span> <span className='descriptor-file'>todo.txt</span>
@@ -260,17 +294,26 @@ export default class Page extends React.Component {
           <section className='textRight'>
             <div className='text'>
               <h3>Organize your Life, not your Calendar</h3>
-              <p>Create events and reminders just like you were talking to a person. Lacona understands.</p>
-              <p className='well'>Dates are complicated! The occasional choppiness is only because Lacona is running in a browser. The real app will be silky smooth.</p>
+              <p>Create events and reminders as though you were talking to a person. Lacona understands.</p>
+              <ul className='well'>
+                <li>Due to browser limitations, this may sometimes be choppy. The real app will be silky smooth!</li>
+                <li>This demo only supports US date formats. The real product will support European formats as well.</li>
+              </ul>
               <ul className='examples'>
                 <li onClick={this.type.bind(this, '1', () => false, "schedule Dinner with Vicky at Sacco's Flatbread for 7pm tomorrow")}>
-                  <span className='category-action'>schedule</span> <span className='descriptor-calendar-event'>Dinner with Vicky</span> <span className='category-conjunction'>at</span> <span className='descriptor-location'>The Friendly Toast</span> <span className='category-conjunction'>for</span> <span className='descriptor-date-and-time'>7pm tomorrow</span>
+                  <span className='category-action'>schedule</span> <span className='descriptor-calendar-event'>Dinner with Vicky</span> <span className='category-conjunction'>at</span> <span className='descriptor-location'>Sacco's Flatbread</span> <span className='category-conjunction'>for</span> <span className='descriptor-time'>7pm</span> <span className='descriptor-date'>tomorrow</span>
                 </li>
                 <li onClick={this.type.bind(this, '1', () => false, 'remind me to Pick up the car September 12 at 11:30am')}>
-                  <span className='category-action'>remind me to</span> <span className='descriptor-reminder-title'>Pick up the car</span> <span className='descriptor-date-and-time'>September 12 at 11:30am</span>
+                  <span className='category-action'>remind me to</span> <span className='descriptor-reminder-title'>Pick up the car</span> <span className='descriptor-date'>September 12</span> <span className='category-conjunction'>at</span> <span className='descriptor-time'>11:30am</span>
+                </li>
+                <li onClick={this.type.bind(this, '1', () => false, "remind me to Buy a gift 2 weeks before my wife's birthday")}>
+                  <span className='category-action'>remind me to</span> <span className='descriptor-reminder-title'>Buy a gift</span> <span className='descriptor-offset'>2 weeks before</span> <span className='descriptor-relationship'>my Wife's birthday</span>
                 </li>
                 <li onClick={this.type.bind(this, '1', () => false, 'schedule Vacation 10a Monday to 6:30p Thursday')}>
-                  <span className='category-action'>schedule</span> <span className='descriptor-calendar-event'>Vacation</span> <span className='descriptor-period-of-time'>10a Monday to 6:30p Thursday</span>
+                  <span className='category-action'>schedule</span> <span className='descriptor-calendar-event'>Vacation</span> <span className='descriptor-time'>10a</span> <span className='descriptor-date'>Monday</span> <span className='category-conjunction'>to</span> <span className='descriptor-time'>6:30p</span> <span className='descriptor-date'>Thursday</span>
+                </li>
+                <li onClick={this.type.bind(this, '1', () => false, 'schedule China trip from Native American Day to Veterans Day')}>
+                  <span className='category-action'>schedule</span> <span className='descriptor-calendar-event'>China trip</span> <span className='category-conjunction'>from</span> <span className='descriptor-holiday'>Native American Day</span> <span className='category-conjunction'>to</span> <span className='descriptor-holiday'>Veterans Day</span>
                 </li>
                 <li onClick={this.type.bind(this, '1', () => false, 'remind me to Buy a gift 7 days before 12/1')}>
                   <span className='category-action'>remind me to</span> <span className='descriptor-reminder-title'>Buy a gift</span> <span className='descriptor-date'>7 days before 12/1</span>
@@ -283,7 +326,7 @@ export default class Page extends React.Component {
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='1' grammar={date.grammar} execute={date => this.execute({date})} />
+            <Lacona userInteracted={this.stopDemo.bind(this)} ref='1' grammar={date.grammar} extensions={date.extensions} execute={date => this.execute({date})} />
           </section>
           <section className='textLeft'>
             <div className='text'>
@@ -299,8 +342,8 @@ export default class Page extends React.Component {
                 <li onClick={this.type.bind(this, '2', () => false, 'Amazon Avengers')}>
                   <span className='descriptor-search-engine'>Amazon</span> <span className='descriptor-query'>Avengers</span>
                 </li>
-                <li onClick={this.type.bind(this, '2', () => false, 'search Wikipedia for Laconia')}>
-                  <span className='category-action'>search</span> <span className='descriptor-search-engine'>Wikipedia</span> <span className='category-conjunction'>for</span> <span className='descriptor-query'>Laconia</span>
+                <li onClick={this.type.bind(this, '2', () => false, 'search Wikipedia for Pluto')}>
+                  <span className='category-action'>search</span> <span className='descriptor-search-engine'>Wikipedia</span> <span className='category-conjunction'>for</span> <span className='descriptor-query'>Pluto</span>
                 </li>
                 <li onClick={this.type.bind(this, '2', () => false, 'search eBay and Amazon for iPhone 6')}>
                   <span className='category-action'>search</span> <span className='descriptor-search-engine'>eBay</span> <span className='category-conjunction'>and</span> <span className='descriptor-search-engine'>Amazon</span> <span className='category-conjunction'>for</span> <span className='descriptor-query'>iPhone 6</span>
@@ -360,6 +403,9 @@ export default class Page extends React.Component {
                 <li onClick={this.type.bind(this, '4', () => false, 'facetime Bruce Banner')}>
                   <span className='category-action'>facetime</span> <span className='descriptor-contact'>Bruce Banner</span>
                 </li>
+                <li onClick={this.type.bind(this, '4', () => false, 'text my Husband Leaving soon!')}>
+                  <span className='category-action'>text</span> <span className='descriptor-relationship'>my Husband</span> <span className='descriptor-message'>Leaving soon!</span>
+                </li>
                 <li onClick={this.type.bind(this, '4', () => false, 'email app@lacona.io')}>
                   <span className='category-action'>email</span> <span className='descriptor-email-address'>app@lacona.io</span>
                 </li>
@@ -373,21 +419,35 @@ export default class Page extends React.Component {
           <section className='full'>
             <div className='text'>
               <h3>The Sky's the Limit</h3>
-              <p>Lacona is built to be extended. An open Developer API will let it understand anything you need to do.</p>
+              <p>Lacona is built to be extended. An open Developer API gives it the power it do anything you need it to do, quickly and easily.</p>
               <ul className='examples inactive'>
                 <li><span className='category-action'>tweet</span> <span className='category-argument2'>just setting up my twttr #blessed</span></li>
                 <li><span className='category-action'>skype</span> <span className='descriptor-contact'>Aaron</span></li>
                 <li><span className='category-action'>switch to</span> <span className='descriptor-application'>Safari</span></li>
-                <li><span className='category-action'>email</span> <span className='category-argument4'>my last instagram picture</span> <span className='category-conjunction'>to</span> <span className='descriptor-relationship'>Mom</span></li>
+                <li><span className='category-action'>email</span> <span className='category-argument0'>my last instagram picture</span> <span className='category-conjunction'>to</span> <span className='descriptor-relationship'>Mom</span></li>
                 <li><span className='category-action'>calculate</span> <span className='category-argument3'>sqrt(5)</span></li>
                 <li><span className='category-action'>turn off</span> <span className='category-argument5'>the kitchen lights</span></li>
+                <li><span className='category-action'>pronounce</span> <span className='category-argument4'>indefatigable</span></li>
                 <li><span className='category-action'>check</span> <span className='category-argument6'>APPL</span></li>
                 <li><span className='category-action'>translate</span> <span className='category-argument3'>How do you do?</span> <span className='category-conjunction'>to</span> <span className='category-argument2'>Japanese</span></li>
                 <li><span className='category-action'>empty the Trash</span></li>
                 <li><span className='category-action'>remind me to</span> <span className='category-argument3'>Book a flight home</span> <span className='descriptor-date'>6 weeks before Jordan's birthday</span></li>
+                <li><span className='category-action'>set</span> <span className='category-argument0'>default browser</span> <span className='category-conjunction'>to</span> <span className='category-application'>Firefox</span></li>
                 <li><span className='category-action'>set a timer</span> <span className='category-conjunction'>for</span> <span className='category-argument2'>25 minutes</span></li>
+                <li><span className='category-action'>execute</span> <span className='category-argument5'>ps -ef | grep -i lacona</span></li>
+                <li><span className='category-action'>email</span> <span className='category-argument3'>walking directions</span> <span className='category-conjunction'>from</span> <span className='category-argument6'>Penn Station NY</span> <span className='category-conjunction'>to</span> <span className='category-argument6'>my house</span> <span className='category-conjunction'>to</span> <span className='descriptor-contact'>Pepper Potts</span></li>
                 <li><span className='category-action'>block</span> <span className='descriptor-url'>reddit.com</span></li>
+                <li><span className='category-action'>subscribe</span> <span className='category-conjunction'>to</span> <span className='category-argument0'>lifehacker</span></li>
+                <li><span className='category-action'>paste</span> <span className='category-argument2'>my last tweet</span></li>
                 <li><span className='category-action'>fork</span> <span className='category-argument1'>lacona/lacona</span></li>
+                <li><span className='category-action'>close</span> <span className='descriptor-application'>Photo Booth</span></li>
+                <li><span className='category-action'>define</span> <span className='category-argument4'>antediluvian</span></li>
+                <li><span className='category-action'>enable</span> <span className='category-argument5'>Do Not Disturb</span></li>
+                <li><span className='category-action'>roll</span> <span className='category-argument0'>d12</span></li>
+                <li><span className='category-action'>find flights</span> <span className='category-conjunction'>from</span> <span className='category-argument6'>SFO</span> <span className='category-conjunction'>to</span> <span className='category-argument6'>BOS</span> <span className='category-conjunction'>on</span> <span className='descriptor-date'>8/6/2015</span></li>
+                <li><span className='category-action'>yo</span> <span className='descriptor-contact'>THEDUDE</span></li>
+                <li><span className='category-action'>set an alarm</span> <span className='category-conjunction'>for</span> <span className='descriptor-time'>6am</span> <span className='category-conjunction'>on</span> <span className='descriptor-date'>Christmas</span></li>
+                <li><span className='category-action'>check the weather</span> <span className='category-conjunction'>in</span> <span className='category-argument2'>Boston</span></li>
                 {/*<li><span className='category-action'>Поиск</span> <span className='descriptor-search-engine'>Яндекса</span> <span className='category-conjunction'>для</span> <span className='descriptor-query'>музыки</span></li>
                 <li><span className='category-conjunction'>在</span><span className='descriptor-search-engine'>百度</span><span classAName='category-conjunction'>上</span><span className='category-action'>搜索</span><span className='descriptor-query'>好听的音乐</span></li>
                 <li style={{textAlign: 'right'}}><span className='category-action'>بحث</span> <span className='descriptor-search-engine'>يملي</span> <span className='descriptor-query'>للموسيقى</span></li>
@@ -415,6 +475,9 @@ export default class Page extends React.Component {
             ©2015 Lacona Labs
           </div>
         </footer>
+        <React.addons.CSSTransitionGroup transitionName='lightbox' element='div' style={{position: 'absolute', zIndex: 2000}}>
+          {this.state.lightBoxMessage ? <Lightbox key='1' message={this.state.lightBoxMessage} hide={this.hideLightBox.bind(this)} /> : null}
+        </React.addons.CSSTransitionGroup>
         <Initializer />
       </div>
     )
