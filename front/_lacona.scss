@@ -167,7 +167,7 @@
     @include descriptor(artist, map-get($theme, argument0));
     @include descriptor(location, map-get($theme, argument0));
 
-    @include descriptor(date, map-get($theme, argument1));
+    @include descriptor(time, map-get($theme, argument1));
     @include descriptor(song, map-get($theme, argument1));
     @include descriptor(email-address, map-get($theme, argument1));
     @include descriptor(path, map-get($theme, argument1));
@@ -185,7 +185,6 @@
 
     @include descriptor(contact, map-get($theme, argument3));
     @include descriptor(birthday, map-get($theme, argument3));
-    @include descriptor(date-and-time, map-get($theme, argument3));
     @include descriptor(url, map-get($theme, argument3));
     @include descriptor(search-engine, map-get($theme, argument3));
     @include descriptor(搜寻引擎, map-get($theme, argument3));
@@ -197,7 +196,7 @@
     @include descriptor(phone-number, map-get($theme, argument4));
     @include descriptor(album, map-get($theme, argument4));
     @include descriptor(application, map-get($theme, argument4));
-    @include descriptor(time, map-get($theme, argument4));
+    @include descriptor(date, map-get($theme, argument4));
 
     @include descriptor(relationship, map-get($theme, argument5));
     @include descriptor(holiday, map-get($theme, argument5));

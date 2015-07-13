@@ -129,7 +129,7 @@ export default class Lacona extends React.Component {
   update (input) {
     this.setState({input})
 
-    if (global.location && global.location.hash === '#videodemo' && input === '') {
+    if (input === '') {
       this.setState({output: []})
       return
     }

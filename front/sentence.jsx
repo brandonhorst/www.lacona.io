@@ -1287,6 +1287,7 @@ class Bookmark extends Phrase {
           {text: 'Lifehacker', value:'http://lifehacker.com'},
           {text: 'xkcd', value:'http://xkcd.com'},
           {text: 'Github', value:'http://github.com'},
+          {text: 'Gmail', value:'http://gmail.com'},
           {text: 'Youtube', value:'http://youtube.com'},
           {text: 'Wikipedia', value:'http://wikipedia.org'},
           {text: 'Ebay', value:'http://ebay.com'}
@@ -1296,64 +1297,106 @@ class Bookmark extends Phrase {
   }
 }
 
-export const open = {
-  grammar: (
-    <choice id='open'>
-      <sequence>
-        <list items={[
-            {text: 'switch to ', value: 'switch'},
-            {text: 'quit ', value: 'quit'},
-            {text: 'close ', value: 'close'},
-            {text: 'launch ', value: 'open'}
-          ]} id='verb' category='action' />
-        <repeat id='apps' unique={true} separator={<list items={[' and ', ', ', ', and ']} limit={1} />}>
+class AppsGroup extends Phrase {
+  describe () {
+    return (
+      <repeat unique={true} separator={<list items={[' and ', ', ', ', and ']} limit={1} max={this.props.max} />}>
+        <choice>
           <Application id='app' />
-        </repeat>
-      </sequence>
-      <sequence>
-        <literal text='open ' category='action' value='open' id='verb' />
-        <choice merge={true}>
-          <repeat unique={true} separator={<list items={[' and ', ', ', ', and ']} limit={1} />}>
-            <choice>
-              <Application id='app' />
-              <URL id='url' />
-              <Bookmark id='url' />
-              <File id='file' />
-              <SystemPreference id='pref' />
-            </choice>
-          </repeat>
-          <sequence>
-            <repeat unique={true} separator={<list items={[' and ', ', ', ', and ']} limit={1} />}>
-              <choice merge={true}>
-                <URL id='url' />
-                <Bookmark id='url' />
-                <File id='file' />
-              </choice>
-            </repeat>
-            <list items={[' with ', ' using ', ' in ']} limit={1} category='conjunction' />
-            <repeat unique={true} separator={<list items={[' and ', ', ', ', and ']} limit={1} />}>
-              <Application id='app' />
-            </repeat>
-          </sequence>
         </choice>
-      </sequence>
-    </choice>
-  )
+      </repeat>
+    )
+  }
+}
+
+class OpenableGroup extends Phrase {
+  describe () {
+    return (
+      <repeat unique={true} separator={<list items={[' and ', ', ', ', and ']} limit={1} />}>
+        <choice>
+          <Application id='app' />
+          <URL id='url' />
+          <Bookmark id='url' />
+          <File id='file' />
+          <SystemPreference id='pref' />
+        </choice>
+      </repeat>
+    )
+  }
+}
+
+class OpenInableGroup extends Phrase {
+  describe () {
+    return (
+      <repeat unique={true} separator={<list items={[' and ', ', ', ', and ']} limit={1} />}>
+        <choice>
+          <URL id='url' />
+          <Bookmark id='url' />
+          <File id='file' />
+        </choice>
+      </repeat>
+    )
+  }
+}
+
+class Open extends Phrase {
+  filter (result) {
+    const allPrefs = _.filter(result.things, 'pref')
+    return allPrefs.length < 2
+  }
+
+  describe () {
+    return (
+      <choice id='open'>
+        <sequence>
+          <literal text='open ' category='action' value='open' id='verb' />
+          <choice merge={true}>
+            <OpenableGroup id='things' />
+            <sequence>
+              <OpenInableGroup id='things' />
+              <list items={[' with ', ' using ', ' in ']} limit={1} category='conjunction' />
+              <AppsGroup id='openin' />
+            </sequence>
+          </choice>
+        </sequence>
+        <sequence>
+          <literal text='switch to ' category='action' value='switch' id='verb' />
+          <AppsGroup max={1} id='things' />
+        </sequence>
+        <sequence>
+          <list items={[
+              {text: 'close ', value: 'close'},
+              {text: 'quit ', value: 'quit'},
+              {text: 'launch ', value: 'open'}
+            ]} id='verb' category='action' limit={2} />
+          <AppsGroup id='things' />
+        </sequence>
+      </choice>
+    )
+  }
+}
+
+export const open = {
+  grammar: <Open id='open' />
 }
 
 class Birthday extends Phrase {
+  getValue () {
+    return new Date(2015, 9, 11, 0, 0, 0, 0)
+  }
+
   describe () {
     return (
       <sequence>
         <literal text='on ' optional={true} prefered={true} limited={true} />
-        <argument text='birthday'>
+        <argument text='birthday' merge={true}>
           <choice>
             <sequence>
-              <Contact argument={false} />
+              <Contact argument={false} merge={true} />
               <literal text="'s birthday" />
             </sequence>
             <sequence>
-              <Relationship argument={false} />
+              <Relationship argument={false} merge={true} />
               <literal text="'s birthday" />
             </sequence>
           </choice>
@@ -1382,10 +1425,11 @@ class Holiday extends Phrase {
           {text: 'Independence Day', value: new Date(2016, 6, 4)},
           {text: 'The Fourth of July', value: new Date(2016, 6, 4)},
           {text: 'Labor Day', value: new Date(2015, 8, 7)},
-          {text: 'Columbus Day', value: new Date(2015, 9, 10)},
-          {text: 'American Indian Day', value: new Date(2015, 9, 10)},
-          {text: 'Native American Day', value: new Date(2015, 9, 10)},
-          {text: "Indigenous People's Day ", value: new Date(2015, 9, 10)},
+          {text: 'Columbus Day', value: new Date(2015, 9, 12)},
+          {text: 'Christopher Columbus Day', value: new Date(2015, 9, 12)},
+          {text: 'American Indian Day', value: new Date(2015, 9, 12)},
+          {text: 'Native American Day', value: new Date(2015, 9, 12)},
+          {text: "Indigenous People's Day ", value: new Date(2015, 9, 12)},
           {text: 'Veterans Day', value: new Date(2015, 10, 11)},
           {text: 'Thanksgiving Day', value: new Date(2015, 10, 26)},
           {text: 'Christmas Eve', value: new Date(2015, 11, 24)},
@@ -1421,6 +1465,8 @@ export const date = {
         <LocationWithAt optional={true} id='location' />
         <list items={[' for ', ' at ', ' ']} category='conjunction' limit={1} />
         <choice limit={1} merge={true}>
+          <Time id='time' />
+          <DatePhrase id='date' />
           <DateTime id='datetime' />
           <TimePeriod id='period' />
         </choice>
@@ -1434,7 +1480,7 @@ export const date = {
         <sequence optional={true} merge={true}>
           <literal text=' ' category='conjunction' />
           <choice merge={true}>
-            <Time id='time' includeAt={true} allowPast={false} merge={true} />
+            <Time id='time' includeAt={true} allowPast={false} />
             <DatePhrase id='date' allowPast={false} />
             <DateTime id='datetime' includeAt={true} allowPast={false} />
           </choice>
@@ -1652,6 +1698,7 @@ const contacts = [
   {text: 'Natalia Romanova', value: 'Natalia Romanova'},
   {text: 'Jennifer Walters', value: 'Jennifer Walters'},
   {text: 'Hank McCoy', value: 'Hank McCoy'},
+  {text: 'Peter Quill', value: 'Peter Quill'},
   {text: 'Reed Richards', value: 'Reed Richards'},
   {text: 'Susan Richards', value: 'Susan Richards'},
   {text: 'Jim Hammond', value: 'Jim Hammond'},
@@ -1737,7 +1784,7 @@ class EmailGroup extends Phrase {
 class NumberGroup extends Phrase {
   describe () {
     return (
-      <repeat unique={true} separator={<list items={[' and ', ', and ', ', ']} limit={1} />}>
+      <repeat unique={true} separator={<list items={[' and ', ', and ', ', ']} limit={1} max={this.props.max} />}>
         <choice>
           <PhoneNumber id='number' />
           <Relationship id='relationship' />
@@ -1751,7 +1798,7 @@ class NumberGroup extends Phrase {
 class AllGroup extends Phrase {
   describe () {
     return (
-      <repeat unique={true} separator={<list items={[' and ', ', and ', ', ']} limit={1} />}>
+      <repeat unique={true} separator={<list items={[' and ', ', and ', ', ']} limit={1} max={this.props.max} />}>
         <choice>
           <Relationship id='relationship' />
           <Contact id='contact' />
@@ -1770,16 +1817,16 @@ export const contact = {
       <sequence id='email'>
         <literal text='email ' category='action' />
         <choice merge={true}>
-          <EmailGroup />
+          <EmailGroup id='to' />
           <sequence>
             <argument text='message' id='message'>
               <freetext splitOn=' ' limit={1} />
             </argument>
             <literal text=' to ' category='conjunction' />
-            <EmailGroup merge={true} />
+            <EmailGroup id='to' />
           </sequence>
           <sequence>
-            <EmailGroup merge={true} />
+            <EmailGroup id='to' />
             <choice limit={1}>
               <literal text=' about ' />
               <literal text=' ' />
@@ -1792,11 +1839,11 @@ export const contact = {
       </sequence>
       <sequence id='call'>
         <literal text='call ' category='action' />
-        <NumberGroup merge={true} />
+        <NumberGroup merge={true} max={1} />
       </sequence>
       <sequence id='facetime'>
         <literal text='facetime ' category='action' />
-        <AllGroup merge={true} />
+        <AllGroup merge={true} max={1} />
       </sequence>
       <sequence id='text'>
         <list items={['text ', 'iMessage ']} limit={1} category='action' />

@@ -89,10 +89,6 @@ content {
 
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
 
-  p {
-    border-radius: 4px;
-  }
-
   h3 {
     padding-bottom: 10px;
   }
@@ -114,7 +110,7 @@ content {
       line-height: 1rem;
     }
 
-    p, .share-desc {
+    .description, .share-desc {
       font-size: 70%;
       line-height: 0.9rem;
     }
@@ -146,6 +142,7 @@ content {
 }
 .lightbox-leave {
   opacity: 1;
+  pointer-events: none;
 }
 .lightbox-leave.lightbox-leave-active {
   opacity: 0.01;
@@ -252,6 +249,14 @@ body {
   a:active {
     color: hsl(0, 0%, 0%);
   }
+
+  a.nodifferent {
+    &, &:visited, &:hover, &:active, &:focus {
+      text-decoration: none;
+      color: inherit;
+    }
+  }
+
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -297,13 +302,25 @@ p {
   margin: 0 auto 1rem auto;
 }
 
-.well {
+.well, .description {
   @include calc(width, '100% - 80px');
   position: relative;
-  font-size: 80%;
   padding: 10px 20px;
   border-radius: 4px;
   margin: -4px auto 4px auto;
+
+  li {
+    margin-left: 20px;
+  }
+}
+
+.well {
+  font-size: 80%;
+}
+
+.description {
+  margin-top: 20px;
+  font-size: 100%;
 }
 
 .code {
@@ -503,10 +520,9 @@ footer {
       }
       a:active {
       }
-      p {
+      .description {
         background: map-get($theme, 'input-bg');
         color: map-get($theme, 'input-text');
-        padding: 10px;
       }
 
     }
@@ -516,6 +532,15 @@ footer {
       border-bottom: 1px solid darken(map-get($theme, 'input-bg'), 20%);
       h1, h2, p {
         color: map-get($theme, 'input-text');
+      }
+      a, a:visited {
+        color: map-get($theme, 'input-text');
+      }
+      a:hover {
+        color: lighten(map-get($theme, 'input-text'), 10%);
+      }
+      a:active {
+        color: lighten(map-get($theme, 'input-text'), 20%);
       }
     }
 

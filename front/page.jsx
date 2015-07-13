@@ -47,9 +47,9 @@ class Lightbox {
         <div className='lightbox'>
           <div tabIndex='0' className='closeButton' onClick={this.props.hide}>×</div>
           <h3>Thanks for trying the Lacona demo!</h3>
-          <p>If this were a real copy of Lacona, it would {this.props.message}.</p>
+          {this.props.detail ? <p className='well'>{this.props.detail}</p> : null}
+          <p className='description'>If this were a real copy of Lacona, it would {this.props.message}.</p>
           <ShareSheet />
-          {/*<p>Feel free to try something else, <a href='https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458' target='_blank' onClick={this.openWindow}>follow @lacona on Twitter</a>, or <a href='http://eepurl.com/bjPRjD' target='_blank'>subscribe to the newsletter</a>.</p>*/}
         </div>
       </div>
     )
@@ -132,7 +132,7 @@ export default class Page extends React.Component {
   }
 
   hideLightBox () {
-    this.setState({lightBoxMessage: null})
+    this.setState({lightBoxMessage: null, lightBoxDetail: null})
   }
 
   componentDidMount () {
@@ -167,6 +167,11 @@ export default class Page extends React.Component {
   stopDemo () {
     this.demoRunning = false
     // this.setState({demoRunning: false})
+  }
+
+  executeDate (date) {
+    this.setState({lightBoxDetail: ["For the purpose of this demo, everyone's birthday is ", <a href='https://www.youtube.com/watch?v=SIQ2MrJImpI' target='_blank' className='nodifferent'>October 11</a>, '.']})
+    this.execute({date})
   }
 
   erase (elem, shouldStop, focus = true, done = () => {}) {
@@ -219,7 +224,8 @@ export default class Page extends React.Component {
           <h1><a href="#" tabIndex="-1">Lacona</a></h1>
           <h2 className='category-action highlighted'>Natural Language Commands for your Mac</h2>
           <p>Call up Lacona with a keypress, and type whatever you want to do. It gives intelligent suggestions as you type and then follows your orders.</p>
-          <p>This page just a demo of Lacona's power. <a href='#'>Support the project on Kickstarter</a> to vote for new features and help make it a reality.</p>
+          <p>This page just a demo of Lacona's power. <a href='#' target='_blank'>Support the project on Kickstarter</a> to vote for new features and help make it a reality.</p>
+          <p>Lacona is about community. If you find a bug, it will be fixed before Lacona launches. Report it on <a href='https://github.com/lacona/www.lacona.io' target='_blank'>GitHub</a>.</p>
         </header>
 
         <content>
@@ -254,8 +260,8 @@ export default class Page extends React.Component {
                 <li onClick={this.type.bind(this, '0', () => false, 'open Parental Controls')}>
                   <span className='category-action'>open</span> <span className='descriptor-preference-pane'>Parental Controls</span>
                 </li>
-                <li onClick={this.type.bind(this, '0', () => false, 'open Facebook')}>
-                  <span className='category-action'>open</span> <span className='descriptor-bookmark'>Facebook</span>
+                <li onClick={this.type.bind(this, '0', () => false, 'open Facebook and Twitter')}>
+                  <span className='category-action'>open</span> <span className='descriptor-bookmark'>Facebook</span> <span className='category-conjunction'>and</span> <span className='descriptor-bookmark'>Twitter</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'iTunes')}>
                   <span className='descriptor-application'>iTunes</span>
@@ -263,8 +269,8 @@ export default class Page extends React.Component {
                 <li onClick={this.type.bind(this, '0', () => false, 'quit Safari')}>
                   <span className='category-action'>quit</span> <span className='descriptor-application'>Safari</span>
                 </li>
-                <li onClick={this.type.bind(this, '0', () => false, 'open lacona.io in Safari')}>
-                  <span className='category-action'>open</span> <span className='descriptor-url'>lacona.io</span> <span className='category-conjunction'>in</span> <span className='descriptor-application'>Safari</span>
+                <li onClick={this.type.bind(this, '0', () => false, 'open lacona.io in Safari and Firefox')}>
+                  <span className='category-action'>open</span> <span className='descriptor-url'>lacona.io</span> <span className='category-conjunction'>in</span> <span className='descriptor-application'>Safari</span> <span className='category-conjunction'>and</span> <span className='descriptor-application'>Firefox</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'switch to Messages')}>
                   <span className='category-action'>switch to</span> <span className='descriptor-application'>Messages</span>
@@ -272,11 +278,14 @@ export default class Page extends React.Component {
                 <li onClick={this.type.bind(this, '0', () => false, 'open kickstarter.com')}>
                   <span className='category-action'>open</span> <span className='descriptor-url'>kickstarter.com</span>
                 </li>
-                <li onClick={this.type.bind(this, '0', () => false, 'lifehacker.com')}>
-                  <span className='descriptor-url'>lifehacker.com</span>
-                </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'open ~/Downloads/Lacona.dmg')}>
                   <span className='category-action'>open</span> <span className='descriptor-path'>~/Downloads/Lacona.dmg</span>
+                </li>
+                <li onClick={this.type.bind(this, '0', () => false, 'open Gmail and Reminders and calendar.google.com')}>
+                  <span className='category-action'>open</span> <span className='descriptor-bookmark'>Gmail</span><span className='category-conjunction'> and </span><span className='descriptor-application'>Reminders</span><span className='category-conjunction'> and </span><span className='descriptor-url'>calendar.google.com</span>
+                </li>
+                <li onClick={this.type.bind(this, '0', () => false, 'lifehacker.com')}>
+                  <span className='descriptor-url'>lifehacker.com</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'close Reminders')}>
                   <span className='category-action'>close</span> <span className='descriptor-application'>Reminders</span>
@@ -307,7 +316,7 @@ export default class Page extends React.Component {
                   <span className='category-action'>remind me to</span> <span className='descriptor-reminder-title'>Pick up the car</span> <span className='descriptor-date'>September 12</span> <span className='category-conjunction'>at</span> <span className='descriptor-time'>11:30am</span>
                 </li>
                 <li onClick={this.type.bind(this, '1', () => false, "remind me to Buy a gift 2 weeks before my wife's birthday")}>
-                  <span className='category-action'>remind me to</span> <span className='descriptor-reminder-title'>Buy a gift</span> <span className='descriptor-offset'>2 weeks before</span> <span className='descriptor-relationship'>my Wife's birthday</span>
+                  <span className='category-action'>remind me to</span> <span className='descriptor-reminder-title'>Buy a gift</span> <span className='descriptor-offset'>2 weeks before</span> <span className='descriptor-birthday'>my Wife's birthday</span>
                 </li>
                 <li onClick={this.type.bind(this, '1', () => false, 'schedule Vacation 10a Monday to 6:30p Thursday')}>
                   <span className='category-action'>schedule</span> <span className='descriptor-calendar-event'>Vacation</span> <span className='descriptor-time'>10a</span> <span className='descriptor-date'>Monday</span> <span className='category-conjunction'>to</span> <span className='descriptor-time'>6:30p</span> <span className='descriptor-date'>Thursday</span>
@@ -316,7 +325,7 @@ export default class Page extends React.Component {
                   <span className='category-action'>schedule</span> <span className='descriptor-calendar-event'>China trip</span> <span className='category-conjunction'>from</span> <span className='descriptor-holiday'>Native American Day</span> <span className='category-conjunction'>to</span> <span className='descriptor-holiday'>Veterans Day</span>
                 </li>
                 <li onClick={this.type.bind(this, '1', () => false, 'remind me to Buy a gift 7 days before 12/1')}>
-                  <span className='category-action'>remind me to</span> <span className='descriptor-reminder-title'>Buy a gift</span> <span className='descriptor-date'>7 days before 12/1</span>
+                  <span className='category-action'>remind me to</span> <span className='descriptor-reminder-title'>Buy a gift</span> <span className='descriptor-offset'>7 days before</span> <span className='descriptor-date'>12/1</span>
                 </li>
                 <li onClick={this.type.bind(this, '1', () => false, 'remind me to Call Jenny')}>
                   <span className='category-action'>remind me to</span> <span className='descriptor-reminder-title'>Call Jenny</span>
@@ -326,7 +335,7 @@ export default class Page extends React.Component {
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='1' grammar={date.grammar} extensions={date.extensions} execute={date => this.execute({date})} />
+            <Lacona userInteracted={this.stopDemo.bind(this)} ref='1' grammar={date.grammar} extensions={date.extensions} execute={this.executeDate.bind(this)} />
           </section>
           <section className='textLeft'>
             <div className='text'>
@@ -394,8 +403,8 @@ export default class Page extends React.Component {
                 <li onClick={this.type.bind(this, '4', () => false, 'text Leaving now :) to Hank McCoy')}>
                   <span className='category-action'>text</span> <span className='descriptor-message'>Leaving now :)</span> <span className='conjunction'>to</span> <span className='descriptor-contact'>Hank McCoy</span>
                 </li>
-                <li onClick={this.type.bind(this, '4', () => false, 'email Dinner Plans to Peter Parker')}>
-                  <span className='category-action'>email</span> <span className='descriptor-message'>Dinner Plans</span> <span className='conjunction'>to</span> <span className='descriptor-contact'>Peter Parker</span>
+                <li onClick={this.type.bind(this, '4', () => false, 'email Dinner Plans to Clinton and Natalia')}>
+                  <span className='category-action'>email</span> <span className='descriptor-message'>Dinner Plans</span> <span className='conjunction'>to</span> <span className='descriptor-contact'>Clinton</span> <span className='conjunction'>and</span> <span className='descriptor-contact'>Natalia</span>
                 </li>
                 <li onClick={this.type.bind(this, '4', () => false, 'facetime my boss')}>
                   <span className='category-action'>facetime</span> <span className='descriptor-relationship'>my boss</span>
@@ -423,7 +432,6 @@ export default class Page extends React.Component {
               <ul className='examples inactive'>
                 <li><span className='category-action'>tweet</span> <span className='category-argument2'>just setting up my twttr #blessed</span></li>
                 <li><span className='category-action'>skype</span> <span className='descriptor-contact'>Aaron</span></li>
-                <li><span className='category-action'>switch to</span> <span className='descriptor-application'>Safari</span></li>
                 <li><span className='category-action'>email</span> <span className='category-argument0'>my last instagram picture</span> <span className='category-conjunction'>to</span> <span className='descriptor-relationship'>Mom</span></li>
                 <li><span className='category-action'>calculate</span> <span className='category-argument3'>sqrt(5)</span></li>
                 <li><span className='category-action'>turn off</span> <span className='category-argument5'>the kitchen lights</span></li>
@@ -476,7 +484,11 @@ export default class Page extends React.Component {
           </div>
         </footer>
         <React.addons.CSSTransitionGroup transitionName='lightbox' element='div' style={{position: 'absolute', zIndex: 2000}}>
-          {this.state.lightBoxMessage ? <Lightbox key='1' message={this.state.lightBoxMessage} hide={this.hideLightBox.bind(this)} /> : null}
+          {this.state.lightBoxMessage ? <Lightbox
+            key='1'
+            message={this.state.lightBoxMessage}
+            hide={this.hideLightBox.bind(this)}
+            detail={this.state.lightBoxDetail} /> : null}
         </React.addons.CSSTransitionGroup>
         <Initializer />
       </div>
