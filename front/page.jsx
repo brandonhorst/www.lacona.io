@@ -225,7 +225,7 @@ export default class Page extends React.Component {
           <h2 className='category-action highlighted'>Natural Language Commands for your Mac</h2>
           <p>Call up Lacona with a keypress, and type whatever you want to do. It gives intelligent suggestions as you type and then follows your orders.</p>
           <p>This page just a demo of Lacona's power. <a href='#' target='_blank'>Support the project on Kickstarter</a> to help make it a reality.</p>
-          <p>This demo still has some bugs. If you find one, report it on <a href='https://github.com/lacona/www.lacona.io' target='_blank'>GitHub</a>. It will be fixed before Lacona launches.</p>
+          <p>This demo still has some bugs. If you find one, report it on <a href='https://github.com/lacona/www.lacona.io' target='_blank'>GitHub</a> or <a href='https://twitter.com/lacona' target='_blank'>Twitter</a>. It will be fixed before Lacona launches.</p>
         </header>
 
         <content>

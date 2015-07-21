@@ -1445,6 +1445,12 @@ var Page = (function (_React$Component) {
               { href: 'https://github.com/lacona/www.lacona.io', target: '_blank' },
               'GitHub'
             ),
+            ' or ',
+            _reactAddons2['default'].createElement(
+              'a',
+              { href: 'https://twitter.com/lacona', target: '_blank' },
+              'Twitter'
+            ),
             '. It will be fixed before Lacona launches.'
           )
         ),
