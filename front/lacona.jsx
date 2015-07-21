@@ -119,6 +119,7 @@ export default class Lacona extends React.Component {
         .groupBy(groupPlaceholders)
         .map(mapPlaceholderGroups)
         .sortBy(option => -option.score)
+        .take(20)
         .value()
     }
 

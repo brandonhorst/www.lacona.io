@@ -939,7 +939,7 @@ var Lacona = (function (_React$Component) {
       if (!_lodash2['default'].isEmpty(fullOutput)) {
         return _lodash2['default'].chain(fullOutput).groupBy(groupPlaceholders).map(mapPlaceholderGroups).sortBy(function (option) {
           return -option.score;
-        }).value();
+        }).take(20).value();
       }
 
       return [];
@@ -1434,18 +1434,18 @@ var Page = (function (_React$Component) {
               { href: '#', target: '_blank' },
               'Support the project on Kickstarter'
             ),
-            ' to vote for new features and help make it a reality.'
+            ' to help make it a reality.'
           ),
           _reactAddons2['default'].createElement(
             'p',
             null,
-            'Lacona is about community. If you find a bug, it will be fixed before Lacona launches. Report it on ',
+            'This demo still has some bugs. If you find one, report it on ',
             _reactAddons2['default'].createElement(
               'a',
               { href: 'https://github.com/lacona/www.lacona.io', target: '_blank' },
               'GitHub'
             ),
-            '.'
+            '. It will be fixed before Lacona launches.'
           )
         ),
         _reactAddons2['default'].createElement(
@@ -4247,7 +4247,7 @@ var Application = (function (_Phrase4) {
       return (0, _laconaPhrase.createElement)(
         'argument',
         { text: 'application', showForEmpty: true },
-        (0, _laconaPhrase.createElement)('list', { items: [{ text: 'Calendar', value: 'Calendar' }, { text: 'Contacts', value: 'Contacts' }, { text: 'FaceTime', value: 'FaceTime' }, { text: 'Finder', value: 'Finder' }, { text: 'Game Center', value: 'Game Center' }, { text: 'GarageBand', value: 'GarageBand' }, { text: 'iBooks', value: 'iBooks' }, { text: 'iMovie', value: 'iMovie' }, { text: 'iPhoto', value: 'iPhoto' }, { text: 'iTunes', value: 'iTunes' }, { text: 'Keynote', value: 'Keynote' }, { text: 'App Store', value: 'App Store' }, { text: 'Mail', value: 'Mail' }, { text: 'Maps', value: 'Maps' }, { text: 'Messages', value: 'Messages' }, { text: 'Notes', value: 'Notes' }, { text: 'Numbers', value: 'Numbers' }, { text: 'Pages', value: 'Pages' }, { text: 'Photo Booth', value: 'Photo Booth' }, { text: 'Reminders', value: 'Reminders' }, { text: 'Safari', value: 'Safari' }, { text: 'Google Chrome', value: 'Google Chrome' }, { text: 'Firefox', value: 'Firefox' }, { text: 'Automator', value: 'Automator' }, { text: 'Calculator', value: 'Calculator' }, { text: 'Chess', value: 'Chess' }, { text: 'Dictionary', value: 'Dictionary' }, { text: 'DVD Player', value: 'DVD Player' }, { text: 'Font Book', value: 'Font Book' }, { text: 'Image Capture', value: 'Image Capture' }, { text: 'Preview', value: 'Preview' }, { text: 'QuickTime Player', value: 'QuickTime Player' }, { text: 'Stickies', value: 'Stickies' }, { text: 'System Information', value: 'System Information' }, { text: 'TextEdit', value: 'TextEdit' }, { text: 'VoiceOver Utility', value: 'VoiceOver Utility' }], fuzzy: true })
+        (0, _laconaPhrase.createElement)('list', { score: 1, items: [{ text: 'Calendar', value: 'Calendar' }, { text: 'Contacts', value: 'Contacts' }, { text: 'FaceTime', value: 'FaceTime' }, { text: 'Finder', value: 'Finder' }, { text: 'Game Center', value: 'Game Center' }, { text: 'GarageBand', value: 'GarageBand' }, { text: 'iBooks', value: 'iBooks' }, { text: 'iMovie', value: 'iMovie' }, { text: 'iPhoto', value: 'iPhoto' }, { text: 'iTunes', value: 'iTunes' }, { text: 'Keynote', value: 'Keynote' }, { text: 'App Store', value: 'App Store' }, { text: 'Mail', value: 'Mail' }, { text: 'Maps', value: 'Maps' }, { text: 'Messages', value: 'Messages' }, { text: 'Notes', value: 'Notes' }, { text: 'Numbers', value: 'Numbers' }, { text: 'Pages', value: 'Pages' }, { text: 'Photo Booth', value: 'Photo Booth' }, { text: 'Reminders', value: 'Reminders' }, { text: 'Safari', value: 'Safari' }, { text: 'Google Chrome', value: 'Google Chrome' }, { text: 'Firefox', value: 'Firefox' }, { text: 'Automator', value: 'Automator' }, { text: 'Calculator', value: 'Calculator' }, { text: 'Chess', value: 'Chess' }, { text: 'Dictionary', value: 'Dictionary' }, { text: 'DVD Player', value: 'DVD Player' }, { text: 'Font Book', value: 'Font Book' }, { text: 'Image Capture', value: 'Image Capture' }, { text: 'Preview', value: 'Preview' }, { text: 'QuickTime Player', value: 'QuickTime Player' }, { text: 'Stickies', value: 'Stickies' }, { text: 'System Information', value: 'System Information' }, { text: 'TextEdit', value: 'TextEdit' }, { text: 'VoiceOver Utility', value: 'VoiceOver Utility' }], fuzzy: true })
       );
     }
   }]);
@@ -4560,22 +4560,22 @@ var date = {
         { text: 'calendar event', id: 'title' },
         (0, _laconaPhrase.createElement)('freetext', { limit: 1, splitOn: ' ' })
       ),
-      (0, _laconaPhrase.createElement)(LocationWithAt, { optional: true, id: 'location' }),
+      (0, _laconaPhrase.createElement)(LocationWithAt, { optional: true, id: 'location', prefered: false }),
       (0, _laconaPhrase.createElement)('list', { items: [' for ', ' at ', ' '], category: 'conjunction', limit: 1 }),
       (0, _laconaPhrase.createElement)(
         'choice',
         { limit: 1, merge: true },
+        (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.DateTime, { id: 'datetime' }),
         (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.Time, { id: 'time' }),
         (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.Date, { id: 'date' }),
-        (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.DateTime, { id: 'datetime' }),
         (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.TimePeriod, { id: 'period' })
       ),
-      (0, _laconaPhrase.createElement)(LocationWithAt, { optional: true, id: 'location' })
+      (0, _laconaPhrase.createElement)(LocationWithAt, { optional: true, prefered: false, id: 'location' })
     ),
     (0, _laconaPhrase.createElement)(
       'sequence',
       { id: 'reminder' },
-      (0, _laconaPhrase.createElement)('literal', { text: 'remind me to ', category: 'action' }),
+      (0, _laconaPhrase.createElement)('list', { items: ['remind me to ', 'create reminder ', 'create a reminder ', 'add a reminder ', 'add reminder '], limit: 1, category: 'action' }),
       (0, _laconaPhrase.createElement)(
         'argument',
         { text: 'reminder title', id: 'title' },
@@ -4674,95 +4674,69 @@ var search = {
 };
 
 exports.search = search;
+/*
 if (global.location && global.location.hash === '#videodemo') {
-  search.grammar = (0, _laconaPhrase.createElement)(
-    'choice',
-    null,
-    (0, _laconaPhrase.createElement)(
-      'sequence',
-      null,
-      (0, _laconaPhrase.createElement)('literal', { text: 'ابحث ', category: 'action' }),
-      (0, _laconaPhrase.createElement)('literal', { text: 'في ', category: 'conjunction' }),
-      (0, _laconaPhrase.createElement)(
-        'argument',
-        { text: 'محرك البحث' },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          null,
-          (0, _laconaPhrase.createElement)('literal', { text: 'جوجل' }),
-          (0, _laconaPhrase.createElement)('literal', { text: 'يملي' })
-        )
-      ),
-      (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
-      (0, _laconaPhrase.createElement)(
-        'argument',
-        { text: 'بحث' },
-        (0, _laconaPhrase.createElement)('freetext', null)
-      )
-    ),
-    (0, _laconaPhrase.createElement)(
-      'sequence',
-      null,
-      (0, _laconaPhrase.createElement)('literal', { text: 'найти ', category: 'action' }),
-      (0, _laconaPhrase.createElement)('literal', { text: 'в ', category: 'conjunction' }),
-      (0, _laconaPhrase.createElement)(
-        'argument',
-        { text: 'поисковик' },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          null,
-          (0, _laconaPhrase.createElement)('literal', { text: 'Яндексе' }),
-          (0, _laconaPhrase.createElement)('literal', { text: 'Гугле' })
-        )
-      ),
-      (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
-      (0, _laconaPhrase.createElement)(
-        'argument',
-        { text: 'запрос' },
-        (0, _laconaPhrase.createElement)('freetext', null)
-      )
-    ),
-    (0, _laconaPhrase.createElement)(
-      'sequence',
-      null,
-      (0, _laconaPhrase.createElement)('literal', { text: 'buscar ', category: 'action' }),
-      (0, _laconaPhrase.createElement)('literal', { text: 'en ', category: 'conjunction' }),
-      (0, _laconaPhrase.createElement)(
-        'argument',
-        { text: 'buscador' },
-        (0, _laconaPhrase.createElement)('literal', { text: 'Google' })
-      ),
-      (0, _laconaPhrase.createElement)('literal', { text: ' ', category: 'conjunction' }),
-      (0, _laconaPhrase.createElement)(
-        'argument',
-        { text: 'consulta' },
-        (0, _laconaPhrase.createElement)('freetext', null)
-      )
-    ),
-    (0, _laconaPhrase.createElement)(
-      'sequence',
-      null,
-      (0, _laconaPhrase.createElement)('literal', { text: '在', category: 'conjunction' }),
-      (0, _laconaPhrase.createElement)(
-        'argument',
-        { text: '搜寻引擎' },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          null,
-          (0, _laconaPhrase.createElement)('literal', { text: '百度' }),
-          (0, _laconaPhrase.createElement)('literal', { text: 'Google' })
-        )
-      ),
-      (0, _laconaPhrase.createElement)('literal', { text: '上', category: 'conjunction' }),
-      (0, _laconaPhrase.createElement)('literal', { text: '搜索', category: 'action' }),
-      (0, _laconaPhrase.createElement)(
-        'argument',
-        { text: '查询' },
-        (0, _laconaPhrase.createElement)('freetext', null)
-      )
-    )
-  );
-}
+  search.grammar = (
+    <choice>
+      <sequence>
+        <literal text='ابحث ' category='action' />
+        <literal text='في ' category='conjunction' />
+        <argument text='محرك البحث'>
+          <choice>
+            <literal text='جوجل' />
+            <literal text='يملي' />
+          </choice>
+        </argument>
+        <literal text=' ' />
+        <argument text='بحث'>
+          <freetext />
+        </argument>
+      </sequence>
+
+      <sequence>
+        <literal text='найти ' category='action' />
+        <literal text='в ' category='conjunction' />
+        <argument text='поисковик'>
+          <choice>
+            <literal text='Яндексе' />
+            <literal text='Гугле' />
+          </choice>
+        </argument>
+        <literal text=' ' />
+        <argument text='запрос'>
+          <freetext />
+        </argument>
+      </sequence>
+
+      <sequence>
+        <literal text='buscar ' category='action' />
+        <literal text='en ' category='conjunction' />
+        <argument text='buscador'>
+          <literal text='Google' />
+        </argument>
+        <literal text=' ' category='conjunction' />
+        <argument text='consulta'>
+          <freetext />
+        </argument>
+      </sequence>
+
+      <sequence>
+        <literal text='在' category='conjunction' />
+        <argument text='搜寻引擎'>
+          <choice>
+            <literal text='百度' />
+            <literal text='Google' />
+          </choice>
+        </argument>
+        <literal text='上' category='conjunction' />
+        <literal text='搜索' category='action' />
+        <argument text='查询'>
+          <freetext />
+        </argument>
+      </sequence>
+    </choice>
+  )
+}*/
 
 function itemify(x) {
   return { text: x, value: x };
@@ -4791,27 +4765,27 @@ var MusicItems = (function (_Phrase14) {
           (0, _laconaPhrase.createElement)(
             'argument',
             { text: 'song', showForEmpty: true, id: 'song' },
-            (0, _laconaPhrase.createElement)('list', { items: _lodash2['default'].chain(tunes).map('name').map(itemify).value(), limit: 10 })
+            (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: _lodash2['default'].chain(tunes).map('name').filter().map(itemify).value(), limit: 10 })
           ),
           (0, _laconaPhrase.createElement)(
             'argument',
             { text: 'album', showForEmpty: true, id: 'album' },
-            (0, _laconaPhrase.createElement)('list', { items: _lodash2['default'].chain(tunes).map('album').unique().map(itemify).value(), limit: 10 })
+            (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: _lodash2['default'].chain(tunes).map('album').filter().unique().map(itemify).value(), limit: 10 })
           ),
           (0, _laconaPhrase.createElement)(
             'argument',
             { text: 'artist', showForEmpty: true, id: 'artist' },
-            (0, _laconaPhrase.createElement)('list', { items: _lodash2['default'].chain(tunes).map('artist').unique().map(itemify).value(), limit: 10 })
+            (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: _lodash2['default'].chain(tunes).map('artist').filter().unique().map(itemify).value(), limit: 10 })
           ),
           (0, _laconaPhrase.createElement)(
             'argument',
             { text: 'genre', showForEmpty: true, id: 'genre' },
-            (0, _laconaPhrase.createElement)('list', { items: _lodash2['default'].chain(tunes).map('genre').unique().map(itemify).value(), limit: 10 })
+            (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: _lodash2['default'].chain(tunes).map('genre').filter().unique().map(itemify).value(), limit: 10 })
           ),
           (0, _laconaPhrase.createElement)(
             'argument',
             { text: 'playlist', showForEmpty: true, id: 'playlist' },
-            (0, _laconaPhrase.createElement)('list', { items: ['Jams', 'Chill', 'Workout', 'Driving'].map(itemify) })
+            (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: ['Jams', 'Chill', 'Workout', 'Driving'].map(itemify) })
           ),
           (0, _laconaPhrase.createElement)(
             'argument',

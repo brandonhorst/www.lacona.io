@@ -1233,7 +1233,7 @@ class Application extends Phrase {
   describe () {
     return (
       <argument text='application' showForEmpty={true}>
-        <list items={[
+        <list score={1} items={[
           {text: 'Calendar', value: 'Calendar'},
           {text: 'Contacts', value: 'Contacts'},
           {text: 'FaceTime', value: 'FaceTime'},
@@ -1462,18 +1462,18 @@ export const date = {
         <argument text='calendar event' id='title'>
           <freetext limit={1} splitOn=' ' />
         </argument>
-        <LocationWithAt optional={true} id='location' />
+        <LocationWithAt optional={true} id='location' prefered={false} />
         <list items={[' for ', ' at ', ' ']} category='conjunction' limit={1} />
         <choice limit={1} merge={true}>
+          <DateTime id='datetime' />
           <Time id='time' />
           <DatePhrase id='date' />
-          <DateTime id='datetime' />
           <TimePeriod id='period' />
         </choice>
-        <LocationWithAt optional={true} id='location' />
+        <LocationWithAt optional={true} prefered={false} id='location' />
       </sequence>
       <sequence id='reminder'>
-        <literal text='remind me to ' category='action' />
+        <list items={['remind me to ', 'create reminder ', 'create a reminder ', 'add a reminder ', 'add reminder ']} limit={1} category='action' />
         <argument text='reminder title' id='title'>
           <freetext limit={1} splitOn=' ' />
         </argument>
@@ -1558,6 +1558,7 @@ export const search = {
   )
 }
 
+/*
 if (global.location && global.location.hash === '#videodemo') {
   search.grammar = (
     <choice>
@@ -1619,7 +1620,7 @@ if (global.location && global.location.hash === '#videodemo') {
       </sequence>
     </choice>
   )
-}
+}*/
 
 function itemify (x) {
   return {text: x, value: x}
@@ -1631,19 +1632,19 @@ class MusicItems extends Phrase {
       <repeat unique={true} separator={<list items={[' and ', ', ', ', and ']} limit={1} />}>
         <choice>
           <argument text='song' showForEmpty={true} id='song'>
-            <list items={_.chain(tunes).map('name').map(itemify).value()} limit={10} />
+            <list fuzzy={true} items={_.chain(tunes).map('name').filter().map(itemify).value()} limit={10} />
           </argument>
           <argument text='album' showForEmpty={true} id='album'>
-            <list items={_.chain(tunes).map('album').unique().map(itemify).value()} limit={10} />
+            <list fuzzy={true} items={_.chain(tunes).map('album').filter().unique().map(itemify).value()} limit={10} />
           </argument>
           <argument text='artist' showForEmpty={true} id='artist'>
-            <list items={_.chain(tunes).map('artist').unique().map(itemify).value()} limit={10} />
+            <list fuzzy={true} items={_.chain(tunes).map('artist').filter().unique().map(itemify).value()} limit={10} />
           </argument>
           <argument text='genre' showForEmpty={true} id='genre'>
-            <list items={_.chain(tunes).map('genre').unique().map(itemify).value()} limit={10} />
+            <list fuzzy={true} items={_.chain(tunes).map('genre').filter().unique().map(itemify).value()} limit={10} />
           </argument>
           <argument text='playlist' showForEmpty={true} id='playlist'>
-            <list items={['Jams', 'Chill', 'Workout', 'Driving'].map(itemify)} />
+            <list fuzzy={true} items={['Jams', 'Chill', 'Workout', 'Driving'].map(itemify)} />
           </argument>
           <argument text='composer' showForEmpty={true} id='composer'><literal /></argument>
         </choice>
