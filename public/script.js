@@ -2641,7 +2641,11 @@ var Page = (function (_React$Component) {
               _reactAddons2['default'].createElement(
                 'h3',
                 null,
-                'The Sky\'s the Limit'
+                _reactAddons2['default'].createElement(
+                  'a',
+                  { name: 'extensibility' },
+                  'The Sky\'s the Limit'
+                )
               ),
               _reactAddons2['default'].createElement(
                 'p',
