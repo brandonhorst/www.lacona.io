@@ -1428,7 +1428,7 @@ var Page = (function (_React$Component) {
           _reactAddons2['default'].createElement(
             'p',
             null,
-            'This page just a demo of Lacona\'s power. ',
+            'This page is just a demo of Lacona\'s power. ',
             _reactAddons2['default'].createElement(
               'a',
               { href: '#', target: '_blank' },
