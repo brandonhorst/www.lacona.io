@@ -1162,7 +1162,7 @@ var ShareSheet = (function () {
         ) : null,
         _reactAddons2['default'].createElement(
           'a',
-          { href: '#comingsoon', className: 'share-item' },
+          { href: 'https://www.kickstarter.com/projects/2102999333/lacona-natural-language-commands-for-your-mac', className: 'share-item' },
           _reactAddons2['default'].createElement(
             'div',
             { className: 'share-desc' },
@@ -1431,7 +1431,7 @@ var Page = (function (_React$Component) {
             'This page is just a demo of Lacona\'s power. ',
             _reactAddons2['default'].createElement(
               'a',
-              { href: '#', target: '_blank' },
+              { href: 'https://www.kickstarter.com/projects/2102999333/lacona-natural-language-commands-for-your-mac', target: '_blank' },
               'Support the project on Kickstarter'
             ),
             ' to help make it a reality.'

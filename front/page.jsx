@@ -71,7 +71,7 @@ class ShareSheet {
           </div>
           : null
         }
-        <a href='#comingsoon' className='share-item'>
+        <a href='https://www.kickstarter.com/projects/2102999333/lacona-natural-language-commands-for-your-mac' className='share-item'>
           <div className='share-desc'>
             Back
           </div>
@@ -224,7 +224,7 @@ export default class Page extends React.Component {
           <h1><a href="#" tabIndex="-1">Lacona</a></h1>
           <h2 className='category-action highlighted'>Natural Language Commands for your Mac</h2>
           <p>Call up Lacona with a keypress, and type whatever you want to do. It gives intelligent suggestions as you type and then follows your orders.</p>
-          <p>This page is just a demo of Lacona's power. <a href='#' target='_blank'>Support the project on Kickstarter</a> to help make it a reality.</p>
+          <p>This page is just a demo of Lacona's power. <a href='https://www.kickstarter.com/projects/2102999333/lacona-natural-language-commands-for-your-mac' target='_blank'>Support the project on Kickstarter</a> to help make it a reality.</p>
           <p>This demo still has some bugs. If you find one, report it on <a href='https://github.com/lacona/www.lacona.io' target='_blank'>GitHub</a> or <a href='https://twitter.com/lacona' target='_blank'>Twitter</a>. It will be fixed before Lacona launches.</p>
         </header>
 
