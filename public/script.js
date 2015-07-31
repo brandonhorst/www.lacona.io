@@ -2783,7 +2783,7 @@ var Page = (function (_React$Component) {
                   ' ',
                   _reactAddons2['default'].createElement(
                     'span',
-                    { className: 'category-argument3' },
+                    { className: 'category-argument2' },
                     'How do you do?'
                   ),
                   ' ',
@@ -2795,7 +2795,7 @@ var Page = (function (_React$Component) {
                   ' ',
                   _reactAddons2['default'].createElement(
                     'span',
-                    { className: 'category-argument2' },
+                    { className: 'category-argument3' },
                     'Japanese'
                   )
                 ),
@@ -2806,27 +2806,6 @@ var Page = (function (_React$Component) {
                     'span',
                     { className: 'category-action' },
                     'empty the Trash'
-                  )
-                ),
-                _reactAddons2['default'].createElement(
-                  'li',
-                  null,
-                  _reactAddons2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'remind me to'
-                  ),
-                  ' ',
-                  _reactAddons2['default'].createElement(
-                    'span',
-                    { className: 'category-argument3' },
-                    'Book a flight home'
-                  ),
-                  ' ',
-                  _reactAddons2['default'].createElement(
-                    'span',
-                    { className: 'descriptor-date' },
-                    '6 weeks before Jordan\'s birthday'
                   )
                 ),
                 _reactAddons2['default'].createElement(
@@ -2898,13 +2877,7 @@ var Page = (function (_React$Component) {
                   _reactAddons2['default'].createElement(
                     'span',
                     { className: 'category-action' },
-                    'email'
-                  ),
-                  ' ',
-                  _reactAddons2['default'].createElement(
-                    'span',
-                    { className: 'category-argument3' },
-                    'walking directions'
+                    'email walking directions'
                   ),
                   ' ',
                   _reactAddons2['default'].createElement(
@@ -3007,21 +2980,6 @@ var Page = (function (_React$Component) {
                     'span',
                     { className: 'category-argument1' },
                     'lacona/lacona'
-                  )
-                ),
-                _reactAddons2['default'].createElement(
-                  'li',
-                  null,
-                  _reactAddons2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'close'
-                  ),
-                  ' ',
-                  _reactAddons2['default'].createElement(
-                    'span',
-                    { className: 'descriptor-application' },
-                    'Photo Booth'
                   )
                 ),
                 _reactAddons2['default'].createElement(
@@ -10037,7 +9995,14 @@ var RecursiveDay = (function (_Phrase2) {
     value: function getValue(result) {
       if (!result || !result.date) {
         return;
-      }var date = new Date(result.date.getTime());
+      }var date = undefined;
+
+      if (result.date === 'now') {
+        date = new Date();
+        date.setHours(0, 0, 0, 0);
+      } else {
+        var _date = new Date(result.date.getTime());
+      }
 
       if (result.years) {
         date.setFullYear(result.years * result.direction + result.date.getFullYear());
@@ -10068,7 +10033,12 @@ var RecursiveDay = (function (_Phrase2) {
         _createElement$Phrase.createElement(
           'placeholder',
           { text: 'date', id: 'date' },
-          _createElement$Phrase.createElement(DatePhrase, { allowRecurse: false })
+          _createElement$Phrase.createElement(
+            'choice',
+            null,
+            _createElement$Phrase.createElement('literal', { text: 'now', value: 'now' }),
+            _createElement$Phrase.createElement(DatePhrase, { allowRecurse: false })
+          )
         )
       );
     }
@@ -10577,7 +10547,6 @@ var DateTime = (function (_Phrase2) {
   _createClass(DateTime, [{
     key: 'getValue',
     value: function getValue(result) {
-      console.log(result);
       if (!result || !result.date || !result.time) {
         return;
       }return new Date(result.date.getFullYear(), result.date.getMonth(), result.date.getDate(), result.time.getHours(), result.time.getMinutes(), result.time.getSeconds(), 0);
@@ -10815,6 +10784,10 @@ var _createElement$Phrase = require('lacona-phrase');
 
 var _DigitString$Integer = require('lacona-phrase-number');
 
+var _TimeDuration = require('./time-duration');
+
+var _TimeDuration2 = _interopRequireWildcard(_TimeDuration);
+
 var Time = (function (_Phrase) {
   function Time() {
     _classCallCheck(this, Time);
@@ -10833,9 +10806,15 @@ var Time = (function (_Phrase) {
         return;
       }if (_import2['default'].isDate(result)) {
         return result;
-      } else if (!_import2['default'].isUndefined(result.hour)) {
+      } else if (result.relative) {
         var date = new Date();
-        date.setHours(result.hour, result.minute || 0, 0, 0);
+        if (!_import2['default'].isUndefined(result.relative.hours)) date.setHours(date.getHours() + result.relative.hours);
+        if (!_import2['default'].isUndefined(result.relative.minutes)) date.setMinutes(date.getMinutes() + result.relative.minutes);
+
+        return date;
+      } else if (result.fancy) {
+        var date = new Date();
+        date.setHours(result.fancy.hour, result.fancy.minute || 0, 0, 0);
         return date;
       }
     }
@@ -10862,7 +10841,8 @@ Time.translations = [{
           _createElement$Phrase.createElement('literal', { text: 'midnight', id: 'hour', value: 0 }),
           _createElement$Phrase.createElement('literal', { text: 'noon', id: 'hour', value: 12 }),
           _createElement$Phrase.createElement(AbsTime, { minutes: true }),
-          _createElement$Phrase.createElement(RelativeTime, null)
+          _createElement$Phrase.createElement(AbsTimeFancy, { id: 'fancy' }),
+          _createElement$Phrase.createElement(RelativeTime, { id: 'relative' })
         )
       )
     );
@@ -10885,6 +10865,61 @@ var RelativeTime = (function (_Phrase2) {
   _inherits(RelativeTime, _Phrase2);
 
   _createClass(RelativeTime, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) {
+        return;
+      }if (result.direction < 0) {
+        return _import2['default'].mapValues(result.duration, function (num) {
+          return -num;
+        });
+      } else {
+        return result.duration;
+      }
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return _createElement$Phrase.createElement(
+        'choice',
+        null,
+        _createElement$Phrase.createElement(
+          'sequence',
+          null,
+          _createElement$Phrase.createElement('literal', { text: 'in ', id: 'direction', value: 1 }),
+          _createElement$Phrase.createElement(_TimeDuration2['default'], { id: 'duration' })
+        ),
+        _createElement$Phrase.createElement(
+          'sequence',
+          null,
+          _createElement$Phrase.createElement(_TimeDuration2['default'], { id: 'duration' }),
+          _createElement$Phrase.createElement('literal', { text: ' from now', id: 'direction', value: 1 })
+        ),
+        this.props.allowPast ? _createElement$Phrase.createElement(
+          'sequence',
+          null,
+          _createElement$Phrase.createElement(_TimeDuration2['default'], { id: 'duration' }),
+          _createElement$Phrase.createElement('literal', { text: ' ago', id: 'direction', value: -1 })
+        ) : null
+      );
+    }
+  }]);
+
+  return RelativeTime;
+})(_createElement$Phrase.Phrase);
+
+var AbsTimeFancy = (function (_Phrase3) {
+  function AbsTimeFancy() {
+    _classCallCheck(this, AbsTimeFancy);
+
+    if (_Phrase3 != null) {
+      _Phrase3.apply(this, arguments);
+    }
+  }
+
+  _inherits(AbsTimeFancy, _Phrase3);
+
+  _createClass(AbsTimeFancy, [{
     key: 'getValue',
     value: function getValue(result) {
       if (!result) {
@@ -10925,13 +10960,18 @@ var RelativeTime = (function (_Phrase2) {
         _createElement$Phrase.createElement(
           'choice',
           { id: 'direction' },
-          _createElement$Phrase.createElement('literal', { text: ' past ', value: 1 }),
+          _createElement$Phrase.createElement(
+            'choice',
+            { limit: 1, value: 1 },
+            _createElement$Phrase.createElement('literal', { text: ' past ' })
+          ),
           _createElement$Phrase.createElement(
             'choice',
             { limit: 1, value: -1 },
             _createElement$Phrase.createElement('literal', { text: ' to ' }),
             _createElement$Phrase.createElement('literal', { text: ' of ' }),
-            _createElement$Phrase.createElement('literal', { text: ' til ' })
+            _createElement$Phrase.createElement('literal', { text: ' til ' }),
+            _createElement$Phrase.createElement('literal', { text: ' from ' })
           )
         ),
         _createElement$Phrase.createElement(
@@ -10949,19 +10989,19 @@ var RelativeTime = (function (_Phrase2) {
     }
   }]);
 
-  return RelativeTime;
+  return AbsTimeFancy;
 })(_createElement$Phrase.Phrase);
 
-var AbsTime = (function (_Phrase3) {
+var AbsTime = (function (_Phrase4) {
   function AbsTime() {
     _classCallCheck(this, AbsTime);
 
-    if (_Phrase3 != null) {
-      _Phrase3.apply(this, arguments);
+    if (_Phrase4 != null) {
+      _Phrase4.apply(this, arguments);
     }
   }
 
-  _inherits(AbsTime, _Phrase3);
+  _inherits(AbsTime, _Phrase4);
 
   _createClass(AbsTime, [{
     key: 'getValue',
@@ -11004,16 +11044,16 @@ var AbsTime = (function (_Phrase3) {
 
 AbsTime.defaultProps = { minutes: true };
 
-var Minutes = (function (_Phrase4) {
+var Minutes = (function (_Phrase5) {
   function Minutes() {
     _classCallCheck(this, Minutes);
 
-    if (_Phrase4 != null) {
-      _Phrase4.apply(this, arguments);
+    if (_Phrase5 != null) {
+      _Phrase5.apply(this, arguments);
     }
   }
 
-  _inherits(Minutes, _Phrase4);
+  _inherits(Minutes, _Phrase5);
 
   _createClass(Minutes, [{
     key: 'describe',
@@ -11027,7 +11067,7 @@ var Minutes = (function (_Phrase4) {
 
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-phrase":163,"lacona-phrase-number":156}],153:[function(require,module,exports){
+},{"./time-duration":151,"lacona-phrase":163,"lacona-phrase-number":156}],153:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -11104,9 +11144,7 @@ var TimePeriod = (function (_Phrase) {
     value: function getValue(result) {
       if (!result) {
         return;
-      }console.log(result);
-
-      if (result.startdatetime) {
+      }if (result.startdatetime) {
         if (result.enddatetime) {
           return {
             start: result.startdatetime,

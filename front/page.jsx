@@ -437,18 +437,16 @@ export default class Page extends React.Component {
                 <li><span className='category-action'>turn off</span> <span className='category-argument5'>the kitchen lights</span></li>
                 <li><span className='category-action'>pronounce</span> <span className='category-argument4'>indefatigable</span></li>
                 <li><span className='category-action'>check</span> <span className='category-argument6'>APPL</span></li>
-                <li><span className='category-action'>translate</span> <span className='category-argument3'>How do you do?</span> <span className='category-conjunction'>to</span> <span className='category-argument2'>Japanese</span></li>
+                <li><span className='category-action'>translate</span> <span className='category-argument2'>How do you do?</span> <span className='category-conjunction'>to</span> <span className='category-argument3'>Japanese</span></li>
                 <li><span className='category-action'>empty the Trash</span></li>
-                <li><span className='category-action'>remind me to</span> <span className='category-argument3'>Book a flight home</span> <span className='descriptor-date'>6 weeks before Jordan's birthday</span></li>
                 <li><span className='category-action'>set</span> <span className='category-argument0'>default browser</span> <span className='category-conjunction'>to</span> <span className='category-application'>Firefox</span></li>
                 <li><span className='category-action'>set a timer</span> <span className='category-conjunction'>for</span> <span className='category-argument2'>25 minutes</span></li>
                 <li><span className='category-action'>execute</span> <span className='category-argument5'>ps -ef | grep -i lacona</span></li>
-                <li><span className='category-action'>email</span> <span className='category-argument3'>walking directions</span> <span className='category-conjunction'>from</span> <span className='category-argument6'>Penn Station NY</span> <span className='category-conjunction'>to</span> <span className='category-argument6'>my house</span> <span className='category-conjunction'>to</span> <span className='descriptor-contact'>Pepper Potts</span></li>
+                <li><span className='category-action'>email walking directions</span> <span className='category-conjunction'>from</span> <span className='category-argument6'>Penn Station NY</span> <span className='category-conjunction'>to</span> <span className='category-argument6'>my house</span> <span className='category-conjunction'>to</span> <span className='descriptor-contact'>Pepper Potts</span></li>
                 <li><span className='category-action'>block</span> <span className='descriptor-url'>reddit.com</span></li>
                 <li><span className='category-action'>subscribe</span> <span className='category-conjunction'>to</span> <span className='category-argument0'>lifehacker</span></li>
                 <li><span className='category-action'>paste</span> <span className='category-argument2'>my last tweet</span></li>
                 <li><span className='category-action'>fork</span> <span className='category-argument1'>lacona/lacona</span></li>
-                <li><span className='category-action'>close</span> <span className='descriptor-application'>Photo Booth</span></li>
                 <li><span className='category-action'>define</span> <span className='category-argument4'>antediluvian</span></li>
                 <li><span className='category-action'>enable</span> <span className='category-argument5'>Do Not Disturb</span></li>
                 <li><span className='category-action'>roll</span> <span className='category-argument0'>d12</span></li>
