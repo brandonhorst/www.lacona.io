@@ -4998,46 +4998,74 @@ var contact = {
     'choice',
     { id: 'contact' },
     (0, _laconaPhrase.createElement)(
-      'sequence',
+      'choice',
       { id: 'email' },
-      (0, _laconaPhrase.createElement)('literal', { text: 'email ', category: 'action' }),
       (0, _laconaPhrase.createElement)(
-        'choice',
-        { merge: true },
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)('list', { items: ['email ', 'send an email to ', 'send email to ', 'shoot an email to '], category: 'action', limit: 1 }),
+        (0, _laconaPhrase.createElement)(EmailGroup, { id: 'to' })
+      ),
+      (0, _laconaPhrase.createElement)(
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)('list', { items: ['send '], category: 'action', limit: 1 }),
+        (0, _laconaPhrase.createElement)(EmailGroup, { id: 'to' }),
+        (0, _laconaPhrase.createElement)('literal', { text: ' an email' })
+      ),
+      (0, _laconaPhrase.createElement)(
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)('list', { items: ['email ', 'send '], category: 'action', limit: 1 }),
+        (0, _laconaPhrase.createElement)(
+          'argument',
+          { text: 'message', id: 'message' },
+          (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
+        ),
+        (0, _laconaPhrase.createElement)('literal', { text: ' to ', category: 'conjunction' }),
+        (0, _laconaPhrase.createElement)(EmailGroup, { id: 'to' })
+      ),
+      (0, _laconaPhrase.createElement)(
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)('list', { items: ['email ', 'send an email to ', 'send email to ', 'shoot an email to '], category: 'action', limit: 1 }),
         (0, _laconaPhrase.createElement)(EmailGroup, { id: 'to' }),
         (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          (0, _laconaPhrase.createElement)(
-            'argument',
-            { text: 'message', id: 'message' },
-            (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
-          ),
-          (0, _laconaPhrase.createElement)('literal', { text: ' to ', category: 'conjunction' }),
-          (0, _laconaPhrase.createElement)(EmailGroup, { id: 'to' })
+          'choice',
+          { limit: 1 },
+          (0, _laconaPhrase.createElement)('literal', { text: ' about ' }),
+          (0, _laconaPhrase.createElement)('literal', { text: ' ' })
         ),
         (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          (0, _laconaPhrase.createElement)(EmailGroup, { id: 'to' }),
-          (0, _laconaPhrase.createElement)(
-            'choice',
-            { limit: 1 },
-            (0, _laconaPhrase.createElement)('literal', { text: ' about ' }),
-            (0, _laconaPhrase.createElement)('literal', { text: ' ' })
-          ),
-          (0, _laconaPhrase.createElement)(
-            'argument',
-            { text: 'message', id: 'message' },
-            (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
-          )
+          'argument',
+          { text: 'message', id: 'message' },
+          (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
+        )
+      ),
+      (0, _laconaPhrase.createElement)(
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)('list', { items: ['send '], category: 'action', limit: 1 }),
+        (0, _laconaPhrase.createElement)(EmailGroup, { id: 'to' }),
+        (0, _laconaPhrase.createElement)(
+          'choice',
+          { limit: 1, category: 'action' },
+          (0, _laconaPhrase.createElement)('literal', { text: ' an email about ' }),
+          (0, _laconaPhrase.createElement)('literal', { text: ' an email ' }),
+          (0, _laconaPhrase.createElement)('literal', { text: ' email about ' }),
+          (0, _laconaPhrase.createElement)('literal', { text: ' email ' })
+        ),
+        (0, _laconaPhrase.createElement)(
+          'argument',
+          { text: 'message', id: 'message' },
+          (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
         )
       )
     ),
     (0, _laconaPhrase.createElement)(
       'sequence',
       { id: 'call' },
-      (0, _laconaPhrase.createElement)('literal', { text: 'call ', category: 'action' }),
+      (0, _laconaPhrase.createElement)('list', { items: ['call ', 'ring ', 'call up ', 'ring up '], category: 'action', limit: 1 }),
       (0, _laconaPhrase.createElement)(NumberGroup, { merge: true, max: 1 })
     ),
     (0, _laconaPhrase.createElement)(
@@ -5047,39 +5075,60 @@ var contact = {
       (0, _laconaPhrase.createElement)(AllGroup, { merge: true, max: 1 })
     ),
     (0, _laconaPhrase.createElement)(
-      'sequence',
+      'choice',
       { id: 'text' },
-      (0, _laconaPhrase.createElement)('list', { items: ['text ', 'iMessage '], limit: 1, category: 'action' }),
       (0, _laconaPhrase.createElement)(
-        'choice',
-        { merge: true },
-        (0, _laconaPhrase.createElement)(AllGroup, null),
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)('list', { items: ['text ', 'iMessage ', 'shoot a text to ', 'send a text to '], limit: 1, category: 'action' }),
+        (0, _laconaPhrase.createElement)(AllGroup, null)
+      ),
+      (0, _laconaPhrase.createElement)(
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)('list', { items: ['text ', 'iMessage '], limit: 1, category: 'action' }),
         (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          (0, _laconaPhrase.createElement)(
-            'argument',
-            { text: 'message', id: 'message' },
-            (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
-          ),
-          (0, _laconaPhrase.createElement)('literal', { text: ' to ', category: 'conjunction' }),
-          (0, _laconaPhrase.createElement)(AllGroup, { merge: true })
+          'argument',
+          { text: 'message', id: 'message' },
+          (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
+        ),
+        (0, _laconaPhrase.createElement)('literal', { text: ' to ', category: 'conjunction' }),
+        (0, _laconaPhrase.createElement)(AllGroup, { merge: true })
+      ),
+      (0, _laconaPhrase.createElement)(
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)('list', { items: ['send '], limit: 1, category: 'action' }),
+        (0, _laconaPhrase.createElement)(AllGroup, { merge: true }),
+        (0, _laconaPhrase.createElement)(
+          'choice',
+          { limit: 1, category: 'action' },
+          (0, _laconaPhrase.createElement)('literal', { text: ' a text saying ' }),
+          (0, _laconaPhrase.createElement)('literal', { text: ' an iMessage saying' }),
+          (0, _laconaPhrase.createElement)('literal', { text: ' a text ' }),
+          (0, _laconaPhrase.createElement)('literal', { text: ' an iMessage' })
         ),
         (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          (0, _laconaPhrase.createElement)(AllGroup, { merge: true }),
-          (0, _laconaPhrase.createElement)(
-            'choice',
-            { limit: 1 },
-            (0, _laconaPhrase.createElement)('literal', { text: ' saying ' }),
-            (0, _laconaPhrase.createElement)('literal', { text: ' ' })
-          ),
-          (0, _laconaPhrase.createElement)(
-            'argument',
-            { text: 'message', id: 'message' },
-            (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
-          )
+          'argument',
+          { text: 'message', id: 'message' },
+          (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
+        )
+      ),
+      (0, _laconaPhrase.createElement)(
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)('list', { items: ['text ', 'iMessage '], limit: 1, category: 'action' }),
+        (0, _laconaPhrase.createElement)(AllGroup, { merge: true }),
+        (0, _laconaPhrase.createElement)(
+          'choice',
+          { limit: 1 },
+          (0, _laconaPhrase.createElement)('literal', { text: ' saying ' }),
+          (0, _laconaPhrase.createElement)('literal', { text: ' ' })
+        ),
+        (0, _laconaPhrase.createElement)(
+          'argument',
+          { text: 'message', id: 'message' },
+          (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
         )
       )
     )
@@ -10001,7 +10050,7 @@ var RecursiveDay = (function (_Phrase2) {
         date = new Date();
         date.setHours(0, 0, 0, 0);
       } else {
-        var _date = new Date(result.date.getTime());
+        date = new Date(result.date.getTime());
       }
 
       if (result.years) {

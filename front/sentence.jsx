@@ -1815,60 +1815,95 @@ class AllGroup extends Phrase {
 export const contact = {
   grammar: (
     <choice id='contact'>
-      <sequence id='email'>
-        <literal text='email ' category='action' />
-        <choice merge={true}>
+      <choice id='email'>
+        <sequence>
+          <list items={['email ', 'send an email to ', 'send email to ', 'shoot an email to ']} category='action' limit={1} />
           <EmailGroup id='to' />
-          <sequence>
-            <argument text='message' id='message'>
-              <freetext splitOn=' ' limit={1} />
-            </argument>
-            <literal text=' to ' category='conjunction' />
-            <EmailGroup id='to' />
-          </sequence>
-          <sequence>
-            <EmailGroup id='to' />
-            <choice limit={1}>
-              <literal text=' about ' />
-              <literal text=' ' />
-            </choice>
-            <argument text='message' id='message'>
-              <freetext splitOn=' ' limit={1} />
-            </argument>
-          </sequence>
-        </choice>
-      </sequence>
+        </sequence>
+        <sequence>
+          <list items={['send ']} category='action' limit={1} />
+          <EmailGroup id='to' />
+          <literal text=' an email' />
+        </sequence>
+        <sequence>
+          <list items={['email ', 'send ']} category='action' limit={1}/>
+          <argument text='message' id='message'>
+            <freetext splitOn=' ' limit={1} />
+          </argument>
+          <literal text=' to ' category='conjunction' />
+          <EmailGroup id='to' />
+        </sequence>
+        <sequence>
+          <list items={['email ', 'send an email to ', 'send email to ', 'shoot an email to ']} category='action' limit={1} />
+          <EmailGroup id='to' />
+          <choice limit={1}>
+            <literal text=' about ' />
+            <literal text=' ' />
+          </choice>
+          <argument text='message' id='message'>
+            <freetext splitOn=' ' limit={1} />
+          </argument>
+        </sequence>
+        <sequence>
+          <list items={['send ']} category='action' limit={1} />
+          <EmailGroup id='to' />
+          <choice limit={1} category='action'>
+            <literal text=' an email about ' />
+            <literal text=' an email ' />
+            <literal text=' email about ' />
+            <literal text=' email ' />
+          </choice>
+          <argument text='message' id='message'>
+            <freetext splitOn=' ' limit={1} />
+          </argument>
+        </sequence>
+      </choice>
       <sequence id='call'>
-        <literal text='call ' category='action' />
+        <list items={['call ', 'ring ', 'call up ', 'ring up ']} category='action' limit={1} />
         <NumberGroup merge={true} max={1} />
       </sequence>
       <sequence id='facetime'>
         <literal text='facetime ' category='action' />
         <AllGroup merge={true} max={1} />
       </sequence>
-      <sequence id='text'>
-        <list items={['text ', 'iMessage ']} limit={1} category='action' />
-        <choice merge={true}>
+      <choice id='text'>
+        <sequence>
+          <list items={['text ', 'iMessage ', 'shoot a text to ', 'send a text to ']} limit={1} category='action' />
           <AllGroup />
-          <sequence>
-            <argument text='message' id='message'>
-              <freetext splitOn=' ' limit={1} />
-            </argument>
-            <literal text=' to ' category='conjunction' />
-            <AllGroup merge={true} />
-          </sequence>
-          <sequence>
-            <AllGroup merge={true} />
-            <choice limit={1}>
-              <literal text=' saying ' />
-              <literal text=' ' />
-            </choice>
-            <argument text='message' id='message'>
-              <freetext splitOn=' ' limit={1} />
-            </argument>
-          </sequence>
-        </choice>
-      </sequence>
+        </sequence>
+        <sequence>
+          <list items={['text ', 'iMessage ']} limit={1} category='action' />
+          <argument text='message' id='message'>
+            <freetext splitOn=' ' limit={1} />
+          </argument>
+          <literal text=' to ' category='conjunction' />
+          <AllGroup merge={true} />
+        </sequence>
+        <sequence>
+          <list items={['send ']} limit={1} category='action' />
+          <AllGroup merge={true} />
+          <choice limit={1} category='action'>
+            <literal text=' a text saying ' />
+            <literal text=' an iMessage saying' />
+            <literal text=' a text ' />
+            <literal text=' an iMessage' />
+          </choice>
+          <argument text='message' id='message'>
+            <freetext splitOn=' ' limit={1} />
+          </argument>
+        </sequence>
+        <sequence>
+          <list items={['text ', 'iMessage ']} limit={1} category='action' />
+          <AllGroup merge={true} />
+          <choice limit={1}>
+            <literal text=' saying ' />
+            <literal text=' ' />
+          </choice>
+          <argument text='message' id='message'>
+            <freetext splitOn=' ' limit={1} />
+          </argument>
+        </sequence>
+      </choice>
     </choice>
   )
 }
