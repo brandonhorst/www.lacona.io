@@ -17720,11 +17720,11 @@ var Options = (function (_React$Component) {
           hint: hint });
       });
 
-      return _React2['default'].createElement(
+      return divs.length ? _React2['default'].createElement(
         'div',
         { className: 'options', ref: 'options' },
         divs
-      );
+      ) : null;
     }
   }]);
 
