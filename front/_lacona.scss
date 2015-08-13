@@ -173,6 +173,7 @@
     @include descriptor(path, map-get($theme, argument1));
 
     @include descriptor(message, map-get($theme, argument2));
+    @include descriptor(phrase, map-get($theme, argument2));
     @include descriptor(query, map-get($theme, argument2));
     @include descriptor(reminder-title, map-get($theme, argument2));
     @include descriptor(calendar-event, map-get($theme, argument2));
@@ -184,6 +185,7 @@
     @include descriptor(consulta, map-get($theme, argument2));
 
     @include descriptor(contact, map-get($theme, argument3));
+    @include descriptor(language, map-get($theme, argument3));
     @include descriptor(birthday, map-get($theme, argument3));
     @include descriptor(url, map-get($theme, argument3));
     @include descriptor(search-engine, map-get($theme, argument3));

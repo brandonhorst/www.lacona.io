@@ -147,6 +147,14 @@ export default function getExecute (showNotification) {
           message = [<span className='category-action'>open</span>, ' ', <span className='descriptor-application'>Messages</span>, ' to a conversation with ', outputifyContacts(result.contact.text)]
         }
       }
+    } else if (result.translate) {
+      if (result.translate.to && result.translate.to.length > 1) {
+        const languages = _.map(result.translate.to, lang => <span className='descriptor-language'>{lang}</span>)
+
+        message = [<span className='category-action'>load </span>, 'translations of ', <span className='descriptor-phrase'>{result.translate.phrase}</span>, ' from ', <span className='descriptor-language'>{result.translate.from || 'an auto-detected language'}</span>, ' to ', andify(languages), ' in ', <span className='descriptor-application'>the default browser</span>]
+      } else {
+        message = [<span className='category-action'>load </span>, 'a translation of ', <span className='descriptor-phrase'>{result.translate.phrase}</span>, ' from ', <span className='descriptor-language'>{result.translate.from || 'an auto-detected language'}</span>, ' to ', <span className='descriptor-language'>{(result.translate.to && result.translate.to[0]) || 'English'}</span>, ' in ', <span className='descriptor-application'>the default browser</span>]
+      }
     }
 
     if (message == null) {

@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import {all, open, date, search, play, contact} from './sentence.jsx'
+import {all, open, date, search, play, contact, translate} from './sentence.jsx'
 import eachSeries from 'async-each-series'
 import ga, {Initializer} from 'react-google-analytics'
 import getExecute from './execute.jsx'
@@ -401,10 +401,10 @@ export default class Page extends React.Component {
                   <span className='category-action'>email</span> <span className='descriptor-contact'>Tony Stark</span>
                 </li>
                 <li onClick={this.type.bind(this, '4', () => false, 'text Leaving now :) to Hank McCoy')}>
-                  <span className='category-action'>text</span> <span className='descriptor-message'>Leaving now :)</span> <span className='conjunction'>to</span> <span className='descriptor-contact'>Hank McCoy</span>
+                  <span className='category-action'>text</span> <span className='descriptor-message'>Leaving now :)</span> <span className='category-conjunction'>to</span> <span className='descriptor-contact'>Hank McCoy</span>
                 </li>
                 <li onClick={this.type.bind(this, '4', () => false, 'email Dinner Plans to Clinton and Natalia')}>
-                  <span className='category-action'>email</span> <span className='descriptor-message'>Dinner Plans</span> <span className='conjunction'>to</span> <span className='descriptor-contact'>Clinton</span> <span className='conjunction'>and</span> <span className='descriptor-contact'>Natalia</span>
+                  <span className='category-action'>email</span> <span className='descriptor-message'>Dinner Plans</span> <span className='category-conjunction'>to</span> <span className='descriptor-contact'>Clinton</span> <span className='category-conjunction'>and</span> <span className='descriptor-contact'>Natalia</span>
                 </li>
                 <li onClick={this.type.bind(this, '4', () => false, 'facetime my boss')}>
                   <span className='category-action'>facetime</span> <span className='descriptor-relationship'>my boss</span>
@@ -424,6 +424,30 @@ export default class Page extends React.Component {
               </ul>
             </div>
             <Lacona userInteracted={this.stopDemo.bind(this)} ref='4' grammar={contact.grammar} execute={contact => this.execute({contact})} />
+          </section>
+          <section className='textRight'>
+            <div className='text'>
+              <h3>Become a Global Citizen</h3>
+              <p>Quickly translate words and phrases between languages. A more natural interface for Google Translate.</p>
+              <ul className='examples'>
+                <li onClick={this.type.bind(this, '5', () => false, 'translate мороженное')}>
+                  <span className='category-action'>translate</span> <span className='descriptor-phrase'>мороженное</span>
+                </li>
+                <li onClick={this.type.bind(this, '5', () => false, 'translate 我爱你 to Korean')}>
+                  <span className='category-action'>translate</span> <span className='descriptor-phrase'>我爱你</span> <span className='category-conjunction'>to</span> <span className='descriptor-language'>Korean</span>
+                </li>
+                <li onClick={this.type.bind(this, '5', () => false, 'translate ¿cómo estás? from Spanish to Japanese')}>
+                  <span className='category-action'>translate</span> <span className='descriptor-phrase'>como estas?</span> <span className='category-conjunction'>from</span> <span className='descriptor-language'>Spanish</span> <span className='category-conjunction'>to</span> <span className='descriptor-language'>Japanese</span>
+                </li>
+                <li onClick={this.type.bind(this, '5', () => false, 'translate hujambo from Swahili')}>
+                  <span className='category-action'>translate</span> <span className='descriptor-phrase'>hujambo</span> <span className='category-conjunction'>from</span> <span className='descriptor-language'>Swahili</span>
+                </li>
+                <li onClick={this.type.bind(this, '5', () => false, "translate I don't know to Arabic, Chinese, French, Russian, and Spanish")}>
+                  <span className='category-action'>translate</span> <span className='descriptor-phrase'>I don't know</span> <span className='category-conjunction'>to</span> <span className='descriptor-language'>Arabic</span> <span className='category-conjunction'>,</span> <span className='descriptor-language'>Chinese</span> <span className='category-conjunction'>,</span> <span className='descriptor-language'>French</span> <span className='category-conjunction'>,</span> <span className='descriptor-language'>Russian</span> <span className='category-conjunction'>, and</span> <span className='descriptor-language'>Spanish</span>
+                </li>
+              </ul>
+            </div>
+            <Lacona userInteracted={this.stopDemo.bind(this)} ref='5' grammar={translate.grammar} execute={translate => this.execute({translate})} />
           </section>
           <section className='full'>
             <div className='text'>

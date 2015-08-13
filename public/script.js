@@ -421,6 +421,56 @@ function getExecute(showNotification) {
           ), ' to a conversation with ', outputifyContacts(result.contact.text)];
         }
       }
+    } else if (result.translate) {
+      if (result.translate.to && result.translate.to.length > 1) {
+        var languages = _.map(result.translate.to, function (lang) {
+          return _reactAddons2['default'].createElement(
+            'span',
+            { className: 'descriptor-language' },
+            lang
+          );
+        });
+
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'load '
+        ), 'translations of ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-phrase' },
+          result.translate.phrase
+        ), ' from ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-language' },
+          result.translate.from || 'an auto-detected language'
+        ), ' to ', andify(languages), ' in ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-application' },
+          'the default browser'
+        )];
+      } else {
+        message = [_reactAddons2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'load '
+        ), 'a translation of ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-phrase' },
+          result.translate.phrase
+        ), ' from ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-language' },
+          result.translate.from || 'an auto-detected language'
+        ), ' to ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-language' },
+          result.translate.to && result.translate.to[0] || 'English'
+        ), ' in ', _reactAddons2['default'].createElement(
+          'span',
+          { className: 'descriptor-application' },
+          'the default browser'
+        )];
+      }
     }
 
     if (message == null) {
@@ -704,7 +754,7 @@ function outputifyDefaultOpen(objs) {
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/core-js/object/define-property":11,"babel-runtime/core-js/object/keys":13,"babel-runtime/helpers/interop-require-default":18,"moment-duration-format":278}],3:[function(require,module,exports){
+},{"babel-runtime/core-js/object/define-property":11,"babel-runtime/core-js/object/keys":13,"babel-runtime/helpers/interop-require-default":18,"moment-duration-format":274}],3:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1045,7 +1095,7 @@ Lacona.defaultProps = {
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/core-js/get-iterator":9,"babel-runtime/core-js/object/define-property":11,"babel-runtime/helpers/class-call-check":14,"babel-runtime/helpers/create-class":15,"babel-runtime/helpers/get":16,"babel-runtime/helpers/inherits":17,"babel-runtime/helpers/interop-require-default":18,"babel-runtime/helpers/to-consumable-array":19,"lacona":199,"react-lacona":281}],4:[function(require,module,exports){
+},{"babel-runtime/core-js/get-iterator":9,"babel-runtime/core-js/object/define-property":11,"babel-runtime/helpers/class-call-check":14,"babel-runtime/helpers/create-class":15,"babel-runtime/helpers/get":16,"babel-runtime/helpers/inherits":17,"babel-runtime/helpers/interop-require-default":18,"babel-runtime/helpers/to-consumable-array":19,"lacona":195,"react-lacona":277}],4:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2490,7 +2540,7 @@ var Page = (function (_React$Component) {
                   ' ',
                   _reactAddons2['default'].createElement(
                     'span',
-                    { className: 'conjunction' },
+                    { className: 'category-conjunction' },
                     'to'
                   ),
                   ' ',
@@ -2519,7 +2569,7 @@ var Page = (function (_React$Component) {
                   ' ',
                   _reactAddons2['default'].createElement(
                     'span',
-                    { className: 'conjunction' },
+                    { className: 'category-conjunction' },
                     'to'
                   ),
                   ' ',
@@ -2531,7 +2581,7 @@ var Page = (function (_React$Component) {
                   ' ',
                   _reactAddons2['default'].createElement(
                     'span',
-                    { className: 'conjunction' },
+                    { className: 'category-conjunction' },
                     'and'
                   ),
                   ' ',
@@ -2636,6 +2686,224 @@ var Page = (function (_React$Component) {
             ),
             _reactAddons2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '4', grammar: _sentenceJsx.contact.grammar, execute: function (contact) {
                 return _this2.execute({ contact: contact });
+              } })
+          ),
+          _reactAddons2['default'].createElement(
+            'section',
+            { className: 'textRight' },
+            _reactAddons2['default'].createElement(
+              'div',
+              { className: 'text' },
+              _reactAddons2['default'].createElement(
+                'h3',
+                null,
+                'Become a Global Citizen'
+              ),
+              _reactAddons2['default'].createElement(
+                'p',
+                null,
+                'Quickly translate words and phrases between languages. A more natural interface for Google Translate.'
+              ),
+              _reactAddons2['default'].createElement(
+                'ul',
+                { className: 'examples' },
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '5', function () {
+                      return false;
+                    }, 'translate мороженное') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'translate'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-phrase' },
+                    'мороженное'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '5', function () {
+                      return false;
+                    }, 'translate 我爱你 to Korean') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'translate'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-phrase' },
+                    '我爱你'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'to'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-language' },
+                    'Korean'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '5', function () {
+                      return false;
+                    }, 'translate ¿cómo estás? from Spanish to Japanese') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'translate'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-phrase' },
+                    'como estas?'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'from'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-language' },
+                    'Spanish'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'to'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-language' },
+                    'Japanese'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '5', function () {
+                      return false;
+                    }, 'translate hujambo from Swahili') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'translate'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-phrase' },
+                    'hujambo'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'from'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-language' },
+                    'Swahili'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '5', function () {
+                      return false;
+                    }, 'translate I don\'t know to Arabic, Chinese, French, Russian, and Spanish') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'translate'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-phrase' },
+                    'I don\'t know'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'to'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-language' },
+                    'Arabic'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    ','
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-language' },
+                    'Chinese'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    ','
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-language' },
+                    'French'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    ','
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-language' },
+                    'Russian'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    ', and'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-language' },
+                    'Spanish'
+                  )
+                )
+              )
+            ),
+            _reactAddons2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '5', grammar: _sentenceJsx.translate.grammar, execute: function (translate) {
+                return _this2.execute({ translate: translate });
               } })
           ),
           _reactAddons2['default'].createElement(
@@ -3200,7 +3468,7 @@ module.exports = exports['default'];
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               </section>*/
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./execute.jsx":2,"./lacona.jsx":3,"./sentence.jsx":6,"async-each-series":7,"babel-runtime/core-js/object/define-property":11,"babel-runtime/helpers/class-call-check":14,"babel-runtime/helpers/create-class":15,"babel-runtime/helpers/get":16,"babel-runtime/helpers/inherits":17,"babel-runtime/helpers/interop-require-default":18,"react-google-analytics":279}],5:[function(require,module,exports){
+},{"./execute.jsx":2,"./lacona.jsx":3,"./sentence.jsx":6,"async-each-series":7,"babel-runtime/core-js/object/define-property":11,"babel-runtime/helpers/class-call-check":14,"babel-runtime/helpers/create-class":15,"babel-runtime/helpers/get":16,"babel-runtime/helpers/inherits":17,"babel-runtime/helpers/interop-require-default":18,"react-google-analytics":275}],5:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3262,10 +3530,6 @@ var _laconaPhraseEmail2 = _interopRequireDefault(_laconaPhraseEmail);
 var _laconaPhrasePhonenumber = require('lacona-phrase-phonenumber');
 
 var _laconaPhrasePhonenumber2 = _interopRequireDefault(_laconaPhrasePhonenumber);
-
-var _laconaPhraseRepeat = require('lacona-phrase-repeat');
-
-var _laconaPhraseRepeat2 = _interopRequireDefault(_laconaPhraseRepeat);
 
 var userFiles = [{
   name: 'Desktop',
@@ -5142,6 +5406,62 @@ var contact = {
 };
 
 exports.contact = contact;
+
+var Language = (function (_Phrase20) {
+  function Language() {
+    _classCallCheck(this, Language);
+
+    if (_Phrase20 != null) {
+      _Phrase20.apply(this, arguments);
+    }
+  }
+
+  _inherits(Language, _Phrase20);
+
+  _createClass(Language, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'argument',
+        { text: 'language' },
+        (0, _laconaPhrase.createElement)('list', { items: [{ text: 'Afrikaans', value: 'Afrikaans' }, { text: 'Albanian', value: 'Albanian' }, { text: 'Arabic', value: 'Arabic' }, { text: 'Armenian', value: 'Armenian' }, { text: 'Azerbaijani', value: 'Azerbaijani' }, { text: 'Basque', value: 'Basque' }, { text: 'Belarusian', value: 'Belarusian' }, { text: 'Bengali', value: 'Bengali' }, { text: 'Bosnian', value: 'Bosnian' }, { text: 'Bulgarian', value: 'Bulgarian' }, { text: 'Catalan', value: 'Catalan' }, { text: 'Cebuano', value: 'Cebuano' }, { text: 'Chichewa', value: 'Chichewa' }, { text: 'Chinese', value: 'Chinese (Simplified)' }, { text: 'Chinese (Simplified)', value: 'Chinese (Simplified)' }, { text: 'Chinese (Traditional)', value: 'Chinese (Traditional)' }, { text: 'Croatian', value: 'Croatian' }, { text: 'Czech', value: 'Czech' }, { text: 'Danish', value: 'Danish' }, { text: 'Dutch', value: 'Dutch' }, { text: 'English', value: 'English' }, { text: 'Esperanto', value: 'Esperanto' }, { text: 'Estonian', value: 'Estonian' }, { text: 'Filipino', value: 'Filipino' }, { text: 'Finnish', value: 'Finnish' }, { text: 'French', value: 'French' }, { text: 'Galician', value: 'Galician' }, { text: 'Georgian', value: 'Georgian' }, { text: 'German', value: 'German' }, { text: 'Greek', value: 'Greek' }, { text: 'Gujarati', value: 'Gujarati' }, { text: 'Haitian Creole', value: 'Creole' }, { text: 'Hausa', value: 'Hausa' }, { text: 'Hebrew', value: 'Hebrew' }, { text: 'Hindi', value: 'Hindi' }, { text: 'Hmong', value: 'Hmong' }, { text: 'Hungarian', value: 'Hungarian' }, { text: 'Icelandic', value: 'Icelandic' }, { text: 'Igbo', value: 'Igbo' }, { text: 'Indonesian', value: 'Indonesian' }, { text: 'Irish', value: 'Irish' }, { text: 'Italian', value: 'Italian' }, { text: 'Japanese', value: 'Japanese' }, { text: 'Javanese', value: 'Javanese' }, { text: 'Kannada', value: 'Kannada' }, { text: 'Kazakh', value: 'Kazakh' }, { text: 'Khmer', value: 'Khmer' }, { text: 'Korean', value: 'Korean' }, { text: 'Lao', value: 'Lao' }, { text: 'Latin', value: 'Latin' }, { text: 'Latvian', value: 'Latvian' }, { text: 'Lithuanian', value: 'Lithuanian' }, { text: 'Macedonian', value: 'Macedonian' }, { text: 'Malagasy', value: 'Malagasy' }, { text: 'Malay', value: 'Malay' }, { text: 'Malayalam', value: 'Malayalam' }, { text: 'Maltese', value: 'Maltese' }, { text: 'Maori', value: 'Maori' }, { text: 'Marathi', value: 'Marathi' }, { text: 'Mongolian', value: 'Mongolian' }, { text: 'Myanmar', value: 'Burmese' }, { text: 'Burmese', value: 'Burmese' }, { text: 'Nepali', value: 'Nepali' }, { text: 'Norwegian', value: 'Norwegian' }, { text: 'Persian', value: 'Persian' }, { text: 'Polish', value: 'Polish' }, { text: 'Portuguese', value: 'Portuguese' }, { text: 'Punjabi', value: 'Punjabi' }, { text: 'Romanian', value: 'Romanian' }, { text: 'Russian', value: 'Russian' }, { text: 'Serbian', value: 'Serbian' }, { text: 'Sesotho', value: 'Sesotho' }, { text: 'Sinhala', value: 'Sinhala' }, { text: 'Slovak', value: 'Slovak' }, { text: 'Slovenian', value: 'Slovenian' }, { text: 'Somali', value: 'Somali' }, { text: 'Spanish', value: 'Spanish' }, { text: 'Sundanese', value: 'Sundanese' }, { text: 'Swahili', value: 'Swahili' }, { text: 'Swedish', value: 'Swedish' }, { text: 'Tajik', value: 'Tajik' }, { text: 'Tamil', value: 'Tamil' }, { text: 'Telugu', value: 'Telugu' }, { text: 'Thai', value: 'Thai' }, { text: 'Turkish', value: 'Turkish' }, { text: 'Ukrainian', value: 'Ukrainian' }, { text: 'Urdu', value: 'Urdu' }, { text: 'Uzbek', value: 'Uzbek' }, { text: 'Vietnamese', value: 'Vietnamese' }, { text: 'Welsh', value: 'Welsh' }, { text: 'Yiddish', value: 'Yiddish' }, { text: 'Yoruba', value: 'Yoruba' }, { text: 'Zulu', value: 'Zulu' }] })
+      );
+    }
+  }]);
+
+  return Language;
+})(_laconaPhrase.Phrase);
+
+var translate = {
+  grammar: (0, _laconaPhrase.createElement)(
+    'sequence',
+    null,
+    (0, _laconaPhrase.createElement)('literal', { text: 'translate ', category: 'action' }),
+    (0, _laconaPhrase.createElement)(
+      'argument',
+      { text: 'phrase', id: 'phrase' },
+      (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
+    ),
+    (0, _laconaPhrase.createElement)(
+      'sequence',
+      { optional: true, merge: true },
+      (0, _laconaPhrase.createElement)('literal', { text: ' from ', category: 'conjunction' }),
+      (0, _laconaPhrase.createElement)(Language, { id: 'from' })
+    ),
+    (0, _laconaPhrase.createElement)(
+      'sequence',
+      { optional: true, merge: true },
+      (0, _laconaPhrase.createElement)('literal', { text: ' to ' }),
+      (0, _laconaPhrase.createElement)(
+        'repeat',
+        { separator: (0, _laconaPhrase.createElement)('list', { items: [', ', ' and ', ', and '], category: 'conjunction', limit: 1 }), id: 'to' },
+        (0, _laconaPhrase.createElement)(Language, null)
+      )
+    )
+  )
+};
+
+exports.translate = translate;
 var all = {
   grammar: (0, _laconaPhrase.createElement)(
     'choice',
@@ -5150,7 +5470,8 @@ var all = {
     date.grammar,
     search.grammar,
     play.grammar,
-    contact.grammar
+    contact.grammar,
+    translate.grammar
   ),
   extensions: [Birthday, Holiday]
 }
@@ -5230,7 +5551,7 @@ var all = {
 ;exports.all = all;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/core-js/object/define-property":11,"babel-runtime/helpers/class-call-check":14,"babel-runtime/helpers/create-class":15,"babel-runtime/helpers/inherits":17,"babel-runtime/helpers/interop-require-default":18,"lacona-phrase":182,"lacona-phrase-datetime":149,"lacona-phrase-email":166,"lacona-phrase-phonenumber":170,"lacona-phrase-repeat":174,"lacona-phrase-url":178}],7:[function(require,module,exports){
+},{"babel-runtime/core-js/object/define-property":11,"babel-runtime/helpers/class-call-check":14,"babel-runtime/helpers/create-class":15,"babel-runtime/helpers/inherits":17,"babel-runtime/helpers/interop-require-default":18,"lacona-phrase":178,"lacona-phrase-datetime":149,"lacona-phrase-email":166,"lacona-phrase-phonenumber":170,"lacona-phrase-url":174}],7:[function(require,module,exports){
 module.exports = function (arr, iterator, callback) {
   callback = callback || function () {};
   if (!Array.isArray(arr) || !arr.length) {
@@ -12013,256 +12334,6 @@ arguments[4][161][0].apply(exports,arguments)
 arguments[4][162][0].apply(exports,arguments)
 },{"dup":162}],174:[function(require,module,exports){
 (function (global){
-"use strict";
-
-var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
-
-var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _inherits = function (subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
-
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
-
-/** @jsx createElement */
-
-var _ = _interopRequire((typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null));
-
-var _laconaPhrase = require("lacona-phrase");
-
-var createElement = _laconaPhrase.createElement;
-var Phrase = _laconaPhrase.Phrase;
-
-var Repeat = (function (_Phrase) {
-  function Repeat() {
-    _classCallCheck(this, Repeat);
-
-    if (_Phrase != null) {
-      _Phrase.apply(this, arguments);
-    }
-  }
-
-  _inherits(Repeat, _Phrase);
-
-  _createClass(Repeat, {
-    filter: {
-      value: function filter(result) {
-        console.log(result);
-        if (result && result.repeat && result.repeat.length > 0 && _.last(result.repeat) == null && result.child == null) {
-          return false;
-        }if (this.props.unique && _.isPlainObject(result) && result.repeat) {
-          return !_.includes(result.repeat, result.child);
-        }
-
-        return true;
-      }
-    },
-    getValue: {
-      value: function getValue(result) {
-        if (_.isPlainObject(result) && result.repeat) {
-          if (result.child) {
-            return [result.child].concat(result.repeat);
-          } else {
-            return result.repeat;
-          }
-        } else {
-          return [result];
-        }
-      }
-    },
-    describe: {
-      value: function describe() {
-        var child = undefined,
-            separator = undefined,
-            firstContent = undefined;
-        var trueChildren = this.props.children;
-
-        if (this.props.children[0] && this.props.children[0].Constructor === "content") {
-          child = this.props.children[0].children[0];
-          if (this.props.children[1] && this.props.children[1].Constructor === "separator") {
-            separator = this.props.children[1].children[0];
-          }
-          if (this.props.children[2] && this.props.children[2].Constructor === "firstContent") {
-            firstContent = this.props.children[2].children[0];
-            trueChildren = this.props.children.slice(0, 2);
-          }
-        } else {
-          child = this.props.children[0];
-        }
-
-        if (this.props.max === 1) {
-          return firstContent || child;
-        } else {
-          var childWithId = _.merge({}, child, { props: { id: "child" } });
-          var content = separator ? createElement(
-            "sequence",
-            { merge: true },
-            childWithId,
-            separator
-          ) : childWithId;
-
-          var recurse = createElement(
-            "sequence",
-            null,
-            content,
-            createElement(
-              Repeat,
-              { id: "repeat", unique: this.props.unique, max: this.props.max - 1, min: this.props.min - 1 },
-              trueChildren
-            )
-          );
-
-          if (this.props.min <= 1) {
-            return createElement(
-              "choice",
-              null,
-              firstContent || child,
-              createElement(
-                "placeholder",
-                null,
-                recurse
-              )
-            );
-          } else {
-            return recurse;
-          }
-        }
-      }
-    }
-  });
-
-  return Repeat;
-})(Phrase);
-
-module.exports = Repeat;
-
-Repeat.defaultProps = {
-  max: Number.MAX_SAFE_INTEGER,
-  min: 1,
-  unique: false
-};
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-phrase":175}],175:[function(require,module,exports){
-"use strict";
-
-var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
-
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
-
-exports.createElement = createElement;
-exports.createFactory = createFactory;
-exports.createPhrase = createPhrase;
-
-var inherits = _interopRequire(require("inherits"));
-
-var version = require("../package").version;
-
-function createElement(Constructor, props) {
-  for (var _len = arguments.length, children = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    children[_key - 2] = arguments[_key];
-  }
-
-  return {
-    Constructor: Constructor,
-    props: props,
-    children: children,
-    version: version
-  };
-}
-
-function createFactory(constructor) {
-  return createElement.bind(null, constructor);
-}
-
-var Phrase = exports.Phrase = function Phrase() {
-  _classCallCheck(this, Phrase);
-};
-
-function createPhrase(options) {
-  var Constructor = options.onCreate || function () {};
-
-  inherits(Constructor, Phrase);
-
-  Constructor.translations = options.translations;
-  Constructor.supplements = options.supplements;
-  Constructor.overrides = options.overrides;
-  Constructor.defaultProps = options.defaultProps;
-  Constructor.initialState = options.initialState;
-
-  for (var key in options) {
-    if (typeof options[key] === "function") {
-      Constructor.prototype[key] = options[key];
-    }
-  }
-  return Constructor;
-}
-
-var choice = exports.choice = createFactory("choice");
-var content = exports.content = createFactory("content");
-var literal = exports.literal = createFactory("literal");
-var separator = exports.separator = createFactory("separator");
-var sequence = exports.sequence = createFactory("sequence");
-var value = exports.value = createFactory("value");
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-},{"../package":177,"inherits":176}],176:[function(require,module,exports){
-arguments[4][161][0].apply(exports,arguments)
-},{"dup":161}],177:[function(require,module,exports){
-module.exports={
-  "name": "lacona-phrase",
-  "version": "0.6.1",
-  "description": "Create lacona phrases",
-  "main": "lib/phrase.js",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "pretest": "babel test --out-dir tmp ",
-    "test": "mocha tmp",
-    "build": "babel src --out-dir lib",
-    "validate": "npm run build && npm test",
-    "prepublish": "npm run clean && npm run build",
-    "clean": "rimraf lib tmp"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/lacona/lacona-phrase.git"
-  },
-  "keywords": [
-    "lacona-phrase",
-    "lacona",
-    "phrase",
-    "create",
-    "initialize",
-    "class"
-  ],
-  "author": {
-    "name": "@brandonhorst"
-  },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/lacona/lacona-phrase/issues"
-  },
-  "homepage": "https://github.com/lacona/lacona-phrase",
-  "devDependencies": {
-    "babel": "^4.6.6",
-    "chai": "^2.1.0",
-    "mocha": "^2.1.0",
-    "rimraf": "^2.2.8"
-  },
-  "dependencies": {
-    "inherits": "^2.0.1"
-  },
-  "readme": "# lacona-phrase\n\nThis package is used to create `lacona` phrases. It works with [`lacona`](https://github.com/lacona/lacona) but is maintained separately to allow libraries to be versioned independently of the parser.\n\nA `lacona` phrase is a Javascript descriptor of some natural language construct. The syntax is modeled after [React](http://facebook.github.io/react/), but rather than specifying HTML output, it specifies a language.\n\nLike React, `lacona` phrases can be specified using [JSX](http://facebook.github.io/jsx/). This is recommended, but not required. While JSX is a much more succinct and readable way to express the phrase's structure, it does necessitate a transpilation step. `lacona` itself is built this way, using the excellent [babel](http://babeljs.io/) transpiler. In addition to transpiling JSX, it also transpiles ES6 functionality, which can result in very simple code. All examples in this document will have two examples - JSX/ES6 code to be transpiled using Babel, and standard ES5. Note that it is possible to ES6 without JS (or vice-versa), but those examples are left as an exercise to the developer (but the tests may point you in the right direction).\n\n## Using Javascript Classes\n\nA `lacona` phrase is expressed as a Javascript class. For use with ES5, a shorthand method is provided that will create this class for you, without requiring you to interact with prototypes.\n\n#### Using ES6\n\n```js\nimport {Phrase} from 'lacona-phrase'\n\nexport default class MyPhrase extends Phrase {\n  constructor() {\n    // no need to call super()\n  }\n  static get defaultProps() {\n    return {a: 'test'}\n  }\n  describe() {\n    return // ...\n  }\n}\n```\n\n#### Using ES5\n\n```js\nvar createPhrase = require('lacona-phrase').createPhrase\n\nmodule.exports = createPhrase({\n  onCreate: function() {\n    // initialize phrase\n  },\n  defaultProps: {a: 'test'},\n  describe: function() {\n    return // ...\n  }\n})\n```\n\n## Describing Language\n\nIn `lacona`, language is described using `Element`s. Each `Element` can be thought of as an instance of a `Phrase`. Each `Element` can have `props` which govern its behavior.\n\nPlease note that `Phrases` should never be instantiated directly, and `Elements` should never be used outside of the context of a `describe()` call. An `Element` is ultimately just a small descriptor of its inputs - the actual `Phrase` instantiation and parsing is all done by `lacona` itself.\n\n#### Using ES6/JSX\n\nIn JSX, all lowercase tags refer to elements built-in to `lacona`. Custom classes must be uppercase. Please note the `@jsx` pragma in the initial comment. Unlike React, this comment is required. It must specify the name of the `createElement` function.\n\n```js\n/** @jsx createElement */\nimport {createElement, Phrase} from 'lacona-phrase'\n\nclass MyPhrase extends Phrase {\n  describe() {\n    return (\n      <choice>\n        <literal text='Google' />\n        <literal text='Yahoo' />\n        <literal text='Bing' />\n      </choice>\n    )\n  }\n}\n```\n\n#### Using ES5\n\nIn ES5, elements are specified in the form `phrase.createElement(constructor, props[, ...children])`. You can also create a factory to free you from continually needing to call `createElement`, using `createFactory`.\n\n```js\nvar phrase = require('lacona-phrase')\nvar factory = phrase.createFactory(MyPhrase)\n// these two lines are equivalent\nfactory({myProp: 'test'}, child1, child2)\nphrase.createElement(MyPhrase, {myProp: 'test'}, child1, child2)\n```\n\nThe module contains shorthand factories for the builtin elements.\n\n```js\nvar phrase = require('lacona-phrase')\n\nmodule.exports = phrase.createPhrase({\n  describe: function() {\n    return phrase.choice(null,\n      phrase.literal({text: 'Google'}),\n      phrase.literal({text: 'Yahoo'}),\n      phrase.literal({text: 'Bing'})\n    )\n  }\n})\n```\n\n## Supporting multiple languages\n\nThe pesky thing about *language* is that there are lots of them. A single phrase can (and should) support as many languages as possible, all expressing the same fundamental thing. This is done using the `translations` property. Note that while `describe()` is specified as a single function, `translations` is specified as a Static Property (see below for more information).\n\n### Using ES6/JSX\n\n```js\n/** @jsx createElement */\nimport {createElement, Phrase} from 'lacona-phrase'\nclass MyPhrase extends Phrase {\n  static get translations () {\n    return [{\n      langs: ['en'],\n      describe() {\n        return <literal text='hello' />\n      }\n    }, {\n      langs: ['zh']\n      describe() {\n        return <literal text='你好' />\n      }\n    }]\n  }\n}\n```\n\n### Using ES5\n\n```js\nvar phrase = require('lacona-phrase')\n\nmodule.exports = phrase.createPhrase({\n  translations: [{\n    langs: ['en'],\n    describe: function() {\n      return phrase.literal({text: 'hello'})\n    }\n  }, {\n    langs: ['zh']\n    describe: function() {\n      return phrase.literal({text: '你好'})\n    }\n  }]\n})\n```\n\n\n## Phrase Properties\n\nA `Phrase` is ultimately just a class - it can have any methods or properties. However, some methods and properties govern the `Phrase`'s behavior, and should not be used outside of that context.\n\n### Static Properties\n\nSome of a `Phrase`'s behavior is governed by Static Properties, which are specific to the `Phrase`, not to any particular `Element`. When using `createPhrase`, these are specified directly as objects. However, because ES6 does not directly support static properties, these cannot be expressed using ES6 class syntax alone. They can set be set as static getters, or directly as properties on the constructor.\n\n* `defaultProps`\n* `supplements`\n* `overrides`\n* `translations`\n\n#### Using ES6\n\nThe two strategies below are precisely equivalent\n\n```js\nimport {Phrase} from 'lacona-phrase'\n\nclass MyPhrase extends Phrase {\n  static get defaultProps() {\n    return {myProp: 'test'}\n  }\n  static get supplements() {\n    return []\n  }\n  describe() {\n    return // ...\n  }\n}\n```\n\n```js\nimport {Phrase} from 'lacona-phrase'\n\nclass MyPhrase extends Phrase {\n  describe() {\n    return // ...\n  }\n}\nMyPhrase.defaultProps = {myProp: 'test'}\nMyPhrase.supplements = []\n```\n\n#### Using ES5\n```js\nvar phrase = require('lacona-phrase')\n\nmodule.exports = phrase.createPhrase({\n  defaultProps: {myProp: 'test'},\n  supplements: [],\n  describe: function () {\n    return // ...\n  }\n})\n```\n",
-  "readmeFilename": "README.md",
-  "gitHead": "c8b8807038b18b65556627510d1e5a8401630614",
-  "_id": "lacona-phrase@0.6.1",
-  "_shasum": "0116fb838b021f5b7158bd734a81d5a7433ff564",
-  "_from": "lacona-phrase@*"
-}
-
-},{}],178:[function(require,module,exports){
-(function (global){
 'use strict';
 
 var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
@@ -12372,19 +12443,19 @@ URL.defaultProps = { splitOn: ' ' }
         */
 ;module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-phrase":179}],179:[function(require,module,exports){
+},{"lacona-phrase":175}],175:[function(require,module,exports){
 arguments[4][160][0].apply(exports,arguments)
-},{"../package":181,"dup":160,"inherits":180}],180:[function(require,module,exports){
+},{"../package":177,"dup":160,"inherits":176}],176:[function(require,module,exports){
 arguments[4][161][0].apply(exports,arguments)
-},{"dup":161}],181:[function(require,module,exports){
+},{"dup":161}],177:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
-},{"dup":162}],182:[function(require,module,exports){
+},{"dup":162}],178:[function(require,module,exports){
 arguments[4][160][0].apply(exports,arguments)
-},{"../package":184,"dup":160,"inherits":183}],183:[function(require,module,exports){
+},{"../package":180,"dup":160,"inherits":179}],179:[function(require,module,exports){
 arguments[4][161][0].apply(exports,arguments)
-},{"dup":161}],184:[function(require,module,exports){
+},{"dup":161}],180:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
-},{"dup":162}],185:[function(require,module,exports){
+},{"dup":162}],181:[function(require,module,exports){
 function join(array) {
   return array.reduce(function (acc, val) {
     return acc + val.string;
@@ -12406,7 +12477,7 @@ module.exports = {
   completion: completion
 };
 
-},{}],186:[function(require,module,exports){
+},{}],182:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -12449,7 +12520,7 @@ var Placeholder = (function (_Phrase) {
 
 exports['default'] = Placeholder;
 module.exports = exports['default'];
-},{"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/class-call-check":214,"babel-runtime/helpers/create-class":215,"babel-runtime/helpers/extends":217,"babel-runtime/helpers/inherits":219,"lacona-phrase":274}],187:[function(require,module,exports){
+},{"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/class-call-check":210,"babel-runtime/helpers/create-class":211,"babel-runtime/helpers/extends":213,"babel-runtime/helpers/inherits":215,"lacona-phrase":270}],183:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 'use strict';
@@ -12659,7 +12730,7 @@ var Choice = (function (_Phrase) {
 exports['default'] = Choice;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../parse":200,"../reconcile":202,"babel-runtime/core-js/get-iterator":204,"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/class-call-check":214,"babel-runtime/helpers/create-class":215,"babel-runtime/helpers/define-property":216,"babel-runtime/helpers/inherits":219,"babel-runtime/helpers/interop-require-default":220,"babel-runtime/regenerator":272,"lacona-phrase":274}],188:[function(require,module,exports){
+},{"../parse":196,"../reconcile":198,"babel-runtime/core-js/get-iterator":200,"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/class-call-check":210,"babel-runtime/helpers/create-class":211,"babel-runtime/helpers/define-property":212,"babel-runtime/helpers/inherits":215,"babel-runtime/helpers/interop-require-default":216,"babel-runtime/regenerator":268,"lacona-phrase":270}],184:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 'use strict';
@@ -12735,7 +12806,7 @@ var Decorator = (function (_Phrase) {
 exports['default'] = Decorator;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../fuzzy":198,"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/class-call-check":214,"babel-runtime/helpers/create-class":215,"babel-runtime/helpers/inherits":219,"babel-runtime/helpers/interop-require-default":220,"lacona-phrase":274}],189:[function(require,module,exports){
+},{"../fuzzy":194,"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/class-call-check":210,"babel-runtime/helpers/create-class":211,"babel-runtime/helpers/inherits":215,"babel-runtime/helpers/interop-require-default":216,"lacona-phrase":270}],185:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 'use strict';
@@ -13009,7 +13080,7 @@ module.exports = exports['default'];
 //   modification.completion = input.completion.concat(word)
 // }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../parse":200,"../reconcile":202,"../stackfind":203,"babel-runtime/core-js/get-iterator":204,"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/class-call-check":214,"babel-runtime/helpers/create-class":215,"babel-runtime/helpers/inherits":219,"babel-runtime/helpers/interop-require-default":220,"babel-runtime/regenerator":272,"lacona-phrase":274}],190:[function(require,module,exports){
+},{"../parse":196,"../reconcile":198,"../stackfind":199,"babel-runtime/core-js/get-iterator":200,"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/class-call-check":210,"babel-runtime/helpers/create-class":211,"babel-runtime/helpers/inherits":215,"babel-runtime/helpers/interop-require-default":216,"babel-runtime/regenerator":268,"lacona-phrase":270}],186:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -13193,7 +13264,7 @@ Freetext.defaultProps = {
   consumeAll: false
 };
 module.exports = exports['default'];
-},{"babel-runtime/core-js/get-iterator":204,"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/class-call-check":214,"babel-runtime/helpers/create-class":215,"babel-runtime/helpers/inherits":219,"babel-runtime/helpers/interop-require-default":220,"babel-runtime/regenerator":272,"lacona-phrase":274,"smart-split":277}],191:[function(require,module,exports){
+},{"babel-runtime/core-js/get-iterator":200,"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/class-call-check":210,"babel-runtime/helpers/create-class":211,"babel-runtime/helpers/inherits":215,"babel-runtime/helpers/interop-require-default":216,"babel-runtime/regenerator":268,"lacona-phrase":270,"smart-split":273}],187:[function(require,module,exports){
 'use strict';
 
 var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
@@ -13247,7 +13318,7 @@ exports.sequence = _interopRequire(_sequence);
 var _value = require('./value');
 
 exports.value = _interopRequire(_value);
-},{"./argument":186,"./choice":187,"./decorator":188,"./descriptor":189,"./freetext":190,"./list":192,"./literal":193,"./placeholder":194,"./repeat":195,"./sequence":196,"./value":197,"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/interop-require":222}],192:[function(require,module,exports){
+},{"./argument":182,"./choice":183,"./decorator":184,"./descriptor":185,"./freetext":186,"./list":188,"./literal":189,"./placeholder":190,"./repeat":191,"./sequence":192,"./value":193,"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/interop-require":218}],188:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 'use strict';
@@ -13542,7 +13613,7 @@ module.exports = exports['default'];
 
 // first check for exact matches
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../fuzzy":198,"babel-runtime/core-js/get-iterator":204,"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/class-call-check":214,"babel-runtime/helpers/create-class":215,"babel-runtime/helpers/inherits":219,"babel-runtime/helpers/interop-require-default":220,"babel-runtime/regenerator":272,"lacona-phrase":274}],193:[function(require,module,exports){
+},{"../fuzzy":194,"babel-runtime/core-js/get-iterator":200,"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/class-call-check":210,"babel-runtime/helpers/create-class":211,"babel-runtime/helpers/inherits":215,"babel-runtime/helpers/interop-require-default":216,"babel-runtime/regenerator":268,"lacona-phrase":270}],189:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 'use strict';
@@ -13641,7 +13712,7 @@ var Literal = (function (_Phrase) {
 exports['default'] = Literal;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../fuzzy":198,"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/class-call-check":214,"babel-runtime/helpers/create-class":215,"babel-runtime/helpers/inherits":219,"babel-runtime/helpers/interop-require-default":220,"lacona-phrase":274}],194:[function(require,module,exports){
+},{"../fuzzy":194,"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/class-call-check":210,"babel-runtime/helpers/create-class":211,"babel-runtime/helpers/inherits":215,"babel-runtime/helpers/interop-require-default":216,"lacona-phrase":270}],190:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -13684,7 +13755,7 @@ var Placeholder = (function (_Phrase) {
 
 exports['default'] = Placeholder;
 module.exports = exports['default'];
-},{"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/class-call-check":214,"babel-runtime/helpers/create-class":215,"babel-runtime/helpers/extends":217,"babel-runtime/helpers/inherits":219,"lacona-phrase":274}],195:[function(require,module,exports){
+},{"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/class-call-check":210,"babel-runtime/helpers/create-class":211,"babel-runtime/helpers/extends":213,"babel-runtime/helpers/inherits":215,"lacona-phrase":270}],191:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -13951,7 +14022,7 @@ Repeat.defaultProps = {
 };
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../parse":200,"../reconcile":202,"babel-runtime/core-js/get-iterator":204,"babel-runtime/core-js/number/max-safe-integer":206,"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/class-call-check":214,"babel-runtime/helpers/create-class":215,"babel-runtime/helpers/inherits":219,"babel-runtime/helpers/interop-require-default":220,"babel-runtime/regenerator":272,"lacona-phrase":274}],196:[function(require,module,exports){
+},{"../parse":196,"../reconcile":198,"babel-runtime/core-js/get-iterator":200,"babel-runtime/core-js/number/max-safe-integer":202,"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/class-call-check":210,"babel-runtime/helpers/create-class":211,"babel-runtime/helpers/inherits":215,"babel-runtime/helpers/interop-require-default":216,"babel-runtime/regenerator":268,"lacona-phrase":270}],192:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 'use strict';
@@ -14186,7 +14257,7 @@ function getAccumulatedResult(inputResult, child, childResult) {
 }
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../parse":200,"../reconcile":202,"babel-runtime/core-js/get-iterator":204,"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/class-call-check":214,"babel-runtime/helpers/create-class":215,"babel-runtime/helpers/define-property":216,"babel-runtime/helpers/extends":217,"babel-runtime/helpers/inherits":219,"babel-runtime/helpers/interop-require-default":220,"babel-runtime/regenerator":272,"lacona-phrase":274}],197:[function(require,module,exports){
+},{"../parse":196,"../reconcile":198,"babel-runtime/core-js/get-iterator":200,"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/class-call-check":210,"babel-runtime/helpers/create-class":211,"babel-runtime/helpers/define-property":212,"babel-runtime/helpers/extends":213,"babel-runtime/helpers/inherits":215,"babel-runtime/helpers/interop-require-default":216,"babel-runtime/regenerator":268,"lacona-phrase":270}],193:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -14483,7 +14554,7 @@ module.exports = exports['default'];
 //   modification.suggestion = input.suggestion.concat(trueWords)
 // }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../stackfind.js":203,"babel-runtime/core-js/get-iterator":204,"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/class-call-check":214,"babel-runtime/helpers/create-class":215,"babel-runtime/helpers/inherits":219,"babel-runtime/helpers/interop-require-default":220,"babel-runtime/regenerator":272,"lacona-phrase":274}],198:[function(require,module,exports){
+},{"../stackfind.js":199,"babel-runtime/core-js/get-iterator":200,"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/class-call-check":210,"babel-runtime/helpers/create-class":211,"babel-runtime/helpers/inherits":215,"babel-runtime/helpers/interop-require-default":216,"babel-runtime/regenerator":268,"lacona-phrase":270}],194:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -14733,7 +14804,7 @@ function anywhereMatch(_ref3) {
 //   return null
 // }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/core-js/get-iterator":204,"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/interop-require-default":220,"babel-runtime/helpers/sliced-to-array":223,"babel-runtime/regenerator":272}],199:[function(require,module,exports){
+},{"babel-runtime/core-js/get-iterator":200,"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/interop-require-default":216,"babel-runtime/helpers/sliced-to-array":219,"babel-runtime/regenerator":268}],195:[function(require,module,exports){
 'use strict';
 
 var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
@@ -14747,7 +14818,7 @@ _Object$defineProperty(exports, '__esModule', {
 var _parser = require('./parser');
 
 exports.Parser = _interopRequire(_parser);
-},{"./parser":201,"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/interop-require":222}],200:[function(require,module,exports){
+},{"./parser":197,"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/interop-require":218}],196:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -14896,7 +14967,7 @@ module.exports = exports['default'];
 
 //noop
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/core-js/get-iterator":204,"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/interop-require-default":220,"babel-runtime/regenerator":272}],201:[function(require,module,exports){
+},{"babel-runtime/core-js/get-iterator":200,"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/interop-require-default":216,"babel-runtime/regenerator":268}],197:[function(require,module,exports){
 (function (process,global){
 /** @jsx createElement */
 'use strict';
@@ -15204,7 +15275,7 @@ var Parser = (function (_EventEmitter) {
 exports['default'] = Parser;
 // path: []
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./parse":200,"./reconcile":202,"_process":145,"babel-runtime/core-js/get-iterator":204,"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/class-call-check":214,"babel-runtime/helpers/create-class":215,"babel-runtime/helpers/get":218,"babel-runtime/helpers/inherits":219,"babel-runtime/helpers/interop-require-default":220,"babel-runtime/regenerator":272,"events":143,"lacona-phrase":274}],202:[function(require,module,exports){
+},{"./parse":196,"./reconcile":198,"_process":145,"babel-runtime/core-js/get-iterator":200,"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/class-call-check":210,"babel-runtime/helpers/create-class":211,"babel-runtime/helpers/get":214,"babel-runtime/helpers/inherits":215,"babel-runtime/helpers/interop-require-default":216,"babel-runtime/regenerator":268,"events":143,"lacona-phrase":270}],198:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 'use strict';
@@ -15460,7 +15531,7 @@ function applySources(_ref14) {
 //   return true
 // }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./elements":191,"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/extends":217,"babel-runtime/helpers/interop-require-default":220,"babel-runtime/helpers/interop-require-wildcard":221,"babel-runtime/helpers/sliced-to-array":223,"lacona-phrase":274}],203:[function(require,module,exports){
+},{"./elements":187,"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/extends":213,"babel-runtime/helpers/interop-require-default":216,"babel-runtime/helpers/interop-require-wildcard":217,"babel-runtime/helpers/sliced-to-array":219,"lacona-phrase":270}],199:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -15489,31 +15560,31 @@ function stackFind(stack, property, override, otherwise) {
 
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/core-js/object/define-property":209,"babel-runtime/helpers/interop-require-default":220}],204:[function(require,module,exports){
+},{"babel-runtime/core-js/object/define-property":205,"babel-runtime/helpers/interop-require-default":216}],200:[function(require,module,exports){
 arguments[4][9][0].apply(exports,arguments)
-},{"core-js/library/fn/get-iterator":224,"dup":9}],205:[function(require,module,exports){
+},{"core-js/library/fn/get-iterator":220,"dup":9}],201:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/is-iterable"), __esModule: true };
-},{"core-js/library/fn/is-iterable":225}],206:[function(require,module,exports){
+},{"core-js/library/fn/is-iterable":221}],202:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/number/max-safe-integer"), __esModule: true };
-},{"core-js/library/fn/number/max-safe-integer":226}],207:[function(require,module,exports){
+},{"core-js/library/fn/number/max-safe-integer":222}],203:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/object/assign"), __esModule: true };
-},{"core-js/library/fn/object/assign":227}],208:[function(require,module,exports){
+},{"core-js/library/fn/object/assign":223}],204:[function(require,module,exports){
 arguments[4][10][0].apply(exports,arguments)
-},{"core-js/library/fn/object/create":228,"dup":10}],209:[function(require,module,exports){
+},{"core-js/library/fn/object/create":224,"dup":10}],205:[function(require,module,exports){
 arguments[4][11][0].apply(exports,arguments)
-},{"core-js/library/fn/object/define-property":229,"dup":11}],210:[function(require,module,exports){
+},{"core-js/library/fn/object/define-property":225,"dup":11}],206:[function(require,module,exports){
 arguments[4][12][0].apply(exports,arguments)
-},{"core-js/library/fn/object/get-own-property-descriptor":230,"dup":12}],211:[function(require,module,exports){
+},{"core-js/library/fn/object/get-own-property-descriptor":226,"dup":12}],207:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/promise"), __esModule: true };
-},{"core-js/library/fn/promise":231}],212:[function(require,module,exports){
+},{"core-js/library/fn/promise":227}],208:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/symbol"), __esModule: true };
-},{"core-js/library/fn/symbol":232}],213:[function(require,module,exports){
+},{"core-js/library/fn/symbol":228}],209:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/symbol/iterator"), __esModule: true };
-},{"core-js/library/fn/symbol/iterator":233}],214:[function(require,module,exports){
+},{"core-js/library/fn/symbol/iterator":229}],210:[function(require,module,exports){
 arguments[4][14][0].apply(exports,arguments)
-},{"dup":14}],215:[function(require,module,exports){
+},{"dup":14}],211:[function(require,module,exports){
 arguments[4][15][0].apply(exports,arguments)
-},{"babel-runtime/core-js/object/define-property":209,"dup":15}],216:[function(require,module,exports){
+},{"babel-runtime/core-js/object/define-property":205,"dup":15}],212:[function(require,module,exports){
 "use strict";
 
 var _Object$defineProperty = require("babel-runtime/core-js/object/define-property")["default"];
@@ -15528,7 +15599,7 @@ exports["default"] = function (obj, key, value) {
 };
 
 exports.__esModule = true;
-},{"babel-runtime/core-js/object/define-property":209}],217:[function(require,module,exports){
+},{"babel-runtime/core-js/object/define-property":205}],213:[function(require,module,exports){
 "use strict";
 
 var _Object$assign = require("babel-runtime/core-js/object/assign")["default"];
@@ -15548,7 +15619,7 @@ exports["default"] = _Object$assign || function (target) {
 };
 
 exports.__esModule = true;
-},{"babel-runtime/core-js/object/assign":207}],218:[function(require,module,exports){
+},{"babel-runtime/core-js/object/assign":203}],214:[function(require,module,exports){
 "use strict";
 
 var _Object$getOwnPropertyDescriptor = require("babel-runtime/core-js/object/get-own-property-descriptor")["default"];
@@ -15592,11 +15663,11 @@ exports["default"] = function get(_x, _x2, _x3) {
 };
 
 exports.__esModule = true;
-},{"babel-runtime/core-js/object/get-own-property-descriptor":210}],219:[function(require,module,exports){
+},{"babel-runtime/core-js/object/get-own-property-descriptor":206}],215:[function(require,module,exports){
 arguments[4][17][0].apply(exports,arguments)
-},{"babel-runtime/core-js/object/create":208,"dup":17}],220:[function(require,module,exports){
+},{"babel-runtime/core-js/object/create":204,"dup":17}],216:[function(require,module,exports){
 arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],221:[function(require,module,exports){
+},{"dup":18}],217:[function(require,module,exports){
 "use strict";
 
 exports["default"] = function (obj) {
@@ -15617,7 +15688,7 @@ exports["default"] = function (obj) {
 };
 
 exports.__esModule = true;
-},{}],222:[function(require,module,exports){
+},{}],218:[function(require,module,exports){
 "use strict";
 
 exports["default"] = function (obj) {
@@ -15625,7 +15696,7 @@ exports["default"] = function (obj) {
 };
 
 exports.__esModule = true;
-},{}],223:[function(require,module,exports){
+},{}],219:[function(require,module,exports){
 "use strict";
 
 var _isIterable = require("babel-runtime/core-js/is-iterable")["default"];
@@ -15665,115 +15736,115 @@ exports["default"] = function (arr, i) {
 };
 
 exports.__esModule = true;
-},{"babel-runtime/core-js/get-iterator":204,"babel-runtime/core-js/is-iterable":205}],224:[function(require,module,exports){
+},{"babel-runtime/core-js/get-iterator":200,"babel-runtime/core-js/is-iterable":201}],220:[function(require,module,exports){
 arguments[4][21][0].apply(exports,arguments)
-},{"../modules/$":249,"../modules/core.iter-helpers":262,"../modules/es6.string.iterator":269,"../modules/web.dom.iterable":271,"dup":21}],225:[function(require,module,exports){
+},{"../modules/$":245,"../modules/core.iter-helpers":258,"../modules/es6.string.iterator":265,"../modules/web.dom.iterable":267,"dup":21}],221:[function(require,module,exports){
 require('../modules/web.dom.iterable');
 require('../modules/es6.string.iterator');
 require('../modules/core.iter-helpers');
 module.exports = require('../modules/$').core.isIterable;
-},{"../modules/$":249,"../modules/core.iter-helpers":262,"../modules/es6.string.iterator":269,"../modules/web.dom.iterable":271}],226:[function(require,module,exports){
+},{"../modules/$":245,"../modules/core.iter-helpers":258,"../modules/es6.string.iterator":265,"../modules/web.dom.iterable":267}],222:[function(require,module,exports){
 require('../../modules/es6.number.statics');
 module.exports = 0x1fffffffffffff;
-},{"../../modules/es6.number.statics":264}],227:[function(require,module,exports){
+},{"../../modules/es6.number.statics":260}],223:[function(require,module,exports){
 require('../../modules/es6.object.assign');
 module.exports = require('../../modules/$').core.Object.assign;
-},{"../../modules/$":249,"../../modules/es6.object.assign":265}],228:[function(require,module,exports){
+},{"../../modules/$":245,"../../modules/es6.object.assign":261}],224:[function(require,module,exports){
 arguments[4][22][0].apply(exports,arguments)
-},{"../../modules/$":249,"dup":22}],229:[function(require,module,exports){
+},{"../../modules/$":245,"dup":22}],225:[function(require,module,exports){
 arguments[4][23][0].apply(exports,arguments)
-},{"../../modules/$":249,"dup":23}],230:[function(require,module,exports){
+},{"../../modules/$":245,"dup":23}],226:[function(require,module,exports){
 arguments[4][24][0].apply(exports,arguments)
-},{"../../modules/$":249,"../../modules/es6.object.statics-accept-primitives":266,"dup":24}],231:[function(require,module,exports){
+},{"../../modules/$":245,"../../modules/es6.object.statics-accept-primitives":262,"dup":24}],227:[function(require,module,exports){
 require('../modules/es6.object.to-string');
 require('../modules/es6.string.iterator');
 require('../modules/web.dom.iterable');
 require('../modules/es6.promise');
 module.exports = require('../modules/$').core.Promise;
-},{"../modules/$":249,"../modules/es6.object.to-string":267,"../modules/es6.promise":268,"../modules/es6.string.iterator":269,"../modules/web.dom.iterable":271}],232:[function(require,module,exports){
+},{"../modules/$":245,"../modules/es6.object.to-string":263,"../modules/es6.promise":264,"../modules/es6.string.iterator":265,"../modules/web.dom.iterable":267}],228:[function(require,module,exports){
 require('../../modules/es6.symbol');
 module.exports = require('../../modules/$').core.Symbol;
-},{"../../modules/$":249,"../../modules/es6.symbol":270}],233:[function(require,module,exports){
+},{"../../modules/$":245,"../../modules/es6.symbol":266}],229:[function(require,module,exports){
 require('../../modules/es6.string.iterator');
 require('../../modules/web.dom.iterable');
 module.exports = require('../../modules/$.wks')('iterator');
-},{"../../modules/$.wks":261,"../../modules/es6.string.iterator":269,"../../modules/web.dom.iterable":271}],234:[function(require,module,exports){
+},{"../../modules/$.wks":257,"../../modules/es6.string.iterator":265,"../../modules/web.dom.iterable":267}],230:[function(require,module,exports){
 arguments[4][26][0].apply(exports,arguments)
-},{"./$":249,"dup":26}],235:[function(require,module,exports){
+},{"./$":245,"dup":26}],231:[function(require,module,exports){
 arguments[4][54][0].apply(exports,arguments)
-},{"./$":249,"./$.enum-keys":240,"dup":54}],236:[function(require,module,exports){
+},{"./$":245,"./$.enum-keys":236,"dup":54}],232:[function(require,module,exports){
 arguments[4][27][0].apply(exports,arguments)
-},{"./$":249,"./$.wks":261,"dup":27}],237:[function(require,module,exports){
+},{"./$":245,"./$.wks":257,"dup":27}],233:[function(require,module,exports){
 arguments[4][28][0].apply(exports,arguments)
-},{"./$.assert":234,"dup":28}],238:[function(require,module,exports){
+},{"./$.assert":230,"dup":28}],234:[function(require,module,exports){
 arguments[4][29][0].apply(exports,arguments)
-},{"./$":249,"dup":29}],239:[function(require,module,exports){
+},{"./$":245,"dup":29}],235:[function(require,module,exports){
 arguments[4][62][0].apply(exports,arguments)
-},{"./$":249,"dup":62}],240:[function(require,module,exports){
+},{"./$":245,"dup":62}],236:[function(require,module,exports){
 arguments[4][63][0].apply(exports,arguments)
-},{"./$":249,"dup":63}],241:[function(require,module,exports){
+},{"./$":245,"dup":63}],237:[function(require,module,exports){
 arguments[4][64][0].apply(exports,arguments)
-},{"./$.ctx":237,"./$.iter":248,"./$.iter-call":245,"dup":64}],242:[function(require,module,exports){
+},{"./$.ctx":233,"./$.iter":244,"./$.iter-call":241,"dup":64}],238:[function(require,module,exports){
 arguments[4][30][0].apply(exports,arguments)
-},{"dup":30}],243:[function(require,module,exports){
+},{"dup":30}],239:[function(require,module,exports){
 arguments[4][31][0].apply(exports,arguments)
-},{"./$":249,"dup":31}],244:[function(require,module,exports){
+},{"./$":245,"dup":31}],240:[function(require,module,exports){
 arguments[4][67][0].apply(exports,arguments)
-},{"dup":67}],245:[function(require,module,exports){
+},{"dup":67}],241:[function(require,module,exports){
 arguments[4][32][0].apply(exports,arguments)
-},{"./$.assert":234,"dup":32}],246:[function(require,module,exports){
+},{"./$.assert":230,"dup":32}],242:[function(require,module,exports){
 arguments[4][33][0].apply(exports,arguments)
-},{"./$":249,"./$.cof":236,"./$.def":238,"./$.iter":248,"./$.redef":252,"./$.wks":261,"dup":33}],247:[function(require,module,exports){
+},{"./$":245,"./$.cof":232,"./$.def":234,"./$.iter":244,"./$.redef":248,"./$.wks":257,"dup":33}],243:[function(require,module,exports){
 arguments[4][34][0].apply(exports,arguments)
-},{"./$.wks":261,"dup":34}],248:[function(require,module,exports){
+},{"./$.wks":257,"dup":34}],244:[function(require,module,exports){
 arguments[4][35][0].apply(exports,arguments)
-},{"./$":249,"./$.assert":234,"./$.cof":236,"./$.shared":255,"./$.wks":261,"dup":35}],249:[function(require,module,exports){
+},{"./$":245,"./$.assert":230,"./$.cof":232,"./$.shared":251,"./$.wks":257,"dup":35}],245:[function(require,module,exports){
 arguments[4][36][0].apply(exports,arguments)
-},{"./$.fw":242,"dup":36}],250:[function(require,module,exports){
+},{"./$.fw":238,"dup":36}],246:[function(require,module,exports){
 arguments[4][73][0].apply(exports,arguments)
-},{"./$":249,"dup":73}],251:[function(require,module,exports){
+},{"./$":245,"dup":73}],247:[function(require,module,exports){
 arguments[4][74][0].apply(exports,arguments)
-},{"./$.redef":252,"dup":74}],252:[function(require,module,exports){
+},{"./$.redef":248,"dup":74}],248:[function(require,module,exports){
 arguments[4][37][0].apply(exports,arguments)
-},{"./$":249,"dup":37}],253:[function(require,module,exports){
+},{"./$":245,"dup":37}],249:[function(require,module,exports){
 arguments[4][79][0].apply(exports,arguments)
-},{"dup":79}],254:[function(require,module,exports){
+},{"dup":79}],250:[function(require,module,exports){
 arguments[4][80][0].apply(exports,arguments)
-},{"./$":249,"./$.assert":234,"./$.ctx":237,"dup":80}],255:[function(require,module,exports){
+},{"./$":245,"./$.assert":230,"./$.ctx":233,"dup":80}],251:[function(require,module,exports){
 arguments[4][38][0].apply(exports,arguments)
-},{"./$":249,"dup":38}],256:[function(require,module,exports){
+},{"./$":245,"dup":38}],252:[function(require,module,exports){
 arguments[4][82][0].apply(exports,arguments)
-},{"./$":249,"./$.wks":261,"dup":82}],257:[function(require,module,exports){
+},{"./$":245,"./$.wks":257,"dup":82}],253:[function(require,module,exports){
 arguments[4][39][0].apply(exports,arguments)
-},{"./$":249,"dup":39}],258:[function(require,module,exports){
+},{"./$":245,"dup":39}],254:[function(require,module,exports){
 arguments[4][86][0].apply(exports,arguments)
-},{"./$":249,"./$.cof":236,"./$.ctx":237,"./$.dom-create":239,"./$.invoke":244,"dup":86}],259:[function(require,module,exports){
+},{"./$":245,"./$.cof":232,"./$.ctx":233,"./$.dom-create":235,"./$.invoke":240,"dup":86}],255:[function(require,module,exports){
 arguments[4][40][0].apply(exports,arguments)
-},{"./$":249,"dup":40}],260:[function(require,module,exports){
+},{"./$":245,"dup":40}],256:[function(require,module,exports){
 arguments[4][41][0].apply(exports,arguments)
-},{"dup":41}],261:[function(require,module,exports){
+},{"dup":41}],257:[function(require,module,exports){
 arguments[4][42][0].apply(exports,arguments)
-},{"./$":249,"./$.shared":255,"./$.uid":259,"dup":42}],262:[function(require,module,exports){
+},{"./$":245,"./$.shared":251,"./$.uid":255,"dup":42}],258:[function(require,module,exports){
 arguments[4][43][0].apply(exports,arguments)
-},{"./$":249,"./$.iter":248,"dup":43}],263:[function(require,module,exports){
+},{"./$":245,"./$.iter":244,"dup":43}],259:[function(require,module,exports){
 arguments[4][45][0].apply(exports,arguments)
-},{"./$":249,"./$.iter":248,"./$.iter-define":246,"./$.uid":259,"./$.unscope":260,"dup":45}],264:[function(require,module,exports){
+},{"./$":245,"./$.iter":244,"./$.iter-define":242,"./$.uid":255,"./$.unscope":256,"dup":45}],260:[function(require,module,exports){
 arguments[4][105][0].apply(exports,arguments)
-},{"./$":249,"./$.def":238,"dup":105}],265:[function(require,module,exports){
+},{"./$":245,"./$.def":234,"dup":105}],261:[function(require,module,exports){
 arguments[4][106][0].apply(exports,arguments)
-},{"./$.assign":235,"./$.def":238,"dup":106}],266:[function(require,module,exports){
+},{"./$.assign":231,"./$.def":234,"dup":106}],262:[function(require,module,exports){
 arguments[4][46][0].apply(exports,arguments)
-},{"./$":249,"./$.def":238,"./$.get-names":243,"dup":46}],267:[function(require,module,exports){
+},{"./$":245,"./$.def":234,"./$.get-names":239,"dup":46}],263:[function(require,module,exports){
 arguments[4][110][0].apply(exports,arguments)
-},{"./$":249,"./$.cof":236,"./$.redef":252,"./$.wks":261,"dup":110}],268:[function(require,module,exports){
+},{"./$":245,"./$.cof":232,"./$.redef":248,"./$.wks":257,"dup":110}],264:[function(require,module,exports){
 arguments[4][111][0].apply(exports,arguments)
-},{"./$":249,"./$.assert":234,"./$.cof":236,"./$.ctx":237,"./$.def":238,"./$.for-of":241,"./$.iter-detect":247,"./$.mix":251,"./$.same":253,"./$.set-proto":254,"./$.species":256,"./$.task":258,"./$.uid":259,"./$.wks":261,"dup":111}],269:[function(require,module,exports){
+},{"./$":245,"./$.assert":230,"./$.cof":232,"./$.ctx":233,"./$.def":234,"./$.for-of":237,"./$.iter-detect":243,"./$.mix":247,"./$.same":249,"./$.set-proto":250,"./$.species":252,"./$.task":254,"./$.uid":255,"./$.wks":257,"dup":111}],265:[function(require,module,exports){
 arguments[4][47][0].apply(exports,arguments)
-},{"./$":249,"./$.iter":248,"./$.iter-define":246,"./$.string-at":257,"./$.uid":259,"dup":47}],270:[function(require,module,exports){
+},{"./$":245,"./$.iter":244,"./$.iter-define":242,"./$.string-at":253,"./$.uid":255,"dup":47}],266:[function(require,module,exports){
 arguments[4][123][0].apply(exports,arguments)
-},{"./$":249,"./$.assert":234,"./$.cof":236,"./$.def":238,"./$.enum-keys":240,"./$.get-names":243,"./$.keyof":250,"./$.redef":252,"./$.shared":255,"./$.uid":259,"./$.wks":261,"dup":123}],271:[function(require,module,exports){
+},{"./$":245,"./$.assert":230,"./$.cof":232,"./$.def":234,"./$.enum-keys":236,"./$.get-names":239,"./$.keyof":246,"./$.redef":248,"./$.shared":251,"./$.uid":255,"./$.wks":257,"dup":123}],267:[function(require,module,exports){
 arguments[4][48][0].apply(exports,arguments)
-},{"./$":249,"./$.iter":248,"./$.wks":261,"./es6.array.iterator":263,"dup":48}],272:[function(require,module,exports){
+},{"./$":245,"./$.iter":244,"./$.wks":257,"./es6.array.iterator":259,"dup":48}],268:[function(require,module,exports){
 (function (global){
 // This method of obtaining a reference to the global object needs to be
 // kept identical to the way it is obtained in runtime.js
@@ -15806,7 +15877,7 @@ if (hadRuntime) {
 module.exports = { "default": module.exports, __esModule: true };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./runtime":273}],273:[function(require,module,exports){
+},{"./runtime":269}],269:[function(require,module,exports){
 (function (process,global){
 /**
  * Copyright (c) 2014, Facebook, Inc.
@@ -16411,11 +16482,11 @@ var _Promise = require("babel-runtime/core-js/promise")["default"];
 // use indirect eval (which violates Content Security Policy).
 typeof global === "object" ? global : typeof window === "object" ? window : typeof self === "object" ? self : undefined);
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":145,"babel-runtime/core-js/object/create":208,"babel-runtime/core-js/promise":211,"babel-runtime/core-js/symbol":212,"babel-runtime/core-js/symbol/iterator":213}],274:[function(require,module,exports){
+},{"_process":145,"babel-runtime/core-js/object/create":204,"babel-runtime/core-js/promise":207,"babel-runtime/core-js/symbol":208,"babel-runtime/core-js/symbol/iterator":209}],270:[function(require,module,exports){
 arguments[4][160][0].apply(exports,arguments)
-},{"../package":276,"dup":160,"inherits":275}],275:[function(require,module,exports){
+},{"../package":272,"dup":160,"inherits":271}],271:[function(require,module,exports){
 arguments[4][161][0].apply(exports,arguments)
-},{"dup":161}],276:[function(require,module,exports){
+},{"dup":161}],272:[function(require,module,exports){
 module.exports={
   "name": "lacona-phrase",
   "version": "0.7.0",
@@ -16469,7 +16540,7 @@ module.exports={
   "_from": "lacona-phrase@0.7.0"
 }
 
-},{}],277:[function(require,module,exports){
+},{}],273:[function(require,module,exports){
 module.exports = function split (input, strOrRegex) {
   var results = []
 
@@ -16497,7 +16568,7 @@ module.exports = function split (input, strOrRegex) {
   return results
 }
 
-},{}],278:[function(require,module,exports){
+},{}],274:[function(require,module,exports){
 (function (global){
 /*! Moment Duration Format v1.3.0
  *  https://github.com/jsmreese/moment-duration-format 
@@ -16983,7 +17054,7 @@ module.exports = function split (input, strOrRegex) {
 })(this);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],279:[function(require,module,exports){
+},{}],275:[function(require,module,exports){
 (function (global){
 var React, ga, script, scriptIsAdded, _name,
   __slice = [].slice;
@@ -17049,7 +17120,7 @@ ga.Initializer = React.createClass({
 module.exports = ga;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],280:[function(require,module,exports){
+},{}],276:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -17185,7 +17256,7 @@ var LaconaInput = (function (_React$Component) {
 exports['default'] = LaconaInput;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],281:[function(require,module,exports){
+},{}],277:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -17420,7 +17491,7 @@ LaconaView.defaultProps = {
 };
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./input":280,"./options":283,"lacona-util-fulltext":185}],282:[function(require,module,exports){
+},{"./input":276,"./options":279,"lacona-util-fulltext":181}],278:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -17636,7 +17707,7 @@ var LaconaOption = (function (_React$Component2) {
 exports['default'] = LaconaOption;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],283:[function(require,module,exports){
+},{}],279:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -17740,4 +17811,4 @@ var Options = (function (_React$Component) {
 exports['default'] = Options;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./option":282,"lacona-util-fulltext":185}]},{},[5]);
+},{"./option":278,"lacona-util-fulltext":181}]},{},[5]);

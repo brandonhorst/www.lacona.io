@@ -6,7 +6,6 @@ import {Date as DatePhrase, DateTime, Time, TimePeriod} from 'lacona-phrase-date
 import URL from 'lacona-phrase-url'
 import Email from 'lacona-phrase-email'
 import PhoneNumber from 'lacona-phrase-phonenumber'
-import Repeat from 'lacona-phrase-repeat'
 
 const userFiles = [
   {
@@ -1909,6 +1908,131 @@ export const contact = {
   )
 }
 
+class Language extends Phrase {
+  describe () {
+    return (
+      <argument text='language'>
+        <list items={[
+          {text: 'Afrikaans', value: 'Afrikaans'},
+          {text: 'Albanian', value: 'Albanian'},
+          {text: 'Arabic', value: 'Arabic'},
+          {text: 'Armenian', value: 'Armenian'},
+          {text: 'Azerbaijani', value: 'Azerbaijani'},
+          {text: 'Basque', value: 'Basque'},
+          {text: 'Belarusian', value: 'Belarusian'},
+          {text: 'Bengali', value: 'Bengali'},
+          {text: 'Bosnian', value: 'Bosnian'},
+          {text: 'Bulgarian', value: 'Bulgarian'},
+          {text: 'Catalan', value: 'Catalan'},
+          {text: 'Cebuano', value: 'Cebuano'},
+          {text: 'Chichewa', value: 'Chichewa'},
+          {text: 'Chinese', value: 'Chinese (Simplified)'},
+          {text: 'Chinese (Simplified)', value: 'Chinese (Simplified)'},
+          {text: 'Chinese (Traditional)', value: 'Chinese (Traditional)'},
+          {text: 'Croatian', value: 'Croatian'},
+          {text: 'Czech', value: 'Czech'},
+          {text: 'Danish', value: 'Danish'},
+          {text: 'Dutch', value: 'Dutch'},
+          {text: 'English', value: 'English'},
+          {text: 'Esperanto', value: 'Esperanto'},
+          {text: 'Estonian', value: 'Estonian'},
+          {text: 'Filipino', value: 'Filipino'},
+          {text: 'Finnish', value: 'Finnish'},
+          {text: 'French', value: 'French'},
+          {text: 'Galician', value: 'Galician'},
+          {text: 'Georgian', value: 'Georgian'},
+          {text: 'German', value: 'German'},
+          {text: 'Greek', value: 'Greek'},
+          {text: 'Gujarati', value: 'Gujarati'},
+          {text: 'Haitian Creole', value: 'Creole'},
+          {text: 'Hausa', value: 'Hausa'},
+          {text: 'Hebrew', value: 'Hebrew'},
+          {text: 'Hindi', value: 'Hindi'},
+          {text: 'Hmong', value: 'Hmong'},
+          {text: 'Hungarian', value: 'Hungarian'},
+          {text: 'Icelandic', value: 'Icelandic'},
+          {text: 'Igbo', value: 'Igbo'},
+          {text: 'Indonesian', value: 'Indonesian'},
+          {text: 'Irish', value: 'Irish'},
+          {text: 'Italian', value: 'Italian'},
+          {text: 'Japanese', value: 'Japanese'},
+          {text: 'Javanese', value: 'Javanese'},
+          {text: 'Kannada', value: 'Kannada'},
+          {text: 'Kazakh', value: 'Kazakh'},
+          {text: 'Khmer', value: 'Khmer'},
+          {text: 'Korean', value: 'Korean'},
+          {text: 'Lao', value: 'Lao'},
+          {text: 'Latin', value: 'Latin'},
+          {text: 'Latvian', value: 'Latvian'},
+          {text: 'Lithuanian', value: 'Lithuanian'},
+          {text: 'Macedonian', value: 'Macedonian'},
+          {text: 'Malagasy', value: 'Malagasy'},
+          {text: 'Malay', value: 'Malay'},
+          {text: 'Malayalam', value: 'Malayalam'},
+          {text: 'Maltese', value: 'Maltese'},
+          {text: 'Maori', value: 'Maori'},
+          {text: 'Marathi', value: 'Marathi'},
+          {text: 'Mongolian', value: 'Mongolian'},
+          {text: 'Myanmar', value: 'Burmese'},
+          {text: 'Burmese', value: 'Burmese'},
+          {text: 'Nepali', value: 'Nepali'},
+          {text: 'Norwegian', value: 'Norwegian'},
+          {text: 'Persian', value: 'Persian'},
+          {text: 'Polish', value: 'Polish'},
+          {text: 'Portuguese', value: 'Portuguese'},
+          {text: 'Punjabi', value: 'Punjabi'},
+          {text: 'Romanian', value: 'Romanian'},
+          {text: 'Russian', value: 'Russian'},
+          {text: 'Serbian', value: 'Serbian'},
+          {text: 'Sesotho', value: 'Sesotho'},
+          {text: 'Sinhala', value: 'Sinhala'},
+          {text: 'Slovak', value: 'Slovak'},
+          {text: 'Slovenian', value: 'Slovenian'},
+          {text: 'Somali', value: 'Somali'},
+          {text: 'Spanish', value: 'Spanish'},
+          {text: 'Sundanese', value: 'Sundanese'},
+          {text: 'Swahili', value: 'Swahili'},
+          {text: 'Swedish', value: 'Swedish'},
+          {text: 'Tajik', value: 'Tajik'},
+          {text: 'Tamil', value: 'Tamil'},
+          {text: 'Telugu', value: 'Telugu'},
+          {text: 'Thai', value: 'Thai'},
+          {text: 'Turkish', value: 'Turkish'},
+          {text: 'Ukrainian', value: 'Ukrainian'},
+          {text: 'Urdu', value: 'Urdu'},
+          {text: 'Uzbek', value: 'Uzbek'},
+          {text: 'Vietnamese', value: 'Vietnamese'},
+          {text: 'Welsh', value: 'Welsh'},
+          {text: 'Yiddish', value: 'Yiddish'},
+          {text: 'Yoruba', value: 'Yoruba'},
+          {text: 'Zulu', value: 'Zulu'}
+        ]} />
+      </argument>
+    )
+  }
+}
+
+export const translate = {
+  grammar: (
+    <sequence>
+      <literal text='translate ' category='action' />
+      <argument text='phrase' id='phrase'>
+        <freetext splitOn=' ' limit={1} />
+      </argument>
+      <sequence optional={true} merge={true}>
+        <literal text=' from ' category='conjunction' />
+        <Language id='from' />
+      </sequence>
+      <sequence optional={true} merge={true}>
+        <literal text=' to ' />
+        <repeat separator={<list items={[', ', ' and ', ', and ']} category='conjunction' limit={1} />} id='to'>
+          <Language />
+        </repeat>
+      </sequence>
+    </sequence>
+  )
+}
+
 export const all = {
   grammar: (
     <choice>
@@ -1917,6 +2041,7 @@ export const all = {
       {search.grammar}
       {play.grammar}
       {contact.grammar}
+      {translate.grammar}
     </choice>
   ),
   extensions: [Birthday, Holiday]
