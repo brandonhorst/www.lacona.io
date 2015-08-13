@@ -1367,6 +1367,7 @@ class Open extends Phrase {
           <list items={[
               {text: 'close ', value: 'close'},
               {text: 'quit ', value: 'quit'},
+              {text: 'kill ', value: 'kill'},
               {text: 'launch ', value: 'open'}
             ]} id='verb' category='action' limit={2} />
           <AppsGroup id='things' />

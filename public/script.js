@@ -109,6 +109,12 @@ function getExecute(showNotification) {
             { className: 'category-action' },
             'quit '
           ), outputifyOpen(result.open.things)];
+        } else if (result.open.verb === 'kill') {
+          message = [_reactAddons2['default'].createElement(
+            'span',
+            { className: 'category-action' },
+            'kill '
+          ), outputifyOpen(result.open.things)];
         }
       }
     } else if (result.date) {
@@ -4390,7 +4396,7 @@ var Open = (function (_Phrase9) {
         (0, _laconaPhrase.createElement)(
           'sequence',
           null,
-          (0, _laconaPhrase.createElement)('list', { items: [{ text: 'close ', value: 'close' }, { text: 'quit ', value: 'quit' }, { text: 'launch ', value: 'open' }], id: 'verb', category: 'action', limit: 2 }),
+          (0, _laconaPhrase.createElement)('list', { items: [{ text: 'close ', value: 'close' }, { text: 'quit ', value: 'quit' }, { text: 'kill ', value: 'kill' }, { text: 'launch ', value: 'open' }], id: 'verb', category: 'action', limit: 2 }),
           (0, _laconaPhrase.createElement)(AppsGroup, { id: 'things' })
         )
       );

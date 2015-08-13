@@ -47,6 +47,8 @@ export default function getExecute (showNotification) {
           message = [<span className='category-action'>close the frontmost window of </span>, outputifyOpen(result.open.things)]
         } else if (result.open.verb === 'quit') {
           message = [<span className='category-action'>quit </span>, outputifyOpen(result.open.things)]
+        } else if (result.open.verb === 'kill') {
+          message = [<span className='category-action'>kill </span>, outputifyOpen(result.open.things)]
         }
       }
     } else if (result.date) {
