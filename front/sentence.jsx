@@ -2014,7 +2014,7 @@ class Language extends Phrase {
 
 export const translate = {
   grammar: (
-    <sequence>
+    <sequence id='translate'>
       <literal text='translate ' category='action' />
       <argument text='phrase' id='phrase'>
         <freetext splitOn=' ' limit={1} />

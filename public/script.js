@@ -5459,7 +5459,7 @@ var Language = (function (_Phrase20) {
 var translate = {
   grammar: (0, _laconaPhrase.createElement)(
     'sequence',
-    null,
+    { id: 'translate' },
     (0, _laconaPhrase.createElement)('literal', { text: 'translate ', category: 'action' }),
     (0, _laconaPhrase.createElement)(
       'argument',
