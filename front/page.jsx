@@ -251,7 +251,7 @@ export default class Page extends React.Component {
           </section>
           <section className='textLeft'>
             <div className='text'>
-              <h3>Ditch the Dock</h3>
+              <a name='open' className='anchor'><h3>Ditch the Dock</h3></a>
               <p>With Lacona, your Apps, Bookmarks, Files, System Preferences, and more are only a few keystrokes away. You can also manage your open Mission Control Desktops, apps, windows, and browser tabs.</p>
               <ul className='examples'>
                 <li onClick={this.type.bind(this, '0', () => false, 'open Calendar')}>
@@ -302,7 +302,7 @@ export default class Page extends React.Component {
           </section>
           <section className='textRight'>
             <div className='text'>
-              <h3>Organize your Life, not your Calendar</h3>
+              <a name='date' className='anchor'><h3>Organize your Life, not your Calendar</h3></a>
               <p>Create events and reminders as though you were talking to a person. Lacona understands.</p>
               <ul className='well'>
                 <li>Due to browser limitations, this may sometimes be choppy. The real app will be silky smooth!</li>
@@ -339,7 +339,7 @@ export default class Page extends React.Component {
           </section>
           <section className='textLeft'>
             <div className='text'>
-              <h3>Seek and Ye Shall Find</h3>
+              <a name='search' className='anchor'><h3>Seek and Ye Shall Find</h3></a>
               <p>Search the web like a boss. Utilize powerful fallthrough functionality to save even more keystrokes.</p>
               <ul className='examples'>
                 <li onClick={this.type.bind(this, '2', () => false, 'search Google for pictures of cats')}>
@@ -363,7 +363,7 @@ export default class Page extends React.Component {
           </section>
           <section className='textRight'>
             <div className='text'>
-              <h3>Your Work Needs a DJ</h3>
+              <a name='play' className='anchor'><h3>Your Work Needs a DJ</h3></a>
               <p>Instantly play anything in your iTunes library, without ever touching the mouse.</p>
               <ul className='examples'>
                 <li onClick={this.type.bind(this, '3', () => false, 'play Robot Love')}>
@@ -391,7 +391,7 @@ export default class Page extends React.Component {
           </section>
           <section className='textLeft'>
             <div className='text'>
-              <h3>Keep in Touch</h3>
+              <a name='contact' className='anchor'><h3>Keep in Touch</h3></a>
               <p>Easily communicate with all of your contacts over Email, FaceTime, iMessage. Make calls and send texts through your iPhone. Smoke signals not yet supported.</p>
               <ul className='examples'>
                 <li onClick={this.type.bind(this, '4', () => false, 'call Mom')}>
@@ -427,7 +427,7 @@ export default class Page extends React.Component {
           </section>
           <section className='textRight'>
             <div className='text'>
-              <h3>Become a Global Citizen</h3>
+              <a name='translate' className='anchor'><h3>Become a Global Citizen</h3></a>
               <p>Quickly translate words and phrases between languages. A more natural interface for Google Translate.</p>
               <ul className='examples'>
                 <li onClick={this.type.bind(this, '5', () => false, 'translate мороженное')}>

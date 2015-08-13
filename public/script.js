@@ -1546,9 +1546,13 @@ var Page = (function (_React$Component) {
               'div',
               { className: 'text' },
               _reactAddons2['default'].createElement(
-                'h3',
-                null,
-                'Ditch the Dock'
+                'a',
+                { name: 'open', className: 'anchor' },
+                _reactAddons2['default'].createElement(
+                  'h3',
+                  null,
+                  'Ditch the Dock'
+                )
               ),
               _reactAddons2['default'].createElement(
                 'p',
@@ -1865,9 +1869,13 @@ var Page = (function (_React$Component) {
               'div',
               { className: 'text' },
               _reactAddons2['default'].createElement(
-                'h3',
-                null,
-                'Organize your Life, not your Calendar'
+                'a',
+                { name: 'date', className: 'anchor' },
+                _reactAddons2['default'].createElement(
+                  'h3',
+                  null,
+                  'Organize your Life, not your Calendar'
+                )
               ),
               _reactAddons2['default'].createElement(
                 'p',
@@ -2176,9 +2184,13 @@ var Page = (function (_React$Component) {
               'div',
               { className: 'text' },
               _reactAddons2['default'].createElement(
-                'h3',
-                null,
-                'Seek and Ye Shall Find'
+                'a',
+                { name: 'search', className: 'anchor' },
+                _reactAddons2['default'].createElement(
+                  'h3',
+                  null,
+                  'Seek and Ye Shall Find'
+                )
               ),
               _reactAddons2['default'].createElement(
                 'p',
@@ -2334,9 +2346,13 @@ var Page = (function (_React$Component) {
               'div',
               { className: 'text' },
               _reactAddons2['default'].createElement(
-                'h3',
-                null,
-                'Your Work Needs a DJ'
+                'a',
+                { name: 'play', className: 'anchor' },
+                _reactAddons2['default'].createElement(
+                  'h3',
+                  null,
+                  'Your Work Needs a DJ'
+                )
               ),
               _reactAddons2['default'].createElement(
                 'p',
@@ -2475,9 +2491,13 @@ var Page = (function (_React$Component) {
               'div',
               { className: 'text' },
               _reactAddons2['default'].createElement(
-                'h3',
-                null,
-                'Keep in Touch'
+                'a',
+                { name: 'contact', className: 'anchor' },
+                _reactAddons2['default'].createElement(
+                  'h3',
+                  null,
+                  'Keep in Touch'
+                )
               ),
               _reactAddons2['default'].createElement(
                 'p',
@@ -2695,9 +2715,13 @@ var Page = (function (_React$Component) {
               'div',
               { className: 'text' },
               _reactAddons2['default'].createElement(
-                'h3',
-                null,
-                'Become a Global Citizen'
+                'a',
+                { name: 'translate', className: 'anchor' },
+                _reactAddons2['default'].createElement(
+                  'h3',
+                  null,
+                  'Become a Global Citizen'
+                )
               ),
               _reactAddons2['default'].createElement(
                 'p',

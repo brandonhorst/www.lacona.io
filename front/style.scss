@@ -56,6 +56,13 @@ body {
   text-align: center;
 }
 
+a.anchor {
+  &, &:hover, &:active, &:visited {
+    text-decoration: none;
+    cursor: unset;
+  }
+}
+
 content {
   // max-width: 940px;
   margin: 0 auto;
@@ -92,6 +99,7 @@ content {
   h3 {
     padding-bottom: 10px;
   }
+
 
 
   @media screen and (max-width: 736px) {
