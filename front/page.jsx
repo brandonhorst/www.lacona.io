@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import {all, open, date, search, play, contact, translate} from './sentence.jsx'
+import {all, open, date, settings, search, play, contact, translate} from './sentence.jsx'
 import eachSeries from 'async-each-series'
 import ga, {Initializer} from 'react-google-analytics'
 import getExecute from './execute.jsx'
@@ -339,115 +339,151 @@ export default class Page extends React.Component {
           </section>
           <section className='textLeft'>
             <div className='text'>
+              <a name='settings' className='anchor'><h3>Setting settings, settled</h3></a>
+              <p>With Lacona, there is no need to fiddle with menus and forms to change your basic settings. Turn off your Wifi, turn on Do Not Disturb, or eject drives with just a few keystrokes. Set time limits on settings, so you don't forget to change them back.</p>
+              <ul className='examples'>
+                <li onClick={this.type.bind(this, '2', () => false, 'turn on wifi')}>
+                  <span className='category-action'>turn on</span> <span className='descriptor-setting'>wifi</span>
+                </li>
+                <li onClick={this.type.bind(this, '2', () => false, 'toggle Do Not Disturb')}>
+                  <span className='category-action'>toggle</span> <span className='descriptor-setting'>Do Not Disturb</span>
+                </li>
+                <li onClick={this.type.bind(this, '2', () => false, 'disable autosleep for 3 hours')}>
+                  <span className='category-action'>disable</span> <span className='descriptor-setting'>autosleep</span> <span className='category-conjunction'>for</span> <span className='descriptor-amount-of-time'>3 hours</span>
+                </li>
+                <li onClick={this.type.bind(this, '2', () => false, 'shutdown')}>
+                  <span className='category-action'>shutdown</span>
+                </li>
+                <li onClick={this.type.bind(this, '2', () => false, 'eject Lacona.dmg')}>
+                  <span className='category-action'>eject</span> <span className='descriptor-volume'>Lacona.dmg</span>
+                </li>
+                <li onClick={this.type.bind(this, '2', () => false, 'turn off display')}>
+                  <span className='category-action'>turn off display</span>
+                </li>
+                <li onClick={this.type.bind(this, '2', () => false, 'empty Trash')}>
+                  <span className='category-action'>empty Trash</span>
+                </li>
+                <li onClick={this.type.bind(this, '2', () => false, 'do not disturb for 25 minutes')}>
+                  <span className='category-action'>do not disturb</span> <span className='category-conjunction'>for</span> <span className='descriptor-amount-of-time'>25 minutes</span>
+                </li>
+                <li onClick={this.type.bind(this, '2', () => false, 'turn on the screensaver')}>
+                  <span className='category-action'>turn on the screensaver</span>
+                </li>
+              </ul>
+            </div>
+            <Lacona userInteracted={this.stopDemo.bind(this)} ref='2' grammar={settings.grammar} execute={settings => this.execute({settings})} />
+          </section>
+          <section className='textRight'>
+            <div className='text'>
               <a name='search' className='anchor'><h3>Seek and Ye Shall Find</h3></a>
               <p>Search the web like a boss. Utilize powerful fallthrough functionality to save even more keystrokes.</p>
               <ul className='examples'>
-                <li onClick={this.type.bind(this, '2', () => false, 'search Google for pictures of cats')}>
+                <li onClick={this.type.bind(this, '3', () => false, 'search Google for pictures of cats')}>
                   <span className='category-action'>search</span> <span className='descriptor-search-engine'>Google</span> <span className='category-conjunction'>for</span> <span className='descriptor-query'>pictures of cats</span>
                 </li>
-                <li onClick={this.type.bind(this, '2', () => false, 'Google stormtroopers')}>
+                <li onClick={this.type.bind(this, '3', () => false, 'Google stormtroopers')}>
                   <span className='descriptor-search-engine'>Google</span> <span className='descriptor-query'>stormtroopers</span>
                 </li>
-                <li onClick={this.type.bind(this, '2', () => false, 'Amazon Avengers')}>
+                <li onClick={this.type.bind(this, '3', () => false, 'Amazon Avengers')}>
                   <span className='descriptor-search-engine'>Amazon</span> <span className='descriptor-query'>Avengers</span>
                 </li>
-                <li onClick={this.type.bind(this, '2', () => false, 'search Wikipedia for Pluto')}>
+                <li onClick={this.type.bind(this, '3', () => false, 'search Wikipedia for Pluto')}>
                   <span className='category-action'>search</span> <span className='descriptor-search-engine'>Wikipedia</span> <span className='category-conjunction'>for</span> <span className='descriptor-query'>Pluto</span>
                 </li>
-                <li onClick={this.type.bind(this, '2', () => false, 'search eBay and Amazon for iPhone 6')}>
+                <li onClick={this.type.bind(this, '3', () => false, 'search eBay and Amazon for iPhone 6')}>
                   <span className='category-action'>search</span> <span className='descriptor-search-engine'>eBay</span> <span className='category-conjunction'>and</span> <span className='descriptor-search-engine'>Amazon</span> <span className='category-conjunction'>for</span> <span className='descriptor-query'>iPhone 6</span>
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='2' grammar={search.grammar} execute={search => this.execute({search})} />
+            <Lacona userInteracted={this.stopDemo.bind(this)} ref='3' grammar={search.grammar} execute={search => this.execute({search})} />
           </section>
-          <section className='textRight'>
+          <section className='textLeft'>
             <div className='text'>
               <a name='play' className='anchor'><h3>Your Work Needs a DJ</h3></a>
               <p>Instantly play anything in your iTunes library, without ever touching the mouse.</p>
               <ul className='examples'>
-                <li onClick={this.type.bind(this, '3', () => false, 'play Robot Love')}>
+                <li onClick={this.type.bind(this, '4', () => false, 'play Robot Love')}>
                   <span className='category-action'>play</span> <span className='descriptor-song'>Robot Love</span>
                 </li>
-                <li onClick={this.type.bind(this, '3', () => false, 'play Walk the Moon')}>
+                <li onClick={this.type.bind(this, '4', () => false, 'play Walk the Moon')}>
                   <span className='category-action'>play</span> <span className='descriptor-artist'>Walk the Moon</span>
                 </li>
-                <li onClick={this.type.bind(this, '3', () => false, 'play Jason Derulo, Flyte, and Elle King')}>
+                <li onClick={this.type.bind(this, '4', () => false, 'play Jason Derulo, Flyte, and Elle King')}>
                   <span className='category-action'>play</span> <span className='descriptor-artist'>Jason Derulo</span><span className='category-conjunction'>, </span><span className='descriptor-artist'>Flyte</span><span className='category-conjunction'>, and </span><span className='descriptor-artist'>Elle King</span>
                 </li>
 
-                <li onClick={this.type.bind(this, '3', () => false, 'play Jams')}>
+                <li onClick={this.type.bind(this, '4', () => false, 'play Jams')}>
                   <span className='category-action'>play</span> <span className='descriptor-playlist'>Jams</span>
                 </li>
-                <li onClick={this.type.bind(this, '3', () => false, 'play next song')}>
+                <li onClick={this.type.bind(this, '4', () => false, 'play next song')}>
                   <span className='category-action'>play</span> <span className='descriptor-next-song'>next song</span>
                 </li>
-                <li onClick={this.type.bind(this, '3', () => false, 'pause')}>
+                <li onClick={this.type.bind(this, '4', () => false, 'pause')}>
                   <span className='category-action'>pause</span>
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='3' grammar={play.grammar} execute={play => this.execute({play})} />
+            <Lacona userInteracted={this.stopDemo.bind(this)} ref='4' grammar={play.grammar} execute={play => this.execute({play})} />
           </section>
-          <section className='textLeft'>
+          <section className='textRight'>
             <div className='text'>
               <a name='contact' className='anchor'><h3>Keep in Touch</h3></a>
               <p>Easily communicate with all of your contacts over Email, FaceTime, iMessage. Make calls and send texts through your iPhone. Smoke signals not yet supported.</p>
               <ul className='examples'>
-                <li onClick={this.type.bind(this, '4', () => false, 'call Mom')}>
+                <li onClick={this.type.bind(this, '5', () => false, 'call Mom')}>
                   <span className='category-action'>call</span> <span className='descriptor-relationship'>Mom</span>
                 </li>
-                <li onClick={this.type.bind(this, '4', () => false, 'email Tony Stark')}>
+                <li onClick={this.type.bind(this, '5', () => false, 'email Tony Stark')}>
                   <span className='category-action'>email</span> <span className='descriptor-contact'>Tony Stark</span>
                 </li>
-                <li onClick={this.type.bind(this, '4', () => false, 'text Leaving now :) to Hank McCoy')}>
+                <li onClick={this.type.bind(this, '5', () => false, 'text Leaving now :) to Hank McCoy')}>
                   <span className='category-action'>text</span> <span className='descriptor-message'>Leaving now :)</span> <span className='category-conjunction'>to</span> <span className='descriptor-contact'>Hank McCoy</span>
                 </li>
-                <li onClick={this.type.bind(this, '4', () => false, 'email Dinner Plans to Clinton and Natalia')}>
+                <li onClick={this.type.bind(this, '5', () => false, 'email Dinner Plans to Clinton and Natalia')}>
                   <span className='category-action'>email</span> <span className='descriptor-message'>Dinner Plans</span> <span className='category-conjunction'>to</span> <span className='descriptor-contact'>Clinton</span> <span className='category-conjunction'>and</span> <span className='descriptor-contact'>Natalia</span>
                 </li>
-                <li onClick={this.type.bind(this, '4', () => false, 'facetime my boss')}>
+                <li onClick={this.type.bind(this, '5', () => false, 'facetime my boss')}>
                   <span className='category-action'>facetime</span> <span className='descriptor-relationship'>my boss</span>
                 </li>
-                <li onClick={this.type.bind(this, '4', () => false, 'facetime Bruce Banner')}>
+                <li onClick={this.type.bind(this, '5', () => false, 'facetime Bruce Banner')}>
                   <span className='category-action'>facetime</span> <span className='descriptor-contact'>Bruce Banner</span>
                 </li>
-                <li onClick={this.type.bind(this, '4', () => false, 'text my Husband Leaving soon!')}>
+                <li onClick={this.type.bind(this, '5', () => false, 'text my Husband Leaving soon!')}>
                   <span className='category-action'>text</span> <span className='descriptor-relationship'>my Husband</span> <span className='descriptor-message'>Leaving soon!</span>
                 </li>
-                <li onClick={this.type.bind(this, '4', () => false, 'email app@lacona.io')}>
+                <li onClick={this.type.bind(this, '5', () => false, 'email app@lacona.io')}>
                   <span className='category-action'>email</span> <span className='descriptor-email-address'>app@lacona.io</span>
                 </li>
-                <li onClick={this.type.bind(this, '4', () => false, 'call +1 617 867 5309')}>
+                <li onClick={this.type.bind(this, '5', () => false, 'call +1 617 867 5309')}>
                   <span className='category-action'>call</span> <span className='descriptor-phone-number'>+1 617 867 5309</span>
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='4' grammar={contact.grammar} execute={contact => this.execute({contact})} />
+            <Lacona userInteracted={this.stopDemo.bind(this)} ref='5' grammar={contact.grammar} execute={contact => this.execute({contact})} />
           </section>
-          <section className='textRight'>
+          <section className='textLeft'>
             <div className='text'>
               <a name='translate' className='anchor'><h3>Become a Global Citizen</h3></a>
               <p>Quickly translate words and phrases between languages. A more natural interface for Google Translate.</p>
               <ul className='examples'>
-                <li onClick={this.type.bind(this, '5', () => false, 'translate мороженное')}>
+                <li onClick={this.type.bind(this, '6', () => false, 'translate мороженное')}>
                   <span className='category-action'>translate</span> <span className='descriptor-phrase'>мороженное</span>
                 </li>
-                <li onClick={this.type.bind(this, '5', () => false, 'translate 我爱你 to Korean')}>
+                <li onClick={this.type.bind(this, '6', () => false, 'translate 我爱你 to Korean')}>
                   <span className='category-action'>translate</span> <span className='descriptor-phrase'>我爱你</span> <span className='category-conjunction'>to</span> <span className='descriptor-language'>Korean</span>
                 </li>
-                <li onClick={this.type.bind(this, '5', () => false, 'translate ¿cómo estás? from Spanish to Japanese')}>
+                <li onClick={this.type.bind(this, '6', () => false, 'translate ¿cómo estás? from Spanish to Japanese')}>
                   <span className='category-action'>translate</span> <span className='descriptor-phrase'>como estas?</span> <span className='category-conjunction'>from</span> <span className='descriptor-language'>Spanish</span> <span className='category-conjunction'>to</span> <span className='descriptor-language'>Japanese</span>
                 </li>
-                <li onClick={this.type.bind(this, '5', () => false, 'translate hujambo from Swahili')}>
+                <li onClick={this.type.bind(this, '6', () => false, 'translate hujambo from Swahili')}>
                   <span className='category-action'>translate</span> <span className='descriptor-phrase'>hujambo</span> <span className='category-conjunction'>from</span> <span className='descriptor-language'>Swahili</span>
                 </li>
-                <li onClick={this.type.bind(this, '5', () => false, "translate I don't know to Arabic, Chinese, French, Russian, and Spanish")}>
+                <li onClick={this.type.bind(this, '6', () => false, "translate I don't know to Arabic, Chinese, French, Russian, and Spanish")}>
                   <span className='category-action'>translate</span> <span className='descriptor-phrase'>I don't know</span> <span className='category-conjunction'>to</span> <span className='descriptor-language'>Arabic</span> <span className='category-conjunction'>,</span> <span className='descriptor-language'>Chinese</span> <span className='category-conjunction'>,</span> <span className='descriptor-language'>French</span> <span className='category-conjunction'>,</span> <span className='descriptor-language'>Russian</span> <span className='category-conjunction'>, and</span> <span className='descriptor-language'>Spanish</span>
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='5' grammar={translate.grammar} execute={translate => this.execute({translate})} />
+            <Lacona userInteracted={this.stopDemo.bind(this)} ref='6' grammar={translate.grammar} execute={translate => this.execute({translate})} />
           </section>
           <section className='full'>
             <div className='text'>

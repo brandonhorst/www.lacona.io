@@ -85,6 +85,21 @@ export default function getExecute (showNotification) {
 
         message = [<span className='category-action'>create an event</span>, ' called ', <span className='descriptor-calendar-event'>{result.date.event.title}</span>, ' ', location, ' on ', time]
       }
+    } else if (result.settings) {
+      if (result.settings.settings) {
+        if (result.settings.settings.duration) {
+console.log(result.settings.settings.duration)
+          message = [<span className='category-action'>{result.settings.settings.verb}</span>, ' ', <span className='descriptor-setting'>{result.settings.settings.setting}</span>, ', wait ', formatDuration(result.settings.settings.duration), ', and then change it back']
+        } else {
+          message = [<span className='category-action'>{result.settings.settings.verb}</span>, ' ', <span className='descriptor-setting'>{result.settings.settings.setting}</span>]
+        }
+      } else  if (result.settings.actions) {
+        if (result.settings.actions.object) {
+          message = [<span className='category-action'>{result.settings.actions.verb}</span>, ' ', <span className='descriptor-volume'>{result.settings.actions.object}</span>]
+        } else {
+          message = [<span className='category-action'>{result.settings.actions.verb}</span>]
+        }
+      }
     } else if (result.search) {
       if (result.search.engines.length === 1) {
         message = [<span className='category-action'>open</span>, ' a ', <span className='descriptor-search-engine'>{result.search.engines[0]}</span>, ' search for ', <span className='descriptor-query'>{result.search.query}</span>, ' in ', <span className='descriptor-application'>the default browser</span>]
@@ -188,6 +203,12 @@ function formatDateRange (obj) {
   } else {
     return [<span className='descriptor-date'>{start.format('dddd, MMMM Do, YYYY')}</span>, ' at ', <span className='descriptor-time'>{start.format('h:mma')}</span>, ' to  ', <span className='descriptor-date'>{end.format('dddd, MMMM Do, YYYY')}</span>, ' at ', <span className='descriptor-time'>{end.format('h:mma')}</span>]
   }
+}
+
+function formatDuration (obj) {
+  if (obj.seconds) return <span className='descriptor-amount-of-time'>{obj.seconds} seconds</span>
+  if (obj.minutes) return <span className='descriptor-amount-of-time'>{obj.minutes} minutes</span>
+  if (obj.hours) return <span className='descriptor-amount-of-time'>{obj.hours} hours</span>
 }
 
 function outputifyContacts (objs) {

@@ -166,11 +166,13 @@
     @include descriptor(file, map-get($theme, argument0));
     @include descriptor(artist, map-get($theme, argument0));
     @include descriptor(location, map-get($theme, argument0));
+    @include descriptor(amount-of-time, map-get($theme, argument0));
 
     @include descriptor(time, map-get($theme, argument1));
     @include descriptor(song, map-get($theme, argument1));
     @include descriptor(email-address, map-get($theme, argument1));
     @include descriptor(path, map-get($theme, argument1));
+    @include descriptor(volume, map-get($theme, argument1));
 
     @include descriptor(message, map-get($theme, argument2));
     @include descriptor(phrase, map-get($theme, argument2));
@@ -194,6 +196,7 @@
     @include descriptor(поисковик, map-get($theme, argument3));
     @include descriptor(buscador, map-get($theme, argument3));
     @include descriptor(composer, map-get($theme, argument3));
+    @include descriptor(setting, map-get($theme, argument3));
 
     @include descriptor(phone-number, map-get($theme, argument4));
     @include descriptor(album, map-get($theme, argument4));
