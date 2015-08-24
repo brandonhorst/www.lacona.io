@@ -2371,6 +2371,23 @@ var Page = (function (_React$Component) {
                   'li',
                   { onClick: this.type.bind(this, '2', function () {
                       return false;
+                    }, 'enable bluetooth') },
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'enable'
+                  ),
+                  ' ',
+                  _reactAddons2['default'].createElement(
+                    'span',
+                    { className: 'descriptor-setting' },
+                    'bluetooth'
+                  )
+                ),
+                _reactAddons2['default'].createElement(
+                  'li',
+                  { onClick: this.type.bind(this, '2', function () {
+                      return false;
                     }, 'do not disturb for 25 minutes') },
                   _reactAddons2['default'].createElement(
                     'span',
@@ -3306,42 +3323,6 @@ var Page = (function (_React$Component) {
                   _reactAddons2['default'].createElement(
                     'span',
                     { className: 'category-action' },
-                    'translate'
-                  ),
-                  ' ',
-                  _reactAddons2['default'].createElement(
-                    'span',
-                    { className: 'category-argument2' },
-                    'How do you do?'
-                  ),
-                  ' ',
-                  _reactAddons2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'to'
-                  ),
-                  ' ',
-                  _reactAddons2['default'].createElement(
-                    'span',
-                    { className: 'category-argument3' },
-                    'Japanese'
-                  )
-                ),
-                _reactAddons2['default'].createElement(
-                  'li',
-                  null,
-                  _reactAddons2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'empty the Trash'
-                  )
-                ),
-                _reactAddons2['default'].createElement(
-                  'li',
-                  null,
-                  _reactAddons2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
                     'set'
                   ),
                   ' ',
@@ -3523,21 +3504,6 @@ var Page = (function (_React$Component) {
                     'span',
                     { className: 'category-argument4' },
                     'antediluvian'
-                  )
-                ),
-                _reactAddons2['default'].createElement(
-                  'li',
-                  null,
-                  _reactAddons2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'enable'
-                  ),
-                  ' ',
-                  _reactAddons2['default'].createElement(
-                    'span',
-                    { className: 'category-argument5' },
-                    'Do Not Disturb'
                   )
                 ),
                 _reactAddons2['default'].createElement(
@@ -5735,14 +5701,14 @@ var settings = {
         'sequence',
         { id: 'verb' },
         (0, _laconaPhrase.createElement)('literal', { text: 'turn on ', category: 'action', value: 'turn on the screensaver', merge: true }),
-        (0, _laconaPhrase.createElement)('literal', { text: 'the ', optional: true, prefered: false, limited: true, category: 'conjunction', category: 'action' }),
+        (0, _laconaPhrase.createElement)('literal', { text: 'the ', optional: true, prefered: false, limited: true, category: 'action' }),
         (0, _laconaPhrase.createElement)('list', { items: ['screensaver', 'screen saver'], limit: 1, category: 'action' })
       ),
       (0, _laconaPhrase.createElement)(
         'sequence',
         { id: 'verb' },
         (0, _laconaPhrase.createElement)('literal', { text: 'turn off ', category: 'action' }),
-        (0, _laconaPhrase.createElement)('literal', { text: 'the ', optional: true, prefered: false, limited: true, category: 'conjunction', category: 'action' }),
+        (0, _laconaPhrase.createElement)('literal', { text: 'the ', optional: true, prefered: false, limited: true, category: 'action' }),
         (0, _laconaPhrase.createElement)(
           'choice',
           { merge: true },

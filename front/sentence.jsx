@@ -2082,12 +2082,12 @@ export const settings = {
         <literal text='empty Trash' category='action' value='empty the Trash' id='verb'/>
         <sequence id='verb'>
           <literal text='turn on ' category='action' value='turn on the screensaver' merge={true} />
-          <literal text='the ' optional={true} prefered={false} limited={true} category='conjunction' category='action' />
+          <literal text='the ' optional={true} prefered={false} limited={true} category='action' />
           <list items={['screensaver', 'screen saver']} limit={1} category='action' />
         </sequence>
         <sequence id='verb'>
           <literal text='turn off ' category='action' />
-          <literal text='the ' optional={true} prefered={false} limited={true} category='conjunction' category='action' />
+          <literal text='the ' optional={true} prefered={false} limited={true} category='action' />
           <choice merge={true}>
             <list items={['display', 'screen']} limit={1} category='action' value='turn off the display' />
             <list items={['computer', 'system']} limit={1} category='action' value='shutdown the computer' />

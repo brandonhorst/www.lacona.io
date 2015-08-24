@@ -363,6 +363,9 @@ export default class Page extends React.Component {
                 <li onClick={this.type.bind(this, '2', () => false, 'empty Trash')}>
                   <span className='category-action'>empty Trash</span>
                 </li>
+                <li onClick={this.type.bind(this, '2', () => false, 'enable bluetooth')}>
+                  <span className='category-action'>enable</span> <span className='descriptor-setting'>bluetooth</span>
+                </li>
                 <li onClick={this.type.bind(this, '2', () => false, 'do not disturb for 25 minutes')}>
                   <span className='category-action'>do not disturb</span> <span className='category-conjunction'>for</span> <span className='descriptor-amount-of-time'>25 minutes</span>
                 </li>
@@ -497,8 +500,6 @@ export default class Page extends React.Component {
                 <li><span className='category-action'>turn off</span> <span className='category-argument5'>the kitchen lights</span></li>
                 <li><span className='category-action'>pronounce</span> <span className='category-argument4'>indefatigable</span></li>
                 <li><span className='category-action'>check</span> <span className='category-argument6'>APPL</span></li>
-                <li><span className='category-action'>translate</span> <span className='category-argument2'>How do you do?</span> <span className='category-conjunction'>to</span> <span className='category-argument3'>Japanese</span></li>
-                <li><span className='category-action'>empty the Trash</span></li>
                 <li><span className='category-action'>set</span> <span className='category-argument0'>default browser</span> <span className='category-conjunction'>to</span> <span className='category-application'>Firefox</span></li>
                 <li><span className='category-action'>set a timer</span> <span className='category-conjunction'>for</span> <span className='category-argument2'>25 minutes</span></li>
                 <li><span className='category-action'>execute</span> <span className='category-argument5'>ps -ef | grep -i lacona</span></li>
@@ -508,7 +509,6 @@ export default class Page extends React.Component {
                 <li><span className='category-action'>paste</span> <span className='category-argument2'>my last tweet</span></li>
                 <li><span className='category-action'>fork</span> <span className='category-argument1'>lacona/lacona</span></li>
                 <li><span className='category-action'>define</span> <span className='category-argument4'>antediluvian</span></li>
-                <li><span className='category-action'>enable</span> <span className='category-argument5'>Do Not Disturb</span></li>
                 <li><span className='category-action'>roll</span> <span className='category-argument0'>d12</span></li>
                 <li><span className='category-action'>find flights</span> <span className='category-conjunction'>from</span> <span className='category-argument6'>SFO</span> <span className='category-conjunction'>to</span> <span className='category-argument6'>BOS</span> <span className='category-conjunction'>on</span> <span className='descriptor-date'>8/6/2015</span></li>
                 <li><span className='category-action'>yo</span> <span className='descriptor-contact'>THEDUDE</span></li>
