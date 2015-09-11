@@ -69,6 +69,15 @@ content {
   display: block;
 }
 
+.btc {
+  text-align: center;
+  
+  img, a {
+    display: block;
+    margin: 0 auto;
+  }
+}
+
 .lightbox-total {
   position: absolute;
   z-index: 10000;

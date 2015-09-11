@@ -40,7 +40,7 @@ const examples = [
 ]
 
 class Lightbox {
-  render() {
+  render () {
     return (
       <div className='lightbox-total'>
         <div className='lightbox-cover' onClick={this.props.hide} />
@@ -49,7 +49,23 @@ class Lightbox {
           <h3>Thanks for trying the Lacona demo!</h3>
           {this.props.detail ? <p className='well'>{this.props.detail}</p> : null}
           <p className='description'>If this were a real copy of Lacona, it would {this.props.message}.</p>
-          <ShareSheet />
+          <ShareSheet showBTCLightbox={this.props.showBTCLightbox} />
+        </div>
+      </div>
+    )
+  }
+}
+
+class BitcoinLightbox {
+  render () {
+    return (
+      <div className='lightbox-total'>
+        <div className='lightbox-cover' onClick={this.props.hide} />
+        <div className='lightbox btc'>
+          <div tabIndex='0' className='closeButton' onClick={this.props.hide}>×</div>
+          <h3>Donate to development with Bitcoin</h3>
+          <img className='qr-code' src='btc-qr.png' />
+          <a className='btc-address' href='bitcoin:1PDi8uvM4ADkes28aJ98pUrVhnxDPWrWnx'>1PDi8uvM4ADkes28aJ98pUrVhnxDPWrWnx</a>
         </div>
       </div>
     )
@@ -71,14 +87,15 @@ class ShareSheet {
           </div>
           : null
         }
-        <a href='https://www.kickstarter.com/projects/2102999333/lacona-natural-language-commands-for-your-mac' className='share-item'>
+        <div className='share-item'>
           <div className='share-desc'>
-            Back
+            Donate
           </div>
           <div className='share-icons'>
-            <img src='kickstarter.png' />
+            <a href='https://www.paypal.me/lacona' target='_blank'><img src='paypal.png' /></a>
+            <a onClick={this.props.showBTCLightbox}><img src='bitcoin.png' /></a>
           </div>
-        </a>
+        </div>
         <a className='share-item' onClick={e => {window.open('https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458', '_blank', 'menubar=1,resizable=1,width=550,height=420'); e.preventDefault()}} href='https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458' target='_blank'>
           <div className='share-desc'>
             Follow
@@ -111,11 +128,12 @@ class ShareSheet {
 }
 ShareSheet.defaultProps = {
   includeTry: false,
-  focusTry: () => {}
+  focusTry: () => {},
+  showBTCLightbox: () => {}
 }
 
 export default class Page extends React.Component {
-  constructor() {
+  constructor () {
     super()
 
     this.state = {
@@ -135,12 +153,19 @@ export default class Page extends React.Component {
     this.setState({lightBoxMessage: null, lightBoxDetail: null})
   }
 
+  showBTCLightbox() {
+    this.setState({btcLightboxVisible: true})
+  }
+
+  hideBTCLightbox() {
+    this.setState({btcLightboxVisible: false})
+  }
+
   componentDidMount () {
     ga('create', 'UA-61643321-1', 'auto')
     ga('send', 'pageview')
 
-
-    window.addEventListener('keydown', this.checkEscape.bind(this));
+    window.addEventListener('keydown', this.checkEscape.bind(this))
 
     this.setState({initialLoad: false})
 
@@ -148,9 +173,8 @@ export default class Page extends React.Component {
   }
 
   componentWillUnmount () {
-    window.removeEventListener('keydown', this.checkEscape.bind(this));
+    window.removeEventListener('keydown', this.checkEscape.bind(this))
   }
-
 
   startDemo () {
     const shuffledExamples = _.shuffle(examples)
@@ -194,7 +218,7 @@ export default class Page extends React.Component {
     const elem = this.refs[ref]
     this.erase(elem, shouldStop, focus, () => {
       for (let i = 0; i < content.length; i++) {
-          if (shouldStop()) return
+        if (shouldStop()) return
         _.delay(() => {
           elem.update(content.substr(0, i + 1))
           if (focus) elem.focusEnd()
@@ -216,15 +240,15 @@ export default class Page extends React.Component {
     this.erase(this.refs.big, () => false)
   }
 
-  render() {
+  render () {
     return (
       <div className={`page ${this.props.isMobile ? 'mobile' : 'desktop'} theme-eighties-dark${this.state.initialLoad ? ' initial-load' : ''}`}>
 
         <header>
-          <h1><a href="#" tabIndex="-1">Lacona</a></h1>
+          <h1><a href='#' tabIndex='-1'>Lacona</a></h1>
           <h2 className='category-action highlighted'>Natural Language Commands for your Mac</h2>
           <p>Call up Lacona with a keypress, and type whatever you want to do. It gives intelligent suggestions as you type and then follows your orders.</p>
-          <p>This page is just a demo of Lacona's power. <a href='https://www.kickstarter.com/projects/2102999333/lacona-natural-language-commands-for-your-mac' target='_blank'>Support the project on Kickstarter</a> to help make it a reality.</p>
+          <p>This page is just a demo of Lacona's power. The App is scheduled to launch in January, 2016.</p>
           <p>This demo still has some bugs. If you find one, report it on <a href='https://github.com/lacona/www.lacona.io' target='_blank'>GitHub</a> or <a href='https://twitter.com/lacona' target='_blank'>Twitter</a>. It will be fixed before Lacona launches.</p>
         </header>
 
@@ -234,8 +258,7 @@ export default class Page extends React.Component {
               <p className='well mobileOnly'>
                 Lacona is designed for use with a keyboard on a full desktop operating system, not for mobile devices. For the full experience, visit this page on your computer!
               </p>
-              {/*<p>Lacona will be available for download <em>late summer, 2015</em>. Until then, check out the demos below, <a href='https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458' target='_blank' onClick={this.openWindow}>follow @lacona on Twitter</a>, or <a href='http://eepurl.com/bjPRjD' target='_blank'>sign up for the newsletter</a>.</p>*/}
-              <ShareSheet includeTry={true} focusTry={this.focusTry.bind(this)} />
+              <ShareSheet includeTry={true} focusTry={this.focusTry.bind(this)} showBTCLightbox={this.showBTCLightbox.bind(this)} />
             </div>
           </section>
           <section className='full'>
@@ -514,24 +537,9 @@ export default class Page extends React.Component {
                 <li><span className='category-action'>yo</span> <span className='descriptor-contact'>THEDUDE</span></li>
                 <li><span className='category-action'>set an alarm</span> <span className='category-conjunction'>for</span> <span className='descriptor-time'>6am</span> <span className='category-conjunction'>on</span> <span className='descriptor-date'>Christmas</span></li>
                 <li><span className='category-action'>check the weather</span> <span className='category-conjunction'>in</span> <span className='category-argument2'>Boston</span></li>
-                {/*<li><span className='category-action'>Поиск</span> <span className='descriptor-search-engine'>Яндекса</span> <span className='category-conjunction'>для</span> <span className='descriptor-query'>музыки</span></li>
-                <li><span className='category-conjunction'>在</span><span className='descriptor-search-engine'>百度</span><span classAName='category-conjunction'>上</span><span className='category-action'>搜索</span><span className='descriptor-query'>好听的音乐</span></li>
-                <li style={{textAlign: 'right'}}><span className='category-action'>بحث</span> <span className='descriptor-search-engine'>يملي</span> <span className='descriptor-query'>للموسيقى</span></li>
-                <li><span className='category-action'>calculate</span> <span className='category-argument3'>六十四 + 23 + ٣‎٤</span></li>*/}
               </ul>
             </div>
           </section>
-          {/*<section className='full'>
-            <div className='text'>
-              <h3>Just the Beginning</h3>
-              <p>
-                Lacona is currently under active development, and will be launching <em>Summer, 2015</em>. To recieve updates, <a href='http://lacona.us10.list-manage.com/subscribe?u=f923be23d36f00f457ea3b2c6&id=1db875d5ed' target='_blank' onClick={this.openWindow}>subscribe to the Newsletter</a> or .
-              </p>
-              {/*<p>
-                Since computers have existed, we have needed to learn <em>their</em> language. With Lacona, the computer takes that responsibility back. It understands commands <em>the way they exist in your mind</em>, freeing you from the burden of an expensive mental context-switch, so you can forget about the computer and just <em>get things done</em>.
-              </p>
-            </div>
-          </section>*/}
         </content>
         <footer>
           <div className='text'>
@@ -546,7 +554,13 @@ export default class Page extends React.Component {
             key='1'
             message={this.state.lightBoxMessage}
             hide={this.hideLightBox.bind(this)}
+            showBTCLightbox={this.showBTCLightbox.bind(this)}
             detail={this.state.lightBoxDetail} /> : null}
+        </React.addons.CSSTransitionGroup>
+        <React.addons.CSSTransitionGroup transitionName='lightbox' element='div' style={{position: 'absolute', zIndex: 2000}}>
+          {this.state.btcLightboxVisible ? <BitcoinLightbox
+            key='1'
+            hide={this.hideBTCLightbox.bind(this)} /> : null}
         </React.addons.CSSTransitionGroup>
         <Initializer />
       </div>

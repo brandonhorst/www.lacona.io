@@ -2,7 +2,7 @@ import moment from 'moment'
 require('moment-duration-format')
 import React from 'react/addons'
 
-function intersperse(array, something) {
+function intersperse (array, something) {
   if (array.length < 2) { return array }
   var result = [], i = 0, l = array.length
   if (typeof something == 'function') {
@@ -52,6 +52,7 @@ export default function getExecute (showNotification) {
         }
       }
     } else if (result.date) {
+      console.log(result.date)
       if (result.date.reminder) {
         let time
 
@@ -88,7 +89,6 @@ export default function getExecute (showNotification) {
     } else if (result.settings) {
       if (result.settings.settings) {
         if (result.settings.settings.duration) {
-console.log(result.settings.settings.duration)
           message = [<span className='category-action'>{result.settings.settings.verb}</span>, ' ', <span className='descriptor-setting'>{result.settings.settings.setting}</span>, ', wait ', formatDuration(result.settings.settings.duration), ', and then change it back']
         } else {
           message = [<span className='category-action'>{result.settings.settings.verb}</span>, ' ', <span className='descriptor-setting'>{result.settings.settings.setting}</span>]
@@ -157,9 +157,9 @@ console.log(result.settings.settings.duration)
         message = [<span className='category-action'>call</span>, ' ', outputifyContacts(result.contact.facetime), ' using the ', <span className='descriptor-application'>FaceTime</span>, ' app']
       } else if (result.contact.text) {
         if (result.contact.text.message) {
-          message = [<span className='category-action'>send</span>, ' ', <span className='descriptor-message'>{result.contact.text.message}</span>, ' to ', outputifyContacts(result.contact.text), ' using the ', <span className='descriptor-application'>Messages</span>, ' app']
+          message = [<span className='category-action'>send</span>, ' ', <span className='descriptor-message'>{result.contact.text.message}</span>, ' to ', outputifyContacts(result.contact.text.to), ' using the ', <span className='descriptor-application'>Messages</span>, ' app']
         } else {
-          message = [<span className='category-action'>open</span>, ' ', <span className='descriptor-application'>Messages</span>, ' to a conversation with ', outputifyContacts(result.contact.text)]
+          message = [<span className='category-action'>open</span>, ' ', <span className='descriptor-application'>Messages</span>, ' to a conversation with ', outputifyContacts(result.contact.text.to)]
         }
       }
     } else if (result.translate) {

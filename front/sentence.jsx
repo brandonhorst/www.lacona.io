@@ -1877,11 +1877,11 @@ export const contact = {
             <freetext splitOn=' ' limit={1} />
           </argument>
           <literal text=' to ' category='conjunction' />
-          <AllGroup merge={true} />
+          <AllGroup id='to' />
         </sequence>
         <sequence>
           <list items={['send ']} limit={1} category='action' />
-          <AllGroup merge={true} />
+          <AllGroup id='to' />
           <choice limit={1} category='action'>
             <literal text=' a text saying ' />
             <literal text=' an iMessage saying' />
@@ -1894,7 +1894,7 @@ export const contact = {
         </sequence>
         <sequence>
           <list items={['text ', 'iMessage ']} limit={1} category='action' />
-          <AllGroup merge={true} />
+          <AllGroup id='to' />
           <choice limit={1}>
             <literal text=' saying ' />
             <literal text=' ' />
@@ -2094,7 +2094,7 @@ export const settings = {
           </choice>
         </sequence>
         <sequence>
-          <literal text='eject ' category='action' id='verb' value='eject' />
+          <list items={['eject ', 'unmount ', 'dismount ']} category='action' id='verb' value='eject' />
           <choice merge={true}>
             <list items={['all', 'everything', 'all devices']} limit={1} category='action' id='verb' value='eject every volume and drive' />
             <argument text='volume' id='object'>
