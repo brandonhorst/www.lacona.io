@@ -2,3 +2,4 @@ node_modules
 .divshot-cache
 .env.json
 tmp
+.DS_Store
