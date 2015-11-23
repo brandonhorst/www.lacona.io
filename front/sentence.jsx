@@ -1388,7 +1388,7 @@ class Birthday extends Phrase {
   describe () {
     return (
       <sequence>
-        <literal text='on ' optional={true} prefered={true} limited={true} />
+        <literal text='on ' />
         <argument text='birthday' merge={true}>
           <choice>
             <sequence>

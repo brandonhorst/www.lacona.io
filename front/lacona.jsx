@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import {Parser} from 'lacona'
-import React from 'react/addons'
+import React from 'react'
+import CSSTransitionGroup from 'react-addons-css-transition-group'
 import ReactLacona from 'react-lacona'
 
 function groupPlaceholders (result) {
@@ -46,7 +47,7 @@ function mapPlaceholderGroups (resultGroup) {
 
 const prefixes = ['open ', 'search '] //, 'open ', 'search ']
 
-class Keys {
+class Keys extends React.Component{
   render () {
     return (
       <div className={`keys${this.props.visible ? ' visible' : ''}`}>
@@ -176,7 +177,7 @@ export default class Lacona extends React.Component {
 
   render () {
     return (
-      <React.addons.CSSTransitionGroup component='div' className='lacona' transitionName='lacona' transitionAppear={true}>
+      <CSSTransitionGroup component='div' className='lacona' transitionName='lacona' transitionAppear={true} transitionAppearTimeout={0} transitionEnterTimeout={1000} transitionLeaveTimeout={1500}>
         <Keys visible={this.state.focused} key='keys' />
         <ReactLacona
           ref='lacona'
@@ -193,7 +194,7 @@ export default class Lacona extends React.Component {
           userInteracted={this.props.userInteracted}
           tabIndex={this.props.tabIndex}
           placeholder={this.props.placeholder} />
-      </React.addons.CSSTransitionGroup>
+      </CSSTransitionGroup>
     )
   }
 }

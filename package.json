@@ -7,25 +7,27 @@
     "build:html": "babel-node render.jsx",
     "build:style": "node-sass front/style.scss public/style.css --output-style compressed",
     "build:script": "mkdir -p tmp && browserify front/script.jsx -t [ babelify --optional runtime ] -g browserify-shim -o public/script.js && uglifyjs public/script.js -o public/script.min.js",
-    "build:vendor": "cp node_modules/moment/min/moment.min.js public & cp node_modules/react/dist/react-with-addons.min.js public",
+    "build:vendor": "cp node_modules/moment/min/moment.min.js public & cp node_modules/react/dist/react.min.js public",
     "build": "npm run build:html & npm run build:vendor & npm run build:style & npm run build:script & wait",
     "open": "open public/index.html"
   },
   "dependencies": {
-    "async-each-series": "^1.0.0",
+    "async-each-series": "^1.1.0",
     "babel-runtime": "^5.8.20",
-    "lacona": "^0.27.0",
+    "lacona": "^0.31.0",
     "lacona-phrase": "^0.7.0",
-    "lacona-phrase-datetime": "^0.3.1",
-    "lacona-phrase-email": "0.0.1",
-    "lacona-phrase-phonenumber": "0.0.1",
-    "lacona-phrase-url": "0.0.1",
+    "lacona-phrase-datetime": "^0.3.2",
+    "lacona-phrase-email": "0.0.2",
+    "lacona-phrase-phonenumber": "0.0.2",
+    "lacona-phrase-url": "0.0.2",
     "lodash": "^3.10.1",
     "moment": "^2.10.6",
     "moment-duration-format": "^1.3.0",
-    "react": "^0.13.3",
+    "react": "^0.14.3",
+    "react-addons-css-transition-group": "^0.14.3",
+    "react-dom": "^0.14.3",
     "react-google-analytics": "^0.2.0",
-    "react-lacona": "^0.4.1"
+    "react-lacona": "^0.5.0"
   },
   "engines": {
     "node": "0.10.x"
@@ -43,19 +45,13 @@
   "devDependencies": {
     "babel": "^5.8.23",
     "babelify": "^6.3.0",
-    "browserify": "^11.1.0",
-    "browserify-shim": "^3.8.10",
-    "node-sass": "^3.3.2",
-    "rimraf": "^2.4.3",
-    "uglify-js": "^2.4.24"
+    "browserify": "^12.0.1",
+    "browserify-shim": "^3.8.11",
+    "node-sass": "^3.4.2",
+    "rimraf": "^2.4.4",
+    "uglify-js": "^2.6.1"
   },
   "browserify-shim": {
-    "react": {
-      "exports": "global:React"
-    },
-    "react/addons": {
-      "exports": "global:React"
-    },
     "moment": {
       "exports": "global:moment"
     },

@@ -4,7 +4,8 @@ import eachSeries from 'async-each-series'
 import ga, {Initializer} from 'react-google-analytics'
 import getExecute from './execute.jsx'
 import Lacona from './lacona.jsx'
-import React from 'react/addons'
+import React from 'react'
+import CSSTransitionGroup from 'react-addons-css-transition-group'
 
 const MS_PER_INPUT = 10
 
@@ -39,7 +40,7 @@ const examples = [
   'call +1 617 867 5309'
 ]
 
-class Lightbox {
+class Lightbox extends React.Component {
   render () {
     return (
       <div className='lightbox-total'>
@@ -56,7 +57,7 @@ class Lightbox {
   }
 }
 
-class BitcoinLightbox {
+class BitcoinLightbox extends React.Component {
   render () {
     return (
       <div className='lightbox-total'>
@@ -72,7 +73,7 @@ class BitcoinLightbox {
   }
 }
 
-class ShareSheet {
+class ShareSheet extends React.Component {
   render () {
     return (
       <div className='share-sheet'>
@@ -549,19 +550,19 @@ export default class Page extends React.Component {
             ©2015 Lacona Labs
           </div>
         </footer>
-        <React.addons.CSSTransitionGroup transitionName='lightbox' element='div' style={{position: 'absolute', zIndex: 2000}}>
+        <CSSTransitionGroup transitionName='lightbox' element='div' style={{position: 'absolute', zIndex: 2000}} transitionEnterTimeout={0} transitionLeaveTimeout={500}>
           {this.state.lightBoxMessage ? <Lightbox
             key='1'
             message={this.state.lightBoxMessage}
             hide={this.hideLightBox.bind(this)}
             showBTCLightbox={this.showBTCLightbox.bind(this)}
             detail={this.state.lightBoxDetail} /> : null}
-        </React.addons.CSSTransitionGroup>
-        <React.addons.CSSTransitionGroup transitionName='lightbox' element='div' style={{position: 'absolute', zIndex: 2000}}>
+        </CSSTransitionGroup>
+        <CSSTransitionGroup transitionName='lightbox' element='div' style={{position: 'absolute', zIndex: 2000}} transitionEnterTimeout={0} transitionLeaveTimeout={500}>
           {this.state.btcLightboxVisible ? <BitcoinLightbox
             key='1'
             hide={this.hideBTCLightbox.bind(this)} /> : null}
-        </React.addons.CSSTransitionGroup>
+        </CSSTransitionGroup>
         <Initializer />
       </div>
     )

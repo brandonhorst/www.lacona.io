@@ -1,6 +1,6 @@
 import moment from 'moment'
 require('moment-duration-format')
-import React from 'react/addons'
+import React from 'react'
 
 function intersperse (array, something) {
   if (array.length < 2) { return array }
@@ -52,7 +52,6 @@ export default function getExecute (showNotification) {
         }
       }
     } else if (result.date) {
-      console.log(result.date)
       if (result.date.reminder) {
         let time
 
