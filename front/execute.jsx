@@ -30,144 +30,155 @@ function andify(array, separator = ',') {
   }
 }
 
+const settingMap = {
+  'shutdown': 'shutdown the computer',
+  'restart': 'restart the computer',
+  'log out': 'log out of the computer',
+  'sleep': 'put the computer to sleep',
+  'lock': 'lock the computer',
+  'display-off': 'turn the display off',
+  'screensaver': 'turn on the screensaver',
+  'empty-trash': 'empty the trash'
+}
+
+
 export default function getExecute (showNotification) {
   if (global.location && global.location.hash === '#videodemo') return
 
   return function (result) {
+    console.log(result)
     let message
     if (result.open) {
-      if (result.open.openin) {
-        message = [<span className='category-action'>open </span>, outputifyOpen(result.open.things), ' in ', outputifyOpen(result.open.openin)]
+      if (result.open.verb === 'openin') {
+        message = [<span className='category-action'>open </span>, outputifyOpen(result.open.items), ' in ', outputifyOpen(result.open.apps)]
       } else if (result.open) {
         if (result.open.verb === 'open') {
-          message = outputifyDefaultOpen(result.open.things)
+          message = outputifyDefaultOpen(result.open.items)
         } else if (result.open.verb === 'switch') {
-          message = [<span className='category-action'>switch focus to </span>, outputifyOpen(result.open.things)]
+          message = [<span className='category-action'>switch focus to </span>, outputifyOpen(result.open.items)]
         } else if (result.open.verb === 'close') {
-          message = [<span className='category-action'>close the frontmost window of </span>, outputifyOpen(result.open.things)]
+          message = [<span className='category-action'>close the frontmost window of </span>, outputifyOpen(result.open.items)]
         } else if (result.open.verb === 'quit') {
-          message = [<span className='category-action'>quit </span>, outputifyOpen(result.open.things)]
+          message = [<span className='category-action'>quit </span>, outputifyOpen(result.open.items)]
         } else if (result.open.verb === 'kill') {
-          message = [<span className='category-action'>kill </span>, outputifyOpen(result.open.things)]
+          message = [<span className='category-action'>kill </span>, outputifyOpen(result.open.items)]
         }
       }
     } else if (result.date) {
-      if (result.date.reminder) {
+      if (result.date.verb === 'remind') {
         let time
 
-        if (result.date.reminder.datetime) {
-          time = ['with an alert on ', formatDate(result.date.reminder.datetime)]
-        } else if (result.date.reminder.date) {
-          time = ['with an alert on ', <span className='descriptor-date'>{moment(result.date.reminder.date).format('dddd, MMMM Do, YYYY')}</span>, ' at ', <span className='descriptor-time'>9:00 am</span>]
-        } else if (result.date.reminder.time) {
-          time = ['with an alert ', <span className='descriptor-date'>today</span>, ' at ', <span className='descriptor-time'>{moment(result.date.reminder.time).format('h:mm a')}</span>]
+        if (result.date.date) {
+          time = ['with an alert on ', formatDate(result.date.date)]
         } else {
           time = ['without an alert']
         }
 
-        message = [<span className='category-action'>create a reminder</span>, ' called ', <span className='descriptor-reminder-title'>{result.date.reminder.title}</span>, ' ', time]
-      } else if (result.date.event) {
+        message = [<span className='category-action'>create a reminder</span>, ' called ', <span className='descriptor-reminder-title'>{result.date.title}</span>, ' ', time]
+      } else if (result.date.verb === 'schedule') {
         let location
-        if (result.date.event.location) location = [' with location ', <span className='descriptor-location'>{result.date.event.location}</span>, '']
+        if (result.date.location) location = [' with location ', <span className='descriptor-location'>{result.date.location}</span>, '']
 
-        let time
-        if (result.date.event.datetime) {
-          time = formatDateAsRange(result.date.event.datetime)
-        } else if (result.date.event.period) {
-          time = formatDateRange(result.date.event.period)
-        } else if (result.date.event.date) {
-          time = [<span className='descriptor-date'>{moment(result.date.event.date).format('dddd, MMMM Do, YYYY')}</span>, ' all day']
-        } else if (result.date.event.time) {
-          const m = moment(result.date.event.time)
-          const todayTomorrow = m.isAfter(moment()) ? moment() : moment().add(1, 'days')
-          time = [<span className='descriptor-date'>{todayTomorrow.format('dddd, MMMM Do, YYYY')}</span>, ' at ', <span className='descriptor-time'>{m.format('h:mma')}</span>]
-        }
+        const time = formatDateRange(result.date.range)
 
-        message = [<span className='category-action'>create an event</span>, ' called ', <span className='descriptor-calendar-event'>{result.date.event.title}</span>, ' ', location, ' on ', time]
+        message = [<span className='category-action'>create an event</span>, ' called ', <span className='descriptor-calendar-event'>{result.date.title}</span>, ' ', location, ' on ', time]
       }
     } else if (result.settings) {
-      if (result.settings.settings) {
-        if (result.settings.settings.duration) {
-          message = [<span className='category-action'>{result.settings.settings.verb}</span>, ' ', <span className='descriptor-setting'>{result.settings.settings.setting}</span>, ', wait ', formatDuration(result.settings.settings.duration), ', and then change it back']
-        } else {
-          message = [<span className='category-action'>{result.settings.settings.verb}</span>, ' ', <span className='descriptor-setting'>{result.settings.settings.setting}</span>]
+      let verb = result.settings.verb
+
+      if (result.settings.direction === -1) {
+        if (result.settings.verb === 'turn off') {
+          verb = 'turn on'
+        } else if (result.settings.verb === 'turn on') {
+          verb = 'turn off'
         }
-      } else  if (result.settings.actions) {
-        if (result.settings.actions.object) {
-          message = [<span className='category-action'>{result.settings.actions.verb}</span>, ' ', <span className='descriptor-volume'>{result.settings.actions.object}</span>]
+      }
+
+      if (verb === 'turn on' || verb === 'turn off' || verb === 'toggle') {
+        if (result.settings.duration) {
+          message = [<span className='category-action'>{verb}</span>, ' ', <span className='descriptor-setting'>{result.settings.setting}</span>, ', wait ', formatDuration(result.settings.duration), ', and then change it back']
         } else {
-          message = [<span className='category-action'>{result.settings.actions.verb}</span>]
+          message = [<span className='category-action'>{verb}</span>, ' ', <span className='descriptor-setting'>{result.settings.setting}</span>]
+        }
+      } else {
+        if (verb === 'eject') {
+          const volumes = _.map(result.settings.volumes, volume => <span className='descriptor-volume'>{volume}</span>)
+          message = [<span className='category-action'>{verb}</span>, ' ', andify(volumes)]
+        } else {
+          message = [<span className='category-action'>{settingMap[verb]}</span>]
         }
       }
     } else if (result.search) {
       if (result.search.engines.length === 1) {
-        message = [<span className='category-action'>open</span>, ' a ', <span className='descriptor-search-engine'>{result.search.engines[0]}</span>, ' search for ', <span className='descriptor-query'>{result.search.query}</span>, ' in ', <span className='descriptor-application'>the default browser</span>]
+        message = [<span className='category-action'>open</span>, ' a ', <span className='descriptor-search-engine'>{result.search.engines[0].name}</span>, ' search for ', <span className='descriptor-query'>{result.search.query}</span>, ' in ', <span className='descriptor-application'>the default browser</span>]
       } else {
-        const enginePhrases = _.map(result.search.engines, engine => <span className='descriptor-search-engine'>{engine}</span>)
+        const enginePhrases = _.map(result.search.engines, ({name}) => <span className='descriptor-search-engine'>{name}</span>)
         const engines = andify(enginePhrases)
         message = [<span className='category-action'>open</span>, ' ', engines, ' searches for ', <span className='descriptor-query'>{result.search.query}</span>, ' in ', <span className='descriptor-application'>the default browser</span>]
-
       }
     } else if (result.play) {
-      if (result.play.something) {
-        const descriptions = _.map(result.play.something, thing => {
-          if (thing.song) {
-            return [<span className='descriptor-song'>{thing.song}</span>]
-          } else if (thing.album) {
-            return ['all songs on ', <span className='descriptor-album'>{thing.album}</span>]
-          } else if (thing.artist) {
-            return ['all songs by ', <span className='descriptor-artist'>{thing.artist}</span>]
-          } else if (thing.genre) {
-            return ['all songs in the ', <span className='descriptor-genre'>{thing.genre}</span>, ' genre']
-          } else if (thing.playlist) {
-            return ['all songs in the ', <span className='descriptor-playlist'>{thing.playlist}</span>, ' playlist']
-          } else if (thing.composer) {
-            return ['all songs composed by ', <span className='descriptor-composer'>{thing.composer}</span>]
+      if (result.play.music) {
+        const descriptions = _.map(result.play.music, ({song, album, artist, genre, playlist, composer}) => {
+          if (song) {
+            return [<span className='descriptor-song'>{song}</span>]
+          } else if (album) {
+            return ['all songs on ', <span className='descriptor-album'>{album}</span>]
+          } else if (artist) {
+            return ['all songs by ', <span className='descriptor-artist'>{artist}</span>]
+          } else if (genre) {
+            return ['all songs in the ', <span className='descriptor-genre'>{genre}</span>, ' genre']
+          } else if (playlist) {
+            return ['all songs in the ', <span className='descriptor-playlist'>{playlist}</span>, ' playlist']
+          } else if (composer) {
+            return ['all songs composed by ', <span className='descriptor-composer'>{composer}</span>]
           }
         })
 
         const allDescriptions = andify(descriptions)
 
-        if (result.play.shuffled) {
-          message = [<span className='category-action'>play</span>, ' ', allDescriptions, ' ', <span className='descriptor-shuffled'>shuffled</span>, ' in ', <span className='descriptor-application'>iTunes</span>]
-        } else {
+        // if (result.play.shuffled) {
+        //   message = [<span className='category-action'>play</span>, ' ', allDescriptions, ' ', <span className='descriptor-shuffled'>shuffled</span>, ' in ', <span className='descriptor-application'>iTunes</span>]
+        // } else {
           message = [<span className='category-action'>play</span>, ' ', allDescriptions, ' in ', <span className='descriptor-application'>iTunes</span>]
-        }
-      } else if (result.play.next) {
+        // }
+      } else if (result.play.verb === 'play') {
+        message = [<span className='category-action'>play</span>, ' ', <span className='category-argument5'>the current song</span>, ' in ', <span className='descriptor-application'>iTunes</span>]
+      } else if (result.play.verb === 'next') {
         message = [<span className='category-action'>play</span>, ' ', <span className='category-argument5'>the next song</span>, ' in ', <span className='descriptor-application'>iTunes</span>]
-      } else if (result.play.previous) {
+      } else if (result.play.verb === 'previous') {
         message = [<span className='category-action'>play</span>, ' ', <span className='category-argument5'>the previous song</span>, ' in ', <span className='descriptor-application'>iTunes</span>]
-      } else if (result.play.stop) {
+      } else if (result.play.verb === 'stop') {
         message = [<span className='category-action'>stop</span>, ' the music in ', <span className='descriptor-application'>iTunes</span>]
-      } else if (result.play.pause) {
+      } else if (result.play.verb === 'pause') {
         message = [<span className='category-action'>pause</span>, ' the music in ', <span className='descriptor-application'>iTunes</span>]
       }
 
     } else if (result.contact) {
-      if (result.contact.email) {
-        if (result.contact.email.message) {
-          message = [<span className='category-action'>start</span>, ' a new email to ', outputifyContacts(result.contact.email.to), ' with ', <span className='descriptor-message'>{result.contact.email.message}</span>, ' in the subject']
+      if (result.contact.verb === 'email') {
+        if (result.contact.subject) {
+          message = [<span className='category-action'>start</span>, ' a new email to ', outputifyContacts(result.contact.to), ' with ', <span className='descriptor-subject'>{result.contact.subject}</span>, ' in the subject']
         } else {
-          message = [<span className='category-action'>start</span>, ' a new email to ', outputifyContacts(result.contact.email.to)]
+          message = [<span className='category-action'>start</span>, ' a new email to ', outputifyContacts(result.contact.to)]
         }
-      } else if (result.contact.call) {
-        message = [<span className='category-action'>call</span>, ' ', outputifyContacts(result.contact.call), ' through your iPhone']
-      } else if (result.contact.facetime) {
-        message = [<span className='category-action'>call</span>, ' ', outputifyContacts(result.contact.facetime), ' using the ', <span className='descriptor-application'>FaceTime</span>, ' app']
-      } else if (result.contact.text) {
-        if (result.contact.text.message) {
-          message = [<span className='category-action'>send</span>, ' ', <span className='descriptor-message'>{result.contact.text.message}</span>, ' to ', outputifyContacts(result.contact.text.to), ' using the ', <span className='descriptor-application'>Messages</span>, ' app']
-        } else {
-          message = [<span className='category-action'>open</span>, ' ', <span className='descriptor-application'>Messages</span>, ' to a conversation with ', outputifyContacts(result.contact.text.to)]
-        }
+      } else if (result.contact.verb === 'call') {
+        message = [<span className='category-action'>call</span>, ' ', outputifyContacts(result.contact.to), ' through your iPhone']
+      } else if (result.contact.verb === 'facetime') {
+        message = [<span className='category-action'>call</span>, ' ', outputifyContacts(result.contact.to), ' using the ', <span className='descriptor-application'>FaceTime</span>, ' app']
+      } else if (result.contact.verb === 'text') {
+        // if (result.contact.text.message) {
+        //   message = [<span className='category-action'>send</span>, ' ', <span className='descriptor-message'>{result.contact.text.message}</span>, ' to ', outputifyContacts(result.contact.text.to), ' using the ', <span className='descriptor-application'>Messages</span>, ' app']
+        // } else {
+          message = [<span className='category-action'>open</span>, ' ', <span className='descriptor-application'>Messages</span>, ' to a conversation with ', outputifyContacts(result.contact.to)]
+        // }
       }
     } else if (result.translate) {
+      console.log(result.translate)
       if (result.translate.to && result.translate.to.length > 1) {
-        const languages = _.map(result.translate.to, lang => <span className='descriptor-language'>{lang}</span>)
+        const languages = _.map(result.translate.to, lang => <span className='descriptor-language'>{lang.name}</span>)
 
-        message = [<span className='category-action'>load </span>, 'translations of ', <span className='descriptor-phrase'>{result.translate.phrase}</span>, ' from ', <span className='descriptor-language'>{result.translate.from || 'an auto-detected language'}</span>, ' to ', andify(languages), ' in ', <span className='descriptor-application'>the default browser</span>]
+        message = [<span className='category-action'>load </span>, 'translations of ', <span className='descriptor-phrase'>{result.translate.phrase}</span>, ' from ', <span className='descriptor-language'>{(result.translate.from && result.translate.from.name) || 'an auto-detected language'}</span>, ' to ', andify(languages), ' in ', <span className='descriptor-application'>the default browser</span>]
       } else {
-        message = [<span className='category-action'>load </span>, 'a translation of ', <span className='descriptor-phrase'>{result.translate.phrase}</span>, ' from ', <span className='descriptor-language'>{result.translate.from || 'an auto-detected language'}</span>, ' to ', <span className='descriptor-language'>{(result.translate.to && result.translate.to[0]) || 'English'}</span>, ' in ', <span className='descriptor-application'>the default browser</span>]
+        message = [<span className='category-action'>load </span>, 'a translation of ', <span className='descriptor-phrase'>{result.translate.phrase}</span>, ' from ', <span className='descriptor-language'>{(result.translate.from && result.translate.from.name) || 'an auto-detected language'}</span>, ' to ', <span className='descriptor-language'>{(result.translate.to && result.translate.to[0].name) || 'English'}</span>, ' in ', <span className='descriptor-application'>the default browser</span>]
       }
     }
 
@@ -180,7 +191,6 @@ export default function getExecute (showNotification) {
 }
 
 function formatDate (datetime) {
-  console.log(datetime)
   if (_.isDate(datetime)) {
     return [<span className='descriptor-date'>{moment(datetime).format('dddd, MMMM Do, YYYY')}</span>, ' at ', <span className='descriptor-time'>{moment(datetime).format('h:mma')}</span>]
   } else if (_.isArray(datetime)) {
@@ -216,26 +226,26 @@ function outputifyContacts (objs) {
 }
 
 function colorizeContact (obj) {
-  if (obj.number) {
-    return <span className='descriptor-phone-number'>{obj.number}</span>
-  } else if (obj.relationship) {
-    return <span className='descriptor-relationship'>{obj.relationship}</span>
-  } else if (obj.contact) {
-    return <span className='descriptor-contact'>{obj.contact}</span>
-  } else if (obj.address) {
-    return <span className='descriptor-email-address'>{obj.address}</span>
+  if (obj.label === 'number' && _.isString(obj.value)) {
+    return <span className='descriptor-phone-number'>{obj.value}</span>
+  } else if (obj.label === 'email' && _.isString(obj.value)) {
+    return <span className='descriptor-email-address'>{obj.value}</span>
+  } else if (obj.value.label === 'relationship') {
+    return <span className='descriptor-relationship'>{obj.value.value}</span>
+  } else if (obj.value.label === 'contact') {
+    return <span className='descriptor-contact'>{obj.value.value}</span>
   }
 }
 
 function colorizeOpen (obj) {
   if (obj.pref) {
     return <span className='descriptor-preference-pane'>{obj.pref}</span>
+  } else if (obj.type === 'app') {
+    return <span className='descriptor-application'>{obj.name}</span>
   } else if (obj.url) {
     return <span className='descriptor-url'>{obj.url}</span>
-  } else if (obj.file) {
-    return <span className='descriptor-file'>{obj.file}</span>
-  } else if (obj.app) {
-    return <span className='descriptor-application'>{obj.app}</span>
+  } else if (obj.path) {
+    return <span className='descriptor-file'>{obj.path}</span>
   }
 }
 
@@ -245,19 +255,20 @@ function outputifyOpen (objs) {
 }
 
 function outputifyDefaultOpen (objs) {
-  const groups = _.groupBy(objs, obj => Object.keys(obj)[0])
+  const groups = _.groupBy(objs, obj => obj.type || Object.keys(obj)[0])
   let message = []
+  console.log(groups)
   if (groups.app) {
     message.push([<span className='category-action'>launch </span>, outputifyOpen(groups.app)])
   }
   if (groups.url) {
     message.push([<span className='category-action'>load </span>, outputifyOpen(groups.url), ' in ', <span className='descriptor-application'>the default browser</span>])
   }
-  if (groups.file) {
-    message.push([<span className='category-action'>open </span>, <span className='descriptor-file'>{groups.file}</span>, ' in ', <span className='descriptor-application'>the default application</span>])
+  if (groups.path) {
+    message.push([<span className='category-action'>open </span>, outputifyOpen(groups.path), ' in ', <span className='descriptor-application'>the default application</span>])
   }
   if (groups.pref) {
-    message.push([<span className='category-action'>open </span>, ' the ', <span className='descriptor-preference-pane'>{groups.pref} </span>, 'system preference pane'])
+    message.push([<span className='category-action'>open </span>, ' the ', <span className='descriptor-preference-pane'>{groups.pref[0].pref} </span>, 'system preference pane'])
   }
 
   return andify(message, ';')

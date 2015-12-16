@@ -28,12 +28,10 @@ const examples = [
   'play Robot Love',
   'play Walk the Moon',
   'play Jason Derulo, Flyte, and Elle King',
-  'play Jams',
   'play next song',
   'pause',
   'call Mom',
   'email Tony Stark',
-  'text Leaving now :) to Hank McCoy',
   'email Dinner Plans to Peter Parker',
   'facetime Bruce Banner',
   'email app@lacona.io',
@@ -322,15 +320,15 @@ export default class Page extends React.Component {
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='0' grammar={open.grammar} execute={open => this.execute({open})} />
+            <Lacona userInteracted={this.stopDemo.bind(this)} ref='0' grammar={open.grammar} extensions={open.extensions} execute={open => this.execute({open})} />
           </section>
           <section className='textRight'>
             <div className='text'>
               <a name='date' className='anchor'><h3>Organize your Life, not your Calendar</h3></a>
               <p>Create events and reminders as though you were talking to a person. Lacona understands.</p>
               <ul className='well'>
-                <li>Due to browser limitations, this may sometimes be choppy. The real app will be silky smooth!</li>
-                <li>This demo only supports US date formats. The real product will support European formats as well.</li>
+                <li>Due to browser limitations, this may sometimes be choppy.</li>
+                <li>This demo US assumes date formats.</li>
               </ul>
               <ul className='examples'>
                 <li onClick={this.type.bind(this, '1', () => false, "schedule Dinner with Vicky at Sacco's Flatbread for 7pm tomorrow")}>
@@ -372,9 +370,6 @@ export default class Page extends React.Component {
                 <li onClick={this.type.bind(this, '2', () => false, 'toggle Do Not Disturb')}>
                   <span className='category-action'>toggle</span> <span className='descriptor-setting'>Do Not Disturb</span>
                 </li>
-                <li onClick={this.type.bind(this, '2', () => false, 'disable autosleep for 3 hours')}>
-                  <span className='category-action'>disable</span> <span className='descriptor-setting'>autosleep</span> <span className='category-conjunction'>for</span> <span className='descriptor-amount-of-time'>3 hours</span>
-                </li>
                 <li onClick={this.type.bind(this, '2', () => false, 'shutdown')}>
                   <span className='category-action'>shutdown</span>
                 </li>
@@ -398,7 +393,7 @@ export default class Page extends React.Component {
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='2' grammar={settings.grammar} execute={settings => this.execute({settings})} />
+            <Lacona userInteracted={this.stopDemo.bind(this)} ref='2' grammar={settings.grammar} extensions={settings.extensions} execute={settings => this.execute({settings})} />
           </section>
           <section className='textRight'>
             <div className='text'>
@@ -439,9 +434,6 @@ export default class Page extends React.Component {
                   <span className='category-action'>play</span> <span className='descriptor-artist'>Jason Derulo</span><span className='category-conjunction'>, </span><span className='descriptor-artist'>Flyte</span><span className='category-conjunction'>, and </span><span className='descriptor-artist'>Elle King</span>
                 </li>
 
-                <li onClick={this.type.bind(this, '4', () => false, 'play Jams')}>
-                  <span className='category-action'>play</span> <span className='descriptor-playlist'>Jams</span>
-                </li>
                 <li onClick={this.type.bind(this, '4', () => false, 'play next song')}>
                   <span className='category-action'>play</span> <span className='descriptor-next-song'>next song</span>
                 </li>
@@ -463,11 +455,8 @@ export default class Page extends React.Component {
                 <li onClick={this.type.bind(this, '5', () => false, 'email Tony Stark')}>
                   <span className='category-action'>email</span> <span className='descriptor-contact'>Tony Stark</span>
                 </li>
-                <li onClick={this.type.bind(this, '5', () => false, 'text Leaving now :) to Hank McCoy')}>
-                  <span className='category-action'>text</span> <span className='descriptor-message'>Leaving now :)</span> <span className='category-conjunction'>to</span> <span className='descriptor-contact'>Hank McCoy</span>
-                </li>
                 <li onClick={this.type.bind(this, '5', () => false, 'email Dinner Plans to Clinton and Natalia')}>
-                  <span className='category-action'>email</span> <span className='descriptor-message'>Dinner Plans</span> <span className='category-conjunction'>to</span> <span className='descriptor-contact'>Clinton</span> <span className='category-conjunction'>and</span> <span className='descriptor-contact'>Natalia</span>
+                  <span className='category-action'>email</span> <span className='descriptor-subject'>Dinner Plans</span> <span className='category-conjunction'>to</span> <span className='descriptor-contact'>Clinton</span> <span className='category-conjunction'>and</span> <span className='descriptor-contact'>Natalia</span>
                 </li>
                 <li onClick={this.type.bind(this, '5', () => false, 'facetime my boss')}>
                   <span className='category-action'>facetime</span> <span className='descriptor-relationship'>my boss</span>
@@ -475,8 +464,8 @@ export default class Page extends React.Component {
                 <li onClick={this.type.bind(this, '5', () => false, 'facetime Bruce Banner')}>
                   <span className='category-action'>facetime</span> <span className='descriptor-contact'>Bruce Banner</span>
                 </li>
-                <li onClick={this.type.bind(this, '5', () => false, 'text my Husband Leaving soon!')}>
-                  <span className='category-action'>text</span> <span className='descriptor-relationship'>my Husband</span> <span className='descriptor-message'>Leaving soon!</span>
+                <li onClick={this.type.bind(this, '5', () => false, 'call my Husband')}>
+                  <span className='category-action'>call</span> <span className='descriptor-relationship'>my Husband</span>
                 </li>
                 <li onClick={this.type.bind(this, '5', () => false, 'email app@lacona.io')}>
                   <span className='category-action'>email</span> <span className='descriptor-email-address'>app@lacona.io</span>
@@ -486,7 +475,7 @@ export default class Page extends React.Component {
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='5' grammar={contact.grammar} execute={contact => this.execute({contact})} />
+            <Lacona userInteracted={this.stopDemo.bind(this)} ref='5' grammar={contact.grammar} extensions={contact.extensions} execute={contact => this.execute({contact})} />
           </section>
           <section className='textLeft'>
             <div className='text'>

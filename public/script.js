@@ -1,1381 +1,277 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function (global){
 /** @jsx createElement */
 
 'use strict';
-
-var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
-
-var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
-
-var _Object$create = require('babel-runtime/core-js/object/create')['default'];
-
-var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
 
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
-var _createClass = (function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
-    }
-  }return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
-  };
-})();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x, _x2, _x3) {
-  var _again = true;_function: while (_again) {
-    var object = _x,
-        property = _x2,
-        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
-      var parent = Object.getPrototypeOf(object);if (parent === null) {
-        return undefined;
-      } else {
-        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
-      }
-    } else if ('value' in desc) {
-      return desc.value;
-    } else {
-      var getter = desc.get;if (getter === undefined) {
-        return undefined;
-      }return getter.call(receiver);
-    }
-  }
-};
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    _Object$defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });
-  } else {
-    obj[key] = value;
-  }return obj;
-}
+exports.execute = execute;
 
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError('Cannot call a class as a function');
-  }
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== 'function' && superClass !== null) {
-    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
-  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-}
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _laconaPhrase = require('lacona-phrase');
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _laconaPhraseNumber = require('lacona-phrase-number');
-
-var DateDuration = (function (_Phrase) {
-  _inherits(DateDuration, _Phrase);
-
-  function DateDuration() {
-    _classCallCheck(this, DateDuration);
-
-    _get(Object.getPrototypeOf(DateDuration.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(DateDuration, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      if (!result) return;
-
-      if (result.type === 'weeks') {
-        return { days: result.num * 7 };
-      } else {
-        return _defineProperty({}, result.type, result.num);
-      }
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      var singularItems = this.props.includeThe ? ['1', 'the'] : ['1'];
-
-      return (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('placeholder', { text: 'number', showForEmpty: true, id: 'num' }, (0, _laconaPhrase.createElement)('list', { items: singularItems, value: 1, limit: 1 })), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)('placeholder', { text: 'time period', id: 'type' }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('literal', { text: 'day', value: 'days' }), (0, _laconaPhrase.createElement)('literal', { text: 'week', value: 'weeks' }), (0, _laconaPhrase.createElement)('literal', { text: 'month', value: 'months' }), (0, _laconaPhrase.createElement)('literal', { text: 'year', value: 'years' })))), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_laconaPhraseNumber.Integer, { id: 'num', min: 2 }), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)('placeholder', { text: 'time period', id: 'type' }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('literal', { text: 'days', value: 'days' }), (0, _laconaPhrase.createElement)('literal', { text: 'weeks', value: 'weeks' }), (0, _laconaPhrase.createElement)('literal', { text: 'months', value: 'months' }), (0, _laconaPhrase.createElement)('literal', { text: 'years', value: 'years' })))));
-    }
-  }]);
-
-  return DateDuration;
-})(_laconaPhrase.Phrase);
-
-exports['default'] = DateDuration;
-
-DateDuration.defaultProps = { includeThe: false };
-module.exports = exports['default'];
-
-},{"babel-runtime/core-js/object/create":600,"babel-runtime/core-js/object/define-property":601,"babel-runtime/core-js/object/get-own-property-descriptor":602,"babel-runtime/core-js/object/set-prototype-of":603,"lacona-phrase":10,"lacona-phrase-number":20}],2:[function(require,module,exports){
-/** @jsx createElement */
-'use strict';
-
-var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
-
-var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
-
-var _Object$create = require('babel-runtime/core-js/object/create')['default'];
-
-var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
-    }
-  }return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
-  };
-})();
-
-var _get = function get(_x, _x2, _x3) {
-  var _again = true;_function: while (_again) {
-    var object = _x,
-        property = _x2,
-        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
-      var parent = Object.getPrototypeOf(object);if (parent === null) {
-        return undefined;
-      } else {
-        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
-      }
-    } else if ('value' in desc) {
-      return desc.value;
-    } else {
-      var getter = desc.get;if (getter === undefined) {
-        return undefined;
-      }return getter.call(receiver);
-    }
-  }
-};
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { 'default': obj };
-}
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    _Object$defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });
-  } else {
-    obj[key] = value;
-  }return obj;
-}
-
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError('Cannot call a class as a function');
-  }
-}
-
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== 'function' && superClass !== null) {
-    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
-  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-}
-
-var _lodash = require('lodash');
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
 var _laconaPhrase = require('lacona-phrase');
 
-var _dateDuration = require('./date-duration');
+var _laconaPhraseString = require('lacona-phrase-string');
 
-var _dateDuration2 = _interopRequireDefault(_dateDuration);
+var _laconaPhraseString2 = _interopRequireDefault(_laconaPhraseString);
 
-var _laconaPhraseNumber = require('lacona-phrase-number');
+var _laconaPhrasePhonenumber = require('lacona-phrase-phonenumber');
 
-var _month = require('./month');
+var _laconaPhrasePhonenumber2 = _interopRequireDefault(_laconaPhrasePhonenumber);
 
-var _month2 = _interopRequireDefault(_month);
+var _laconaPhraseEmail = require('lacona-phrase-email');
 
-var _weekday = require('./weekday');
+var _laconaPhraseEmail2 = _interopRequireDefault(_laconaPhraseEmail);
 
-var _weekday2 = _interopRequireDefault(_weekday);
+function execute(result) {
+  var url = undefined;
+  var to = encodeURIComponent(_lodash2['default'].chain(result.to).map('value').join(',').value());
 
-var DatePhrase = (function (_Phrase) {
-  _inherits(DatePhrase, _Phrase);
-
-  function DatePhrase() {
-    _classCallCheck(this, DatePhrase);
-
-    _get(Object.getPrototypeOf(DatePhrase.prototype), 'constructor', this).apply(this, arguments);
+  if (result.verb === 'email') {
+    if (result.to) {
+      url = 'mailto:' + to + '?subject=' + result.subject;
+    } else {
+      url = 'mailto:' + to;
+    }
+  } else if (result.verb === 'call') {
+    url = 'tel://' + to;
+  } else if (result.verb === 'facetime') {
+    url = 'facetime://' + to;
+  } else if (result.verb === 'text') {
+    url = 'imessage://' + to;
   }
 
-  _createClass(DatePhrase, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      if (!result) return;
-
-      if (_lodash2['default'].isDate(result)) {
-        return result;
-      } else if (result.relative) {
-        var date = new Date();
-        date.setHours(0, 0, 0, 0);
-        if (!_lodash2['default'].isUndefined(result.relative.days)) date.setDate(date.getDate() + result.relative.days);
-        if (!_lodash2['default'].isUndefined(result.relative.weeks)) date.setDate(date.getDate() + result.relative.weeks * 7);
-        if (!_lodash2['default'].isUndefined(result.relative.months)) date.setMonth(date.getMonth() + result.relative.months);
-        if (!_lodash2['default'].isUndefined(result.relative.years)) date.setFullYear(date.getFullYear() + result.relative.years);
-
-        return date;
-      } else if (result.absolute) {
-        return result.absolute;
-      }
-    }
-  }]);
-
-  return DatePhrase;
-})(_laconaPhrase.Phrase);
-
-exports['default'] = DatePhrase;
-
-DatePhrase.translations = [{
-  langs: ['en_US', 'default'],
-  describe: function describe() {
-    return (0, _laconaPhrase.createElement)('placeholder', { text: 'date' }, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('literal', { text: 'on ', optional: true, prefered: true, limited: true }), (0, _laconaPhrase.createElement)('choice', { merge: true }, (0, _laconaPhrase.createElement)('argument', { text: 'date', showForEmpty: true, merge: true, id: 'relative' }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)(NamedDay, { allowPast: this.props.allowPast }), (0, _laconaPhrase.createElement)(RelativeNumbered, { allowPast: this.props.allowPast }), (0, _laconaPhrase.createElement)(RelativeAdjacent, { allowPast: this.props.allowPast }))), (0, _laconaPhrase.createElement)('argument', { text: 'date', showForEmpty: true, merge: true, id: 'absolute' }, (0, _laconaPhrase.createElement)('choice', { id: 'absolute' }, (0, _laconaPhrase.createElement)(RelativeWeekday, { allowPast: this.props.allowPast }), (0, _laconaPhrase.createElement)(AbsoluteDay, { allowPast: this.props.allowPast }), (0, _laconaPhrase.createElement)(NamedMonthAbsolute, { allowPast: this.props.allowPast }))), this.props.allowRecurse ? (0, _laconaPhrase.createElement)(RecursiveDay, { allowPast: this.props.allowPast }) : null)));
-  }
-}];
-DatePhrase.defaultProps = {
-  allowRecurse: true,
-  allowPast: true
-};
-
-var RecursiveDay = (function (_Phrase2) {
-  _inherits(RecursiveDay, _Phrase2);
-
-  function RecursiveDay() {
-    _classCallCheck(this, RecursiveDay);
-
-    _get(Object.getPrototypeOf(RecursiveDay.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(RecursiveDay, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      if (!result || !result.date) return;
-      var date = undefined;
-
-      if (result.date === 'now') {
-        date = new Date();
-        date.setHours(0, 0, 0, 0);
-      } else {
-        date = new Date(result.date.getTime());
-      }
-
-      if (result.years) {
-        date.setFullYear(result.years * result.direction + result.date.getFullYear());
-      } else if (result.months) {
-        date.setMonth(result.months * result.direction + result.date.getMonth());
-      } else if (result.days) {
-        date.setDate(result.days * result.direction + result.date.getDate());
-      }
-
-      return date;
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('argument', { text: 'offset', showForEmpty: true, merge: true }, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_dateDuration2['default'], { includeThe: true, merge: true }), (0, _laconaPhrase.createElement)('list', { merge: true, id: 'direction', items: [{ text: ' before ', value: -1 }, { text: ' after ', value: 1 }, { text: ' from ', value: 1 }], limit: 2 }))), (0, _laconaPhrase.createElement)('placeholder', { text: 'date', id: 'date' }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('literal', { text: 'now', value: 'now' }), (0, _laconaPhrase.createElement)(DatePhrase, { allowRecurse: false }))));
-    }
-  }]);
-
-  return RecursiveDay;
-})(_laconaPhrase.Phrase);
-
-var NamedDay = (function (_Phrase3) {
-  _inherits(NamedDay, _Phrase3);
-
-  function NamedDay() {
-    _classCallCheck(this, NamedDay);
-
-    _get(Object.getPrototypeOf(NamedDay.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(NamedDay, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('literal', { text: 'today', value: { days: 0 } }), (0, _laconaPhrase.createElement)('literal', { text: 'tomorrow', value: { days: 1 } }), this.props.allowPast ? (0, _laconaPhrase.createElement)('literal', { text: 'yesterday', value: { days: -1 } }) : null);
-    }
-  }]);
-
-  return NamedDay;
-})(_laconaPhrase.Phrase);
-
-var RelativeNumbered = (function (_Phrase4) {
-  _inherits(RelativeNumbered, _Phrase4);
-
-  function RelativeNumbered() {
-    _classCallCheck(this, RelativeNumbered);
-
-    _get(Object.getPrototypeOf(RelativeNumbered.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(RelativeNumbered, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      if (!result) return;
-
-      if (result.direction < 0) {
-        return _lodash2['default'].mapValues(result.duration, function (num) {
-          return -num;
-        });
-      } else {
-        return result.duration;
-      }
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('literal', { text: 'in ', id: 'direction', value: 1 }), (0, _laconaPhrase.createElement)(_dateDuration2['default'], { id: 'duration' })), this.props.allowPast ? (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_dateDuration2['default'], { id: 'duration' }), (0, _laconaPhrase.createElement)('literal', { text: ' ago', id: 'direction', value: -1 })) : null);
-    }
-  }]);
-
-  return RelativeNumbered;
-})(_laconaPhrase.Phrase);
-
-var RelativeAdjacent = (function (_Phrase5) {
-  _inherits(RelativeAdjacent, _Phrase5);
-
-  function RelativeAdjacent() {
-    _classCallCheck(this, RelativeAdjacent);
-
-    _get(Object.getPrototypeOf(RelativeAdjacent.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(RelativeAdjacent, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      if (!result) return;
-
-      return _defineProperty({}, result.type, result.num);
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('choice', { id: 'num' }, (0, _laconaPhrase.createElement)('literal', { text: 'next ', value: 1 }), (0, _laconaPhrase.createElement)('literal', { text: 'last ', value: -1 })), (0, _laconaPhrase.createElement)('placeholder', { text: 'week, month, year', id: 'type' }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('literal', { text: 'week', value: 'weeks' }), (0, _laconaPhrase.createElement)('literal', { text: 'month', value: 'months' }), (0, _laconaPhrase.createElement)('literal', { text: 'year', value: 'years' }))));
-    }
-  }]);
-
-  return RelativeAdjacent;
-})(_laconaPhrase.Phrase);
-
-var RelativeWeekday = (function (_Phrase6) {
-  _inherits(RelativeWeekday, _Phrase6);
-
-  function RelativeWeekday() {
-    _classCallCheck(this, RelativeWeekday);
-
-    _get(Object.getPrototypeOf(RelativeWeekday.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(RelativeWeekday, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      var returnDate = new Date();
-      var currentDay = returnDate.getDay();
-      var distance = undefined;
-      if (result.distance != null) {
-        distance = result.weekday - currentDay + 7 * result.distance;
-      } else {
-        distance = (result.weekday + (7 - currentDay)) % 7;
-      }
-      returnDate.setDate(returnDate.getDate() + distance);
-      return returnDate;
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('choice', { id: 'distance' }, (0, _laconaPhrase.createElement)('literal', { text: '', value: null }), (0, _laconaPhrase.createElement)('literal', { text: 'last ', value: -1 }), (0, _laconaPhrase.createElement)('literal', { text: 'this ', value: 0 }), (0, _laconaPhrase.createElement)('list', { items: ['next ', 'this upcoming '], limit: 1, value: 1 })), (0, _laconaPhrase.createElement)('placeholder', { text: 'weekday', id: 'weekday' }, (0, _laconaPhrase.createElement)(_weekday2['default'], null))), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('literal', { text: 'the ' }), (0, _laconaPhrase.createElement)('placeholder', { text: 'weekday', id: 'weekday' }, (0, _laconaPhrase.createElement)(_weekday2['default'], null)), (0, _laconaPhrase.createElement)('choice', { id: 'distance' }, (0, _laconaPhrase.createElement)('literal', { text: ' after next', value: 2 }), (0, _laconaPhrase.createElement)('literal', { text: ' after this', value: 1 }), (0, _laconaPhrase.createElement)('literal', { text: ' before this', value: -1 }), (0, _laconaPhrase.createElement)('literal', { text: ' before last', value: -2 }))));
-    }
-  }]);
-
-  return RelativeWeekday;
-})(_laconaPhrase.Phrase);
-
-function leapYear(year) {
-  return year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
+  global.openURL(url);
 }
 
-var AbsoluteDay = (function (_Phrase7) {
-  _inherits(AbsoluteDay, _Phrase7);
+var EmailGroup = (function (_Phrase) {
+  _inherits(EmailGroup, _Phrase);
 
-  function AbsoluteDay() {
-    _classCallCheck(this, AbsoluteDay);
+  function EmailGroup() {
+    _classCallCheck(this, EmailGroup);
 
-    _get(Object.getPrototypeOf(AbsoluteDay.prototype), 'constructor', this).apply(this, arguments);
+    _get(Object.getPrototypeOf(EmailGroup.prototype), 'constructor', this).apply(this, arguments);
   }
 
-  _createClass(AbsoluteDay, [{
+  _createClass(EmailGroup, [{
     key: 'getValue',
     value: function getValue(result) {
-      var year = undefined;
-
-      if (result.year) {
-        if (result.year.length === 2) {
-          var partialYear = parseInt(result.year, 10);
-          if (partialYear > 29) {
-            year = 1900 + partialYear;
-          } else {
-            year = 2000 + partialYear;
-          }
-        } else {
-          year = parseInt(result.year, 10);
-        }
-      } else {
-        year = new Date().getFullYear();
-      }
-
-      var month = parseInt(result.month, 10) - 1;
-      var day = parseInt(result.day, 10);
-      return new Date(year, month, day, 0, 0, 0, 0);
-    }
-
-    // this is interesting, because the user must be able to specify Feburary 29 if they have not specified a year, and then it must be validated by the year. So use a leap year (2012)
-  }, {
-    key: 'filter',
-    value: function filter(result) {
-      if (_lodash2['default'].isUndefined(result) || _lodash2['default'].isUndefined(result.month) || _lodash2['default'].isUndefined(result.day)) return true;
-
-      var year = _lodash2['default'].isUndefined(result.year) || _lodash2['default'].isEqual(result.year, {}) ? 2012 : parseInt(result.year, 10);
-      var month = parseInt(result.month, 10) - 1;
-      var day = parseInt(result.day, 10);
-      var date = new Date(year, month, day, 0, 0, 0, 0);
-      return date.getMonth() === month;
+      return result.map(function (email) {
+        return { label: 'email', value: email };
+      });
     }
   }, {
     key: 'describe',
     value: function describe() {
-      return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { maxLength: 2, descriptor: 'mm', id: 'month' }), (0, _laconaPhrase.createElement)('list', { items: ['/', '-', '.'], limit: 1 }), (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { maxLength: 2, max: 31, descriptor: 'dd', id: 'day' }), (0, _laconaPhrase.createElement)('sequence', { optional: true, merge: true }, (0, _laconaPhrase.createElement)('list', { items: ['/', '-', '.'], limit: 1 }), (0, _laconaPhrase.createElement)(Year, { id: 'year' })));
-    }
-  }]);
-
-  return AbsoluteDay;
-})(_laconaPhrase.Phrase);
-
-var Year = (function (_Phrase8) {
-  _inherits(Year, _Phrase8);
-
-  function Year() {
-    _classCallCheck(this, Year);
-
-    _get(Object.getPrototypeOf(Year.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Year, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      if (!result) return;
-
-      if (result.year20 != null) {
-        return 2000 + parseInt(result.year20, 10);
-      } else if (result.year19 != null) {
-        return 1900 + parseInt(result.year19, 10);
-      } else {
-        return parseInt(result.year, 10);
-      }
-    }
-  }, {
-    key: 'displayWhen',
-    value: function displayWhen(input) {
-      return (/^(|\d|\d{3})$/.test(input)
+      return (0, _laconaPhrase.createElement)(
+        'repeat',
+        { unique: true, separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1 }) },
+        (0, _laconaPhrase.createElement)(_laconaPhraseEmail2['default'], null)
       );
     }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)('argument', { displayWhen: this.displayWhen, text: 'year' }, (0, _laconaPhrase.createElement)('choice', { limit: 1 }, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('decorator', { text: '20' }), (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { minLength: 2, maxLength: 2, min: 0, max: 29, id: 'year20' })), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('decorator', { text: '19' }), (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { minLength: 2, maxLength: 2, min: 30, max: 99, id: 'year19' })), (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { minLength: 4, maxLength: 4, id: 'year' })));
-    }
   }]);
 
-  return Year;
+  return EmailGroup;
 })(_laconaPhrase.Phrase);
 
-var NamedMonthAbsolute = (function (_Phrase9) {
-  _inherits(NamedMonthAbsolute, _Phrase9);
+var NumberGroup = (function (_Phrase2) {
+  _inherits(NumberGroup, _Phrase2);
 
-  function NamedMonthAbsolute() {
-    _classCallCheck(this, NamedMonthAbsolute);
+  function NumberGroup() {
+    _classCallCheck(this, NumberGroup);
 
-    _get(Object.getPrototypeOf(NamedMonthAbsolute.prototype), 'constructor', this).apply(this, arguments);
+    _get(Object.getPrototypeOf(NumberGroup.prototype), 'constructor', this).apply(this, arguments);
   }
 
-  _createClass(NamedMonthAbsolute, [{
+  _createClass(NumberGroup, [{
     key: 'getValue',
     value: function getValue(result) {
-      var year = _lodash2['default'].isUndefined(result.year) ? new Date().getFullYear() : parseInt(result.year, 10);
-      return new Date(year, result.month, result.day, 0, 0, 0, 0);
-    }
-
-    // this is interesting, because the user must be able to specify Feburary 29 if they have not specified a year, and then it must be validated by the year. So use a leap year (2012)
-  }, {
-    key: 'filter',
-    value: function filter(result) {
-      if (_lodash2['default'].isUndefined(result) || _lodash2['default'].isUndefined(result.month) || _lodash2['default'].isUndefined(result.day)) return true;
-      var year = _lodash2['default'].isUndefined(result.year) || _lodash2['default'].isEqual(result.year, {}) ? 2012 : parseInt(result.year, 10);
-      var date = new Date(year, result.month, result.day, 0, 0, 0, 0);
-      return date.getMonth() === result.month;
+      return result.map(function (email) {
+        return { label: 'number', value: email };
+      });
     }
   }, {
     key: 'describe',
     value: function describe() {
-      return (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_month2['default'], { id: 'month' }), (0, _laconaPhrase.createElement)('list', { items: [' ', ' the '], limit: 1 }), (0, _laconaPhrase.createElement)('choice', { id: 'day', limit: 1 }, (0, _laconaPhrase.createElement)(_laconaPhraseNumber.Integer, { max: 31, min: 1 }), (0, _laconaPhrase.createElement)(_laconaPhraseNumber.Ordinal, { max: 31 })), (0, _laconaPhrase.createElement)('sequence', { id: 'year', optional: true, preffered: false }, (0, _laconaPhrase.createElement)('list', { items: [', ', ' '], limit: 1 }), (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { descriptor: 'year', max: 9999, allowLeadingZeros: false, merge: true }))), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('literal', { text: 'the ' }), (0, _laconaPhrase.createElement)('choice', { id: 'day', limit: 1 }, (0, _laconaPhrase.createElement)(_laconaPhraseNumber.Integer, { max: 31, min: 1 }), (0, _laconaPhrase.createElement)(_laconaPhraseNumber.Ordinal, { max: 31 })), (0, _laconaPhrase.createElement)('list', { items: [' of ', ' '], limit: 1 }), (0, _laconaPhrase.createElement)(_month2['default'], { id: 'month' }), (0, _laconaPhrase.createElement)('sequence', { id: 'year', optional: true, preffered: false }, (0, _laconaPhrase.createElement)('list', { items: [', ', ' '], limit: 1 }), (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { descriptor: 'year', max: 9999, allowLeadingZeros: false, merge: true }))));
+      return (0, _laconaPhrase.createElement)(
+        'repeat',
+        { unique: true, separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1, max: this.props.max }) },
+        (0, _laconaPhrase.createElement)(_laconaPhrasePhonenumber2['default'], null)
+      );
     }
   }]);
 
-  return NamedMonthAbsolute;
+  return NumberGroup;
 })(_laconaPhrase.Phrase);
 
-module.exports = exports['default'];
+var AllGroup = (function (_Phrase3) {
+  _inherits(AllGroup, _Phrase3);
 
-},{"./date-duration":1,"./month":5,"./weekday":9,"babel-runtime/core-js/object/create":600,"babel-runtime/core-js/object/define-property":601,"babel-runtime/core-js/object/get-own-property-descriptor":602,"babel-runtime/core-js/object/set-prototype-of":603,"lacona-phrase":10,"lacona-phrase-number":20,"lodash":13}],3:[function(require,module,exports){
-/** @jsx createElement */
-'use strict';
+  function AllGroup() {
+    _classCallCheck(this, AllGroup);
 
-var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
-
-var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
-
-var _Object$create = require('babel-runtime/core-js/object/create')['default'];
-
-var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
-    }
-  }return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
-  };
-})();
-
-var _get = function get(_x, _x2, _x3) {
-  var _again = true;_function: while (_again) {
-    var object = _x,
-        property = _x2,
-        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
-      var parent = Object.getPrototypeOf(object);if (parent === null) {
-        return undefined;
-      } else {
-        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
-      }
-    } else if ('value' in desc) {
-      return desc.value;
-    } else {
-      var getter = desc.get;if (getter === undefined) {
-        return undefined;
-      }return getter.call(receiver);
-    }
-  }
-};
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { 'default': obj };
-}
-
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError('Cannot call a class as a function');
-  }
-}
-
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== 'function' && superClass !== null) {
-    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
-  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-}
-
-var _laconaPhrase = require('lacona-phrase');
-
-var _time = require('./time');
-
-var _time2 = _interopRequireDefault(_time);
-
-var _date = require('./date');
-
-var _date2 = _interopRequireDefault(_date);
-
-var ExtendedDate = (function (_Phrase) {
-  _inherits(ExtendedDate, _Phrase);
-
-  function ExtendedDate() {
-    _classCallCheck(this, ExtendedDate);
-
-    _get(Object.getPrototypeOf(ExtendedDate.prototype), 'constructor', this).apply(this, arguments);
+    _get(Object.getPrototypeOf(AllGroup.prototype), 'constructor', this).apply(this, arguments);
   }
 
-  _createClass(ExtendedDate, [{
+  _createClass(AllGroup, [{
     key: 'getValue',
     value: function getValue(result) {
-      if (!result) return;
-
-      var date = new Date();
-      date.setHours(0, 0, 0, 0);
-      date.setDate(date.getDate() + result.dateComponents.days);
-      return date;
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)('argument', { text: 'date', showForEmpty: true }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('literal', { text: 'this morning', value: { dateComponents: { days: 0 }, impliedTime: { hours: 8 } } }), (0, _laconaPhrase.createElement)('literal', { text: 'this afternoon', value: { dateComponents: { days: 0 }, impliedTime: { hours: 14 } } }), (0, _laconaPhrase.createElement)('literal', { text: 'tonight', value: { dateComponents: { days: 0 }, impliedTime: { hours: 18 } } }), (0, _laconaPhrase.createElement)('literal', { text: 'this evening', value: { dateComponents: { days: 0 }, impliedTime: { hours: 18 } } }), (0, _laconaPhrase.createElement)('literal', { text: 'tomorrow morning', value: { dateComponents: { days: 1 }, impliedTime: { hours: 8 } } }), (0, _laconaPhrase.createElement)('literal', { text: 'tomorrow afternoon', value: { dateComponents: { days: 1 }, impliedTime: { hours: 14 } } }), (0, _laconaPhrase.createElement)('literal', { text: 'tomorrow evening', value: { dateComponents: { days: 1 }, impliedTime: { hours: 18 } } }), (0, _laconaPhrase.createElement)('literal', { text: 'tomorrow night', value: { dateComponents: { days: 1 }, impliedTime: { hours: 18 } } }), (0, _laconaPhrase.createElement)('literal', { text: 'yesterday morning', value: { dateComponents: { days: -1 }, impliedTime: { hours: 8 } } }), (0, _laconaPhrase.createElement)('literal', { text: 'yesterday afternoon', value: { dateComponents: { days: -1 }, impliedTime: { hours: 14 } } }), (0, _laconaPhrase.createElement)('literal', { text: 'yesterday night', value: { dateComponents: { days: -1 }, impliedTime: { hours: 18 } } }), (0, _laconaPhrase.createElement)('literal', { text: 'yesterday evening', value: { dateComponents: { days: -1 }, impliedTime: { hours: 18 } } })));
-    }
-  }]);
-
-  return ExtendedDate;
-})(_laconaPhrase.Phrase);
-
-var DateTime = (function (_Phrase2) {
-  _inherits(DateTime, _Phrase2);
-
-  function DateTime() {
-    _classCallCheck(this, DateTime);
-
-    _get(Object.getPrototypeOf(DateTime.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(DateTime, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      if (!result || !result.date || !result.time) return;
-
-      return new Date(result.date.getFullYear(), result.date.getMonth(), result.date.getDate(), result.time.getHours(), result.time.getMinutes(), result.time.getSeconds(), 0);
-    }
-  }]);
-
-  return DateTime;
-})(_laconaPhrase.Phrase);
-
-exports['default'] = DateTime;
-
-DateTime.translations = [{
-  langs: ['en_US', 'default'],
-  describe: function describe() {
-    return (0, _laconaPhrase.createElement)('placeholder', { text: 'date and time' }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)(ExtendedDate, { id: 'date' }), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_time2['default'], { id: 'time', includeAt: this.props.includeAt }), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)('choice', { id: 'date' }, (0, _laconaPhrase.createElement)(_date2['default'], { allowPast: this.props.allowPast }), (0, _laconaPhrase.createElement)(ExtendedDate, null))), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('choice', { id: 'date' }, (0, _laconaPhrase.createElement)(_date2['default'], { allowPast: this.props.allowPast }), (0, _laconaPhrase.createElement)(ExtendedDate, null)), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)(_time2['default'], { id: 'time', includeAt: true }))));
-  }
-}];
-
-DateTime.defaultProps = {
-  includeAt: false,
-  allowPast: true
-};
-module.exports = exports['default'];
-
-},{"./date":2,"./time":7,"babel-runtime/core-js/object/create":600,"babel-runtime/core-js/object/define-property":601,"babel-runtime/core-js/object/get-own-property-descriptor":602,"babel-runtime/core-js/object/set-prototype-of":603,"lacona-phrase":10}],4:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-function _interopRequire(obj) { return obj && obj.__esModule ? obj['default'] : obj; }
-
-var _date = require('./date');
-
-exports.Date = _interopRequire(_date);
-
-var _time = require('./time');
-
-exports.Time = _interopRequire(_time);
-
-var _datetime = require('./datetime');
-
-exports.DateTime = _interopRequire(_datetime);
-
-var _timeperiod = require('./timeperiod');
-
-exports.TimePeriod = _interopRequire(_timeperiod);
-
-var _timeDuration = require('./time-duration');
-
-exports.TimeDuration = _interopRequire(_timeDuration);
-},{"./date":2,"./datetime":3,"./time":7,"./time-duration":6,"./timeperiod":8}],5:[function(require,module,exports){
-/** @jsx createElement */
-
-'use strict';
-
-var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
-
-var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
-
-var _Object$create = require('babel-runtime/core-js/object/create')['default'];
-
-var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
-    }
-  }return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
-  };
-})();
-
-var _get = function get(_x, _x2, _x3) {
-  var _again = true;_function: while (_again) {
-    var object = _x,
-        property = _x2,
-        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
-      var parent = Object.getPrototypeOf(object);if (parent === null) {
-        return undefined;
-      } else {
-        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
-      }
-    } else if ('value' in desc) {
-      return desc.value;
-    } else {
-      var getter = desc.get;if (getter === undefined) {
-        return undefined;
-      }return getter.call(receiver);
-    }
-  }
-};
-
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError('Cannot call a class as a function');
-  }
-}
-
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== 'function' && superClass !== null) {
-    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
-  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-}
-
-var _laconaPhrase = require('lacona-phrase');
-
-var Weekday = (function (_Phrase) {
-  _inherits(Weekday, _Phrase);
-
-  function Weekday() {
-    _classCallCheck(this, Weekday);
-
-    _get(Object.getPrototypeOf(Weekday.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Weekday, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)('placeholder', { text: 'month', showForEmpty: true }, (0, _laconaPhrase.createElement)('list', { items: [{ text: 'January', value: 0 }, { text: 'Feburary', value: 1 }, { text: 'March', value: 2 }, { text: 'April', value: 3 }, { text: 'May', value: 4 }, { text: 'June', value: 5 }, { text: 'July', value: 6 }, { text: 'August', value: 7 }, { text: 'September', value: 8 }, { text: 'October', value: 9 }, { text: 'November', value: 10 }, { text: 'December', value: 11 }] }));
-    }
-  }]);
-
-  return Weekday;
-})(_laconaPhrase.Phrase);
-
-exports['default'] = Weekday;
-module.exports = exports['default'];
-
-},{"babel-runtime/core-js/object/create":600,"babel-runtime/core-js/object/define-property":601,"babel-runtime/core-js/object/get-own-property-descriptor":602,"babel-runtime/core-js/object/set-prototype-of":603,"lacona-phrase":10}],6:[function(require,module,exports){
-/** @jsx createElement */
-
-'use strict';
-
-var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
-
-var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
-
-var _Object$create = require('babel-runtime/core-js/object/create')['default'];
-
-var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
-    }
-  }return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
-  };
-})();
-
-var _get = function get(_x, _x2, _x3) {
-  var _again = true;_function: while (_again) {
-    var object = _x,
-        property = _x2,
-        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
-      var parent = Object.getPrototypeOf(object);if (parent === null) {
-        return undefined;
-      } else {
-        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
-      }
-    } else if ('value' in desc) {
-      return desc.value;
-    } else {
-      var getter = desc.get;if (getter === undefined) {
-        return undefined;
-      }return getter.call(receiver);
-    }
-  }
-};
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    _Object$defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });
-  } else {
-    obj[key] = value;
-  }return obj;
-}
-
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError('Cannot call a class as a function');
-  }
-}
-
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== 'function' && superClass !== null) {
-    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
-  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-}
-
-var _laconaPhrase = require('lacona-phrase');
-
-var _laconaPhraseNumber = require('lacona-phrase-number');
-
-var TimeDuration = (function (_Phrase) {
-  _inherits(TimeDuration, _Phrase);
-
-  function TimeDuration() {
-    _classCallCheck(this, TimeDuration);
-
-    _get(Object.getPrototypeOf(TimeDuration.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(TimeDuration, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      if (!result) return;
-
-      return _defineProperty({}, result.type, result.num);
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('placeholder', { text: 'number', showForEmpty: true }, (0, _laconaPhrase.createElement)('literal', { text: '1 ', id: 'num', value: 1 })), (0, _laconaPhrase.createElement)('placeholder', { text: 'time period', id: 'type' }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('literal', { text: 'hour', value: 'hours' }), (0, _laconaPhrase.createElement)('literal', { text: 'minute', value: 'minutes' }), (0, _laconaPhrase.createElement)('literal', { text: 'second', value: 'seconds' })))), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_laconaPhraseNumber.Integer, { id: 'num', min: 2 }), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)('placeholder', { text: 'time period', id: 'type' }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('literal', { text: 'hours', value: 'hours' }), (0, _laconaPhrase.createElement)('literal', { text: 'minutes', value: 'minutes' }), (0, _laconaPhrase.createElement)('literal', { text: 'seconds', value: 'seconds' })))));
-    }
-  }]);
-
-  return TimeDuration;
-})(_laconaPhrase.Phrase);
-
-exports['default'] = TimeDuration;
-module.exports = exports['default'];
-
-},{"babel-runtime/core-js/object/create":600,"babel-runtime/core-js/object/define-property":601,"babel-runtime/core-js/object/get-own-property-descriptor":602,"babel-runtime/core-js/object/set-prototype-of":603,"lacona-phrase":10,"lacona-phrase-number":20}],7:[function(require,module,exports){
-/** @jsx createElement */
-
-'use strict';
-
-var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
-
-var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
-
-var _Object$create = require('babel-runtime/core-js/object/create')['default'];
-
-var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
-    }
-  }return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
-  };
-})();
-
-var _get = function get(_x, _x2, _x3) {
-  var _again = true;_function: while (_again) {
-    var object = _x,
-        property = _x2,
-        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
-      var parent = Object.getPrototypeOf(object);if (parent === null) {
-        return undefined;
-      } else {
-        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
-      }
-    } else if ('value' in desc) {
-      return desc.value;
-    } else {
-      var getter = desc.get;if (getter === undefined) {
-        return undefined;
-      }return getter.call(receiver);
-    }
-  }
-};
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { 'default': obj };
-}
-
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError('Cannot call a class as a function');
-  }
-}
-
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== 'function' && superClass !== null) {
-    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
-  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-}
-
-var _lodash = require('lodash');
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _laconaPhrase = require('lacona-phrase');
-
-var _laconaPhraseNumber = require('lacona-phrase-number');
-
-var _timeDuration = require('./time-duration');
-
-var _timeDuration2 = _interopRequireDefault(_timeDuration);
-
-var Time = (function (_Phrase) {
-  _inherits(Time, _Phrase);
-
-  function Time() {
-    _classCallCheck(this, Time);
-
-    _get(Object.getPrototypeOf(Time.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Time, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      if (!result) return;
-
-      if (_lodash2['default'].isDate(result)) {
-        return result;
-      } else if (result.relative) {
-        var date = new Date();
-        if (!_lodash2['default'].isUndefined(result.relative.hours)) date.setHours(date.getHours() + result.relative.hours);
-        if (!_lodash2['default'].isUndefined(result.relative.minutes)) date.setMinutes(date.getMinutes() + result.relative.minutes);
-
-        return date;
-      } else if (result.fancy) {
-        var date = new Date();
-        date.setHours(result.fancy.hour, result.fancy.minute || 0, 0, 0);
-        return date;
-      }
-    }
-  }]);
-
-  return Time;
-})(_laconaPhrase.Phrase);
-
-exports['default'] = Time;
-
-Time.translations = [{
-  langs: ['en_US', 'default'],
-  describe: function describe() {
-    return (0, _laconaPhrase.createElement)('sequence', null, this.props.includeAt ? (0, _laconaPhrase.createElement)('literal', { text: 'at ', optional: true, preferred: true, limited: true }) : null, (0, _laconaPhrase.createElement)('argument', { text: 'time', showForEmpty: true, merge: true }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('literal', { text: 'midnight', id: 'hour', value: 0 }), (0, _laconaPhrase.createElement)('literal', { text: 'noon', id: 'hour', value: 12 }), (0, _laconaPhrase.createElement)(AbsTime, { minutes: true }), (0, _laconaPhrase.createElement)(AbsTimeFancy, { id: 'fancy' }), (0, _laconaPhrase.createElement)(RelativeTime, { id: 'relative' }))));
-  }
-}];
-
-Time.defaultProps = {
-  includeAt: false
-};
-
-var RelativeTime = (function (_Phrase2) {
-  _inherits(RelativeTime, _Phrase2);
-
-  function RelativeTime() {
-    _classCallCheck(this, RelativeTime);
-
-    _get(Object.getPrototypeOf(RelativeTime.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(RelativeTime, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      if (!result) return;
-
-      if (result.direction < 0) {
-        return _lodash2['default'].mapValues(result.duration, function (num) {
-          return -num;
-        });
-      } else {
-        return result.duration;
-      }
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('literal', { text: 'in ', id: 'direction', value: 1 }), (0, _laconaPhrase.createElement)(_timeDuration2['default'], { id: 'duration' })), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_timeDuration2['default'], { id: 'duration' }), (0, _laconaPhrase.createElement)('literal', { text: ' from now', id: 'direction', value: 1 })), this.props.allowPast ? (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_timeDuration2['default'], { id: 'duration' }), (0, _laconaPhrase.createElement)('literal', { text: ' ago', id: 'direction', value: -1 })) : null);
-    }
-  }]);
-
-  return RelativeTime;
-})(_laconaPhrase.Phrase);
-
-var AbsTimeFancy = (function (_Phrase3) {
-  _inherits(AbsTimeFancy, _Phrase3);
-
-  function AbsTimeFancy() {
-    _classCallCheck(this, AbsTimeFancy);
-
-    _get(Object.getPrototypeOf(AbsTimeFancy.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(AbsTimeFancy, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      if (!result) return;
-      var date = new Date();
-
-      if (result.direction > 0) {
-        date.setHours(result.hour, result.minutes, 0, 0);
-      } else {
-        var hour = result.hour === 0 ? 23 : result.hour - 1;
-        var minutes = 60 - result.minutes;
-        date.setHours(hour, minutes, 0, 0);
-      }
-      return date;
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('placeholder', { text: 'number', showForEmpty: true, id: 'minutes' }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('literal', { text: 'quarter', value: 15 }), (0, _laconaPhrase.createElement)('literal', { text: 'half', value: 30 }), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_laconaPhraseNumber.Integer, { min: 1, max: 59, merge: true }), (0, _laconaPhrase.createElement)('literal', { optional: true, text: ' minutes' })))), (0, _laconaPhrase.createElement)('choice', { id: 'direction' }, (0, _laconaPhrase.createElement)('choice', { limit: 1, value: 1 }, (0, _laconaPhrase.createElement)('literal', { text: ' past ' })), (0, _laconaPhrase.createElement)('choice', { limit: 1, value: -1 }, (0, _laconaPhrase.createElement)('literal', { text: ' to ' }), (0, _laconaPhrase.createElement)('literal', { text: ' of ' }), (0, _laconaPhrase.createElement)('literal', { text: ' til ' }), (0, _laconaPhrase.createElement)('literal', { text: ' from ' }))), (0, _laconaPhrase.createElement)('placeholder', { text: 'some hour', merge: true }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)(AbsTime, { minutes: false }), (0, _laconaPhrase.createElement)('literal', { text: 'midnight', value: { hour: 0, minute: 0 } }), (0, _laconaPhrase.createElement)('literal', { text: 'noon', value: { hour: 12, minute: 0 } }))));
-    }
-  }]);
-
-  return AbsTimeFancy;
-})(_laconaPhrase.Phrase);
-
-var AbsTime = (function (_Phrase4) {
-  _inherits(AbsTime, _Phrase4);
-
-  function AbsTime() {
-    _classCallCheck(this, AbsTime);
-
-    _get(Object.getPrototypeOf(AbsTime.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(AbsTime, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      var hour = parseInt(result.hour);
-
-      if (result.ampm) {
-        hour = result.ampm === 'am' ? hour === 12 ? 0 : hour : hour + 12;
-      }
-
-      var minute = result.minutes ? parseInt(result.minutes, 10) : 0;
-
-      return { hour: hour, minute: minute };
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { descriptor: 'hour', min: 1, max: 12, allowLeadingZeros: false, id: 'hour' }), this.props.minutes ? (0, _laconaPhrase.createElement)('sequence', { id: 'minutes', optional: true, preffered: false }, (0, _laconaPhrase.createElement)('literal', { text: ':' }), (0, _laconaPhrase.createElement)(Minutes, { merge: true })) : null, (0, _laconaPhrase.createElement)('choice', { id: 'ampm' }, (0, _laconaPhrase.createElement)('list', { items: [' am', 'am', ' a', 'a', ' a.m.', 'a.m.', ' a.m', 'a.m'], value: 'am', limit: 1 }), (0, _laconaPhrase.createElement)('list', { items: [' pm', 'pm', ' p', 'p', ' p.m.', 'p.m.', ' p.m', 'p.m'], value: 'pm', limit: 1 })));
-    }
-  }]);
-
-  return AbsTime;
-})(_laconaPhrase.Phrase);
-
-AbsTime.defaultProps = { minutes: true };
-
-var Minutes = (function (_Phrase5) {
-  _inherits(Minutes, _Phrase5);
-
-  function Minutes() {
-    _classCallCheck(this, Minutes);
-
-    _get(Object.getPrototypeOf(Minutes.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Minutes, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { descriptor: 'minutes', max: 59, minLength: 2, maxLength: 2 });
-    }
-  }]);
-
-  return Minutes;
-})(_laconaPhrase.Phrase);
-
-module.exports = exports['default'];
-
-},{"./time-duration":6,"babel-runtime/core-js/object/create":600,"babel-runtime/core-js/object/define-property":601,"babel-runtime/core-js/object/get-own-property-descriptor":602,"babel-runtime/core-js/object/set-prototype-of":603,"lacona-phrase":10,"lacona-phrase-number":20,"lodash":13}],8:[function(require,module,exports){
-/** @jsx createElement */
-
-'use strict';
-
-var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
-
-var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
-
-var _Object$create = require('babel-runtime/core-js/object/create')['default'];
-
-var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
-    }
-  }return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
-  };
-})();
-
-var _get = function get(_x, _x2, _x3) {
-  var _again = true;_function: while (_again) {
-    var object = _x,
-        property = _x2,
-        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
-      var parent = Object.getPrototypeOf(object);if (parent === null) {
-        return undefined;
-      } else {
-        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
-      }
-    } else if ('value' in desc) {
-      return desc.value;
-    } else {
-      var getter = desc.get;if (getter === undefined) {
-        return undefined;
-      }return getter.call(receiver);
-    }
-  }
-};
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { 'default': obj };
-}
-
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError('Cannot call a class as a function');
-  }
-}
-
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== 'function' && superClass !== null) {
-    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
-  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-}
-
-var _lodash = require('lodash');
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _laconaPhrase = require('lacona-phrase');
-
-var _date = require('./date');
-
-var _date2 = _interopRequireDefault(_date);
-
-var _datetime = require('./datetime');
-
-var _datetime2 = _interopRequireDefault(_datetime);
-
-var _dateDuration = require('./date-duration');
-
-var _dateDuration2 = _interopRequireDefault(_dateDuration);
-
-var _moment = require('moment');
-
-var _moment2 = _interopRequireDefault(_moment);
-
-var _time = require('./time');
-
-var _time2 = _interopRequireDefault(_time);
-
-var _timeDuration = require('./time-duration');
-
-var _timeDuration2 = _interopRequireDefault(_timeDuration);
-
-function join(date, time) {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds());
-}
-
-var MS_PER_DAY = 1000 * 60 * 60 * 24;
-
-function dateDiffInDays(a, b) {
-  // Discard the time and time-zone information.
-  var utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-  var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
-
-  return Math.floor((utc2 - utc1) / MS_PER_DAY);
-}
-
-var TimePeriod = (function (_Phrase) {
-  _inherits(TimePeriod, _Phrase);
-
-  function TimePeriod() {
-    _classCallCheck(this, TimePeriod);
-
-    _get(Object.getPrototypeOf(TimePeriod.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(TimePeriod, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      if (!result) return;
-
-      if (result.startdatetime) {
-        if (result.enddatetime) {
-          return {
-            start: result.startdatetime,
-            end: result.enddatetime
-          };
-        } else if (result.endtime) {
-          return {
-            start: result.startdatetime,
-            end: join(result.startdatetime, result.endtime)
-          };
-        } else if (result.duration) {
-          return {
-            start: result.startdatetime,
-            duration: (0, _moment2['default'])(result.startdatetime).add(result.duration)
-          };
-        } else {
-          return {
-            start: result.startdatetime
-          };
+      return result.map(function (item) {
+        if (item.number) {
+          return { label: 'number', value: item.number };
+        } else if (item.email) {
+          return { label: 'email', value: item.email };
         }
-      } else if (result.startdate) {
-        return {
-          start: result.startdate,
-          end: result.enddate,
-          allday: true
-        };
-      } else if (result.date) {
-        if (result.starttime && result.endtime) {
-          return {
-            start: join(result.date, result.starttime),
-            end: join(result.date, result.endtime)
-          };
-        }
-      }
+      });
     }
-  }]);
-
-  return TimePeriod;
-})(_laconaPhrase.Phrase);
-
-exports['default'] = TimePeriod;
-
-TimePeriod.translations = [{
-  langs: ['en_US', 'default'],
-  describe: function describe() {
-    return (0, _laconaPhrase.createElement)('placeholder', { text: 'period of time' }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_datetime2['default'], { id: 'startdatetime' }), (0, _laconaPhrase.createElement)('list', { items: [' to ', ' - ', '-'], limit: 1 }), (0, _laconaPhrase.createElement)('choice', { merge: true }, (0, _laconaPhrase.createElement)(_time2['default'], { id: 'endtime' }), (0, _laconaPhrase.createElement)(_datetime2['default'], { id: 'enddatetime' }))), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_date2['default'], { id: 'date' }), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)(_time2['default'], { id: 'starttime' }), (0, _laconaPhrase.createElement)('list', { items: [' to ', ' - ', '-'], limit: 1 }), (0, _laconaPhrase.createElement)(_time2['default'], { id: 'endtime' })), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_time2['default'], { id: 'starttime' }), (0, _laconaPhrase.createElement)('list', { items: [' to ', ' - ', '-'], limit: 1 }), (0, _laconaPhrase.createElement)(_time2['default'], { id: 'endtime' }), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)(_date2['default'], { id: 'date' })), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('literal', { text: 'from ', optional: true, limited: true, preferred: false }), (0, _laconaPhrase.createElement)(_date2['default'], { id: 'startdate' }), (0, _laconaPhrase.createElement)('list', { items: [' to ', ' - ', '-'], limit: 1 }), (0, _laconaPhrase.createElement)(_date2['default'], { id: 'enddate' })), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('argument', { text: 'duration', id: 'duration' }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)(_timeDuration2['default'], null), (0, _laconaPhrase.createElement)(_dateDuration2['default'], null))), (0, _laconaPhrase.createElement)('literal', { text: ' at ' }), (0, _laconaPhrase.createElement)(_datetime2['default'], { id: 'startdatetime' })), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_datetime2['default'], { id: 'startdatetime' }), (0, _laconaPhrase.createElement)('literal', { text: ' for ' }), (0, _laconaPhrase.createElement)('argument', { text: 'duration', id: 'duration' }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)(_timeDuration2['default'], null), (0, _laconaPhrase.createElement)(_dateDuration2['default'], null))))));
-  }
-}];
-module.exports = exports['default'];
-
-},{"./date":2,"./date-duration":1,"./datetime":3,"./time":7,"./time-duration":6,"babel-runtime/core-js/object/create":600,"babel-runtime/core-js/object/define-property":601,"babel-runtime/core-js/object/get-own-property-descriptor":602,"babel-runtime/core-js/object/set-prototype-of":603,"lacona-phrase":10,"lodash":13,"moment":14}],9:[function(require,module,exports){
-/** @jsx createElement */
-
-'use strict';
-
-var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
-
-var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
-
-var _Object$create = require('babel-runtime/core-js/object/create')['default'];
-
-var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
-    }
-  }return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
-  };
-})();
-
-var _get = function get(_x, _x2, _x3) {
-  var _again = true;_function: while (_again) {
-    var object = _x,
-        property = _x2,
-        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
-      var parent = Object.getPrototypeOf(object);if (parent === null) {
-        return undefined;
-      } else {
-        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
-      }
-    } else if ('value' in desc) {
-      return desc.value;
-    } else {
-      var getter = desc.get;if (getter === undefined) {
-        return undefined;
-      }return getter.call(receiver);
-    }
-  }
-};
-
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError('Cannot call a class as a function');
-  }
-}
-
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== 'function' && superClass !== null) {
-    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
-  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-}
-
-var _laconaPhrase = require('lacona-phrase');
-
-var Weekday = (function (_Phrase) {
-  _inherits(Weekday, _Phrase);
-
-  function Weekday() {
-    _classCallCheck(this, Weekday);
-
-    _get(Object.getPrototypeOf(Weekday.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Weekday, [{
+  }, {
     key: 'describe',
     value: function describe() {
-      return (0, _laconaPhrase.createElement)('list', { items: [{ text: 'Sunday', value: 0 }, { text: 'Monday', value: 1 }, { text: 'Tuesday', value: 2 }, { text: 'Wednesday', value: 3 }, { text: 'Thursday', value: 4 }, { text: 'Friday', value: 5 }, { text: 'Saturday', value: 6 }] });
+      return (0, _laconaPhrase.createElement)(
+        'repeat',
+        { unique: true, separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1, max: this.props.max }) },
+        (0, _laconaPhrase.createElement)(
+          'choice',
+          null,
+          (0, _laconaPhrase.createElement)(_laconaPhrasePhonenumber2['default'], { id: 'number' }),
+          (0, _laconaPhrase.createElement)(_laconaPhraseEmail2['default'], { id: 'email' })
+        )
+      );
     }
   }]);
 
-  return Weekday;
+  return AllGroup;
 })(_laconaPhrase.Phrase);
 
-exports['default'] = Weekday;
-module.exports = exports['default'];
+var Sentence = (function (_Phrase4) {
+  _inherits(Sentence, _Phrase4);
 
-},{"babel-runtime/core-js/object/create":600,"babel-runtime/core-js/object/define-property":601,"babel-runtime/core-js/object/get-own-property-descriptor":602,"babel-runtime/core-js/object/set-prototype-of":603,"lacona-phrase":10}],10:[function(require,module,exports){
+  function Sentence() {
+    _classCallCheck(this, Sentence);
+
+    _get(Object.getPrototypeOf(Sentence.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Sentence, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'choice',
+        null,
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('list', { items: ['email ', 'send an email to ', 'send email to ', 'shoot an email to '], category: 'action', id: 'verb', value: 'email', limit: 1 }),
+          (0, _laconaPhrase.createElement)(EmailGroup, { id: 'to' })
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('list', { items: ['send '], id: 'verb', value: 'email', category: 'action', limit: 1 }),
+          (0, _laconaPhrase.createElement)(EmailGroup, { id: 'to' }),
+          (0, _laconaPhrase.createElement)('literal', { text: ' an email' })
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('list', { items: ['email ', 'send '], id: 'verb', value: 'email', category: 'action', limit: 1 }),
+          (0, _laconaPhrase.createElement)(_laconaPhraseString2['default'], { argument: 'subject', id: 'subject', limit: 1 }),
+          (0, _laconaPhrase.createElement)('literal', { text: ' to ', category: 'conjunction' }),
+          (0, _laconaPhrase.createElement)(EmailGroup, { id: 'to' })
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('list', { items: ['email ', 'send an email to ', 'send email to ', 'shoot an email to '], id: 'verb', value: 'email', category: 'action', limit: 1 }),
+          (0, _laconaPhrase.createElement)(EmailGroup, { id: 'to' }),
+          (0, _laconaPhrase.createElement)(
+            'choice',
+            { limit: 1 },
+            (0, _laconaPhrase.createElement)('literal', { text: ' about ' }),
+            (0, _laconaPhrase.createElement)('literal', { text: ' ' })
+          ),
+          (0, _laconaPhrase.createElement)(_laconaPhraseString2['default'], { argument: 'subject', id: 'subject', limit: 1 })
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('list', { items: ['send '], category: 'action', limit: 1 }),
+          (0, _laconaPhrase.createElement)(EmailGroup, { id: 'to' }),
+          (0, _laconaPhrase.createElement)('list', { limit: 1, category: 'action', items: [' an email about ', ' an email ', ' email about ', ' email '], id: 'verb', value: 'email' }),
+          (0, _laconaPhrase.createElement)(_laconaPhraseString2['default'], { argument: 'subject', id: 'subject', limit: 1 })
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('list', { items: ['call ', 'ring ', 'call up ', 'ring up '], category: 'action', limit: 1, id: 'verb', value: 'call' }),
+          (0, _laconaPhrase.createElement)(NumberGroup, { id: 'to', max: 1 })
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('literal', { text: 'facetime ', category: 'action', id: 'verb', value: 'facetime' }),
+          (0, _laconaPhrase.createElement)(AllGroup, { max: 1, id: 'to' })
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('list', { items: ['text ', 'iMessage ', 'shoot a text to ', 'send a text to '], limit: 1, category: 'action', id: 'verb', value: 'text' }),
+          (0, _laconaPhrase.createElement)(AllGroup, { id: 'to' })
+        )
+      );
+    }
+  }]);
+
+  return Sentence;
+})(_laconaPhrase.Phrase);
+
+exports.Sentence = Sentence;
+exports['default'] = {
+  sentences: [{ Sentence: Sentence, execute: execute }]
+};
+/* <sequence>
+ <list items={['text ', 'iMessage ']} limit={1} category='action' />
+ <String argument='message' id='message' limit={1} />
+ <literal text=' to ' category='conjunction' />
+ <AllGroup merge={true} />
+</sequence>
+<sequence>
+ <list items={['send ']} limit={1} category='action' />
+ <AllGroup merge={true} />
+ <choice limit={1} category='action'>
+   <literal text=' a text saying ' />
+   <literal text=' an iMessage saying' />
+   <literal text=' a text ' />
+   <literal text=' an iMessage' />
+ </choice>
+ <String argument='message' id='message' limit={1} />
+</sequence>
+<sequence>
+ <list items={['text ', 'iMessage ']} limit={1} category='action' />
+ <AllGroup merge={true} />
+ <choice limit={1}>
+   <literal text=' saying ' />
+   <literal text=' ' />
+ </choice>
+ <String argument='message' id='message' limit={1} />
+</sequence>*/
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"lacona-phrase":2,"lacona-phrase-email":77,"lacona-phrase-phonenumber":93,"lacona-phrase-string":101}],2:[function(require,module,exports){
 "use strict";
 
 var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
@@ -1448,7 +344,7 @@ var sequence = createFactory("sequence");
 exports.sequence = sequence;
 var value = createFactory("value");
 exports.value = value;
-},{"../package":12,"inherits":11}],11:[function(require,module,exports){
+},{"../package":4,"inherits":3}],3:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -1473,7 +369,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],12:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 module.exports={
   "name": "lacona-phrase",
   "version": "0.7.0",
@@ -1543,7 +439,162 @@ module.exports={
   "readme": "ERROR: No README data found!"
 }
 
-},{}],13:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
+(function (process,global){
+/** @jsx createElement */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _laconaPhraseString = require('lacona-phrase-string');
+
+var _laconaPhraseString2 = _interopRequireDefault(_laconaPhraseString);
+
+var SubscriptionSource = (function (_Source) {
+  _inherits(SubscriptionSource, _Source);
+
+  function SubscriptionSource() {
+    _classCallCheck(this, SubscriptionSource);
+
+    _get(Object.getPrototypeOf(SubscriptionSource.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(SubscriptionSource, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      if (process && process.env && process.env.LACONA_ENV === 'demo') {
+        this.replaceData(global.config[this.props.key]);
+      } else {
+        var _global$subscribeToChanges = global.subscribeToChanges(this.constructor.eventName, this.change.bind(this));
+
+        var subscriptionId = _global$subscribeToChanges.subscriptionId;
+        var value = _global$subscribeToChanges.value;
+
+        this.replaceData(value[this.props.key]);
+
+        this.subscriptionId = subscriptionId;
+      }
+    }
+  }, {
+    key: 'onDelete',
+    value: function onDelete() {
+      if (process && process.env && process.env.LACONA_ENV === 'demo') {} else {
+        global.removeChangeSubscription(this.constructor.eventName, this.subscriptionId);
+      }
+    }
+  }, {
+    key: 'change',
+    value: function change(newValues) {
+      if (!_lodash2['default'].isEqual(newValues[this.props.key], this.data)) {
+        this.replaceData(newValues[this.props.key]);
+      }
+    }
+  }]);
+
+  return SubscriptionSource;
+})(_laconaPhrase.Source);
+
+var Config = (function (_SubscriptionSource) {
+  _inherits(Config, _SubscriptionSource);
+
+  function Config() {
+    _classCallCheck(this, Config);
+
+    _get(Object.getPrototypeOf(Config.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  return Config;
+})(SubscriptionSource);
+
+exports.Config = Config;
+
+Config.eventName = 'config';
+
+var Context = (function (_SubscriptionSource2) {
+  _inherits(Context, _SubscriptionSource2);
+
+  function Context() {
+    _classCallCheck(this, Context);
+
+    _get(Object.getPrototypeOf(Context.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  return Context;
+})(SubscriptionSource);
+
+exports.Context = Context;
+
+Context.eventName = 'context';
+
+var TextSelection = (function (_Phrase) {
+  _inherits(TextSelection, _Phrase);
+
+  function TextSelection() {
+    _classCallCheck(this, TextSelection);
+
+    _get(Object.getPrototypeOf(TextSelection.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(TextSelection, [{
+    key: 'source',
+    value: function source() {
+      return {
+        selection: (0, _laconaPhrase.createElement)(Context, { key: 'selection' }),
+        clipboard: (0, _laconaPhrase.createElement)(Context, { key: 'clipboard' })
+      };
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'argument',
+        { text: this.props.argument || 'string' },
+        (0, _laconaPhrase.createElement)(
+          'choice',
+          null,
+          this.sources.selection.data ? (0, _laconaPhrase.createElement)('literal', { text: 'this selection', value: this.sources.selection.data, truncate: true, category: 'symbol' }) : null,
+          this.sources.clipboard.data ? (0, _laconaPhrase.createElement)('literal', { text: 'my clipboard', value: this.sources.clipboard.data, truncate: true, category: 'symbol' }) : null
+        )
+      );
+    }
+  }]);
+
+  return TextSelection;
+})(_laconaPhrase.Phrase);
+
+exports.TextSelection = TextSelection;
+
+TextSelection['extends'] = [_laconaPhraseString2['default']];
+
+exports['default'] = {
+  extensions: [TextSelection]
+};
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"_process":384,"lacona-phrase":6,"lacona-phrase-string":101,"lodash":9}],6:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":8,"dup":2,"inherits":7}],7:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],8:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],9:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -13898,7 +12949,6620 @@ module.exports={
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],14:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
+(function (global){
+/** @jsx createElement */
+
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+exports.executeEvent = executeEvent;
+exports.executeReminder = executeReminder;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _laconaPhraseString = require('lacona-phrase-string');
+
+var _laconaPhraseString2 = _interopRequireDefault(_laconaPhraseString);
+
+var _laconaPhraseDatetime = require('lacona-phrase-datetime');
+
+var _moment = (typeof window !== "undefined" ? window['moment'] : typeof global !== "undefined" ? global['moment'] : null);
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var LocationWithAt = (function (_Phrase) {
+  _inherits(LocationWithAt, _Phrase);
+
+  function LocationWithAt() {
+    _classCallCheck(this, LocationWithAt);
+
+    _get(Object.getPrototypeOf(LocationWithAt.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(LocationWithAt, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)('list', { items: [' at ', ' on ', ' in '], limit: 1, category: 'conjunction' }),
+        (0, _laconaPhrase.createElement)(_laconaPhraseString2['default'], { argument: 'location', merge: true, splitOn: ' ', limit: 1 })
+      );
+    }
+  }]);
+
+  return LocationWithAt;
+})(_laconaPhrase.Phrase);
+
+function executeEvent(result) {
+  global.createEvent(result.title, result.location, result.range.start, result.range.end, result.range.allDay, function (err) {
+    if (err) {
+      global.notify('Failed to Create Event', '', err, function () {});
+    } else {
+      global.notify('Created Event', '', result.title + ' on ' + (0, _moment2['default'])(result.range.start).format('LLL'), function () {});
+    }
+  });
+}
+
+var ScheduleEvent = (function (_Phrase2) {
+  _inherits(ScheduleEvent, _Phrase2);
+
+  function ScheduleEvent() {
+    _classCallCheck(this, ScheduleEvent);
+
+    _get(Object.getPrototypeOf(ScheduleEvent.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(ScheduleEvent, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'sequence',
+        { unique: true },
+        (0, _laconaPhrase.createElement)('list', { items: ['schedule ', 'create an event ', 'create event ', 'add an event ', 'add event '], limit: 1, category: 'action', id: 'verb', value: 'schedule' }),
+        (0, _laconaPhrase.createElement)(_laconaPhraseString2['default'], { limit: 1, splitOn: ' ', argument: 'calendar event', id: 'title' }),
+        (0, _laconaPhrase.createElement)(LocationWithAt, { optional: true, id: 'location', prefered: false }),
+        (0, _laconaPhrase.createElement)('literal', { text: ' ', category: 'conjunction' }),
+        (0, _laconaPhrase.createElement)('literal', { text: 'for ', category: 'conjunction', optional: true, limited: true }),
+        (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.Range, { id: 'range', prepositions: true }),
+        (0, _laconaPhrase.createElement)(LocationWithAt, { optional: true, id: 'location', prefered: false })
+      );
+    }
+  }]);
+
+  return ScheduleEvent;
+})(_laconaPhrase.Phrase);
+
+exports.ScheduleEvent = ScheduleEvent;
+
+function executeReminder(result) {
+  console.log(JSON.stringify(result, null, 1));
+  global.createReminder(result.title, result.date, function (err) {
+    if (err) {
+      global.notify('Failed to Create Reminder', '', err, function () {});
+    } else {
+      global.notify('Created Reminder', '', result.title + ' on ' + (0, _moment2['default'])(result.date).format('LLL'), function () {});
+    }
+  });
+}
+
+var CreateReminder = (function (_Phrase3) {
+  _inherits(CreateReminder, _Phrase3);
+
+  function CreateReminder() {
+    _classCallCheck(this, CreateReminder);
+
+    _get(Object.getPrototypeOf(CreateReminder.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(CreateReminder, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)('list', { items: ['remind me to ', 'create reminder ', 'create a reminder ', 'add a reminder ', 'add reminder '], limit: 1, category: 'action', id: 'verb', value: 'remind' }),
+        (0, _laconaPhrase.createElement)(
+          'choice',
+          { merge: true },
+          (0, _laconaPhrase.createElement)(_laconaPhraseString2['default'], { argument: 'reminder title', id: 'title', consumeAll: true }),
+          (0, _laconaPhrase.createElement)(
+            'sequence',
+            null,
+            (0, _laconaPhrase.createElement)(_laconaPhraseString2['default'], { limit: 1, argument: 'reminder title', id: 'title', splitOn: ' ' }),
+            (0, _laconaPhrase.createElement)('literal', { text: ' ', category: 'conjunction' }),
+            (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.DateTime, { id: 'date', prepositions: true })
+          )
+        )
+      );
+    }
+  }]);
+
+  return CreateReminder;
+})(_laconaPhrase.Phrase);
+
+exports.CreateReminder = CreateReminder;
+exports['default'] = {
+  sentences: [{ Sentence: CreateReminder, execute: executeReminder }, { Sentence: ScheduleEvent, execute: executeEvent }]
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"lacona-phrase":11,"lacona-phrase-datetime":66,"lacona-phrase-string":101}],11:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":13,"dup":2,"inherits":12}],12:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],13:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],14:[function(require,module,exports){
+(function (process,global){
+/** @jsx createElement */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+exports.executeSpecific = executeSpecific;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _laconaCommandOsx = require('lacona-command-osx');
+
+function executeSpecific(result) {
+  var ids = _lodash2['default'].chain(result.music).map('ids').flatten().value();
+
+  if (ids) {
+    var command = '\n      tell application "iTunes"\n      \tif user playlist "Lacona Playlist" exists then\n      \t\ttry\n      \t\t\tdelete user playlist "Lacona Playlist"\n      \t\tend try\n      \tend if\n\n    \t\tmake new user playlist with properties {name:"Lacona Playlist", shuffle: false}\n\n      \trepeat with tid in {' + results.ids.join(',') + '}\n      \t\tset trk to (some track of first user playlist whose database ID is tid)\n      \t\tduplicate trk to end of user playlist "Lacona Playlist"\n      \tend repeat\n\n        play user playlist "Lacona Playlist"\n      end tell\n    ';
+    global.applescript(command);
+  }
+}
+
+var script = 'tell application "iTunes" to get {name, album, artist, album artist, composer, genre, year, disc number, track number, database ID} of every track of first library playlist';
+
+// class Sorted extends Source {
+//   source () {
+//     return {data: this.props.children[0]}
+//   }
+//
+//   onCreate () {
+//     this.replaceData([])
+//   }
+//
+//   trigger () {
+//     this.sources.data.trigger()
+//   }
+//
+//   onUpdate () {
+//     const sortedData = _.sortByAll(this.sources.data.data, this.props.keys)
+//     this.replaceData(sortedData)
+//   }
+// }
+
+function artistify(_ref) {
+  var albumArtist = _ref.albumArtist;
+  var artist = _ref.artist;
+
+  return albumArtist || artist;
+}
+
+function sortInteger(key) {
+  return function (item) {
+    return parseInt(item[key], 10);
+  };
+}
+
+function arrangeMusic(arrays) {
+  return _lodash2['default'].chain(arrays).thru(_lodash2['default'].spread(_lodash2['default'].zip)).map(_lodash2['default'].partial(_lodash2['default'].zipObject, ['name', 'album', 'artist', 'albumArtist', 'composer', 'genre', 'year', 'discNumber', 'trackNumber', 'id'])).sortByAll([artistify, sortInteger('year'), 'album', sortInteger('discNumber'), sortInteger('trackNumber'), sortInteger('id')]).value();
+}
+
+var DemoPlay = (function (_Source) {
+  _inherits(DemoPlay, _Source);
+
+  function DemoPlay() {
+    _classCallCheck(this, DemoPlay);
+
+    _get(Object.getPrototypeOf(DemoPlay.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(DemoPlay, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      this.replaceData(global.config.music);
+    }
+  }, {
+    key: 'trigger',
+    value: function trigger() {}
+  }]);
+
+  return DemoPlay;
+})(_laconaPhrase.Source);
+
+var PlaySpecific = (function (_Phrase) {
+  _inherits(PlaySpecific, _Phrase);
+
+  function PlaySpecific() {
+    _classCallCheck(this, PlaySpecific);
+
+    _get(Object.getPrototypeOf(PlaySpecific.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(PlaySpecific, [{
+    key: 'source',
+    value: function source() {
+      if (process.env.LACONA_ENV === 'demo') {
+        return {
+          music: (0, _laconaPhrase.createElement)(DemoPlay, null)
+        };
+      } else {
+        return {
+          music: (0, _laconaPhrase.createElement)(
+            'thru',
+            { 'function': arrangeMusic },
+            (0, _laconaPhrase.createElement)(_laconaCommandOsx.Applescript, { code: script, fetchOn: 'triggerOnce' })
+          )
+        };
+      }
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      var tracks = _lodash2['default'].map(this.sources.music.data, function (_ref2) {
+        var name = _ref2.name;
+        var id = _ref2.id;
+        return { text: name, value: { song: name, ids: [id] } };
+      });
+      var albums = _lodash2['default'].chain(this.sources.music.data).groupBy('album').map(function (albumItems, album) {
+        return { text: album, value: { album: album, ids: _lodash2['default'].map(albumItems, 'id') } };
+      }).value();
+      var artists = _lodash2['default'].chain(this.sources.music.data).groupBy(artistify).map(function (artistItems, artist) {
+        return { text: artist, value: { artist: artist, ids: _lodash2['default'].map(artistItems, 'id') } };
+      }).value();
+      var genres = _lodash2['default'].chain(this.sources.music.data).groupBy('genre').map(function (genreItems, genre) {
+        return { text: genre, value: { genre: genre, ids: _lodash2['default'].map(genreItems, 'id') } };
+      }).value();
+      var composers = _lodash2['default'].chain(this.sources.music.data).groupBy('composer').map(function (composerItems, composer) {
+        return { text: composer, value: { composer: composer, ids: _lodash2['default'].map(composerItems, 'id') } };
+      }).value();
+
+      return (0, _laconaPhrase.createElement)(
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)('literal', { text: 'play ', category: 'action' }),
+        (0, _laconaPhrase.createElement)(
+          'descriptor',
+          { id: 'music', trigger: this.sources.music.trigger.bind(this.sources.music) },
+          (0, _laconaPhrase.createElement)(
+            'repeat',
+            { unique: true, separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', ', ', and '], limit: 1 }) },
+            (0, _laconaPhrase.createElement)(
+              'choice',
+              null,
+              (0, _laconaPhrase.createElement)(
+                'argument',
+                { text: 'song' },
+                (0, _laconaPhrase.createElement)('list', { items: tracks, fuzzy: true, limit: 10 })
+              ),
+              (0, _laconaPhrase.createElement)(
+                'argument',
+                { text: 'album' },
+                (0, _laconaPhrase.createElement)('list', { items: albums, fuzzy: true, limit: 10 })
+              ),
+              (0, _laconaPhrase.createElement)(
+                'argument',
+                { text: 'artist' },
+                (0, _laconaPhrase.createElement)('list', { items: artists, fuzzy: true, limit: 10 })
+              ),
+              (0, _laconaPhrase.createElement)(
+                'argument',
+                { text: 'genre' },
+                (0, _laconaPhrase.createElement)('list', { items: genres, fuzzy: true, limit: 10 })
+              ),
+              (0, _laconaPhrase.createElement)(
+                'argument',
+                { text: 'composer' },
+                (0, _laconaPhrase.createElement)('list', { items: composers, fuzzy: true, limit: 10 })
+              )
+            )
+          )
+        )
+      );
+    }
+
+    // filter ({ids, shuffled}) {
+    //   if (shuffled && ids && ids.length === 1) {
+    //     return false
+    //   }
+    //   return true
+    // }
+  }]);
+
+  return PlaySpecific;
+})(_laconaPhrase.Phrase);
+
+function executeControl(result) {
+  if (result.verb === 'play') {
+    global.applescript('tell application "iTunes" to play');
+  } else if (result.verb === 'next') {
+    global.applescript('tell application "iTunes" to next track');
+  } else if (result.verb === 'previous') {
+    global.applescript('tell application "iTunes" to previous track');
+  } else if (result.verb === 'pause') {
+    global.applescript('tell application "iTunes" to pause');
+  } else if (result.verb === 'stop') {
+    global.applescript('tell application "iTunes" to stop');
+  }
+}
+
+var Control = (function (_Phrase2) {
+  _inherits(Control, _Phrase2);
+
+  function Control() {
+    _classCallCheck(this, Control);
+
+    _get(Object.getPrototypeOf(Control.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Control, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'choice',
+        null,
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('literal', { text: 'play ', category: 'action' }),
+          (0, _laconaPhrase.createElement)(
+            'choice',
+            { merge: true, id: 'verb', limit: 2 },
+            (0, _laconaPhrase.createElement)('list', { items: ['current song', 'current track', 'music'], value: 'play', limit: 1, category: 'action' }),
+            (0, _laconaPhrase.createElement)('list', { items: ['previous song', 'previous track', 'last song', 'last track'], value: 'previous', limit: 1, category: 'action' }),
+            (0, _laconaPhrase.createElement)('list', { items: ['next song', 'next track'], value: 'next', limit: 1, category: 'action' })
+          )
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          { value: { verb: 'pause' } },
+          (0, _laconaPhrase.createElement)('literal', { text: 'pause ', category: 'action' }),
+          (0, _laconaPhrase.createElement)('list', { items: ['current song', 'current track', 'music'], limit: 1, category: 'action' })
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          { value: { verb: 'next' } },
+          (0, _laconaPhrase.createElement)('literal', { text: 'skip ', category: 'action' }),
+          (0, _laconaPhrase.createElement)('list', { items: ['current song', 'current track'], limit: 1, category: 'action' })
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          { value: { verb: 'stop' } },
+          (0, _laconaPhrase.createElement)('literal', { text: 'stop ', category: 'action' }),
+          (0, _laconaPhrase.createElement)('list', { items: ['current song', 'current track'], limit: 1, category: 'action' })
+        )
+      );
+    }
+  }]);
+
+  return Control;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = {
+  sentences: [{ Sentence: PlaySpecific, execute: executeSpecific }, { Sentence: Control, execute: executeControl }]
+};
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"_process":384,"lacona-command-osx":31,"lacona-phrase":15}],15:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":17,"dup":2,"inherits":16}],16:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],17:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],18:[function(require,module,exports){
+(function (global){
+/** @jsx createElement */
+
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+exports.execute = execute;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _laconaPhraseApplication = require('lacona-phrase-application');
+
+var _laconaPhraseApplication2 = _interopRequireDefault(_laconaPhraseApplication);
+
+var _laconaPhrasePreferencePane = require('lacona-phrase-preference-pane');
+
+var _laconaPhrasePreferencePane2 = _interopRequireDefault(_laconaPhrasePreferencePane);
+
+var _laconaPhraseUrl = require('lacona-phrase-url');
+
+var _laconaPhraseUrl2 = _interopRequireDefault(_laconaPhraseUrl);
+
+var _laconaPhraseFile = require('lacona-phrase-file');
+
+var _laconaPhraseFile2 = _interopRequireDefault(_laconaPhraseFile);
+
+var _laconaPhraseSystemState = require('lacona-phrase-system-state');
+
+function execute(result) {
+  if (result.verb === 'open') {
+    result.items.forEach(function (item) {
+      if (item.open) {
+        item.open();
+      } else if (item.url) {
+        global.openURL(item.url);
+      } else if (item.path || item.pref) {
+        global.openFile(item.path || item.pref);
+      }
+    });
+  } else if (result.verb === 'openin') {
+    result.items.forEach(function (item) {
+      result.apps.forEach(function (app) {
+        if (item.url) {
+          app.openURL(item.url);
+        } else if (item.path) {
+          app.openFile(item.path);
+        }
+      });
+    });
+  } else if (result.verb === 'switch') {
+    if (result.item.activate) result.item.activate();
+  } else if (result.verb === 'quit') {
+    _lodash2['default'].forEach(result.items, function (item) {
+      if (item.quit) item.quit();
+    });
+  } else if (result.verb === 'close') {
+    _lodash2['default'].forEach(result.items, function (item) {
+      if (item.close) item.close();
+    });
+  } else if (result.verb === 'hide') {
+    _lodash2['default'].forEach(result.items, function (item) {
+      if (item.hide) item.hide();
+    });
+  }
+}
+
+var Sentence = (function (_Phrase) {
+  _inherits(Sentence, _Phrase);
+
+  function Sentence() {
+    _classCallCheck(this, Sentence);
+
+    _get(Object.getPrototypeOf(Sentence.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Sentence, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'choice',
+        null,
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('literal', { text: 'open ', category: 'action', id: 'verb', value: 'open' }),
+          (0, _laconaPhrase.createElement)(
+            'repeat',
+            { unique: true, id: 'items', separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1, category: 'conjunction' }) },
+            (0, _laconaPhrase.createElement)(
+              'choice',
+              null,
+              (0, _laconaPhrase.createElement)(_laconaPhraseApplication2['default'], null),
+              (0, _laconaPhrase.createElement)(_laconaPhrasePreferencePane2['default'], { id: 'pref' }),
+              (0, _laconaPhrase.createElement)(_laconaPhraseUrl2['default'], { splitOn: /\s|,/, id: 'url' }),
+              (0, _laconaPhrase.createElement)(_laconaPhraseFile2['default'], { id: 'path' })
+            )
+          )
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('literal', { text: 'open ', category: 'action', id: 'verb', value: 'openin' }),
+          (0, _laconaPhrase.createElement)(
+            'repeat',
+            { unique: true, id: 'items', separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1, category: 'conjunction' }) },
+            (0, _laconaPhrase.createElement)(
+              'choice',
+              null,
+              (0, _laconaPhrase.createElement)(_laconaPhraseUrl2['default'], { splitOn: /\s|,/, id: 'url' }),
+              (0, _laconaPhrase.createElement)(_laconaPhraseFile2['default'], { id: 'path' })
+            )
+          ),
+          (0, _laconaPhrase.createElement)('list', { items: [' in ', ' using ', ' with '], limit: 1, category: 'conjunction' }),
+          (0, _laconaPhrase.createElement)(
+            'repeat',
+            { unique: true, id: 'apps', separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1, category: 'conjunction' }) },
+            (0, _laconaPhrase.createElement)(_laconaPhraseApplication2['default'], null)
+          )
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('literal', { text: 'switch to ', category: 'action', id: 'verb', value: 'switch' }),
+          (0, _laconaPhrase.createElement)(
+            'choice',
+            { id: 'item' },
+            (0, _laconaPhrase.createElement)(_laconaPhraseSystemState.RunningApplication, null),
+            (0, _laconaPhrase.createElement)(_laconaPhraseSystemState.OpenWindow, null),
+            (0, _laconaPhrase.createElement)(_laconaPhraseSystemState.BrowserTab, null)
+          )
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('list', { items: ['quit ', 'kill '], category: 'action', id: 'verb', value: 'quit' }),
+          (0, _laconaPhrase.createElement)(
+            'repeat',
+            { unique: true, id: 'items', separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1, category: 'conjunction' }) },
+            (0, _laconaPhrase.createElement)(_laconaPhraseSystemState.RunningApplication, null)
+          )
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('list', { items: ['hide '], category: 'action', id: 'verb', value: 'hide' }),
+          (0, _laconaPhrase.createElement)(
+            'repeat',
+            { unique: true, id: 'items', separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1, category: 'conjunction' }) },
+            (0, _laconaPhrase.createElement)(_laconaPhraseSystemState.RunningApplication, null)
+          )
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('literal', { text: 'close ', category: 'action', id: 'verb', value: 'close' }),
+          (0, _laconaPhrase.createElement)(
+            'repeat',
+            { unique: true, id: 'items', separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1, category: 'conjunction' }) },
+            (0, _laconaPhrase.createElement)(
+              'choice',
+              null,
+              (0, _laconaPhrase.createElement)(_laconaPhraseSystemState.RunningApplication, null),
+              (0, _laconaPhrase.createElement)(_laconaPhraseSystemState.OpenWindow, null),
+              (0, _laconaPhrase.createElement)(_laconaPhraseSystemState.BrowserTab, null)
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return Sentence;
+})(_laconaPhrase.Phrase);
+
+exports.Sentence = Sentence;
+exports['default'] = {
+  sentences: [{ Sentence: Sentence, execute: execute }]
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"lacona-phrase":19,"lacona-phrase-application":57,"lacona-phrase-file":81,"lacona-phrase-preference-pane":97,"lacona-phrase-system-state":105,"lacona-phrase-url":109}],19:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":21,"dup":2,"inherits":20}],20:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],21:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],22:[function(require,module,exports){
+(function (process,global){
+/** @jsx createElement */
+'use strict';
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+var _laconaPhraseApplication = require('lacona-phrase-application');
+
+var _laconaPhraseApplication2 = _interopRequireDefault(_laconaPhraseApplication);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _spotlight = require('./spotlight');
+
+var _spotlight2 = _interopRequireDefault(_spotlight);
+
+var AppObject = (function () {
+  function AppObject(_ref) {
+    var kMDItemCFBundleIdentifier = _ref.kMDItemCFBundleIdentifier;
+    var kMDItemDisplayName = _ref.kMDItemDisplayName;
+    var kMDItemPath = _ref.kMDItemPath;
+
+    _classCallCheck(this, AppObject);
+
+    this.bundleId = kMDItemCFBundleIdentifier;
+    this.name = kMDItemDisplayName;
+  }
+
+  _createClass(AppObject, [{
+    key: 'open',
+    value: function open() {
+      global.launchApplication(this.bundleId, function () {});
+    }
+  }, {
+    key: 'openURL',
+    value: function openURL(url) {
+      global.openURLInApplication(rl, this.bundleId);
+    }
+  }, {
+    key: 'openFile',
+    value: function openFile(file) {
+      global.openURLInApplication(file, this.bundleId);
+    }
+  }]);
+
+  return AppObject;
+})();
+
+function toObject(obj) {
+  return new AppObject(obj);
+}
+
+var DemoApps = (function (_Source) {
+  _inherits(DemoApps, _Source);
+
+  function DemoApps() {
+    _classCallCheck(this, DemoApps);
+
+    _get(Object.getPrototypeOf(DemoApps.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(DemoApps, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      this.replaceData(global.config.apps);
+    }
+  }]);
+
+  return DemoApps;
+})(_laconaPhrase.Source);
+
+var App = (function (_Phrase) {
+  _inherits(App, _Phrase);
+
+  function App() {
+    _classCallCheck(this, App);
+
+    _get(Object.getPrototypeOf(App.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(App, [{
+    key: 'source',
+    value: function source() {
+      if (process.env.LACONA_ENV === 'demo') {
+        return {
+          apps: (0, _laconaPhrase.createElement)(DemoApps, null)
+        };
+      } else {
+        return {
+          apps: (0, _laconaPhrase.createElement)('map', { 'function': toObject }, (0, _laconaPhrase.createElement)(_spotlight2['default'], { directories: ['/Applications'], query: 'kMDItemContentTypeTree == \'com.apple.application\'', attributes: ['kMDItemDisplayName', 'kMDItemCFBundleIdentifier', 'kMDItemPath'] }))
+        };
+      }
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      var apps = this.sources.apps.data.map(function (app) {
+        return {
+          text: app.name,
+          value: app
+        };
+      });
+
+      return (0, _laconaPhrase.createElement)('argument', { text: 'application' }, (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: apps, limit: 10 }));
+    }
+  }]);
+
+  return App;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = App;
+
+App['extends'] = [_laconaPhraseApplication2['default']];
+module.exports = exports['default'];
+
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./spotlight":39,"_process":384,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":41,"lacona-phrase-application":57}],23:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var Applescript = (function (_Source) {
+  _inherits(Applescript, _Source);
+
+  function Applescript() {
+    _classCallCheck(this, Applescript);
+
+    _get(Object.getPrototypeOf(Applescript.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Applescript, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      this.triggered = false;
+      this.replaceData([]);
+
+      if (this.props.fetchOn === 'create') {
+        this.fetch();
+      }
+      if (this.props.fetchOn === 'activate') {
+        this.fetch();
+      }
+    }
+  }, {
+    key: 'onActivate',
+    value: function onActivate() {
+      if (this.props.fetchOn === 'activate') {
+        this.fetch();
+      }
+    }
+  }, {
+    key: 'onDeactivate',
+    value: function onDeactivate() {
+      if (this.props.fetchOn === 'activate') {
+        this.replaceData([]);
+      }
+      // if (this.props.fetchOn === 'triggerOnce') {
+      //   this.triggered = false
+      // }
+    }
+  }, {
+    key: 'trigger',
+    value: function trigger() {
+      if (this.props.fetchOn === 'triggerOnce' && !this.triggered) {
+        this.fetch();
+        this.triggered = true;
+      } else if (this.props.fetchOn === 'trigger') {
+        this.fetch();
+      }
+    }
+  }, {
+    key: 'fetch',
+    value: function fetch() {
+      var _this = this;
+
+      global.applescript(this.props.code, function (err, data) {
+        if (err) {
+          console.log('Applescript Error:');
+          console.log(err);
+          return;
+        }
+        _this.replaceData(data);
+      });
+    }
+  }]);
+
+  return Applescript;
+})(_laconaPhrase.Source);
+
+exports.Applescript = Applescript;
+
+Applescript.defaultProps = {
+  fetchOn: 'create'
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":41,"lodash":44}],24:[function(require,module,exports){
+(function (process,global){
+/** @jsx createElement */
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _spotlight = require('./spotlight');
+
+var _spotlight2 = _interopRequireDefault(_spotlight);
+
+var _laconaPhraseUrl = require('lacona-phrase-url');
+
+var _laconaPhraseUrl2 = _interopRequireDefault(_laconaPhraseUrl);
+
+/* for when I want to support Chrome
+tell application "Google Chrome"
+	get {title, URL, id} of bookmark items of bookmark folders
+end tell
+*/
+
+var DemoBookmarks = (function (_Source) {
+  _inherits(DemoBookmarks, _Source);
+
+  function DemoBookmarks() {
+    _classCallCheck(this, DemoBookmarks);
+
+    _get(Object.getPrototypeOf(DemoBookmarks.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(DemoBookmarks, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      this.replaceData(global.config.bookmarks);
+    }
+  }]);
+
+  return DemoBookmarks;
+})(_laconaPhrase.Source);
+
+var Bookmark = (function (_Phrase) {
+  _inherits(Bookmark, _Phrase);
+
+  function Bookmark() {
+    _classCallCheck(this, Bookmark);
+
+    _get(Object.getPrototypeOf(Bookmark.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Bookmark, [{
+    key: 'source',
+    value: function source() {
+      if (process.env.LACONA_ENV === 'demo') {
+        return {
+          bookmarks: (0, _laconaPhrase.createElement)(DemoBookmarks, null)
+        };
+      } else {
+        return {
+          bookmarks: (0, _laconaPhrase.createElement)(_spotlight2['default'], { query: 'kMDItemContentTypeTree = \'com.apple.safari.bookmark\'',
+            attributes: ['kMDItemDisplayName', 'kMDItemURL'] })
+        };
+      }
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      var bookmarks = this.sources.bookmarks.data.map(function (bookmark) {
+        return { text: bookmark.kMDItemDisplayName, value: bookmark.kMDItemURL };
+      });
+
+      return (0, _laconaPhrase.createElement)('argument', { text: 'bookmark' }, (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: bookmarks }));
+    }
+  }]);
+
+  return Bookmark;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = Bookmark;
+
+Bookmark['extends'] = [_laconaPhraseUrl2['default']];
+module.exports = exports['default'];
+
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./spotlight":39,"_process":384,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":41,"lacona-phrase-url":109}],25:[function(require,module,exports){
+(function (process,global){
+/** @jsx createElement */
+
+'use strict';
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _isIterable = require('babel-runtime/core-js/is-iterable')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _slicedToArray = (function () {
+  function sliceIterator(arr, i) {
+    var _arr = [];var _n = true;var _d = false;var _e = undefined;try {
+      for (var _i = _getIterator(arr), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;_e = err;
+    } finally {
+      try {
+        if (!_n && _i['return']) _i['return']();
+      } finally {
+        if (_d) throw _e;
+      }
+    }return _arr;
+  }return function (arr, i) {
+    if (Array.isArray(arr)) {
+      return arr;
+    } else if (_isIterable(Object(arr))) {
+      return sliceIterator(arr, i);
+    } else {
+      throw new TypeError('Invalid attempt to destructure non-iterable instance');
+    }
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _applescript = require('./applescript');
+
+var _laconaPhraseSystemState = require('lacona-phrase-system-state');
+
+var fetchScript = '\n  set chromeTabs to {}\n  set safariTabs to {}\n\n  if is_running("Google Chrome") then\n    set chromeTabs to run script "\n      set allTabs to {}\n      tell application \\"Google Chrome\\"\n        repeat with win in every window\n          repeat with t in win\'s tabs\n            set end of allTabs to {\\"Google Chrome\\", t\'s id, title of t}\n          end repeat\n        end repeat\n      end tell\n      return allTabs\n    "\n  end if\n\n  if is_running("Safari") then\n    set safariTabs to run script "\n      set allTabs to {}\n      tell application \\"Safari\\"\n        repeat with win in (windows where visible is true)\n          repeat with t in win\'s tabs\n            set end of allTabs to {\\"Safari\\", {win\'s index, t\'s index}, t\'s name}\n          end repeat\n        end repeat\n      end tell\n      return allTabs\n    "\n  end if\n\n  on is_running(appName)\n    tell application "System Events" to (name of processes) contains appName\n  end is_running\n\n  return chromeTabs & safariTabs\n';
+
+var TabObject = (function () {
+  function TabObject(_ref) {
+    var appName = _ref.appName;
+    var tabId = _ref.tabId;
+    var name = _ref.name;
+
+    _classCallCheck(this, TabObject);
+
+    this.appName = appName;
+    this.tabId = tabId;
+    this.name = name;
+  }
+
+  _createClass(TabObject, [{
+    key: 'close',
+    value: function close() {}
+  }, {
+    key: 'activate',
+    value: function activate() {
+      var script = undefined;
+
+      if (this.appName === 'Google Chrome') {
+        script = '\n        tell application "Google Chrome"\n        \trepeat with wi from 1 to count windows\n        \t\trepeat with ti from 1 to count (window wi\'s tabs)\n        \t\t\tif id of window wi\'s tab ti is ' + this.tabId + ' then\n        \t\t\t\tset theTab to ti\n        \t\t\t\tset theWin to wi\n        \t\t\tend if\n        \t\tend repeat\n        \tend repeat\n\n        \tset window theWin\'s active tab index to theTab\n        \tset window theWin\'s index to 1\n        \tactivate\n        end tell\n      ';
+      } else if (this.appName === 'Safari') {
+        var _tabId = _slicedToArray(this.tabId, 2);
+
+        var winId = _tabId[0];
+        var tabId = _tabId[1];
+
+        //TODO THIS DOES NOT WORK
+        script = '\n        tell application "Safari"\n        \tactivate\n          set win to window ' + winId + '\n        \tset win\'s current tab to win\'s tab ' + tabId + '\n          set win\'s index to 1\n        end tell\n      ';
+      }
+      global.applescript(script);
+    }
+  }]);
+
+  return TabObject;
+})();
+
+function toObject(obj) {
+  return new TabObject(obj);
+}
+
+var objectify = _lodash2['default'].partial(_lodash2['default'].zipObject, ['appName', 'tabId', 'name']);
+
+var DemoTabs = (function (_Source) {
+  _inherits(DemoTabs, _Source);
+
+  function DemoTabs() {
+    _classCallCheck(this, DemoTabs);
+
+    _get(Object.getPrototypeOf(DemoTabs.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(DemoTabs, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      this.replaceData([]);
+    }
+  }]);
+
+  return DemoTabs;
+})(_laconaPhrase.Source);
+
+var Tab = (function (_Phrase) {
+  _inherits(Tab, _Phrase);
+
+  function Tab() {
+    _classCallCheck(this, Tab);
+
+    _get(Object.getPrototypeOf(Tab.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Tab, [{
+    key: 'source',
+    value: function source() {
+      if (process.env.LACONA_ENV === 'demo') {
+        return { tabs: (0, _laconaPhrase.createElement)(DemoTabs, null) };
+      } else {
+        return {
+          tabs: (0, _laconaPhrase.createElement)('map', { 'function': toObject }, (0, _laconaPhrase.createElement)('map', { 'function': objectify }, (0, _laconaPhrase.createElement)(_applescript.Applescript, { code: fetchScript, fetchOn: 'activate' })))
+        };
+      }
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      var tabs = this.sources.tabs.data.map(function (tab) {
+        return { text: tab.name, value: tab };
+      });
+
+      return (0, _laconaPhrase.createElement)('argument', { text: 'tab' }, (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: tabs }));
+    }
+  }]);
+
+  return Tab;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = Tab;
+
+Tab['extends'] = [_laconaPhraseSystemState.BrowserTab];
+module.exports = exports['default'];
+
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./applescript":23,"_process":384,"babel-runtime/core-js/get-iterator":686,"babel-runtime/core-js/is-iterable":687,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":41,"lacona-phrase-system-state":105,"lodash":44}],26:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+var dateMap = {
+  '_$!<Birthday>!$_': ['birthday'],
+  '_$!<Anniversary>!$_': ['anniversary']
+};
+
+exports.dateMap = dateMap;
+var relationshipMap = {
+  '_$!<Mother>!$_': ['mother', 'mom'],
+  '_$!<Brother>!$_': ['brother'],
+  '_$!<Child>!$_': ['child'],
+  '_$!<Father>!$_': ['father', 'dad'],
+  '_$!<Friend>!$_': ['friend'],
+  '_$!<Parent>!$_': ['parent'],
+  '_$!<Partner>!$_': ['partner'],
+  '_$!<Sister>!$_': ['sister'],
+  '_$!<Spouse>!$_': ['spouse'],
+  '_$!<Assistant>!$_': ['assistant'],
+  '_$!<Manager>!$_': ['manager', 'boss'],
+  '_$!<Other>!$_': ['other']
+};
+
+exports.relationshipMap = relationshipMap;
+var emailLabelMap = {
+  '_$!<Home>!$_': ['home', 'personal'],
+  '_$!<Work>!$_': ['work'],
+  '_$!<Other>!$_': ['other']
+};
+
+exports.emailLabelMap = emailLabelMap;
+var phoneNumberMap = {
+  '_$!<Home>!$_': ['home', 'house', 'home phone'],
+  '_$!<Work>!$_': ['work', 'work phone', 'office'],
+  '_$!<Mobile>!$_': ['mobile', 'cell'],
+  '_$!<Main>!$_': ['main', 'primary'],
+  '_$!<HomeFAX>!$_': ['home fax'],
+  '_$!<WorkFAX>!$_': ['work fax'],
+  '_$!<Pager>!$_': ['pager', 'pager number'],
+  '_$!<Other>!$_': ['other']
+};
+
+exports.phoneNumberMap = phoneNumberMap;
+var urlMap = {
+  '_$!<HomePage>!$_': ['website', 'homepage']
+};
+exports.urlMap = urlMap;
+
+},{}],27:[function(require,module,exports){
+(function (process,global){
+/** @jsx createElement */
+
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x7, _x8, _x9) {
+  var _again = true;_function: while (_again) {
+    var object = _x7,
+        property = _x8,
+        receiver = _x9;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x7 = parent;_x8 = property;_x9 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+exports.possibleNameCombinations = possibleNameCombinations;
+exports.spreadObject = spreadObject;
+exports.spread = spread;
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    _Object$defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });
+  } else {
+    obj[key] = value;
+  }return obj;
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+function possibleNameCombinations(_ref5) {
+  var firstName = _ref5.firstName;
+  var middleName = _ref5.middleName;
+  var lastName = _ref5.lastName;
+  var nickname = _ref5.nickname;
+  var company = _ref5.company;
+
+  var possibleNames = [];
+  if (firstName && lastName) {
+    possibleNames.push(firstName + ' ' + lastName);
+  }
+  if (firstName) {
+    possibleNames.push(firstName);
+  }
+  if (lastName && !firstName) {
+    possibleNames.push(lastName);
+  }
+
+  if (company && !firstName && !lastName) {
+    possibleNames.push(company);
+  }
+
+  if (nickname) {
+    if (firstName && lastName) {
+      possibleNames.push(firstName + ' "' + nickname + '" ' + lastName);
+    }
+    if (lastName) {
+      possibleNames.push(nickname + ' ' + lastName);
+    }
+  }
+
+  return possibleNames;
+}
+
+function spreadObject(obj, spreadKey) {
+  var dataKeys = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
+  var valueKey = arguments.length <= 3 || arguments[3] === undefined ? 'value' : arguments[3];
+  var labelKey = arguments.length <= 4 || arguments[4] === undefined ? 'label' : arguments[4];
+
+  var spreadData = _lodash2['default'].chain(obj[spreadKey]).map(function (_ref6) {
+    var value = _ref6.value;
+    var label = _ref6.label;
+
+    return _lodash2['default'].assign(valueKey ? _defineProperty({}, valueKey, value) : {}, labelKey ? _defineProperty({}, labelKey, label) : {}, _lodash2['default'].pick(value, dataKeys));
+  }).value();
+  return spreadData;
+}
+
+function spread(data, spreadKey) {
+  var dataKeys = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
+  var valueKey = arguments.length <= 3 || arguments[3] === undefined ? 'value' : arguments[3];
+  var labelKey = arguments.length <= 4 || arguments[4] === undefined ? 'label' : arguments[4];
+
+  var spreadData = _lodash2['default'].chain(data).map(function (item) {
+    return _lodash2['default'].map(item[spreadKey], function (_ref7) {
+      var value = _ref7.value;
+      var label = _ref7.label;
+
+      return _lodash2['default'].assign(valueKey ? _defineProperty({}, valueKey, value) : {}, labelKey ? _defineProperty({}, labelKey, label) : {}, _lodash2['default'].pick(item, dataKeys));
+    });
+  }).flatten().value();
+
+  return spreadData;
+}
+
+var UserContact = (function (_Source) {
+  _inherits(UserContact, _Source);
+
+  function UserContact() {
+    _classCallCheck(this, UserContact);
+
+    _get(Object.getPrototypeOf(UserContact.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(UserContact, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      var _this = this;
+
+      if (process.env.LACONA_ENV === 'demo') {
+        this.replaceData(global.config.userContact);
+      } else {
+        this.replaceData([]);
+        global.userContact(function (err, contact) {
+          _this.replaceData(contact);
+        });
+      }
+    }
+  }]);
+
+  return UserContact;
+})(_laconaPhrase.Source);
+
+exports.UserContact = UserContact;
+
+var Contacts = (function (_Source2) {
+  _inherits(Contacts, _Source2);
+
+  function Contacts() {
+    _classCallCheck(this, Contacts);
+
+    _get(Object.getPrototypeOf(Contacts.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  /*
+  If its source looks like this:
+  [{a: 1, b: [{value, ...
+  
+  */
+  // export class Spread extends Source {
+  //   source () {
+  //     return {contacts: this.props.children[0]}
+  //   }
+  //
+  //   onCreate () {
+  //     this.replaceData([])
+  //   }
+  //
+  //   onUpdate () {
+  //     const spreadData = _.chain(this.sources.contacts.data)
+  //       .map(contact => {
+  //         return _.map(contact[this.props.spreadKey], ({value, label}) => {
+  //           return _.assign(
+  //             this.props.valueKey ? {[this.props.valueKey]: value} : {},
+  //             this.props.labelKey ? {[this.props.labelKey]: label} : {},
+  //             _.pick(contact, this.props.dataKeys)
+  //           )
+  //         })
+  //       })
+  //       .flatten()
+  //       .value()
+  //
+  //     this.replaceData(spreadData)
+  //   }
+  // }
+  //
+  // Spread.defaultProps = {
+  //   dataKeys: [],
+  //   valueKey: 'value',
+  //   labelKey: 'label'
+  // }
+  //
+  // export class SpreadObject extends Source {
+  //   source () {
+  //     return {contact: this.props.children[0]}
+  //   }
+  //
+  //   onCreate () {
+  //     this.replaceData([])
+  //   }
+  //
+  //   onUpdate () {
+  //     const spreadData = _.chain(this.sources.contact.data[this.props.spreadKey])
+  //       .map(({value, label}) => {
+  //         return _.assign(
+  //           this.props.valueKey ? {[this.props.valueKey]: value} : {},
+  //           this.props.labelKey ? {[this.props.labelKey]: label} : {},
+  //           _.pick(this.sources.contact.data, this.props.dataKeys)
+  //         )
+  //       })
+  //       .value()
+  //
+  //     this.replaceData(spreadData)
+  //   }
+  // }
+  //
+  // SpreadObject.defaultProps = {
+  //   dataKeys: [],
+  //   valueKey: 'value',
+  //   labelKey: 'label'
+  // }
+  //
+  // export class SpreadUserContact extends Source {
+  //   source () {
+  //     return {user: <UserContact />}
+  //   }
+  //
+  //   onCreate () {
+  //     this.replaceData([])
+  //   }
+  //
+  //   onUpdate () {
+  //     if (_.isEmpty(this.sources.user.data)) return
+  //
+  //     const spreadData = _.chain(this.sources.user.data[this.props.spreadKey])
+  //       .map(contact => {
+  //         return _.map(contact[this.props.spreadKey], ({value, label}) => {
+  //           const returnObj = {value, label}
+  //           for (let dataKey in this.props.dataKeys) {
+  //             returnObj[dataKey] = contact.dataKey
+  //           }
+  //           return returnObj
+  //         })
+  //       })
+  //       .value()
+  //
+  //     this.replaceData(spreadData)
+  //   }
+  //
+  // }
+
+  _createClass(Contacts, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      var _this2 = this;
+
+      if (process.env.LACONA_ENV === 'demo') {
+        this.replaceData(global.config.contacts);
+      } else {
+        this.replaceData([]);
+        global.allContacts(function (err, contacts) {
+          _this2.replaceData(contacts);
+        });
+      }
+    }
+  }]);
+
+  return Contacts;
+})(_laconaPhrase.Source);
+
+exports.Contacts = Contacts;
+
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"_process":384,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":41,"lodash":44}],28:[function(require,module,exports){
+/** @jsx createElement */
+
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _contactSources = require('./contact-sources');
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _laconaPhraseDatetime = require('lacona-phrase-datetime');
+
+var _constantMaps = require('./constant-maps');
+
+var _laconaPhraseEmail = require('lacona-phrase-email');
+
+var _laconaPhraseEmail2 = _interopRequireDefault(_laconaPhraseEmail);
+
+var _laconaPhrasePhonenumber = require('lacona-phrase-phonenumber');
+
+var _laconaPhrasePhonenumber2 = _interopRequireDefault(_laconaPhrasePhonenumber);
+
+function elementsFromContacts(data) {
+  var elements = _lodash2['default'].chain(data).map(function (_ref) {
+    var firstName = _ref.firstName;
+    var middleName = _ref.middleName;
+    var lastName = _ref.lastName;
+    var nickname = _ref.nickname;
+    var company = _ref.company;
+    var value = _ref.value;
+    var label = _ref.label;
+
+    var possibleNames = (0, _contactSources.possibleNameCombinations)({ firstName: firstName, middleName: middleName, lastName: lastName, nickname: nickname, company: company });
+    var items = _lodash2['default'].map(possibleNames, function (text) {
+      return { text: text, value: value };
+    });
+
+    return (0, _laconaPhrase.createElement)('list', { items: items, limit: 1 });
+  }).value();
+
+  return (0, _laconaPhrase.createElement)('argument', { text: 'contact', showForEmpty: true }, (0, _laconaPhrase.createElement)('choice', { limit: 10 }, elements));
+}
+
+var ContactPhrase = (function (_Phrase) {
+  _inherits(ContactPhrase, _Phrase);
+
+  function ContactPhrase() {
+    _classCallCheck(this, ContactPhrase);
+
+    _get(Object.getPrototypeOf(ContactPhrase.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(ContactPhrase, [{
+    key: 'describe',
+    value: function describe() {
+      return elementsFromContacts(this.sources.contacts.data);
+    }
+  }]);
+
+  return ContactPhrase;
+})(_laconaPhrase.Phrase);
+
+function spreadEmails(ary) {
+  return (0, _contactSources.spread)(ary, 'phoneNumbers', ['firstName', 'lastName', 'middleName', 'nickname', 'company']);
+}
+
+var ContactEmail = (function (_ContactPhrase) {
+  _inherits(ContactEmail, _ContactPhrase);
+
+  function ContactEmail() {
+    _classCallCheck(this, ContactEmail);
+
+    _get(Object.getPrototypeOf(ContactEmail.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(ContactEmail, [{
+    key: 'source',
+    value: function source() {
+      return {
+        contacts: (0, _laconaPhrase.createElement)('thru', { 'function': spreadEmails }, (0, _laconaPhrase.createElement)(_contactSources.Contacts, null))
+      };
+    }
+  }]);
+
+  return ContactEmail;
+})(ContactPhrase);
+
+exports.ContactEmail = ContactEmail;
+
+ContactEmail['extends'] = [_laconaPhraseEmail2['default']];
+
+function spreadPhoneNumbers(ary) {
+  return (0, _contactSources.spread)(ary, 'phoneNumbers', ['firstName', 'lastName', 'middleName', 'nickname', 'company']);
+}
+
+var ContactPhoneNumber = (function (_ContactPhrase2) {
+  _inherits(ContactPhoneNumber, _ContactPhrase2);
+
+  function ContactPhoneNumber() {
+    _classCallCheck(this, ContactPhoneNumber);
+
+    _get(Object.getPrototypeOf(ContactPhoneNumber.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(ContactPhoneNumber, [{
+    key: 'source',
+    value: function source() {
+      return {
+        contacts: (0, _laconaPhrase.createElement)('thru', { 'function': spreadPhoneNumbers }, (0, _laconaPhrase.createElement)(_contactSources.Contacts, null))
+      };
+    }
+  }]);
+
+  return ContactPhoneNumber;
+})(ContactPhrase);
+
+exports.ContactPhoneNumber = ContactPhoneNumber;
+
+ContactPhoneNumber['extends'] = [_laconaPhrasePhonenumber2['default']];
+
+function spreadDates(ary) {
+  return (0, _contactSources.spread)(ary, 'dates', ['firstName', 'lastName', 'middleName', 'nickname', 'company']);
+}
+
+var ContactDate = (function (_Phrase2) {
+  _inherits(ContactDate, _Phrase2);
+
+  function ContactDate() {
+    _classCallCheck(this, ContactDate);
+
+    _get(Object.getPrototypeOf(ContactDate.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(ContactDate, [{
+    key: 'source',
+    value: function source() {
+      return {
+        contacts: (0, _laconaPhrase.createElement)('thru', { 'function': spreadDates }, (0, _laconaPhrase.createElement)(_contactSources.Contacts, null))
+      };
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      var items = _lodash2['default'].chain(this.sources.contacts.data).map(function (_ref2) {
+        var firstName = _ref2.firstName;
+        var middleName = _ref2.middleName;
+        var lastName = _ref2.lastName;
+        var nickname = _ref2.nickname;
+        var company = _ref2.company;
+        var value = _ref2.value;
+        var label = _ref2.label;
+
+        var dateNames = _constantMaps.dateMap[label] || [label];
+        var possibleNames = (0, _contactSources.possibleNameCombinations)({ firstName: firstName, middleName: middleName, lastName: lastName, nickname: nickname });
+        return (0, _laconaPhrase.createElement)('choice', { limit: 1, value: value }, _lodash2['default'].map(dateNames, function (dateName) {
+          return _lodash2['default'].map(possibleNames, function (possibleName) {
+            return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('argument', { text: 'contact' }, (0, _laconaPhrase.createElement)('literal', { text: possibleName + '\'s ' })), (0, _laconaPhrase.createElement)('argument', { text: 'special date' }, (0, _laconaPhrase.createElement)('literal', { text: dateName })));
+          });
+        }));
+      }).value();
+
+      return (0, _laconaPhrase.createElement)('sequence', null, this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'on ', category: 'conjunction', optional: true, limited: true, prefered: true }) : null, (0, _laconaPhrase.createElement)('choice', { limit: 10 }, items));
+    }
+  }]);
+
+  return ContactDate;
+})(_laconaPhrase.Phrase);
+
+exports.ContactDate = ContactDate;
+
+ContactDate['extends'] = [_laconaPhraseDatetime.Day];
+
+},{"./constant-maps":26,"./contact-sources":27,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":41,"lacona-phrase-datetime":66,"lacona-phrase-email":77,"lacona-phrase-phonenumber":93,"lodash":44}],29:[function(require,module,exports){
+(function (process,global){
+/** @jsx createElement */
+
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _laconaPhraseDatetime = require('lacona-phrase-datetime');
+
+var HolidaySource = (function (_Source) {
+  _inherits(HolidaySource, _Source);
+
+  function HolidaySource() {
+    _classCallCheck(this, HolidaySource);
+
+    _get(Object.getPrototypeOf(HolidaySource.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(HolidaySource, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      if (process.env.LACONA_ENV === 'demo') {
+        this.replaceData(global.config.usHolidays);
+      } else {
+        this.replaceData([]);
+      }
+    }
+  }]);
+
+  return HolidaySource;
+})(_laconaPhrase.Source);
+
+var Holiday = (function (_Phrase) {
+  _inherits(Holiday, _Phrase);
+
+  function Holiday() {
+    _classCallCheck(this, Holiday);
+
+    _get(Object.getPrototypeOf(Holiday.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Holiday, [{
+    key: 'source',
+    value: function source() {
+      return { dates: (0, _laconaPhrase.createElement)(HolidaySource, null) };
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      if (this.sources.dates.data.length === 0) return;
+
+      return (0, _laconaPhrase.createElement)('argument', { text: 'holiday' }, (0, _laconaPhrase.createElement)('list', { items: this.sources.dates.data }));
+    }
+  }]);
+
+  return Holiday;
+})(_laconaPhrase.Phrase);
+
+exports.Holiday = Holiday;
+
+Holiday['extends'] = [_laconaPhraseDatetime.Date];
+
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"_process":384,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":41,"lacona-phrase-datetime":66,"lodash":44}],30:[function(require,module,exports){
+(function (process,global){
+/** @jsx createElement */
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _spotlightFetch = require('./spotlight-fetch');
+
+var _spotlightFetch2 = _interopRequireDefault(_spotlightFetch);
+
+var _laconaPhraseFile = require('lacona-phrase-file');
+
+var _laconaPhraseFile2 = _interopRequireDefault(_laconaPhraseFile);
+
+var _path = require('path');
+
+var DemoFiles = (function (_Source) {
+  _inherits(DemoFiles, _Source);
+
+  function DemoFiles() {
+    _classCallCheck(this, DemoFiles);
+
+    _get(Object.getPrototypeOf(DemoFiles.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(DemoFiles, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      this.replaceData(global.config.spotlightFiles);
+    }
+  }, {
+    key: 'fetch',
+    value: function fetch() {}
+  }]);
+
+  return DemoFiles;
+})(_laconaPhrase.Source);
+
+var File = (function (_Phrase) {
+  _inherits(File, _Phrase);
+
+  function File() {
+    _classCallCheck(this, File);
+
+    _get(Object.getPrototypeOf(File.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(File, [{
+    key: 'source',
+    value: function source() {
+      if (process.env.LACONA_ENV === 'demo') {
+        return {
+          files: (0, _laconaPhrase.createElement)(DemoFiles, null)
+        };
+      } else {
+        return {
+          files: (0, _laconaPhrase.createElement)(_spotlightFetch2['default'], { attributes: ['kMDItemPath', 'kMDItemContentType'], limit: 10 })
+        };
+      }
+    }
+  }, {
+    key: 'fetch',
+    value: function fetch(input) {
+      if (input === '') return;
+      this.sources.files.fetch('kMDItemFSName contains[cd] "' + input + '" && ' + 'kMDItemSupportFileType != "MDSystemFile" && ' + 'kMDItemContentTypeTree != "com.apple.application" && ' + 'kMDItemContentTypeTree != "com.apple.application-bundle" && ' + 'kMDItemContentTypeTree != "com.apple.safari.bookmark" && ' + 'kMDItemContentTypeTree != "public.contact" && ' + 'kMDItemContentTypeTree != "com.apple.safari.history" && ' + 'kMDItemContentTypeTree != "public.calendar-event" && ' + 'kMDItemContentTypeTree != "com.apple.ichat.transcript"');
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      var files = this.sources.files.data.map(function (_ref) {
+        var kMDItemPath = _ref.kMDItemPath;
+        var kMDItemContentType = _ref.kMDItemContentType;
+
+        return (0, _laconaPhrase.createElement)('sequence', { value: kMDItemPath }, (0, _laconaPhrase.createElement)('decorator', { allowInput: false, text: (0, _path.dirname)(kMDItemPath) + '/' }), (0, _laconaPhrase.createElement)('literal', { text: (0, _path.basename)(kMDItemPath) }));
+      });
+
+      return (0, _laconaPhrase.createElement)('argument', { text: 'file', trigger: this.fetch.bind(this) }, (0, _laconaPhrase.createElement)('choice', null, files));
+    }
+  }]);
+
+  return File;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = File;
+
+File['extends'] = [_laconaPhraseFile2['default']];
+module.exports = exports['default'];
+
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./spotlight-fetch":38,"_process":384,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":41,"lacona-phrase-file":81,"path":383}],31:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequire(obj) { return obj && obj.__esModule ? obj['default'] : obj; }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _app = require('./app');
+
+var _app2 = _interopRequireDefault(_app);
+
+var _bookmark = require('./bookmark');
+
+var _bookmark2 = _interopRequireDefault(_bookmark);
+
+var _browserTab = require('./browser-tab');
+
+var _browserTab2 = _interopRequireDefault(_browserTab);
+
+var _contact = require('./contact');
+
+var _relationship = require('./relationship');
+
+var _me = require('./me');
+
+var _event = require('./event');
+
+var _file = require('./file');
+
+var _file2 = _interopRequireDefault(_file);
+
+var _openWindow = require('./open-window');
+
+var _openWindow2 = _interopRequireDefault(_openWindow);
+
+var _path = require('./path');
+
+var _path2 = _interopRequireDefault(_path);
+
+var _preferencePane = require('./preference-pane');
+
+var _preferencePane2 = _interopRequireDefault(_preferencePane);
+
+var _runningApp = require('./running-app');
+
+var _runningApp2 = _interopRequireDefault(_runningApp);
+
+var _volume = require('./volume');
+
+var _volume2 = _interopRequireDefault(_volume);
+
+var _applescript = require('./applescript');
+
+Object.defineProperty(exports, 'Applescript', {
+  enumerable: true,
+  get: function get() {
+    return _applescript.Applescript;
+  }
+});
+
+var _spotlight = require('./spotlight');
+
+exports.Spotlight = _interopRequire(_spotlight);
+exports['default'] = {
+  extensions: [_app2['default'], _bookmark2['default'], _browserTab2['default'], _contact.ContactDate, _contact.ContactEmail, _contact.ContactPhoneNumber, _file2['default'], _event.Holiday, _openWindow2['default'], _path2['default'], _me.PersonalDate, _preferencePane2['default'], _relationship.RelationshipDate, _relationship.RelationshipEmail, _relationship.RelationshipPhoneNumber, _runningApp2['default'], _volume2['default']]
+};
+
+// export default {
+//   extensions: [App, Bookmark, Email, PhoneNumber, File],
+//   config: {
+//     apps: {type: 'boolean', default: true},
+//     contacts: {type: 'boolean', default: true},
+//     files: {type: 'boolean', default: true},
+//     safariBookmarks: {type: 'boolean', default: true},
+//   },
+//   translations: [{
+//     langs: ['en', 'default'],
+//     information: {
+//       title: 'Spotlight',
+//       description: 'Lacona Extensions allowing you to manipulate data accessible via Spotlight',
+//       examples: ['open Safari', 'email Adam', 'open Facebook']
+//     }
+//   }]
+// }
+},{"./app":22,"./applescript":23,"./bookmark":24,"./browser-tab":25,"./contact":28,"./event":29,"./file":30,"./me":32,"./open-window":33,"./path":34,"./preference-pane":35,"./relationship":36,"./running-app":37,"./spotlight":39,"./volume":40}],32:[function(require,module,exports){
+/** @jsx createElement */
+
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _laconaPhraseDatetime = require('lacona-phrase-datetime');
+
+var _laconaPhraseEmail = require('lacona-phrase-email');
+
+var _laconaPhraseEmail2 = _interopRequireDefault(_laconaPhraseEmail);
+
+var _laconaPhrasePhonenumber = require('lacona-phrase-phonenumber');
+
+var _laconaPhrasePhonenumber2 = _interopRequireDefault(_laconaPhrasePhonenumber);
+
+var _constantMaps = require('./constant-maps');
+
+var _contactSources = require('./contact-sources');
+
+function spreadDates(obj) {
+  return (0, _contactSources.spreadObject)(obj, 'dates');
+}
+
+var PersonalDate = (function (_Phrase) {
+  _inherits(PersonalDate, _Phrase);
+
+  function PersonalDate() {
+    _classCallCheck(this, PersonalDate);
+
+    _get(Object.getPrototypeOf(PersonalDate.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(PersonalDate, [{
+    key: 'source',
+    value: function source() {
+      return {
+        myDates: (0, _laconaPhrase.createElement)('thru', { 'function': spreadDates }, (0, _laconaPhrase.createElement)(_contactSources.UserContact, null))
+      };
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      var items = _lodash2['default'].map(this.sources.myDates.data, function (_ref) {
+        var value = _ref.value;
+        var label = _ref.label;
+
+        return { value: value, text: 'my ' + (_constantMaps.dateMap[label] || label) };
+      });
+
+      return (0, _laconaPhrase.createElement)('sequence', null, this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'on ', optional: true, prefered: true, limited: true, category: 'conjunction' }) : null, (0, _laconaPhrase.createElement)('argument', { text: 'special date', showForEmpty: true }, (0, _laconaPhrase.createElement)('list', { items: items })));
+    }
+  }]);
+
+  return PersonalDate;
+})(_laconaPhrase.Phrase);
+
+exports.PersonalDate = PersonalDate;
+
+PersonalDate['extends'] = [_laconaPhraseDatetime.Day];
+
+},{"./constant-maps":26,"./contact-sources":27,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":41,"lacona-phrase-datetime":66,"lacona-phrase-email":77,"lacona-phrase-phonenumber":93,"lodash":44}],33:[function(require,module,exports){
+(function (process,global){
+/** @jsx createElement */
+
+'use strict';
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _applescript = require('./applescript');
+
+var _laconaPhraseSystemState = require('lacona-phrase-system-state');
+
+var fetchScript = '\non run\n\ttell application "System Events"\n\t\tset allWindows to {}\n\t\trepeat with proc in (processes where background only is false)\n\t\t\trepeat with win in proc\'s windows\n\t\t\t\tif win\'s subrole is "AXStandardWindow" then\n\t\t\t\t\tset end of allWindows to {proc\'s id, proc\'s name, win\'s title, my hasCloseButton(win)}\n\t\t\t\tend if\n\t\t\tend repeat\n\t\tend repeat\n\tend tell\n\treturn allWindows\nend run\n\non hasCloseButton(win)\n\ttell application "System Events"\n\t\tif win\'s subrole is "AXStandardWindow" then\n\t\t\trepeat with butt in win\'s buttons\n\t\t\t\tif butt\'s subrole is "AXCloseButton" then\n\t\t\t\t\treturn true\n\t\t\t\tend if\n\t\t\tend repeat\n\t\tend if\n\t\treturn false\n\tend tell\nend hasCloseButton\n';
+
+var WindowObject = (function () {
+  function WindowObject(_ref) {
+    var procId = _ref.procId;
+    var procName = _ref.procName;
+    var name = _ref.name;
+    var closeable = _ref.closeable;
+
+    _classCallCheck(this, WindowObject);
+
+    this.procId = procId;
+    this.procName = procName;
+    this.name = name;
+    this.closeable = closeable;
+  }
+
+  _createClass(WindowObject, [{
+    key: 'activate',
+    value: function activate() {
+      var script = '\n      tell application "System Events"\n      \tset proc to first process whose background only is false and id is ' + this.procId + '\n      \tset win to proc\'s first window whose name is "' + this.name + '"\n      \tperform action "AXRaise" of win\n      \tset proc\'s frontmost to true\n      end tell\n    ';
+      global.applescript(script);
+    }
+  }, {
+    key: 'close',
+    value: function close() {
+      if (!this.closeable) return;
+
+      var script = '\n      tell application "System Events"\n      \tset proc to first process whose background only is false and id is ' + this.procId + '\n      \tset win to proc\'s first window whose name is "' + this.name + '"\n    \t\tset butt to win\'s first button whose subrole is "AXCloseButton"\n    \t\tclick butt\n      end tell\n    ';
+      global.applescript(script);
+    }
+  }]);
+
+  return WindowObject;
+})();
+
+function objectifyWindow(results) {
+  return _lodash2['default'].chain(results).map(_lodash2['default'].partial(_lodash2['default'].zipObject, ['procId', 'procName', 'name', 'closeable'])).map(function (obj) {
+    return new WindowObject(obj);
+  }).value();
+}
+
+var DemoWindows = (function (_Source) {
+  _inherits(DemoWindows, _Source);
+
+  function DemoWindows() {
+    _classCallCheck(this, DemoWindows);
+
+    _get(Object.getPrototypeOf(DemoWindows.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(DemoWindows, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      this.replaceData([]);
+    }
+  }]);
+
+  return DemoWindows;
+})(_laconaPhrase.Source);
+
+var Window = (function (_Phrase) {
+  _inherits(Window, _Phrase);
+
+  function Window() {
+    _classCallCheck(this, Window);
+
+    _get(Object.getPrototypeOf(Window.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Window, [{
+    key: 'source',
+    value: function source() {
+      if (process.env.LACONA_ENV === 'demo') {
+        return { windows: (0, _laconaPhrase.createElement)(DemoWindows, null) };
+      } else {
+        return {
+          windows: (0, _laconaPhrase.createElement)('thru', { 'function': objectifyWindow }, (0, _laconaPhrase.createElement)(_applescript.Applescript, { code: fetchScript }))
+        };
+      }
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      var windows = this.sources.windows.data.map(function (win) {
+        return { text: win.name, value: win };
+      });
+
+      return (0, _laconaPhrase.createElement)('argument', { text: 'window', showForEmpty: true }, (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: windows }));
+    }
+  }]);
+
+  return Window;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = Window;
+
+Window['extends'] = [_laconaPhraseSystemState.OpenWindow];
+module.exports = exports['default'];
+
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./applescript":23,"_process":384,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":41,"lacona-phrase-system-state":105,"lodash":44}],34:[function(require,module,exports){
+(function (process,global){
+/** @jsx createElement */
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _spotlightFetch = require('./spotlight-fetch');
+
+var _spotlightFetch2 = _interopRequireDefault(_spotlightFetch);
+
+var _laconaPhraseFile = require('lacona-phrase-file');
+
+var _laconaPhraseFile2 = _interopRequireDefault(_laconaPhraseFile);
+
+var _path = require('path');
+
+var Directory = (function (_Source) {
+  _inherits(Directory, _Source);
+
+  function Directory() {
+    _classCallCheck(this, Directory);
+
+    _get(Object.getPrototypeOf(Directory.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Directory, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      var _this = this;
+
+      this.replaceData([]);
+
+      global.getDirectoryContents(this.props.path, function (err, contents) {
+        if (!err) {
+          _this.replaceData(contents);
+        }
+      });
+    }
+  }]);
+
+  return Directory;
+})(_laconaPhrase.Source);
+
+function processChildren(children) {
+  return _lodash2['default'].map(children, function (child) {
+    if (_lodash2['default'].isString(child)) {
+      return { file: child, isDir: false };
+    } else {
+      return { file: child.name, isDir: true, children: child.children };
+    }
+  });
+}
+
+var DemoDirectory = (function (_Source2) {
+  _inherits(DemoDirectory, _Source2);
+
+  function DemoDirectory() {
+    _classCallCheck(this, DemoDirectory);
+
+    _get(Object.getPrototypeOf(DemoDirectory.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(DemoDirectory, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      this.replaceData(global.config.rootFiles[this.props.path]);
+    }
+
+    //   const components = this.props.path.split('/')
+    //   console.log(components)
+    //   let contents = processChildren(global.config.rootFiles)
+    //   for (let component in components.slice(1)) {
+    //     const theDir = _.find(contents, child => child.name === component)
+    //     if (theDir) {
+    //       contents = processChildren(theDir.children)
+    //     } else {
+    //       this.replaceData([])
+    //       return
+    //     }
+    //   }
+    //
+    //   this.replaceData(contents)
+    // }
+  }]);
+
+  return DemoDirectory;
+})(_laconaPhrase.Source);
+
+var TrueFile = (function (_Phrase) {
+  _inherits(TrueFile, _Phrase);
+
+  function TrueFile() {
+    _classCallCheck(this, TrueFile);
+
+    _get(Object.getPrototypeOf(TrueFile.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(TrueFile, [{
+    key: 'source',
+    value: function source() {
+      if (process.env.LACONA_ENV === 'demo') {
+        return {
+          files: (0, _laconaPhrase.createElement)(DemoDirectory, { path: this.props.directory })
+        };
+      } else {
+        return {
+          files: (0, _laconaPhrase.createElement)(Directory, { path: this.props.directory })
+        };
+      }
+    }
+  }, {
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) return;
+
+      return '' + (result.prefix || '') + (result.suffix || '');
+      // if (result && result.dir) {
+      //   return result.dir.prefix + result.dir.suffix
+      // } else if (result && result.file) {
+      //   return result.file
+      // }
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      var _this2 = this;
+
+      var dirElements = _lodash2['default'].chain(this.sources.files.data).map(function (_ref) {
+        var isDir = _ref.isDir;
+        var file = _ref.file;
+
+        if (!isDir) return;
+        var val = file + '/';
+        var newDir = (0, _path.resolve)(_this2.props.directory, file);
+
+        return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('literal', { text: val, value: val, id: 'prefix' }), (0, _laconaPhrase.createElement)(TrueFile, { directory: newDir + '/', id: 'suffix' }));
+      }).filter().value();
+
+      var fileItems = _lodash2['default'].chain(this.sources.files.data).map(function (_ref2) {
+        var isDir = _ref2.isDir;
+        var file = _ref2.file;
+        return isDir ? null : { text: file, value: { suffix: file } };
+      }).filter().value();
+
+      return (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('argument', { text: 'directory' }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('literal', { text: '', value: { prefix: '', suffix: '' } }), dirElements)), fileItems.length > 0 ? (0, _laconaPhrase.createElement)('argument', { text: 'file' }, (0, _laconaPhrase.createElement)('list', { items: fileItems })) : null);
+    }
+  }]);
+
+  return TrueFile;
+})(_laconaPhrase.Phrase);
+
+var UserHome = (function (_Source3) {
+  _inherits(UserHome, _Source3);
+
+  function UserHome() {
+    _classCallCheck(this, UserHome);
+
+    _get(Object.getPrototypeOf(UserHome.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(UserHome, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      if (process.env.LACONA_ENV === 'demo') {
+        this.replaceData('/Users/LaconaUser');
+      } else {
+        this.replaceData(global.getUserHome());
+      }
+    }
+  }]);
+
+  return UserHome;
+})(_laconaPhrase.Source);
+
+var Path = (function (_Phrase2) {
+  _inherits(Path, _Phrase2);
+
+  function Path() {
+    _classCallCheck(this, Path);
+
+    _get(Object.getPrototypeOf(Path.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Path, [{
+    key: 'source',
+    value: function source() {
+      return { userHome: (0, _laconaPhrase.createElement)(UserHome, null) };
+    }
+  }, {
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) return;
+      return '' + (result.prefix || '') + (result.suffix || '');
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('argument', { text: 'path', showForEmpty: true }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('literal', { text: '/', value: '/', id: 'prefix' }), (0, _laconaPhrase.createElement)(TrueFile, { directory: '/', id: 'suffix' })), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('literal', { text: '~/', value: this.sources.userHome.data + '/', id: 'prefix' }), (0, _laconaPhrase.createElement)(TrueFile, { directory: this.sources.userHome.data + '/', id: 'suffix' }))));
+    }
+  }]);
+
+  return Path;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = Path;
+
+Path['extends'] = [_laconaPhraseFile2['default']];
+module.exports = exports['default'];
+
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./spotlight-fetch":38,"_process":384,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":41,"lacona-phrase-file":81,"lodash":44,"path":383}],35:[function(require,module,exports){
+(function (process,global){
+/** @jsx createElement */
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _laconaPhrasePreferencePane = require('lacona-phrase-preference-pane');
+
+var _laconaPhrasePreferencePane2 = _interopRequireDefault(_laconaPhrasePreferencePane);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _spotlight = require('./spotlight');
+
+var _spotlight2 = _interopRequireDefault(_spotlight);
+
+var DemoPanes = (function (_Source) {
+  _inherits(DemoPanes, _Source);
+
+  function DemoPanes() {
+    _classCallCheck(this, DemoPanes);
+
+    _get(Object.getPrototypeOf(DemoPanes.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(DemoPanes, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      this.replaceData(global.config.preferencePanes);
+    }
+  }]);
+
+  return DemoPanes;
+})(_laconaPhrase.Source);
+
+var Pane = (function (_Phrase) {
+  _inherits(Pane, _Phrase);
+
+  function Pane() {
+    _classCallCheck(this, Pane);
+
+    _get(Object.getPrototypeOf(Pane.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Pane, [{
+    key: 'source',
+    value: function source() {
+      if (process.env.LACONA_ENV === 'demo') {
+        return { panes: (0, _laconaPhrase.createElement)(DemoPanes, null) };
+      } else {
+        return {
+          panes: (0, _laconaPhrase.createElement)(_spotlight2['default'], { directories: ['/Applications'], query: 'kMDItemContentTypeTree == \'com.apple.systempreference.prefpane\'', attributes: ['kMDItemDisplayName', 'kMDItemPath'] })
+        };
+      }
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      var panes = this.sources.panes.data.map(function (pane) {
+        return { text: pane.kMDItemDisplayName, value: pane.kMDItemPath };
+      });
+
+      return (0, _laconaPhrase.createElement)('argument', { text: 'preference pane' }, (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: panes, limit: 10 }));
+    }
+  }]);
+
+  return Pane;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = Pane;
+
+Pane['extends'] = [_laconaPhrasePreferencePane2['default']];
+module.exports = exports['default'];
+
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./spotlight":39,"_process":384,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":41,"lacona-phrase-preference-pane":97}],36:[function(require,module,exports){
+/** @jsx createElement */
+
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _laconaPhraseDatetime = require('lacona-phrase-datetime');
+
+var _laconaPhraseEmail = require('lacona-phrase-email');
+
+var _laconaPhraseEmail2 = _interopRequireDefault(_laconaPhraseEmail);
+
+var _laconaPhrasePhonenumber = require('lacona-phrase-phonenumber');
+
+var _laconaPhrasePhonenumber2 = _interopRequireDefault(_laconaPhrasePhonenumber);
+
+var _constantMaps = require('./constant-maps');
+
+var _contactSources = require('./contact-sources');
+
+var relationships = (0, _laconaPhrase.createElement)('thru', { 'function': _lodash2['default'].partial(_contactSources.spreadObject, _lodash2['default'], 'relationships', ['phoneNumbers', 'emails', 'dates'], null, 'relationship') }, (0, _laconaPhrase.createElement)(_contactSources.UserContact, null));
+
+var RelationshipPhrase = (function (_Phrase) {
+  _inherits(RelationshipPhrase, _Phrase);
+
+  function RelationshipPhrase() {
+    _classCallCheck(this, RelationshipPhrase);
+
+    _get(Object.getPrototypeOf(RelationshipPhrase.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(RelationshipPhrase, [{
+    key: 'describe',
+    value: function describe() {
+      var items = _lodash2['default'].chain(this.sources.relationships.data).map(function (_ref) {
+        var relationship = _ref.relationship;
+        var value = _ref.value;
+        var label = _ref.label;
+
+        var relationships = _constantMaps.relationshipMap[relationship] || [relationship];
+        return (0, _laconaPhrase.createElement)('choice', { limit: 1, value: value }, _lodash2['default'].map(relationships, function (oneRelationship) {
+          return (0, _laconaPhrase.createElement)('literal', { text: 'my ' + oneRelationship.toLowerCase() });
+        }), _lodash2['default'].map(relationships, function (oneRelationship) {
+          return (0, _laconaPhrase.createElement)('literal', { text: '' + _lodash2['default'].capitalize(oneRelationship) });
+        }));
+      }).value();
+
+      return (0, _laconaPhrase.createElement)('argument', { text: 'relationship', showForEmpty: true }, (0, _laconaPhrase.createElement)('choice', null, items));
+    }
+  }]);
+
+  return RelationshipPhrase;
+})(_laconaPhrase.Phrase);
+
+function spreadPhoneNumbers(ary) {
+  return (0, _contactSources.spread)(ary, 'phoneNumbers', ['relationship']);
+}
+
+var RelationshipPhoneNumber = (function (_RelationshipPhrase) {
+  _inherits(RelationshipPhoneNumber, _RelationshipPhrase);
+
+  function RelationshipPhoneNumber() {
+    _classCallCheck(this, RelationshipPhoneNumber);
+
+    _get(Object.getPrototypeOf(RelationshipPhoneNumber.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(RelationshipPhoneNumber, [{
+    key: 'source',
+    value: function source() {
+      return {
+        relationships: (0, _laconaPhrase.createElement)('thru', { 'function': spreadPhoneNumbers }, relationships)
+      };
+    }
+  }]);
+
+  return RelationshipPhoneNumber;
+})(RelationshipPhrase);
+
+exports.RelationshipPhoneNumber = RelationshipPhoneNumber;
+
+RelationshipPhoneNumber['extends'] = [_laconaPhrasePhonenumber2['default']];
+
+function spreadEmails(ary) {
+  return (0, _contactSources.spread)(ary, 'emails', ['relationship']);
+}
+
+var RelationshipEmail = (function (_RelationshipPhrase2) {
+  _inherits(RelationshipEmail, _RelationshipPhrase2);
+
+  function RelationshipEmail() {
+    _classCallCheck(this, RelationshipEmail);
+
+    _get(Object.getPrototypeOf(RelationshipEmail.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(RelationshipEmail, [{
+    key: 'source',
+    value: function source() {
+      return {
+        relationships: (0, _laconaPhrase.createElement)('thru', { 'function': spreadEmails }, relationships)
+      };
+    }
+  }]);
+
+  return RelationshipEmail;
+})(RelationshipPhrase);
+
+exports.RelationshipEmail = RelationshipEmail;
+
+RelationshipEmail['extends'] = [_laconaPhraseEmail2['default']];
+
+function spreadDates(ary) {
+  return (0, _contactSources.spread)(ary, 'dates', ['relationship']);
+}
+
+var RelationshipDate = (function (_Phrase2) {
+  _inherits(RelationshipDate, _Phrase2);
+
+  function RelationshipDate() {
+    _classCallCheck(this, RelationshipDate);
+
+    _get(Object.getPrototypeOf(RelationshipDate.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(RelationshipDate, [{
+    key: 'source',
+    value: function source() {
+      return {
+        contacts: (0, _laconaPhrase.createElement)('thru', { 'function': spreadDates }, relationships)
+      };
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      var items = _lodash2['default'].chain(this.sources.contacts.data).map(function (_ref2) {
+        var relationship = _ref2.relationship;
+        var value = _ref2.value;
+        var label = _ref2.label;
+
+        var relationships = _constantMaps.relationshipMap[relationship] || [relationship];
+        var dateNames = _constantMaps.dateMap[label] || [label];
+        return (0, _laconaPhrase.createElement)('choice', { limit: 1, value: value }, _lodash2['default'].map(dateNames, function (dateName) {
+          return [_lodash2['default'].map(relationships, function (oneRelationship) {
+            return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('argument', { text: 'relationship' }, (0, _laconaPhrase.createElement)('literal', { text: 'my ' + oneRelationship.toLowerCase() + '\'s ' })), (0, _laconaPhrase.createElement)('argument', { text: 'special date' }, (0, _laconaPhrase.createElement)('literal', { text: dateName })));
+          }), _lodash2['default'].map(relationships, function (oneRelationship) {
+            return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('argument', { text: 'relationship' }, (0, _laconaPhrase.createElement)('literal', { text: _lodash2['default'].capitalize(oneRelationship) + '\'s ' })), (0, _laconaPhrase.createElement)('argument', { text: 'special date' }, (0, _laconaPhrase.createElement)('literal', { text: dateName })));
+          })];
+        }));
+      }).value();
+
+      return (0, _laconaPhrase.createElement)('sequence', null, this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'on ', category: 'conjunction', optional: true, limited: true, prefered: true }) : null, (0, _laconaPhrase.createElement)('choice', { merge: true }, items));
+    }
+  }]);
+
+  return RelationshipDate;
+})(_laconaPhrase.Phrase);
+
+exports.RelationshipDate = RelationshipDate;
+
+RelationshipDate['extends'] = [_laconaPhraseDatetime.Day];
+
+},{"./constant-maps":26,"./contact-sources":27,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":41,"lacona-phrase-datetime":66,"lacona-phrase-email":77,"lacona-phrase-phonenumber":93,"lodash":44}],37:[function(require,module,exports){
+(function (process,global){
+/** @jsx createElement */
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _laconaPhraseSystemState = require('lacona-phrase-system-state');
+
+var DemoRunningApps = (function (_Source) {
+  _inherits(DemoRunningApps, _Source);
+
+  function DemoRunningApps() {
+    _classCallCheck(this, DemoRunningApps);
+
+    _get(Object.getPrototypeOf(DemoRunningApps.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(DemoRunningApps, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      this.replaceData(global.config.apps);
+    }
+  }]);
+
+  return DemoRunningApps;
+})(_laconaPhrase.Source);
+
+var RunningApps = (function (_Source2) {
+  _inherits(RunningApps, _Source2);
+
+  function RunningApps() {
+    _classCallCheck(this, RunningApps);
+
+    _get(Object.getPrototypeOf(RunningApps.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(RunningApps, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      this.replaceData([]);
+    }
+  }, {
+    key: 'onActivate',
+    value: function onActivate() {
+      var _this = this;
+
+      global.allRunningApps(function (err, apps) {
+        if (apps) _this.replaceData(apps);
+      });
+    }
+  }, {
+    key: 'onDeactivate',
+    value: function onDeactivate() {
+      this.replaceData([]);
+    }
+  }]);
+
+  return RunningApps;
+})(_laconaPhrase.Source);
+
+var RunningAppObject = (function () {
+  function RunningAppObject(item) {
+    _classCallCheck(this, RunningAppObject);
+
+    this.bundleId = item.id;
+    this.name = item.name;
+  }
+
+  _createClass(RunningAppObject, [{
+    key: 'activate',
+    value: function activate() {
+      global.launchApplication(this.bundleId, function () {});
+    }
+  }, {
+    key: 'hide',
+    value: function hide() {
+      global.hideApplication(this.bundleId, function () {});
+    }
+  }, {
+    key: 'close',
+    value: function close() {
+      var script = '\n      tell application "System Events"\n      \tset proc to first process whose background only is false and bundle identifier is "' + this.bundleId + '"\n      \trepeat with win in proc\'s windows\n      \t\tset butt to (win\'s first button whose subrole is "AXCloseButton")\n      \t\tclick butt\n      \tend repeat\n      end tell\n    ';
+      global.applescript(script);
+    }
+  }, {
+    key: 'quit',
+    value: function quit() {
+      global.quitApplication(this.bundleId, function () {});
+    }
+  }]);
+
+  return RunningAppObject;
+})();
+
+function toObject(obj) {
+  return new RunningAppObject(obj);
+}
+
+var RunningApp = (function (_Phrase) {
+  _inherits(RunningApp, _Phrase);
+
+  function RunningApp() {
+    _classCallCheck(this, RunningApp);
+
+    _get(Object.getPrototypeOf(RunningApp.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(RunningApp, [{
+    key: 'source',
+    value: function source() {
+      if (process.env.LACONA_ENV === 'demo') {
+        return { apps: (0, _laconaPhrase.createElement)(DemoRunningApps, null) };
+      } else {
+        return {
+          apps: (0, _laconaPhrase.createElement)('map', { 'function': toObject }, (0, _laconaPhrase.createElement)(RunningApps, null))
+        };
+      }
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      var apps = this.sources.apps.data.map(function (app) {
+        return { text: app.name, value: app };
+      });
+
+      return (0, _laconaPhrase.createElement)('argument', { text: 'application' }, (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: apps }));
+    }
+  }]);
+
+  return RunningApp;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = RunningApp;
+
+RunningApp['extends'] = [_laconaPhraseSystemState.RunningApplication];
+module.exports = exports['default'];
+
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"_process":384,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":41,"lacona-phrase-system-state":105}],38:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var SpotlightFetch = (function (_Source) {
+  _inherits(SpotlightFetch, _Source);
+
+  function SpotlightFetch() {
+    _classCallCheck(this, SpotlightFetch);
+
+    _get(Object.getPrototypeOf(SpotlightFetch.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(SpotlightFetch, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      this.replaceData([]);
+      this.currentQueryId = null;
+    }
+  }, {
+    key: 'onDeactivate',
+    value: function onDeactivate() {
+      this.replaceData([]);
+    }
+  }, {
+    key: 'onDestroy',
+    value: function onDestroy() {
+      global.cancelQuery(this.currentQueryId);
+    }
+  }, {
+    key: 'fetch',
+    value: function fetch(query) {
+      if (this.currentQueryId != null) {
+        global.cancelQuery(this.currentQueryId);
+      }
+      this.currentQueryId = global.spotlight(query, this.props.attributes, this.props.directories, this.props.limit, this.props.liveUpdate, this.replaceData.bind(this));
+    }
+  }]);
+
+  return SpotlightFetch;
+})(_laconaPhrase.Source);
+
+exports['default'] = SpotlightFetch;
+
+SpotlightFetch.defaultProps = {
+  liveUpdate: false,
+  attributes: [],
+  directories: [],
+  limit: 100
+};
+
+SpotlightFetch.preventSharing = true;
+module.exports = exports['default'];
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":41,"lodash":44}],39:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _laconaPhrase = require('lacona-phrase');
+
+var Spotlight = (function (_Source) {
+  _inherits(Spotlight, _Source);
+
+  function Spotlight() {
+    _classCallCheck(this, Spotlight);
+
+    _get(Object.getPrototypeOf(Spotlight.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Spotlight, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      var _this = this;
+
+      this.replaceData([]);
+
+      this.queryId = global.spotlight(this.props.query, this.props.attributes, this.props.directories, this.props.limit, this.props.liveUpdate, function (data) {
+        _this.replaceData(data);
+      });
+    }
+  }, {
+    key: 'onDestroy',
+    value: function onDestroy() {
+      global.cancelQuery(this.queryId);
+    }
+  }]);
+
+  return Spotlight;
+})(_laconaPhrase.Source);
+
+exports['default'] = Spotlight;
+
+Spotlight.defaultProps = {
+  liveUpdate: false,
+  attributes: [],
+  directories: [],
+  query: '',
+  limit: 100
+};
+module.exports = exports['default'];
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":41}],40:[function(require,module,exports){
+(function (process,global){
+/** @jsx createElement */
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _applescript = require('./applescript');
+
+var _applescript2 = _interopRequireDefault(_applescript);
+
+var _laconaPhraseSystemState = require('lacona-phrase-system-state');
+
+var Volumes = (function (_Source) {
+  _inherits(Volumes, _Source);
+
+  function Volumes() {
+    _classCallCheck(this, Volumes);
+
+    _get(Object.getPrototypeOf(Volumes.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Volumes, [{
+    key: 'onCreate',
+    value: function onCreate() {
+      if (process.env.LACONA_ENV === 'demo') {
+        this.replaceData(global.config.volumes);
+      } else {
+        this.replaceData([]);
+      }
+    }
+  }, {
+    key: 'onActivate',
+    value: function onActivate() {
+      var _this = this;
+
+      global.mountedVolumes(function (err, volumes) {
+        if (volumes) _this.replaceData(volumes);
+      });
+    }
+  }, {
+    key: 'onDeactivate',
+    value: function onDeactivate() {
+      this.replaceData([]);
+    }
+  }]);
+
+  return Volumes;
+})(_laconaPhrase.Source);
+
+var Volume = (function (_Phrase) {
+  _inherits(Volume, _Phrase);
+
+  function Volume() {
+    _classCallCheck(this, Volume);
+
+    _get(Object.getPrototypeOf(Volume.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Volume, [{
+    key: 'source',
+    value: function source() {
+      return { volumes: (0, _laconaPhrase.createElement)(Volumes, null) };
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      var volumes = _lodash2['default'].chain(this.sources.volumes.data).filter('ejectable').map(function (_ref) {
+        var name = _ref.name;
+        return { text: name, value: name };
+      }).value();
+
+      return (0, _laconaPhrase.createElement)('argument', { text: 'volume' }, (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: volumes }));
+    }
+  }]);
+
+  return Volume;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = Volume;
+
+Volume['extends'] = [_laconaPhraseSystemState.MountedVolume];
+module.exports = exports['default'];
+
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./applescript":23,"_process":384,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":41,"lacona-phrase-system-state":105,"lodash":44}],41:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":43,"dup":2,"inherits":42}],42:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],43:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],44:[function(require,module,exports){
+arguments[4][9][0].apply(exports,arguments)
+},{"dup":9}],45:[function(require,module,exports){
+(function (global){
+/** @jsx createElement */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+exports.execute = execute;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _laconaPhraseString = require('lacona-phrase-string');
+
+var _laconaPhraseString2 = _interopRequireDefault(_laconaPhraseString);
+
+var _laconaCommandConfig = require('lacona-command-config');
+
+var SearchEngines = (function (_Phrase) {
+  _inherits(SearchEngines, _Phrase);
+
+  function SearchEngines() {
+    _classCallCheck(this, SearchEngines);
+
+    _get(Object.getPrototypeOf(SearchEngines.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(SearchEngines, [{
+    key: 'source',
+    value: function source() {
+      return { config: (0, _laconaPhrase.createElement)(_laconaCommandConfig.Config, { key: 'webSearch' }) };
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      if (!this.sources.config.data) return null;
+
+      var choices = this.sources.config.data.searchEngines.map(function (engine) {
+        return (0, _laconaPhrase.createElement)('literal', { text: engine.name, value: engine });
+      });
+
+      return (0, _laconaPhrase.createElement)(
+        'repeat',
+        { unique: true, separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1 }) },
+        (0, _laconaPhrase.createElement)(
+          'argument',
+          { text: 'search engine' },
+          (0, _laconaPhrase.createElement)(
+            'choice',
+            null,
+            choices
+          )
+        )
+      );
+    }
+  }]);
+
+  return SearchEngines;
+})(_laconaPhrase.Phrase);
+
+var Query = (function (_Phrase2) {
+  _inherits(Query, _Phrase2);
+
+  function Query() {
+    _classCallCheck(this, Query);
+
+    _get(Object.getPrototypeOf(Query.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Query, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(_laconaPhraseString2['default'], { limit: 1, argument: 'query' });
+    }
+  }]);
+
+  return Query;
+})(_laconaPhrase.Phrase);
+
+function execute(result) {
+  var query = encodeURI(result.query);
+  _lodash2['default'].forEach(result.engines, function (_ref) {
+    var url = _ref.url;
+
+    global.openURL(url.replace('{0}', query));
+  });
+}
+
+var Sentence = (function (_Phrase3) {
+  _inherits(Sentence, _Phrase3);
+
+  function Sentence() {
+    _classCallCheck(this, Sentence);
+
+    _get(Object.getPrototypeOf(Sentence.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Sentence, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'choice',
+        { limit: 1 },
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('literal', { text: 'search ', category: 'action' }),
+          (0, _laconaPhrase.createElement)(SearchEngines, { id: 'engines' }),
+          (0, _laconaPhrase.createElement)('literal', { text: ' for ' }),
+          (0, _laconaPhrase.createElement)(Query, { id: 'query' })
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)('literal', { text: 'search ', category: 'action' }),
+          (0, _laconaPhrase.createElement)('literal', { text: 'for ', category: 'conjunction', optional: true }),
+          (0, _laconaPhrase.createElement)(Query, { id: 'query' }),
+          (0, _laconaPhrase.createElement)(
+            'choice',
+            { limit: 1, category: 'conjunction' },
+            (0, _laconaPhrase.createElement)('literal', { text: ' on ' }),
+            (0, _laconaPhrase.createElement)('literal', { text: ' with ' }),
+            (0, _laconaPhrase.createElement)('literal', { text: ' using ' })
+          ),
+          (0, _laconaPhrase.createElement)(SearchEngines, { id: 'engines' })
+        )
+      );
+    }
+  }]);
+
+  return Sentence;
+})(_laconaPhrase.Phrase);
+
+exports.Sentence = Sentence;
+exports['default'] = {
+  sentences: [{ Sentence: Sentence, execute: execute }]
+};
+
+// export default {
+//   config: config,
+//   sentences: [
+//     SearchInternet
+//   ],
+//   translations: [{
+//     langs: ['en', 'default'],
+//     information: {
+//       title: 'Search Internet',
+//       description: 'Search various search engines',
+//       examples: ['search Google for pictures of cats', 'search for Red Sox on Yahoo']
+//     }
+//   }]
+// }
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"lacona-command-config":5,"lacona-phrase":46,"lacona-phrase-string":101}],46:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":48,"dup":2,"inherits":47}],47:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],48:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],49:[function(require,module,exports){
+(function (global){
+/** @jsx createElement */
+
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+exports.execute = execute;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _laconaPhraseDatetime = require('lacona-phrase-datetime');
+
+var _laconaPhraseSystemState = require('lacona-phrase-system-state');
+
+function setWifiEnabled(enabled) {
+  global.system('/usr/sbin/networksetup', ['-setairportpower', 'en0', enabled ? 'on' : 'off']);
+}
+
+function checkWifiEnabled(callback) {
+  global.system('/usr/sbin/networksetup', ['-getairportpower', 'en0'], function (err, results) {
+    if (err) return callback(err);
+    callback(null, _lodash2['default'].includes(results, 'On'));
+  });
+}
+
+// function setDoNotDisturbEnabled (enabled) {
+//   const userHome = global.getUserHome()
+//   global.getSystemUUID((err, uuid) => {
+//     global.system('/usr/bin/defaults', ['write', `${userHome}/Library/Preferences/ByHost/com.apple.notificationcenterui.${uuid}.plist`, 'doNotDisturb', enabled ? '1' : '0'])
+//   })
+// }
+
+function toggleDoNotDisturbEnabled() {
+  var script = '\n    tell application "System Events" to tell process "SystemUIServer"\n      key down option\n      click menu bar item 1 of menu bar 2\n      key up option\n    end tell\n  ';
+
+  global.applescript(script);
+}
+
+function checkDoNotDisturbEnabled(callback) {
+  var userHome = global.getUserHome();
+  global.getSystemUUID(function (err, uuid) {
+    global.system('/usr/bin/defaults', ['read', userHome + '/Library/Preferences/ByHost/com.apple.notificationcenterui.' + uuid + '.plist', 'doNotDisturb'], function (err, results) {
+      if (err) return callback(err);
+      callback(null, _lodash2['default'].contains(results, '1'));
+    });
+  });
+}
+
+function checkVolumeMuted(callback) {
+  var script = 'output muted of (get volume settings)';
+  global.applescript(script, callback);
+}
+
+function setVolumeMuted(muted) {
+  var script = 'set volume ' + (muted ? 'with' : 'without') + ' output muted';
+  global.applescript(script);
+}
+
+function execute(result) {
+  var verb = result.verb;
+
+  if (result.direction === -1) {
+    if (result.verb === 'turn off') {
+      verb = 'turn on';
+    } else if (result.verb === 'turn on') {
+      verb = 'turn off';
+    }
+  }
+
+  if (verb === 'turn on') {
+    if (result.setting === 'wifi') {
+      setWifiEnabled(true);
+    } else if (result.setting === 'bluetooth') {
+      global.setBluetoothEnabled(true);
+    } else if (result.setting === 'Do Not Disturb') {
+      checkDoNotDisturbEnabled(function (err, enabled) {
+        if (!enabled) toggleDoNotDisturbEnabled();
+      });
+    } else if (result.setting === 'sound') {
+      setVolumeMuted(false);
+    }
+  } else if (verb === 'turn off') {
+    if (result.setting === 'wifi') {
+      setWifiEnabled(false);
+    } else if (result.setting === 'bluetooth') {
+      global.setBluetoothEnabled(false);
+    } else if (result.setting === 'Do Not Disturb') {
+      checkDoNotDisturbEnabled(function (err, enabled) {
+        if (enabled) toggleDoNotDisturbEnabled();
+      });
+    } else if (result.setting === 'sound') {
+      setVolumeMuted(true);
+    }
+  } else if (verb === 'toggle') {
+    if (result.setting === 'wifi') {
+      checkWifiEnabled(function (err, enabled) {
+        setWifiEnabled(!enabled);
+      });
+    } else if (result.setting === 'bluetooth') {
+      global.checkBluetoothEnabled(function (err, enabled) {
+        global.setBluetoothEnabled(!enabled);
+      });
+    } else if (result.setting === 'Do Not Disturb') {
+      toggleDoNotDisturbEnabled();
+    } else if (result.setting === 'sound') {
+      checkVolumeMuted(function (err, muted) {
+        setVolumeMuted(!muted);
+      });
+    }
+  } else if (verb === 'shutdown') {
+    global.applescript('tell application "System Events" to shutdown');
+  } else if (verb === 'restart') {
+    global.applescript('tell application "System Events" to restart');
+  } else if (verb === 'log out') {
+    global.applescript('tell application "System Events" to log out');
+  } else if (verb === 'sleep') {
+    global.applescript('tell application "System Events" to sleep');
+  } else if (verb === 'lock') {
+    global.system('/System/Library/CoreServices/Menu Extras/User.menu/Contents/Resources/CGSession', ['-suspend']);
+  } else if (verb === 'display-off') {
+    global.system('/usr/bin/pmset', ['displaysleepnow']);
+  } else if (verb === 'screensaver') {
+    global.applescript('tell application "System Events" to start current screen saver');
+  } else if (verb === 'empty-trash') {
+    global.applescript('tell application "Finder" to empty the trash');
+  } else if (verb === 'eject-all') {
+    global.applescript('tell application "Finder" to eject the disks');
+  } else if (verb === 'eject') {
+    global.applescript('\n      tell application "Finder"\n        repeat with vol in {"' + result.volumes.join('", "') + '"}\n          eject vol\n        end repeat\n      end tell\n    ');
+  }
+}
+
+var Sentence = (function (_Phrase) {
+  _inherits(Sentence, _Phrase);
+
+  function Sentence() {
+    _classCallCheck(this, Sentence);
+
+    _get(Object.getPrototypeOf(Sentence.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Sentence, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'choice',
+        null,
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          (0, _laconaPhrase.createElement)(
+            'choice',
+            { merge: true },
+            (0, _laconaPhrase.createElement)(
+              'sequence',
+              null,
+              (0, _laconaPhrase.createElement)('list', { items: [{ text: 'disable ', value: 'turn off' }, { text: 'enable ', value: 'turn on' }, { text: 'toggle ', value: 'toggle' }, { text: 'turn off ', value: 'turn off' }, { text: 'turn on ', value: 'turn on' }], limit: 3, category: 'action', id: 'verb' }),
+              (0, _laconaPhrase.createElement)(
+                'argument',
+                { text: 'setting', merge: true },
+                (0, _laconaPhrase.createElement)(
+                  'choice',
+                  null,
+                  (0, _laconaPhrase.createElement)('list', { items: ['wifi', 'airport'], value: { setting: 'wifi' }, limit: 1 }),
+                  (0, _laconaPhrase.createElement)('literal', { text: 'bluetooth', value: { setting: 'bluetooth' } }),
+                  (0, _laconaPhrase.createElement)('literal', { text: 'Do Not Disturb', value: { setting: 'Do Not Disturb' } }),
+                  (0, _laconaPhrase.createElement)('literal', { text: 'notifications', value: { setting: 'Do Not Disturb', direction: -1 } }),
+                  (0, _laconaPhrase.createElement)('list', { items: ['sound', 'audio', 'the sound'], value: { setting: 'sound' }, limit: 1 }),
+                  (0, _laconaPhrase.createElement)('list', { items: ['mute'], value: { setting: 'sound', direction: -1 }, limit: 1 })
+                )
+              )
+            ),
+            (0, _laconaPhrase.createElement)('list', { items: ['mute'], limit: 1, category: 'action', value: { setting: 'sound', verb: 'turn off' }, merge: true }),
+            (0, _laconaPhrase.createElement)('list', { items: ['unmute'], limit: 1, category: 'action', value: { setting: 'sound', verb: 'turn on' }, merge: true }),
+            (0, _laconaPhrase.createElement)('list', { items: ['do not disturb', 'do not disturb me'], limit: 1, category: 'action', value: { setting: 'Do Not Disturb', verb: 'turn on' }, merge: true })
+          ),
+          (0, _laconaPhrase.createElement)(
+            'sequence',
+            { optional: true, id: 'duration' },
+            (0, _laconaPhrase.createElement)('literal', { text: ' for ', category: 'conjunction' }),
+            (0, _laconaPhrase.createElement)(
+              'argument',
+              { text: 'amount of time', merge: true },
+              (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.TimeDuration, null)
+            )
+          )
+        ),
+        (0, _laconaPhrase.createElement)(
+          'choice',
+          null,
+          (0, _laconaPhrase.createElement)(
+            'sequence',
+            null,
+            (0, _laconaPhrase.createElement)('list', { items: [{ text: 'restart', value: 'restart' }, { text: 'shutdown', value: 'shutdown' }, { text: 'sleep', value: 'sleep' }, { text: 'lock', value: 'lock' }, { text: 'log out', value: 'log out' }, { text: 'logout', value: 'log out' }, { text: 'log off', value: 'log out' }, { text: 'logoff', value: 'log out' }], category: 'action', id: 'verb', limit: 5 }),
+            (0, _laconaPhrase.createElement)('list', { items: [' computer', ' the computer', ' system', ' the system'], limit: 1, optional: true, prefered: false, limited: true, category: 'action' })
+          ),
+          (0, _laconaPhrase.createElement)('literal', { text: 'empty Trash', category: 'action', value: 'empty-trash', id: 'verb' }),
+          (0, _laconaPhrase.createElement)(
+            'sequence',
+            { id: 'verb' },
+            (0, _laconaPhrase.createElement)('literal', { text: 'turn on ', category: 'action', value: 'screensaver', merge: true }),
+            (0, _laconaPhrase.createElement)('literal', { text: 'the ', optional: true, prefered: false, limited: true, category: 'action' }),
+            (0, _laconaPhrase.createElement)('list', { items: ['screensaver', 'screensaver'], limit: 1, category: 'action' })
+          ),
+          (0, _laconaPhrase.createElement)(
+            'sequence',
+            { id: 'verb' },
+            (0, _laconaPhrase.createElement)('literal', { text: 'turn off ', category: 'action' }),
+            (0, _laconaPhrase.createElement)('literal', { text: 'the ', optional: true, prefered: false, limited: true, category: 'action' }),
+            (0, _laconaPhrase.createElement)(
+              'choice',
+              { merge: true },
+              (0, _laconaPhrase.createElement)('list', { items: ['display', 'screen'], limit: 1, category: 'action', value: 'display-off' }),
+              (0, _laconaPhrase.createElement)('list', { items: ['computer', 'system'], limit: 1, category: 'action', value: 'shutdown' })
+            )
+          ),
+          (0, _laconaPhrase.createElement)(
+            'sequence',
+            null,
+            (0, _laconaPhrase.createElement)('list', { items: ['eject ', 'unmount ', 'dismount '], category: 'action', id: 'verb', value: 'eject' }),
+            (0, _laconaPhrase.createElement)(
+              'choice',
+              { merge: true },
+              (0, _laconaPhrase.createElement)('list', { items: ['all', 'everything', 'all devices'], limit: 1, category: 'action', id: 'verb', value: 'eject-all' }),
+              (0, _laconaPhrase.createElement)(
+                'repeat',
+                { id: 'volumes', separator: (0, _laconaPhrase.createElement)('list', { items: [', ', ', and ', ' and '], limit: 1 }) },
+                (0, _laconaPhrase.createElement)(_laconaPhraseSystemState.MountedVolume, null)
+              )
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return Sentence;
+})(_laconaPhrase.Phrase);
+
+exports.Sentence = Sentence;
+exports['default'] = {
+  sentences: [{ Sentence: Sentence, execute: execute }]
+};
+
+// export default {
+//   sentences: [OpenApp],
+//   translations: [{
+//     langs: ['en', 'default'],
+//     information: {
+//       title: 'Open Application',
+//       description: 'Quickly launch applications on your computer',
+//       examples: ['open Safari', 'open Contacts']
+//     }
+//   }]
+// }
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"lacona-phrase":50,"lacona-phrase-datetime":66,"lacona-phrase-system-state":105}],50:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":52,"dup":2,"inherits":51}],51:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],52:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],53:[function(require,module,exports){
+(function (global){
+/** @jsx createElement */
+
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+exports.execute = execute;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhraseUrl = require('lacona-phrase-url');
+
+var _laconaPhraseUrl2 = _interopRequireDefault(_laconaPhraseUrl);
+
+var _laconaPhraseString = require('lacona-phrase-string');
+
+var _laconaPhraseString2 = _interopRequireDefault(_laconaPhraseString);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var Language = (function (_Phrase) {
+  _inherits(Language, _Phrase);
+
+  function Language() {
+    _classCallCheck(this, Language);
+
+    _get(Object.getPrototypeOf(Language.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Language, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'argument',
+        { text: 'language' },
+        (0, _laconaPhrase.createElement)('list', { items: [{ text: 'Afrikaans', value: { name: 'Afrikaans', code: 'af' } }, { text: 'Albanian', value: { name: 'Albanian', code: 'sq' } }, { text: 'Arabic', value: { name: 'Arabic', code: 'ar' } }, { text: 'Armenian', value: { name: 'Armenian', code: 'hy' } }, { text: 'Azerbaijani', value: { name: 'Azerbaijani', code: 'az' } }, { text: 'Basque', value: { name: 'Basque', code: 'eu' } }, { text: 'Belarusian', value: { name: 'Belarusian', code: 'be' } }, { text: 'Bengali', value: { name: 'Bengali', code: 'bn' } }, { text: 'Bosnian', value: { name: 'Bosnian', code: 'bs' } }, { text: 'Bulgarian', value: { name: 'Bulgarian', code: 'bg' } }, { text: 'Burmese', value: { name: 'Burmese', code: 'my' } }, { text: 'Catalan', value: { name: 'Catalan', code: 'ca' } }, { text: 'Cebuano', value: { name: 'Cebuano', code: 'ceb' } }, { text: 'Chichewa', value: { name: 'Chichewa', code: 'ny' } }, { text: 'Chinese', value: { name: 'Chinese', code: 'zh-CN' } }, { text: 'Chinese (Simplified)', value: { name: 'Chinese (Simplified)', code: 'zh-CN' } }, { text: 'Chinese (Traditional)', value: { name: 'Chinese (Traditional)', code: 'zh-TW' } }, { text: 'Croatian', value: { name: 'Croatian', code: 'hr' } }, { text: 'Czech', value: { name: 'Czech', code: 'cs' } }, { text: 'Danish', value: { name: 'Danish', code: 'da' } }, { text: 'Dutch', value: { name: 'Dutch', code: 'nl' } }, { text: 'English', value: { name: 'English', code: 'en' } }, { text: 'Esperanto', value: { name: 'Esperanto', code: 'eo' } }, { text: 'Estonian', value: { name: 'Estonian', code: 'et' } }, { text: 'Filipino', value: { name: 'Filipino', code: 'tl' } }, { text: 'Finnish', value: { name: 'Finnish', code: 'fi' } }, { text: 'French', value: { name: 'French', code: 'fr' } }, { text: 'Galician', value: { name: 'Galician', code: 'gl' } }, { text: 'Georgian', value: { name: 'Georgian', code: 'ka' } }, { text: 'German', value: { name: 'German', code: 'de' } }, { text: 'Greek', value: { name: 'Greek', code: 'el' } }, { text: 'Gujarati', value: { name: 'Gujarati', code: 'gu' } }, { text: 'Haitian Creole', value: { name: 'Haitian Creole', code: 'ht' } }, { text: 'Hausa', value: { name: 'Hausa', code: 'ha' } }, { text: 'Hebrew', value: { name: 'Hebrew', code: 'iw' } }, { text: 'Hindi', value: { name: 'Hindi', code: 'hi' } }, { text: 'Hmong', value: { name: 'Hmong', code: 'hmn' } }, { text: 'Hungarian', value: { name: 'Hungarian', code: 'hu' } }, { text: 'Farsi', value: { name: 'Farsi', code: 'fa' } }, { text: 'Icelandic', value: { name: 'Icelandic', code: 'is' } }, { text: 'Igbo', value: { name: 'Igbo', code: 'ig' } }, { text: 'Indonesian', value: { name: 'Indonesian', code: 'id' } }, { text: 'Irish', value: { name: 'Irish', code: 'ga' } }, { text: 'Italian', value: { name: 'Italian', code: 'it' } }, { text: 'Japanese', value: { name: 'Japanese', code: 'ja' } }, { text: 'Javanese', value: { name: 'Javanese', code: 'jw' } }, { text: 'Kannada', value: { name: 'Kannada', code: 'kn' } }, { text: 'Kazakh', value: { name: 'Kazakh', code: 'kk' } }, { text: 'Khmer', value: { name: 'Khmer', code: 'km' } }, { text: 'Korean', value: { name: 'Korean', code: 'ko' } }, { text: 'Lao', value: { name: 'Lao', code: 'lo' } }, { text: 'Latin', value: { name: 'Latin', code: 'la' } }, { text: 'Latvian', value: { name: 'Latvian', code: 'lv' } }, { text: 'Lithuanian', value: { name: 'Lithuanian', code: 'lt' } }, { text: 'Macedonian', value: { name: 'Macedonian', code: 'mk' } }, { text: 'Malagasy', value: { name: 'Malagasy', code: 'mg' } }, { text: 'Malay', value: { name: 'Malay', code: 'ms' } }, { text: 'Malayalam', value: { name: 'Malayalam', code: 'ml' } }, { text: 'Maltese', value: { name: 'Maltese', code: 'mt' } }, { text: 'Maori', value: { name: 'Maori', code: 'mi' } }, { text: 'Marathi', value: { name: 'Marathi', code: 'mr' } }, { text: 'Mongolian', value: { name: 'Mongolian', code: 'mn' } }, { text: 'Myanmar', value: { name: 'Myanmar', code: 'my' } }, { text: 'Nepali', value: { name: 'Nepali', code: 'ne' } }, { text: 'Norwegian', value: { name: 'Norwegian', code: 'no' } }, { text: 'Persian', value: { name: 'Persian', code: 'fa' } }, { text: 'Polish', value: { name: 'Polish', code: 'pl' } }, { text: 'Portuguese', value: { name: 'Portuguese', code: 'pt' } }, { text: 'Punjabi', value: { name: 'Punjabi', code: 'pa' } }, { text: 'Romanian', value: { name: 'Romanian', code: 'ro' } }, { text: 'Russian', value: { name: 'Russian', code: 'ru' } }, { text: 'Serbian', value: { name: 'Serbian', code: 'sr' } }, { text: 'Sesotho', value: { name: 'Sesotho', code: 'st' } }, { text: 'Sinhala', value: { name: 'Sinhala', code: 'si' } }, { text: 'Slovak', value: { name: 'Slovak', code: 'sk' } }, { text: 'Slovenian', value: { name: 'Slovenian', code: 'sl' } }, { text: 'Somali', value: { name: 'Somali', code: 'so' } }, { text: 'Spanish', value: { name: 'Spanish', code: 'es' } }, { text: 'Sundanese', value: { name: 'Sundanese', code: 'su' } }, { text: 'Swahili', value: { name: 'Swahili', code: 'sw' } }, { text: 'Swedish', value: { name: 'Swedish', code: 'sv' } }, { text: 'Tajik', value: { name: 'Tajik', code: 'tg' } }, { text: 'Tamil', value: { name: 'Tamil', code: 'ta' } }, { text: 'Telugu', value: { name: 'Telugu', code: 'te' } }, { text: 'Thai', value: { name: 'Thai', code: 'th' } }, { text: 'Turkish', value: { name: 'Turkish', code: 'tr' } }, { text: 'Ukrainian', value: { name: 'Ukrainian', code: 'uk' } }, { text: 'Urdu', value: { name: 'Urdu', code: 'ur' } }, { text: 'Uzbek', value: { name: 'Uzbek', code: 'uz' } }, { text: 'Vietnamese', value: { name: 'Vietnamese', code: 'vi' } }, { text: 'Welsh', value: { name: 'Welsh', code: 'cy' } }, { text: 'Yiddish', value: { name: 'Yiddish', code: 'yi' } }, { text: 'Yoruba', value: { name: 'Yoruba', code: 'yo' } }, { text: 'Zulu', value: { name: 'Zulu', code: 'zu' } }] })
+      );
+    }
+  }]);
+
+  return Language;
+})(_laconaPhrase.Phrase);
+
+function execute(result) {
+  var toList = result.to || [{ name: 'English', code: 'en' }];
+  var from = result.from && result.from.code || 'auto';
+
+  _lodash2['default'].forEach(toList, function (to) {
+    var body = encodeURI(result.phrase || result.url);
+    var url = 'https://translate.google.com/#' + from + '/' + to.code + '/' + body;
+    global.openURL(url);
+  });
+}
+
+var Sentence = (function (_Phrase2) {
+  _inherits(Sentence, _Phrase2);
+
+  function Sentence() {
+    _classCallCheck(this, Sentence);
+
+    _get(Object.getPrototypeOf(Sentence.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Sentence, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)('literal', { text: 'translate ', category: 'action' }),
+        (0, _laconaPhrase.createElement)(
+          'choice',
+          { merge: true },
+          (0, _laconaPhrase.createElement)(_laconaPhraseUrl2['default'], { id: 'url' }),
+          (0, _laconaPhrase.createElement)(_laconaPhraseString2['default'], { argument: 'phrase', id: 'phrase', limit: 1, splitOn: ' ' })
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          { optional: true, merge: true },
+          (0, _laconaPhrase.createElement)('literal', { text: ' from ', category: 'conjunction' }),
+          (0, _laconaPhrase.createElement)(Language, { id: 'from' })
+        ),
+        (0, _laconaPhrase.createElement)(
+          'sequence',
+          { optional: true, merge: true },
+          (0, _laconaPhrase.createElement)('literal', { text: ' to ' }),
+          (0, _laconaPhrase.createElement)(
+            'repeat',
+            { separator: (0, _laconaPhrase.createElement)('list', { items: [', ', ' and ', ', and '], category: 'conjunction', limit: 1 }), id: 'to', unique: true },
+            (0, _laconaPhrase.createElement)(Language, null)
+          )
+        )
+      );
+    }
+  }]);
+
+  return Sentence;
+})(_laconaPhrase.Phrase);
+
+exports.Sentence = Sentence;
+exports['default'] = {
+  sentences: [{ Sentence: Sentence, execute: execute }]
+};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"lacona-phrase":54,"lacona-phrase-string":101,"lacona-phrase-url":109}],54:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":56,"dup":2,"inherits":55}],55:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],56:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],57:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _laconaPhrase = require('lacona-phrase');
+
+var Application = (function (_Phrase) {
+  _inherits(Application, _Phrase);
+
+  function Application() {
+    _classCallCheck(this, Application);
+
+    _get(Object.getPrototypeOf(Application.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Application, [{
+    key: 'describe',
+    value: function describe() {
+      return null;
+    }
+  }]);
+
+  return Application;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = Application;
+module.exports = exports['default'];
+},{"lacona-phrase":58}],58:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":60,"dup":2,"inherits":59}],59:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],60:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],61:[function(require,module,exports){
+/** @jsx createElement */
+
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _internalDuration = require('./internal/duration');
+
+function isUnique(array) {
+  return _lodash2['default'].uniq(array).length === array.length;
+}
+
+var DateDuration = (function (_Phrase) {
+  _inherits(DateDuration, _Phrase);
+
+  function DateDuration() {
+    _classCallCheck(this, DateDuration);
+
+    _get(Object.getPrototypeOf(DateDuration.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(DateDuration, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      var output = {};
+      _lodash2['default'].forEach(result, function (_ref) {
+        var num = _ref.num;
+        var type = _ref.type;
+
+        output[type] = (output[type] || 0) + num;
+      });
+      return output;
+    }
+  }, {
+    key: 'filter',
+    value: function filter(results) {
+      return isUnique(_lodash2['default'].map(results, 'id'));
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('repeat', { separator: (0, _laconaPhrase.createElement)('list', { items: [', and ', ' and ', ', '], limit: 1, category: 'conjunction' }) }, (0, _laconaPhrase.createElement)(_internalDuration.InternalDuration, { type: 'date' }));
+    }
+  }]);
+
+  return DateDuration;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = DateDuration;
+module.exports = exports['default'];
+
+},{"./internal/duration":67,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":72,"lodash":75}],62:[function(require,module,exports){
+/** @jsx createElement */
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    _Object$defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });
+  } else {
+    obj[key] = value;
+  }return obj;
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _dateDuration = require('./date-duration');
+
+var _dateDuration2 = _interopRequireDefault(_dateDuration);
+
+var _laconaPhraseNumber = require('lacona-phrase-number');
+
+var _time = require('./time');
+
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _month = require('./month');
+
+var _month2 = _interopRequireDefault(_month);
+
+var _weekday = require('./weekday');
+
+var _weekday2 = _interopRequireDefault(_weekday);
+
+var _helpers = require('./helpers');
+
+var Day = (function (_Phrase) {
+  _inherits(Day, _Phrase);
+
+  function Day() {
+    _classCallCheck(this, Day);
+
+    _get(Object.getPrototypeOf(Day.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Day, [{
+    key: 'describe',
+    value: function describe() {
+      if (this.props.nullify) return;
+
+      return (0, _laconaPhrase.createElement)('choice', null, this.props.recurse ? (0, _laconaPhrase.createElement)('argument', { text: 'day', showForEmpty: true }, (0, _laconaPhrase.createElement)(RecursiveDay, null)) : null, (0, _laconaPhrase.createElement)('sequence', null, this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'on ', optional: true, prefered: true, limited: true, category: 'conjunction' }) : null, (0, _laconaPhrase.createElement)('argument', { text: 'day', showForEmpty: true, merge: true }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)(AmbiguousAbsoluteDay, null), (0, _laconaPhrase.createElement)(AmbiguousAbsoluteNamedMonth, null)))));
+    }
+  }]);
+
+  return Day;
+})(_laconaPhrase.Phrase);
+
+exports.Day = Day;
+
+Day.defaultProps = {
+  recurse: true
+};
+
+var Date = (function (_Phrase2) {
+  _inherits(Date, _Phrase2);
+
+  function Date() {
+    _classCallCheck(this, Date);
+
+    _get(Object.getPrototypeOf(Date.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Date, [{
+    key: 'describe',
+    value: function describe() {
+      if (this.props.nullify) return;
+
+      return (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('argument', { text: 'date', showForEmpty: true }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)(RelativeNamed, null), (0, _laconaPhrase.createElement)(RelativeNumbered, { prepositions: this.props.prepositions }), (0, _laconaPhrase.createElement)(DayWithYear, { prepositions: this.props.prepositions }), (0, _laconaPhrase.createElement)(RelativeAdjacent, null), this.props.recurse ? (0, _laconaPhrase.createElement)(RecursiveDate, null) : null)), (0, _laconaPhrase.createElement)('sequence', null, this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'on ', optional: true, prefered: true, limited: true, category: 'conjunction' }) : null, (0, _laconaPhrase.createElement)('argument', { text: 'date', showForEmpty: true, merge: true }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)(RelativeWeekday, null), (0, _laconaPhrase.createElement)(AbsoluteDay, null)))));
+    }
+  }]);
+
+  return Date;
+})(_laconaPhrase.Phrase);
+
+exports.Date = Date;
+
+Date.defaultProps = {
+  recurse: true,
+  prepositions: false,
+  nullify: false
+};
+
+var DateWithTimeOfDay = (function (_Phrase3) {
+  _inherits(DateWithTimeOfDay, _Phrase3);
+
+  function DateWithTimeOfDay() {
+    _classCallCheck(this, DateWithTimeOfDay);
+
+    _get(Object.getPrototypeOf(DateWithTimeOfDay.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(DateWithTimeOfDay, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('sequence', null, this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'on ', optional: true, prefered: true, limited: true }) : null, (0, _laconaPhrase.createElement)('placeholder', { text: 'date', merge: true, showForEmpty: true }, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('literal', { text: 'the ' }), (0, _laconaPhrase.createElement)(_time.TimeOfDay, { id: 'impliedTime' }), (0, _laconaPhrase.createElement)('literal', { text: ' of ' }), (0, _laconaPhrase.createElement)('choice', { id: 'date' }, (0, _laconaPhrase.createElement)(Date, { nullify: true }), (0, _laconaPhrase.createElement)(RelativeWeekday, null), (0, _laconaPhrase.createElement)(RelativeAdjacent, null), (0, _laconaPhrase.createElement)(RelativeNumbered, null), (0, _laconaPhrase.createElement)(AbsoluteDay, null), (0, _laconaPhrase.createElement)(DayWithYear, null), this.props.recurse ? (0, _laconaPhrase.createElement)(RecursiveDate, null) : null)))), (0, _laconaPhrase.createElement)('placeholder', { text: 'date', showForEmpty: true }, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('choice', { id: 'date' }, (0, _laconaPhrase.createElement)(Date, { nullify: true, prepositions: this.props.prepositions }), (0, _laconaPhrase.createElement)(TimeOfDayModifier, null), (0, _laconaPhrase.createElement)(RelativeWeekday, { prepositions: this.props.prepositions })), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)(_time.TimeOfDay, { id: 'impliedTime' }))), (0, _laconaPhrase.createElement)('placeholder', { text: 'date', showForEmpty: true }, (0, _laconaPhrase.createElement)(DayWithYearAndTimeOfDay, null)), (0, _laconaPhrase.createElement)('placeholder', { text: 'date', showForEmpty: true }, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('choice', { id: 'date' }, (0, _laconaPhrase.createElement)(Date, { nullify: true, prepositions: this.props.prepositions }), (0, _laconaPhrase.createElement)(DayWithYear, { prepositions: this.props.prepositions }), (0, _laconaPhrase.createElement)(RelativeNumbered, { prepositions: this.props.prepositions }), this.props.recurse ? (0, _laconaPhrase.createElement)(RecursiveDate, { prepositions: this.props.prepositions }) : null), (0, _laconaPhrase.createElement)('literal', { text: ' in the ' }), (0, _laconaPhrase.createElement)(_time.TimeOfDay, { id: 'impliedTime' }))));
+    }
+  }]);
+
+  return DateWithTimeOfDay;
+})(_laconaPhrase.Phrase);
+
+exports.DateWithTimeOfDay = DateWithTimeOfDay;
+
+DateWithTimeOfDay.defaultProps = {
+  recurse: true,
+  prepositions: false
+};
+
+var DayWithYear = (function (_Phrase4) {
+  _inherits(DayWithYear, _Phrase4);
+
+  function DayWithYear() {
+    _classCallCheck(this, DayWithYear);
+
+    _get(Object.getPrototypeOf(DayWithYear.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(DayWithYear, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) return;
+      return (0, _helpers.absoluteDate)(result);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(Day, { prepositions: this.props.prepositions, merge: true, recurse: false }), (0, _laconaPhrase.createElement)('sequence', { optional: true, merge: true }, (0, _laconaPhrase.createElement)('list', { items: [', ', ' in ', ' '], category: 'conjunction', limit: 1 }), (0, _laconaPhrase.createElement)(Year, { id: 'year' })));
+    }
+  }]);
+
+  return DayWithYear;
+})(_laconaPhrase.Phrase);
+
+var DayWithYearAndTimeOfDay = (function (_Phrase5) {
+  _inherits(DayWithYearAndTimeOfDay, _Phrase5);
+
+  function DayWithYearAndTimeOfDay() {
+    _classCallCheck(this, DayWithYearAndTimeOfDay);
+
+    _get(Object.getPrototypeOf(DayWithYearAndTimeOfDay.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(DayWithYearAndTimeOfDay, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      var absolute = _lodash2['default'].assign({ year: result.year }, result.day);
+      return { date: (0, _helpers.absoluteDate)(absolute), impliedTime: result.impliedTime };
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(Day, { id: 'day', prepositions: this.props.prepositions }), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)(_time.TimeOfDay, { id: 'impliedTime' }), (0, _laconaPhrase.createElement)('sequence', { optional: true, merge: true }, (0, _laconaPhrase.createElement)('list', { items: [', ', ' in ', ' '], category: 'conjunction', limit: 1 }), (0, _laconaPhrase.createElement)(Year, { id: 'year' })));
+    }
+  }]);
+
+  return DayWithYearAndTimeOfDay;
+})(_laconaPhrase.Phrase);
+
+DayWithYearAndTimeOfDay.defaultProps = {
+  prepositions: false
+};
+
+var ExtraDateDuration = (function (_Phrase6) {
+  _inherits(ExtraDateDuration, _Phrase6);
+
+  function ExtraDateDuration() {
+    _classCallCheck(this, ExtraDateDuration);
+
+    _get(Object.getPrototypeOf(ExtraDateDuration.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(ExtraDateDuration, [{
+    key: 'getValue',
+    value: function getValue(_ref2) {
+      var type = _ref2.type;
+      var _ref2$multiplier = _ref2.multiplier;
+      var multiplier = _ref2$multiplier === undefined ? 1 : _ref2$multiplier;
+
+      return _defineProperty({}, type, multiplier);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('placeholder', { text: 'number' }, (0, _laconaPhrase.createElement)('literal', { text: 'the ' })), (0, _laconaPhrase.createElement)('placeholder', { text: 'time period', merge: true }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('literal', { text: 'day', value: { type: 'days' } }), ',', (0, _laconaPhrase.createElement)('literal', { text: 'fortnight', value: { type: 'days', multiplier: 14 } }), ',', (0, _laconaPhrase.createElement)('literal', { text: 'week', value: { type: 'days', multiplier: 7 } }), ',', (0, _laconaPhrase.createElement)('literal', { text: 'month', value: { type: 'months' } }), ',', (0, _laconaPhrase.createElement)('literal', { text: 'year', value: { type: 'years' } }))));
+    }
+  }]);
+
+  return ExtraDateDuration;
+})(_laconaPhrase.Phrase);
+
+var RecursiveDay = (function (_Phrase7) {
+  _inherits(RecursiveDay, _Phrase7);
+
+  function RecursiveDay() {
+    _classCallCheck(this, RecursiveDay);
+
+    _get(Object.getPrototypeOf(RecursiveDay.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(RecursiveDay, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result || !result.day) return;
+
+      var duration = result.direction === -1 ? (0, _helpers.negateDuration)(result.duration) : result.duration;
+
+      return (0, _helpers.relativeDay)(duration, result.day);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('argument', { text: 'offset', showForEmpty: true, merge: true }, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('choice', { id: 'duration' }, (0, _laconaPhrase.createElement)(ExtraDateDuration, null), (0, _laconaPhrase.createElement)(_dateDuration2['default'], null)), (0, _laconaPhrase.createElement)('list', { merge: true, id: 'direction', items: [{ text: ' before ', value: -1 }, { text: ' after ', value: 1 }, { text: ' from ', value: 1 }], limit: 2 }))), (0, _laconaPhrase.createElement)('placeholder', { text: 'day', id: 'day' }, (0, _laconaPhrase.createElement)(Day, { recurse: false, prepositions: false })));
+    }
+  }]);
+
+  return RecursiveDay;
+})(_laconaPhrase.Phrase);
+
+var RecursiveDate = (function (_Phrase8) {
+  _inherits(RecursiveDate, _Phrase8);
+
+  function RecursiveDate() {
+    _classCallCheck(this, RecursiveDate);
+
+    _get(Object.getPrototypeOf(RecursiveDate.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(RecursiveDate, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) return;
+
+      var duration = result.direction === -1 ? (0, _helpers.negateDuration)(result.duration) : result.duration;
+
+      return (0, _helpers.relativeDate)(duration, result.date);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('argument', { text: 'offset', showForEmpty: true, merge: true }, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('choice', { id: 'duration' }, (0, _laconaPhrase.createElement)(ExtraDateDuration, null), (0, _laconaPhrase.createElement)(_dateDuration2['default'], null)), (0, _laconaPhrase.createElement)('list', { merge: true, id: 'direction', items: [{ text: ' before ', value: -1 }, { text: ' after ', value: 1 }, { text: ' from ', value: 1 }], limit: 2 }))), (0, _laconaPhrase.createElement)(Date, { id: 'date', recurse: false, prepositions: false }));
+    }
+  }]);
+
+  return RecursiveDate;
+})(_laconaPhrase.Phrase);
+
+var RelativeNamed = (function (_Phrase9) {
+  _inherits(RelativeNamed, _Phrase9);
+
+  function RelativeNamed() {
+    _classCallCheck(this, RelativeNamed);
+
+    _get(Object.getPrototypeOf(RelativeNamed.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(RelativeNamed, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      return (0, _helpers.relativeDate)(result);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('list', { items: [{ text: 'today', value: { days: 0 } }, { text: 'tomorrow', value: { days: 1 } }, { text: 'yesterday', value: { days: -1 } }, { text: 'now', value: { days: 0 } }, { text: 'right now', value: { days: 0 } }], limit: 3 });
+    }
+  }]);
+
+  return RelativeNamed;
+})(_laconaPhrase.Phrase);
+
+var TimeOfDayModifier = (function (_Phrase10) {
+  _inherits(TimeOfDayModifier, _Phrase10);
+
+  function TimeOfDayModifier() {
+    _classCallCheck(this, TimeOfDayModifier);
+
+    _get(Object.getPrototypeOf(TimeOfDayModifier.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(TimeOfDayModifier, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      return (0, _helpers.relativeDate)(result);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('list', { items: [{ text: 'this', value: { days: 0 } }, { text: 'tomorrow', value: { days: 1 } }, { text: 'yesterday', value: { days: -1 } }] });
+    }
+  }]);
+
+  return TimeOfDayModifier;
+})(_laconaPhrase.Phrase);
+
+var RelativeNumbered = (function (_Phrase11) {
+  _inherits(RelativeNumbered, _Phrase11);
+
+  function RelativeNumbered() {
+    _classCallCheck(this, RelativeNumbered);
+
+    _get(Object.getPrototypeOf(RelativeNumbered.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(RelativeNumbered, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) return;
+
+      var duration = result.direction === -1 ? (0, _helpers.negateDuration)(result.duration) : result.duration;
+
+      return (0, _helpers.relativeDate)(duration);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('choice', null, this.props.prepositions ? (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('literal', { text: 'in ', id: 'direction', value: 1 }), (0, _laconaPhrase.createElement)(_dateDuration2['default'], { id: 'duration' })) : null, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_dateDuration2['default'], { id: 'duration' }), (0, _laconaPhrase.createElement)('literal', { text: ' ago', id: 'direction', value: -1 })));
+    }
+  }]);
+
+  return RelativeNumbered;
+})(_laconaPhrase.Phrase);
+
+var RelativeAdjacent = (function (_Phrase12) {
+  _inherits(RelativeAdjacent, _Phrase12);
+
+  function RelativeAdjacent() {
+    _classCallCheck(this, RelativeAdjacent);
+
+    _get(Object.getPrototypeOf(RelativeAdjacent.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(RelativeAdjacent, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) return;
+
+      var duration = _defineProperty({}, result.type, result.num * (result.multiplier || 1));
+
+      return (0, _helpers.relativeDate)(duration);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('choice', { id: 'num' }, (0, _laconaPhrase.createElement)('literal', { text: 'next ', value: 1 }), (0, _laconaPhrase.createElement)('literal', { text: 'last ', value: -1 })), (0, _laconaPhrase.createElement)('placeholder', { text: 'week, month, year', merge: true }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('literal', { text: 'week', value: { type: 'days', multiplier: 7 } }), (0, _laconaPhrase.createElement)('literal', { text: 'month', value: { type: 'months' } }), (0, _laconaPhrase.createElement)('literal', { text: 'year', value: { type: 'years' } }))));
+    }
+  }]);
+
+  return RelativeAdjacent;
+})(_laconaPhrase.Phrase);
+
+var RelativeWeekday = (function (_Phrase13) {
+  _inherits(RelativeWeekday, _Phrase13);
+
+  function RelativeWeekday() {
+    _classCallCheck(this, RelativeWeekday);
+
+    _get(Object.getPrototypeOf(RelativeWeekday.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(RelativeWeekday, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      var day = (result.distance || 0) * 7 + result.weekday;
+
+      return (0, _moment2['default'])().day(day).toDate();
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('choice', { id: 'distance' }, (0, _laconaPhrase.createElement)('literal', { text: '', value: null }), (0, _laconaPhrase.createElement)('literal', { text: 'last ', value: -1 }), (0, _laconaPhrase.createElement)('literal', { text: 'this ', value: 0 }), (0, _laconaPhrase.createElement)('list', { items: ['next ', 'this upcoming '], limit: 1, value: 1 })), (0, _laconaPhrase.createElement)('placeholder', { text: 'weekday', id: 'weekday' }, (0, _laconaPhrase.createElement)(_weekday2['default'], null))), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('literal', { text: 'the ' }), (0, _laconaPhrase.createElement)('placeholder', { text: 'weekday', id: 'weekday' }, (0, _laconaPhrase.createElement)(_weekday2['default'], null)), (0, _laconaPhrase.createElement)('choice', { id: 'distance' }, (0, _laconaPhrase.createElement)('literal', { text: ' after next', value: 2 }), (0, _laconaPhrase.createElement)('literal', { text: ' after this', value: 1 }), (0, _laconaPhrase.createElement)('literal', { text: ' before this', value: -1 }), (0, _laconaPhrase.createElement)('literal', { text: ' before last', value: -2 }))));
+    }
+  }]);
+
+  return RelativeWeekday;
+})(_laconaPhrase.Phrase);
+
+function leapYear(year) {
+  return year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
+}
+
+var MonthNumber = (function (_Phrase14) {
+  _inherits(MonthNumber, _Phrase14);
+
+  function MonthNumber() {
+    _classCallCheck(this, MonthNumber);
+
+    _get(Object.getPrototypeOf(MonthNumber.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(MonthNumber, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      return parseInt(result, 10) - 1;
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { maxLength: 2, max: 12, min: 1, descriptor: 'mm' });
+    }
+  }]);
+
+  return MonthNumber;
+})(_laconaPhrase.Phrase);
+
+var DayNumber = (function (_Phrase15) {
+  _inherits(DayNumber, _Phrase15);
+
+  function DayNumber() {
+    _classCallCheck(this, DayNumber);
+
+    _get(Object.getPrototypeOf(DayNumber.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(DayNumber, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      return parseInt(result, 10);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { maxLength: 2, max: 31, min: 1, descriptor: 'dd' });
+    }
+  }]);
+
+  return DayNumber;
+})(_laconaPhrase.Phrase);
+
+var AbsoluteDay = (function (_Phrase16) {
+  _inherits(AbsoluteDay, _Phrase16);
+
+  function AbsoluteDay() {
+    _classCallCheck(this, AbsoluteDay);
+
+    _get(Object.getPrototypeOf(AbsoluteDay.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(AbsoluteDay, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      return (0, _helpers.absoluteDate)(result);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('filter', { 'function': _helpers.validateDay }, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(AmbiguousAbsoluteDay, { merge: true }), (0, _laconaPhrase.createElement)('list', { items: ['/'], limit: 1 }), (0, _laconaPhrase.createElement)(Year, { id: 'year' })));
+    }
+  }]);
+
+  return AbsoluteDay;
+})(_laconaPhrase.Phrase);
+
+var AmbiguousAbsoluteDay = (function (_Phrase17) {
+  _inherits(AmbiguousAbsoluteDay, _Phrase17);
+
+  function AmbiguousAbsoluteDay() {
+    _classCallCheck(this, AmbiguousAbsoluteDay);
+
+    _get(Object.getPrototypeOf(AmbiguousAbsoluteDay.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(AmbiguousAbsoluteDay, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('filter', { 'function': _helpers.validateDay }, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(MonthNumber, { id: 'month' }), (0, _laconaPhrase.createElement)('list', { items: ['/'], limit: 1 }), (0, _laconaPhrase.createElement)(DayNumber, { id: 'day' })));
+    }
+  }]);
+
+  return AmbiguousAbsoluteDay;
+})(_laconaPhrase.Phrase);
+
+var Year = (function (_Phrase18) {
+  _inherits(Year, _Phrase18);
+
+  function Year() {
+    _classCallCheck(this, Year);
+
+    _get(Object.getPrototypeOf(Year.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Year, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) return;
+
+      if (result.year20 != null) {
+        return 2000 + parseInt(result.year20, 10);
+      } else if (result.year19 != null) {
+        return 1900 + parseInt(result.year19, 10);
+      } else {
+        return parseInt(result.year, 10);
+      }
+    }
+  }, {
+    key: 'displayWhen',
+    value: function displayWhen(input) {
+      return (/^(|\d|\d{3})$/.test(input)
+      );
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('argument', { displayWhen: this.displayWhen, text: 'year' }, (0, _laconaPhrase.createElement)('choice', { limit: 1 }, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('decorator', { text: '20' }), (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { minLength: 2, maxLength: 2, min: 0, max: 29, id: 'year20' })), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('decorator', { text: '19' }), (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { minLength: 2, maxLength: 2, min: 30, max: 99, id: 'year19' })), (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { minLength: 4, maxLength: 4, id: 'year' })));
+    }
+  }]);
+
+  return Year;
+})(_laconaPhrase.Phrase);
+
+var AmbiguousAbsoluteNamedMonth = (function (_Phrase19) {
+  _inherits(AmbiguousAbsoluteNamedMonth, _Phrase19);
+
+  function AmbiguousAbsoluteNamedMonth() {
+    _classCallCheck(this, AmbiguousAbsoluteNamedMonth);
+
+    _get(Object.getPrototypeOf(AmbiguousAbsoluteNamedMonth.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(AmbiguousAbsoluteNamedMonth, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('filter', { 'function': _helpers.validateDay }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_month2['default'], { id: 'month' }), (0, _laconaPhrase.createElement)('list', { items: [' ', ' the '], limit: 1 }), (0, _laconaPhrase.createElement)('choice', { id: 'day', limit: 1 }, (0, _laconaPhrase.createElement)(_laconaPhraseNumber.Integer, { max: 31, min: 1 }), (0, _laconaPhrase.createElement)(_laconaPhraseNumber.Ordinal, { max: 31 }))), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('literal', { text: 'the ' }), (0, _laconaPhrase.createElement)('choice', { id: 'day', limit: 1 }, (0, _laconaPhrase.createElement)(_laconaPhraseNumber.Integer, { max: 31, min: 1 }), (0, _laconaPhrase.createElement)(_laconaPhraseNumber.Ordinal, { max: 31 })), (0, _laconaPhrase.createElement)('list', { items: [' of ', ' '], limit: 1 }), (0, _laconaPhrase.createElement)(_month2['default'], { id: 'month' }))));
+    }
+  }]);
+
+  return AmbiguousAbsoluteNamedMonth;
+})(_laconaPhrase.Phrase);
+
+},{"./date-duration":61,"./helpers":65,"./month":68,"./time":70,"./weekday":71,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":72,"lacona-phrase-number":86,"lodash":75,"moment":76}],63:[function(require,module,exports){
+/** @jsx createElement */
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Array$from = require('babel-runtime/core-js/array/from')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _toConsumableArray(arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];return arr2;
+  } else {
+    return _Array$from(arr);
+  }
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _time = require('./time');
+
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _helpers = require('./helpers');
+
+var _date = require('./date');
+
+var DateTime = (function (_Phrase) {
+  _inherits(DateTime, _Phrase);
+
+  function DateTime() {
+    _classCallCheck(this, DateTime);
+
+    _get(Object.getPrototypeOf(DateTime.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(DateTime, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) return;
+
+      if (result.date) {
+        if (result.time) {
+          return (0, _helpers.join)(result.date, result.time);
+        } else if (result.impliedTime) {
+          if (result.ambiguousTime) {
+            var time = (0, _helpers.coerceAmbiguousTime)(result.ambiguousTime, result.impliedTime.range);
+            return (0, _helpers.join)(result.date, time);
+          } else {
+            return (0, _helpers.join)(result.date, { hour: result.impliedTime['default'] });
+          }
+        } else {
+          return (0, _helpers.join)(result.date, this.props.defaultTime);
+        }
+      } else if (result.time) {
+        return (0, _helpers.join)((0, _moment2['default'])().toDate(), result.time);
+      }
+    }
+  }, {
+    key: 'filter',
+    value: function filter(result) {
+      if (result && result.time && result.impliedTime) {
+        return _lodash2['default'].inRange.apply(_lodash2['default'], [result.time.hour].concat(_toConsumableArray(result.impliedTime.range)));
+      }
+      return true;
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('filter', { 'function': this.filter.bind(this) }, (0, _laconaPhrase.createElement)('placeholder', { text: 'date and time', showForEmpty: true }, (0, _laconaPhrase.createElement)('choice', null, this.props.impliedDate ? (0, _laconaPhrase.createElement)(_time.Time, { id: 'time', prepositions: this.props.prepositions }) : null, this.props.impliedTime ? (0, _laconaPhrase.createElement)('choice', { limit: 1 }, (0, _laconaPhrase.createElement)(_date.Date, { id: 'date', prepositions: this.props.prepositions }), (0, _laconaPhrase.createElement)(_date.DateWithTimeOfDay, { merge: true, prepositions: this.props.prepositions })) : null, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_time.Time, { id: 'time', seconds: this.props.seconds, relative: false, recurse: false, prepositions: this.props.prepositions }), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)(_date.Date, { id: 'date', recurse: false, prepositions: true })), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_date.Date, { id: 'date', recurse: false, prepositions: this.props.prepositions }), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)(_time.Time, { id: 'time', seconds: this.props.seconds, relative: false, recurse: false, prepositions: true })), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('choice', { merge: true }, (0, _laconaPhrase.createElement)(_time.AmbiguousTime, { id: 'ambiguousTime', prepositions: this.props.prepositions }), (0, _laconaPhrase.createElement)(_time.Time, { id: 'time', seconds: this.props.seconds, relative: false, recurse: false, prepositions: this.props.prepositions })), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)(_date.DateWithTimeOfDay, { merge: true })), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_date.DateWithTimeOfDay, { merge: true }), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)('choice', { limit: 1, merge: true }, (0, _laconaPhrase.createElement)(_time.AmbiguousTime, { id: 'ambiguousTime', seconds: this.props.seconds, prepositions: true }), (0, _laconaPhrase.createElement)(_time.Time, { id: 'time', seconds: this.props.seconds, relative: false, recurse: false, prepositions: true }))))));
+    }
+  }]);
+
+  return DateTime;
+})(_laconaPhrase.Phrase);
+
+exports.DateTime = DateTime;
+
+DateTime.defaultProps = {
+  defaultTime: { hour: 8 },
+  seconds: true,
+  prepositions: false,
+  impliedTime: true,
+  impliedDate: true
+};
+
+},{"./date":62,"./helpers":65,"./time":70,"babel-runtime/core-js/array/from":685,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":72,"lodash":75,"moment":76}],64:[function(require,module,exports){
+/** @jsx createElement */
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _laconaPhraseNumber = require('lacona-phrase-number');
+
+function isUnique(array) {
+  return _lodash2['default'].uniq(array).length === array.length;
+}
+
+var BaseDuration = (function (_Phrase) {
+  _inherits(BaseDuration, _Phrase);
+
+  function BaseDuration() {
+    _classCallCheck(this, BaseDuration);
+
+    _get(Object.getPrototypeOf(BaseDuration.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(BaseDuration, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      var output = {};
+      _lodash2['default'].forEach(result, function (_ref) {
+        var num = _ref.num;
+        var type = _ref.type;
+
+        output[type] = (output[type] || 0) + num;
+      });
+      return output;
+    }
+  }, {
+    key: 'filter',
+    value: function filter(results) {
+      return isUnique(_lodash2['default'].map(results, 'id'));
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('filter', { 'function': this.filter.bind(this) }, (0, _laconaPhrase.createElement)('repeat', { separator: (0, _laconaPhrase.createElement)('list', { items: [', and ', ' and ', ', '], limit: 1, category: 'conjunction' }) }, this.childDescribe()));
+    }
+  }]);
+
+  return BaseDuration;
+})(_laconaPhrase.Phrase);
+
+var InternalDuration = (function (_Phrase2) {
+  _inherits(InternalDuration, _Phrase2);
+
+  function InternalDuration() {
+    _classCallCheck(this, InternalDuration);
+
+    _get(Object.getPrototypeOf(InternalDuration.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(InternalDuration, [{
+    key: 'getValue',
+    value: function getValue(_ref2) {
+      var id = _ref2.id;
+      var type = _ref2.type;
+      var num = _ref2.num;
+      var _ref2$multiplier = _ref2.multiplier;
+      var multiplier = _ref2$multiplier === undefined ? 1 : _ref2$multiplier;
+
+      return { id: id, type: type, num: num * multiplier };
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('choice', { limit: 1 }, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_laconaPhraseNumber.Integer, { max: 1, min: 1, id: 'num' }), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)('placeholder', { text: 'time period', merge: true }, (0, _laconaPhrase.createElement)('choice', null, this.props.type !== 'time' ? [(0, _laconaPhrase.createElement)('literal', { text: 'day', value: { id: 'days', type: 'days' } }), (0, _laconaPhrase.createElement)('literal', { text: 'fortnight', value: { id: 'fortnights', type: 'days', multiplier: 14 } }), (0, _laconaPhrase.createElement)('literal', { text: 'week', value: { id: 'weeks', type: 'days', multiplier: 7 } }), (0, _laconaPhrase.createElement)('literal', { text: 'month', value: { id: 'months', type: 'months' } }), (0, _laconaPhrase.createElement)('literal', { text: 'year', value: { id: 'years', type: 'years' } })] : null, this.props.type !== 'date' ? [(0, _laconaPhrase.createElement)('literal', { text: 'hour', value: { id: 'hours', type: 'hours' } }), (0, _laconaPhrase.createElement)('literal', { text: 'minute', value: { id: 'minutes', type: 'minutes' } }), this.props.seconds ? (0, _laconaPhrase.createElement)('literal', { text: 'second', value: { id: 'seconds', type: 'seconds' } }) : null] : null))), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_laconaPhraseNumber.Integer, { id: 'num', min: 2 }), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)('placeholder', { text: 'time period', merge: true }, (0, _laconaPhrase.createElement)('choice', null, this.props.type !== 'time' ? [(0, _laconaPhrase.createElement)('literal', { text: 'days', value: { id: 'days', type: 'days' } }), (0, _laconaPhrase.createElement)('literal', { text: 'fortnights', value: { id: 'fortnights', type: 'days', multiplier: 14 } }), (0, _laconaPhrase.createElement)('literal', { text: 'weeks', value: { id: 'weeks', type: 'days', multiplier: 7 } }), (0, _laconaPhrase.createElement)('literal', { text: 'months', value: { id: 'months', type: 'months' } }), (0, _laconaPhrase.createElement)('literal', { text: 'years', value: { id: 'years', type: 'years' } })] : null, this.props.type !== 'date' ? [(0, _laconaPhrase.createElement)('literal', { text: 'hours', value: { id: 'hours', type: 'hours' } }), (0, _laconaPhrase.createElement)('literal', { text: 'minutes', value: { id: 'minutes', type: 'minutes' } }), this.props.seconds ? (0, _laconaPhrase.createElement)('literal', { text: 'seconds', value: { id: 'seconds', type: 'seconds' } }) : null] : null))));
+    }
+  }]);
+
+  return InternalDuration;
+})(_laconaPhrase.Phrase);
+
+var DateDuration = (function (_BaseDuration) {
+  _inherits(DateDuration, _BaseDuration);
+
+  function DateDuration() {
+    _classCallCheck(this, DateDuration);
+
+    _get(Object.getPrototypeOf(DateDuration.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(DateDuration, [{
+    key: 'childDescribe',
+    value: function childDescribe() {
+      return (0, _laconaPhrase.createElement)(InternalDuration, { type: 'date' });
+    }
+  }]);
+
+  return DateDuration;
+})(BaseDuration);
+
+exports.DateDuration = DateDuration;
+
+var TimeDuration = (function (_BaseDuration2) {
+  _inherits(TimeDuration, _BaseDuration2);
+
+  function TimeDuration() {
+    _classCallCheck(this, TimeDuration);
+
+    _get(Object.getPrototypeOf(TimeDuration.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(TimeDuration, [{
+    key: 'childDescribe',
+    value: function childDescribe() {
+      return (0, _laconaPhrase.createElement)(InternalDuration, { type: 'time', seconds: this.props.seconds });
+    }
+  }]);
+
+  return TimeDuration;
+})(BaseDuration);
+
+exports.TimeDuration = TimeDuration;
+
+TimeDuration.defaultProps = {
+  seconds: true
+};
+
+var Duration = (function (_BaseDuration3) {
+  _inherits(Duration, _BaseDuration3);
+
+  function Duration() {
+    _classCallCheck(this, Duration);
+
+    _get(Object.getPrototypeOf(Duration.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Duration, [{
+    key: 'childDescribe',
+    value: function childDescribe() {
+      return (0, _laconaPhrase.createElement)(InternalDuration, { seconds: this.props.seconds });
+    }
+  }]);
+
+  return Duration;
+})(BaseDuration);
+
+exports.Duration = Duration;
+
+Duration.defaultProps = {
+  seconds: true
+};
+
+},{"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":72,"lacona-phrase-number":86,"lodash":75}],65:[function(require,module,exports){
+'use strict';
+
+var _Array$from = require('babel-runtime/core-js/array/from')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports.join = join;
+exports.timeIsBefore = timeIsBefore;
+exports.negateDuration = negateDuration;
+exports.relativeTime = relativeTime;
+exports.absoluteTime = absoluteTime;
+exports.ambiguousTime = ambiguousTime;
+exports.coerceAmbiguousTime = coerceAmbiguousTime;
+exports.absoluteDate = absoluteDate;
+exports.relativeDate = relativeDate;
+exports.relativeDay = relativeDay;
+exports.validateDay = validateDay;
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _toConsumableArray(arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];return arr2;
+  } else {
+    return _Array$from(arr);
+  }
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
+function join(date, time) {
+  return (0, _moment2['default'])(date).set(time).toDate();
+}
+
+function timeIsBefore(timeA, timeB) {
+  if (timeA.hour < timeB.hour) return true;
+  if (timeA.hour > timeB.hour) return false;
+
+  if (timeA.minute < timeB.minute) return true;
+  if (timeA.minute > timeB.minute) return false;
+
+  if (timeA.second < timeB.second) return true;
+  if (timeA.second > timeB.second) return false;
+}
+
+function negateDuration(duration) {
+  return _lodash2['default'].mapValues(duration, function (num) {
+    return -num;
+  });
+}
+
+function relativeTime(duration, now) {
+  var newTime = (0, _moment2['default'])(now).utc().add(_moment2['default'].duration(duration)).local();
+
+  return { hour: newTime.hour(), minute: newTime.minute(), second: newTime.second() };
+}
+
+function absoluteTime(absolute) {
+  return { hour: absolute.hour, minute: absolute.minute || 0, second: absolute.second || 0 };
+}
+
+function ambiguousTime(ambiguousTime, ampm) {
+  var hour = ampmHourToHour(ambiguousTime.hour, ampm);
+
+  return { hour: hour, minute: ambiguousTime.minute || 0, second: ambiguousTime.second || 0 };
+}
+
+function ampmHourToHour(hour, ampm) {
+  if (ampm) {
+    return ampm === 'am' ? hour === 12 ? 0 : hour : hour + 12;
+  } else {
+    return hour;
+  }
+}
+
+function coerceAmbiguousTime(ambiguousTime, range) {
+  if (_lodash2['default'].inRange.apply(_lodash2['default'], [ambiguousTime.hour].concat(_toConsumableArray(range)))) {
+    return ambiguousTime;
+  } else {
+    return { hour: ambiguousTime.hour < 12 ? ambiguousTime.hour + 12 : ambiguousTime.hour - 12, minute: ambiguousTime.minute, second: ambiguousTime.second };
+  }
+}
+
+function absoluteDate(absolute) {
+  return (0, _moment2['default'])(absolute).toDate();
+}
+
+function relativeDate(duration) {
+  var now = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+  return (0, _moment2['default'])(now).add(_moment2['default'].duration(duration)).toDate();
+}
+
+function relativeDay(duration) {
+  var now = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+  var newMoment = (0, _moment2['default'])(now).year(2010).add(_moment2['default'].duration(duration)); // not leap year
+  return { month: newMoment.month(), day: newMoment.date() };
+}
+
+function validateDay() {
+  var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+  var month = _ref.month;
+  var day = _ref.day;
+  var _ref$year = _ref.year;
+  var year = _ref$year === undefined ? 2012 : _ref$year;
+  //leap year
+  if (_lodash2['default'].isUndefined(month) || _lodash2['default'].isUndefined(day)) return true;
+
+  var dateMoment = (0, _moment2['default'])({ year: year, month: month, day: day });
+  return dateMoment.month() === month;
+}
+
+},{"babel-runtime/core-js/array/from":685,"lodash":75,"moment":76}],66:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _datetime = require('./datetime');
+
+Object.defineProperty(exports, 'DateTime', {
+  enumerable: true,
+  get: function get() {
+    return _datetime.DateTime;
+  }
+});
+
+var _date = require('./date');
+
+Object.defineProperty(exports, 'Day', {
+  enumerable: true,
+  get: function get() {
+    return _date.Day;
+  }
+});
+Object.defineProperty(exports, 'Date', {
+  enumerable: true,
+  get: function get() {
+    return _date.Date;
+  }
+});
+
+var _time = require('./time');
+
+Object.defineProperty(exports, 'Time', {
+  enumerable: true,
+  get: function get() {
+    return _time.Time;
+  }
+});
+
+var _duration = require('./duration');
+
+Object.defineProperty(exports, 'Duration', {
+  enumerable: true,
+  get: function get() {
+    return _duration.Duration;
+  }
+});
+Object.defineProperty(exports, 'DateDuration', {
+  enumerable: true,
+  get: function get() {
+    return _duration.DateDuration;
+  }
+});
+Object.defineProperty(exports, 'TimeDuration', {
+  enumerable: true,
+  get: function get() {
+    return _duration.TimeDuration;
+  }
+});
+
+var _range = require('./range');
+
+Object.defineProperty(exports, 'Range', {
+  enumerable: true,
+  get: function get() {
+    return _range.Range;
+  }
+});
+Object.defineProperty(exports, 'TimeRange', {
+  enumerable: true,
+  get: function get() {
+    return _range.TimeRange;
+  }
+});
+Object.defineProperty(exports, 'DateRange', {
+  enumerable: true,
+  get: function get() {
+    return _range.DateRange;
+  }
+});
+},{"./date":62,"./datetime":63,"./duration":64,"./range":69,"./time":70}],67:[function(require,module,exports){
+/** @jsx createElement */
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _laconaPhraseNumber = require('lacona-phrase-number');
+
+var InternalDuration = (function (_Phrase) {
+  _inherits(InternalDuration, _Phrase);
+
+  function InternalDuration() {
+    _classCallCheck(this, InternalDuration);
+
+    _get(Object.getPrototypeOf(InternalDuration.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(InternalDuration, [{
+    key: 'getValue',
+    value: function getValue(_ref) {
+      var id = _ref.id;
+      var type = _ref.type;
+      var num = _ref.num;
+      var _ref$multiplier = _ref.multiplier;
+      var multiplier = _ref$multiplier === undefined ? 1 : _ref$multiplier;
+
+      return { id: id, type: type, num: num * multiplier };
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('choice', { limit: 1 }, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_laconaPhraseNumber.Integer, { max: 1, min: 1, id: 'num' }), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)('placeholder', { text: 'time period', merge: true }, (0, _laconaPhrase.createElement)('choice', null, this.props.type !== 'time' ? [(0, _laconaPhrase.createElement)('literal', { text: 'day', value: { id: 'days', type: 'days' } }), (0, _laconaPhrase.createElement)('literal', { text: 'fortnight', value: { id: 'fortnights', type: 'days', multiplier: 14 } }), (0, _laconaPhrase.createElement)('literal', { text: 'week', value: { id: 'weeks', type: 'days', multiplier: 7 } }), (0, _laconaPhrase.createElement)('literal', { text: 'month', value: { id: 'months', type: 'months' } }), (0, _laconaPhrase.createElement)('literal', { text: 'year', value: { id: 'years', type: 'years' } })] : null, this.props.type !== 'date' ? [(0, _laconaPhrase.createElement)('literal', { text: 'hour', value: { id: 'hours', type: 'hours' } }), (0, _laconaPhrase.createElement)('literal', { text: 'minute', value: { id: 'minutes', type: 'minutes' } }), (0, _laconaPhrase.createElement)('literal', { text: 'second', value: { id: 'seconds', type: 'seconds' } })] : null))), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_laconaPhraseNumber.Integer, { id: 'num', min: 2 }), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)('placeholder', { text: 'time period', merge: true }, (0, _laconaPhrase.createElement)('choice', null, this.props.type !== 'time' ? [(0, _laconaPhrase.createElement)('literal', { text: 'days', value: { id: 'days', type: 'days' } }), (0, _laconaPhrase.createElement)('literal', { text: 'fortnights', value: { id: 'fortnights', type: 'days', multiplier: 14 } }), (0, _laconaPhrase.createElement)('literal', { text: 'weeks', value: { id: 'weeks', type: 'days', multiplier: 7 } }), (0, _laconaPhrase.createElement)('literal', { text: 'months', value: { id: 'months', type: 'months' } }), (0, _laconaPhrase.createElement)('literal', { text: 'years', value: { id: 'years', type: 'years' } })] : null, this.props.type !== 'date' ? [(0, _laconaPhrase.createElement)('literal', { text: 'hours', value: { id: 'hours', type: 'hours' } }), (0, _laconaPhrase.createElement)('literal', { text: 'minutes', value: { id: 'minutes', type: 'minutes' } }), (0, _laconaPhrase.createElement)('literal', { text: 'seconds', value: { id: 'seconds', type: 'seconds' } })] : null))));
+    }
+  }]);
+
+  return InternalDuration;
+})(_laconaPhrase.Phrase);
+
+exports.InternalDuration = InternalDuration;
+
+},{"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":72,"lacona-phrase-number":86}],68:[function(require,module,exports){
+/** @jsx createElement */
+
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _laconaPhrase = require('lacona-phrase');
+
+var Weekday = (function (_Phrase) {
+  _inherits(Weekday, _Phrase);
+
+  function Weekday() {
+    _classCallCheck(this, Weekday);
+
+    _get(Object.getPrototypeOf(Weekday.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Weekday, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('placeholder', { text: 'month', showForEmpty: true }, (0, _laconaPhrase.createElement)('list', { items: [{ text: 'January', value: 0 }, { text: 'Feburary', value: 1 }, { text: 'March', value: 2 }, { text: 'April', value: 3 }, { text: 'May', value: 4 }, { text: 'June', value: 5 }, { text: 'July', value: 6 }, { text: 'August', value: 7 }, { text: 'September', value: 8 }, { text: 'October', value: 9 }, { text: 'November', value: 10 }, { text: 'December', value: 11 }] }));
+    }
+  }]);
+
+  return Weekday;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = Weekday;
+module.exports = exports['default'];
+
+},{"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":72}],69:[function(require,module,exports){
+/** @jsx createElement */
+
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _date = require('./date');
+
+var _datetime = require('./datetime');
+
+var _duration = require('./duration');
+
+var _time = require('./time');
+
+var _helpers = require('./helpers');
+
+var TimeRange = (function (_Phrase) {
+  _inherits(TimeRange, _Phrase);
+
+  function TimeRange() {
+    _classCallCheck(this, TimeRange);
+
+    _get(Object.getPrototypeOf(TimeRange.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(TimeRange, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) return;
+
+      if (result.start && result.duration) {
+        var startDate = _moment2['default'].utc(result.start);
+        var endDate = startDate.add(_moment2['default'].duration(result.duration));
+        var dayOffset = endDate.diff(startDate, 'days');
+        var end = { hour: endDate.hour(), minute: endDate.minute(), second: endDate.second() };
+        return { start: result.start, end: end, dayOffset: dayOffset };
+      }
+
+      if (result.start && result.end) {
+        return result;
+      }
+    }
+
+    // validate (result) {
+    //   if (!result || !result.start || !result.end || result.dayOffset == null) return true
+    //
+    //   if (result.dayOffset > 0) return true
+    //
+    //   const startMoment = moment.utc(result.start)
+    //   return startMoment.isBefore(moment.utc(result.end))
+    // }
+
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('sequence', null, this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'from ' }) : null, (0, _laconaPhrase.createElement)(_time.Time, { id: 'start' }), (0, _laconaPhrase.createElement)('list', { items: [' to ', ' - ', '-'], limit: 1 }), (0, _laconaPhrase.createElement)(_time.Time, { id: 'end' })), this.props.duration ? (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_time.Time, { id: 'start', prepositions: this.props.prepositions }), (0, _laconaPhrase.createElement)('literal', { text: ' for ' }), (0, _laconaPhrase.createElement)(_duration.TimeDuration, { id: 'duration', max: { hours: 23, minutes: 59, seconds: 59 } })) : null);
+    }
+  }]);
+
+  return TimeRange;
+})(_laconaPhrase.Phrase);
+
+exports.TimeRange = TimeRange;
+
+TimeRange.defaultProps = {
+  prepositions: false,
+  duration: true
+};
+
+var Range = (function (_Phrase2) {
+  _inherits(Range, _Phrase2);
+
+  function Range() {
+    _classCallCheck(this, Range);
+
+    _get(Object.getPrototypeOf(Range.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Range, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) return;
+
+      if (result.start) {
+        if (result.end) {
+          return {
+            start: result.start,
+            end: result.end,
+            allDay: false
+          };
+        } else if (result.duration) {
+          return {
+            start: result.start,
+            end: (0, _moment2['default'])(result.start).add(_moment2['default'].duration(result.duration)).toDate(),
+            allDay: false
+          };
+        } else {
+          return {
+            start: result.start,
+            end: (0, _moment2['default'])(result.start).add(_moment2['default'].duration(this.props.defaultDuration)).toDate(),
+            allDay: false
+          };
+        }
+      } else if (result.date && result.timeRange) {
+        if ((0, _helpers.timeIsBefore)(result.timeRange.end, result.timeRange.start)) {
+          return {
+            start: (0, _helpers.join)(result.date, result.timeRange.start),
+            end: (0, _helpers.join)((0, _moment2['default'])(result.date).add(1, 'day').toDate(), result.timeRange.end),
+            allDay: false
+          };
+        } else {
+          return {
+            start: (0, _helpers.join)(result.date, result.timeRange.start),
+            end: (0, _helpers.join)(result.date, result.timeRange.end),
+            allDay: false
+          };
+        }
+      } else if (result.startDate) {
+        if (result.endDate) {
+          return {
+            start: result.startDate,
+            end: result.endDate,
+            allDay: true
+          };
+        } else {
+          return {
+            start: result.startDate,
+            end: result.startDate,
+            allDay: true
+          };
+        }
+      }
+    }
+  }, {
+    key: 'validate',
+    value: function validate(result) {
+      if (!result || !result.start || !result.end) return true;
+
+      var startMoment = (0, _moment2['default'])(result.start);
+      if (result.allDay) {
+        return startMoment.isBefore(result.end) || startMoment.isSame(result.end);
+      } else {
+        return startMoment.isBefore(result.end);
+      }
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('placeholder', { text: 'period of time' }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)(_date.Date, { id: 'startDate' }), (0, _laconaPhrase.createElement)(_datetime.DateTime, { id: 'start', impliedTime: false, defaultTime: this.props.defaultTime }), (0, _laconaPhrase.createElement)('choice', { limit: 1 }, (0, _laconaPhrase.createElement)('sequence', null, ' ', this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'from ', optional: true, limited: true, preferred: false }) : null, (0, _laconaPhrase.createElement)('literal', { text: 'all day ', optional: true, limited: true, preferred: false }), (0, _laconaPhrase.createElement)(_date.Date, { id: 'startDate' }), (0, _laconaPhrase.createElement)('list', { items: [' to ', ' - ', '-'], limit: 1 }), (0, _laconaPhrase.createElement)('literal', { text: 'all day ', optional: true, limited: true, preferred: false }), (0, _laconaPhrase.createElement)(_date.Date, { id: 'endDate' })), (0, _laconaPhrase.createElement)('sequence', null, ' ', this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'from ', optional: true, limited: true, preferred: false }) : null, (0, _laconaPhrase.createElement)(_datetime.DateTime, { id: 'start', impliedDate: false, defaultTime: this.props.defaultTime }), (0, _laconaPhrase.createElement)('list', { items: [' to ', ' - ', '-'], limit: 1 }), (0, _laconaPhrase.createElement)(_datetime.DateTime, { id: 'end', impliedDate: false, defaultTime: this.props.defaultTime }))), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_date.Date, { id: 'date', prepositions: this.props.prepositions }), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)(TimeRange, { id: 'timeRange', duration: false, prepositions: true })), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(TimeRange, { id: 'timeRange', prepositions: this.props.prepositions }), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)(_date.Date, { id: 'date', prepositions: true })), (0, _laconaPhrase.createElement)('sequence', null, this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'for ', optional: true, limited: true, preferred: false }) : null, (0, _laconaPhrase.createElement)(_duration.Duration, { id: 'duration', seconds: this.props.seconds }), (0, _laconaPhrase.createElement)('literal', { text: ' ' }), (0, _laconaPhrase.createElement)(_datetime.DateTime, { id: 'start', prepositions: true, defaultTime: this.props.defaultTime })), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_datetime.DateTime, { id: 'start', prepositions: this.props.prepositions, defaultTime: this.props.defaultTime }), (0, _laconaPhrase.createElement)('literal', { text: ' for ' }), (0, _laconaPhrase.createElement)(_duration.Duration, { id: 'duration', seconds: this.props.seconds }))));
+    }
+  }]);
+
+  return Range;
+})(_laconaPhrase.Phrase);
+
+exports.Range = Range;
+
+Range.defaultProps = {
+  prepositions: false,
+  seconds: true,
+  defaultTime: { hour: 8 },
+  defaultDuration: { hours: 1 }
+};
+/* today to tomorrow */ /* today at 3pm to tomorrow */
+
+},{"./date":62,"./datetime":63,"./duration":64,"./helpers":65,"./time":70,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":72,"lodash":75,"moment":76}],70:[function(require,module,exports){
+/** @jsx createElement */
+
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _laconaPhraseNumber = require('lacona-phrase-number');
+
+var _helpers = require('./helpers');
+
+var _duration = require('./duration');
+
+var TimeOfDay = (function (_Phrase) {
+  _inherits(TimeOfDay, _Phrase);
+
+  function TimeOfDay() {
+    _classCallCheck(this, TimeOfDay);
+
+    _get(Object.getPrototypeOf(TimeOfDay.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(TimeOfDay, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('placeholder', { text: 'time of day' }, (0, _laconaPhrase.createElement)('list', { items: [{ text: 'morning', value: { 'default': 8, range: [0, 12] } }, { text: 'afternoon', value: { 'default': 12, range: [12, 24] } }, { text: 'evening', value: { 'default': 17, range: [12, 24] } }, { text: 'night', value: { 'default': 20, range: [12, 24] } }] }));
+    }
+  }]);
+
+  return TimeOfDay;
+})(_laconaPhrase.Phrase);
+
+exports.TimeOfDay = TimeOfDay;
+
+var AmbiguousTime = (function (_Phrase2) {
+  _inherits(AmbiguousTime, _Phrase2);
+
+  function AmbiguousTime() {
+    _classCallCheck(this, AmbiguousTime);
+
+    _get(Object.getPrototypeOf(AmbiguousTime.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(AmbiguousTime, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('sequence', null, this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'at ', category: 'conjunction' }) : null, (0, _laconaPhrase.createElement)('argument', { text: 'time', showForEmpty: true, merge: true }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)(AmbiguousAbsoluteNumeric, { seconds: this.props.seconds }), (0, _laconaPhrase.createElement)(AmbiguousAbsoluteRelativeHour, null))));
+    }
+  }]);
+
+  return AmbiguousTime;
+})(_laconaPhrase.Phrase);
+
+exports.AmbiguousTime = AmbiguousTime;
+
+var Time = (function (_Phrase3) {
+  _inherits(Time, _Phrase3);
+
+  function Time() {
+    _classCallCheck(this, Time);
+
+    _get(Object.getPrototypeOf(Time.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Time, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('argument', { text: 'time', showForEmpty: true }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('sequence', null, this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'at ', category: 'conjunction' }) : null, (0, _laconaPhrase.createElement)('choice', { merge: true }, (0, _laconaPhrase.createElement)(AbsoluteNumeric, { seconds: this.props.seconds }), (0, _laconaPhrase.createElement)(AbsoluteRelativeHour, null), (0, _laconaPhrase.createElement)(AbsoluteNamed, null), (0, _laconaPhrase.createElement)(AbsoluteTimeOfDay, { seconds: this.props.seconds }))), this.props.named ? (0, _laconaPhrase.createElement)(RelativeNamed, null) : null, this.props.relative ? (0, _laconaPhrase.createElement)(RelativeTime, null) : null, this.props.recurse ? (0, _laconaPhrase.createElement)(RecursiveTime, null) : null));
+    }
+  }]);
+
+  return Time;
+})(_laconaPhrase.Phrase);
+
+exports.Time = Time;
+
+Time.defaultProps = {
+  named: true,
+  recurse: true,
+  relative: true,
+  prepositions: false,
+  seconds: false
+};
+
+var RelativeTime = (function (_Phrase4) {
+  _inherits(RelativeTime, _Phrase4);
+
+  function RelativeTime() {
+    _classCallCheck(this, RelativeTime);
+
+    _get(Object.getPrototypeOf(RelativeTime.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(RelativeTime, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) return;
+
+      var duration = result.direction === -1 ? (0, _helpers.negateDuration)(result.duration) : result.duration;
+
+      return (0, _helpers.relativeTime)(duration);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('literal', { text: 'in ', id: 'direction', value: 1 }), (0, _laconaPhrase.createElement)(_duration.TimeDuration, { id: 'duration', seconds: this.props.seconds })), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_duration.TimeDuration, { id: 'duration', seconds: this.props.seconds }), (0, _laconaPhrase.createElement)('literal', { text: ' from now', id: 'direction', value: 1 })), (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_duration.TimeDuration, { id: 'duration', seconds: this.props.seconds }), (0, _laconaPhrase.createElement)('literal', { text: ' ago', id: 'direction', value: -1 })));
+    }
+  }]);
+
+  return RelativeTime;
+})(_laconaPhrase.Phrase);
+
+var RelativeNamed = (function (_Phrase5) {
+  _inherits(RelativeNamed, _Phrase5);
+
+  function RelativeNamed() {
+    _classCallCheck(this, RelativeNamed);
+
+    _get(Object.getPrototypeOf(RelativeNamed.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(RelativeNamed, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      return (0, _helpers.relativeTime)(result);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('list', { items: [{ text: 'now', value: {} }, { text: 'right now', value: {} }], limit: 1 });
+    }
+  }]);
+
+  return RelativeNamed;
+})(_laconaPhrase.Phrase);
+
+var AbsoluteTimeOfDay = (function (_Phrase6) {
+  _inherits(AbsoluteTimeOfDay, _Phrase6);
+
+  function AbsoluteTimeOfDay() {
+    _classCallCheck(this, AbsoluteTimeOfDay);
+
+    _get(Object.getPrototypeOf(AbsoluteTimeOfDay.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(AbsoluteTimeOfDay, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result || !result.timeOfDay || !result.ambiguousTime) return;
+
+      return (0, _helpers.coerceAmbiguousTime)(result.ambiguousTime, result.timeOfDay.range);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('choice', { id: 'ambiguousTime' }, (0, _laconaPhrase.createElement)(AmbiguousAbsoluteNumeric, { seconds: this.props.seconds }), (0, _laconaPhrase.createElement)(AmbiguousAbsoluteRelativeHour, null)), (0, _laconaPhrase.createElement)('literal', { text: ' in the ', category: 'conjunction' }), (0, _laconaPhrase.createElement)(TimeOfDay, { id: 'timeOfDay' }));
+    }
+  }]);
+
+  return AbsoluteTimeOfDay;
+})(_laconaPhrase.Phrase);
+
+var AbsoluteNamed = (function (_Phrase7) {
+  _inherits(AbsoluteNamed, _Phrase7);
+
+  function AbsoluteNamed() {
+    _classCallCheck(this, AbsoluteNamed);
+
+    _get(Object.getPrototypeOf(AbsoluteNamed.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(AbsoluteNamed, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      return (0, _helpers.absoluteTime)(result);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('list', { items: [{ text: 'midnight', value: { hour: 0 } }, { text: 'noon', value: { hour: 12 } }] });
+    }
+  }]);
+
+  return AbsoluteNamed;
+})(_laconaPhrase.Phrase);
+
+var AmbiguousAbsoluteNumeric = (function (_Phrase8) {
+  _inherits(AmbiguousAbsoluteNumeric, _Phrase8);
+
+  function AmbiguousAbsoluteNumeric() {
+    _classCallCheck(this, AmbiguousAbsoluteNumeric);
+
+    _get(Object.getPrototypeOf(AmbiguousAbsoluteNumeric.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(AmbiguousAbsoluteNumeric, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) return;
+      return (0, _helpers.ambiguousTime)(result);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(Hour, { id: 'hour' }), (0, _laconaPhrase.createElement)('choice', { optional: true, limit: 1, merge: true }, this.props.minutes ? (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('literal', { text: ':' }), (0, _laconaPhrase.createElement)(MinutesOrSeconds, { id: 'minute' })) : null, this.props.minutes && this.props.seconds ? (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('literal', { text: ':' }), (0, _laconaPhrase.createElement)(MinutesOrSeconds, { id: 'minute' }), (0, _laconaPhrase.createElement)('literal', { text: ':' }), (0, _laconaPhrase.createElement)(MinutesOrSeconds, { id: 'second' })) : null));
+    }
+  }]);
+
+  return AmbiguousAbsoluteNumeric;
+})(_laconaPhrase.Phrase);
+
+AmbiguousAbsoluteNumeric.defaultProps = {
+  minutes: true,
+  seconds: false
+};
+
+var AbsoluteNumeric = (function (_Phrase9) {
+  _inherits(AbsoluteNumeric, _Phrase9);
+
+  function AbsoluteNumeric() {
+    _classCallCheck(this, AbsoluteNumeric);
+
+    _get(Object.getPrototypeOf(AbsoluteNumeric.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(AbsoluteNumeric, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) return;
+
+      return (0, _helpers.ambiguousTime)(result.ambiguousTime, result.ampm);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(AmbiguousAbsoluteNumeric, { id: 'ambiguousTime', minutes: this.props.minutes, seconds: this.props.seconds }), (0, _laconaPhrase.createElement)('choice', { id: 'ampm' }, (0, _laconaPhrase.createElement)('list', { items: [' am', 'am', ' a', 'a', ' a.m.', 'a.m.', ' a.m', 'a.m'], value: 'am', limit: 1 }), (0, _laconaPhrase.createElement)('list', { items: [' pm', 'pm', ' p', 'p', ' p.m.', 'p.m.', ' p.m', 'p.m'], value: 'pm', limit: 1 })));
+    }
+  }]);
+
+  return AbsoluteNumeric;
+})(_laconaPhrase.Phrase);
+
+AbsoluteNumeric.defaultProps = {
+  minutes: true,
+  seconds: false
+};
+
+var AmbiguousAbsoluteRelativeHour = (function (_Phrase10) {
+  _inherits(AmbiguousAbsoluteRelativeHour, _Phrase10);
+
+  function AmbiguousAbsoluteRelativeHour() {
+    _classCallCheck(this, AmbiguousAbsoluteRelativeHour);
+
+    _get(Object.getPrototypeOf(AmbiguousAbsoluteRelativeHour.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(AmbiguousAbsoluteRelativeHour, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(BaseAbsoluteRelativeHour, { ambiguous: true });
+    }
+  }]);
+
+  return AmbiguousAbsoluteRelativeHour;
+})(_laconaPhrase.Phrase);
+
+var AbsoluteRelativeHour = (function (_Phrase11) {
+  _inherits(AbsoluteRelativeHour, _Phrase11);
+
+  function AbsoluteRelativeHour() {
+    _classCallCheck(this, AbsoluteRelativeHour);
+
+    _get(Object.getPrototypeOf(AbsoluteRelativeHour.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(AbsoluteRelativeHour, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(BaseAbsoluteRelativeHour, null);
+    }
+  }]);
+
+  return AbsoluteRelativeHour;
+})(_laconaPhrase.Phrase);
+
+var BaseAbsoluteRelativeHour = (function (_Phrase12) {
+  _inherits(BaseAbsoluteRelativeHour, _Phrase12);
+
+  function BaseAbsoluteRelativeHour() {
+    _classCallCheck(this, BaseAbsoluteRelativeHour);
+
+    _get(Object.getPrototypeOf(BaseAbsoluteRelativeHour.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(BaseAbsoluteRelativeHour, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result) return;
+
+      var duration = result.direction === -1 ? (0, _helpers.negateDuration)(result.duration) : result.duration;
+
+      return (0, _helpers.relativeTime)(duration, result.absolute);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('placeholder', { text: 'number', showForEmpty: true, id: 'duration' }, (0, _laconaPhrase.createElement)('choice', null, (0, _laconaPhrase.createElement)('literal', { id: 'minutes', text: 'quarter', value: 15 }), (0, _laconaPhrase.createElement)('literal', { id: 'minutes', text: 'half', value: 30 }), (0, _laconaPhrase.createElement)(_laconaPhraseNumber.Integer, { id: 'minutes', min: 1, max: 59, merge: true }))), (0, _laconaPhrase.createElement)('choice', { id: 'direction' }, (0, _laconaPhrase.createElement)('choice', { limit: 1, value: 1 }, (0, _laconaPhrase.createElement)('literal', { text: ' past ' })), (0, _laconaPhrase.createElement)('choice', { limit: 1, value: -1 }, (0, _laconaPhrase.createElement)('literal', { text: ' to ' }), (0, _laconaPhrase.createElement)('literal', { text: ' of ' }), (0, _laconaPhrase.createElement)('literal', { text: ' til ' }), (0, _laconaPhrase.createElement)('literal', { text: ' before ' }), (0, _laconaPhrase.createElement)('literal', { text: ' from ' }))), (0, _laconaPhrase.createElement)('placeholder', { text: 'hour', id: 'absolute' }, (0, _laconaPhrase.createElement)('choice', null, this.props.ambiguous ? (0, _laconaPhrase.createElement)(AmbiguousAbsoluteNumeric, { minutes: false, seconds: false }) : (0, _laconaPhrase.createElement)(AbsoluteNumeric, { minutes: false, seconds: false }), (0, _laconaPhrase.createElement)(AbsoluteNamed, null))));
+    }
+  }]);
+
+  return BaseAbsoluteRelativeHour;
+})(_laconaPhrase.Phrase);
+
+BaseAbsoluteRelativeHour.defaultProps = {
+  ambiguous: false
+};
+
+var RecursiveTime = (function (_Phrase13) {
+  _inherits(RecursiveTime, _Phrase13);
+
+  function RecursiveTime() {
+    _classCallCheck(this, RecursiveTime);
+
+    _get(Object.getPrototypeOf(RecursiveTime.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(RecursiveTime, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      if (!result || !result.time || !result.duration || !result.direction) return;
+
+      var duration = result.direction === -1 ? (0, _helpers.negateDuration)(result.duration) : result.duration;
+
+      return (0, _helpers.relativeTime)(duration, result.time);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)('argument', { text: 'offset', showForEmpty: true, merge: true }, (0, _laconaPhrase.createElement)('sequence', null, (0, _laconaPhrase.createElement)(_duration.TimeDuration, { id: 'duration' }), (0, _laconaPhrase.createElement)('list', { merge: true, id: 'direction', items: [{ text: ' before ', value: -1 }, { text: ' after ', value: 1 }, { text: ' from ', value: 1 }, { text: ' past ', value: 1 }, { text: ' to ', value: -1 }, { text: ' of ', value: -1 }, { text: ' til ', value: -1 }, { text: ' from ', value: -1 }], limit: 2 }))), (0, _laconaPhrase.createElement)(Time, { recurse: false, relative: false, id: 'time' }));
+    }
+  }]);
+
+  return RecursiveTime;
+})(_laconaPhrase.Phrase);
+
+var MinutesOrSeconds = (function (_Phrase14) {
+  _inherits(MinutesOrSeconds, _Phrase14);
+
+  function MinutesOrSeconds() {
+    _classCallCheck(this, MinutesOrSeconds);
+
+    _get(Object.getPrototypeOf(MinutesOrSeconds.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(MinutesOrSeconds, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      return parseInt(result, 10);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { descriptor: 'minutes', max: 59, minLength: 2, maxLength: 2 });
+    }
+  }]);
+
+  return MinutesOrSeconds;
+})(_laconaPhrase.Phrase);
+
+var Hour = (function (_Phrase15) {
+  _inherits(Hour, _Phrase15);
+
+  function Hour() {
+    _classCallCheck(this, Hour);
+
+    _get(Object.getPrototypeOf(Hour.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Hour, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      return parseInt(result, 10);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { descriptor: 'hour', min: 1, max: 12, allowLeadingZeros: false });
+    }
+  }]);
+
+  return Hour;
+})(_laconaPhrase.Phrase);
+
+},{"./duration":64,"./helpers":65,"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":72,"lacona-phrase-number":86,"lodash":75,"moment":76}],71:[function(require,module,exports){
+/** @jsx createElement */
+
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor')['default'];
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+var _Object$setPrototypeOf = require('babel-runtime/core-js/object/set-prototype-of')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;_Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+})();
+
+var _get = function get(_x, _x2, _x3) {
+  var _again = true;_function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = _Object$getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+      }
+    } else if ('value' in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;if (getter === undefined) {
+        return undefined;
+      }return getter.call(receiver);
+    }
+  }
+};
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+  }subClass.prototype = _Object$create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var _laconaPhrase = require('lacona-phrase');
+
+var Weekday = (function (_Phrase) {
+  _inherits(Weekday, _Phrase);
+
+  function Weekday() {
+    _classCallCheck(this, Weekday);
+
+    _get(Object.getPrototypeOf(Weekday.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Weekday, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('list', { items: [{ text: 'Sunday', value: 0 }, { text: 'Monday', value: 1 }, { text: 'Tuesday', value: 2 }, { text: 'Wednesday', value: 3 }, { text: 'Thursday', value: 4 }, { text: 'Friday', value: 5 }, { text: 'Saturday', value: 6 }] });
+    }
+  }]);
+
+  return Weekday;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = Weekday;
+module.exports = exports['default'];
+
+},{"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":72}],72:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":74,"dup":2,"inherits":73}],73:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],74:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],75:[function(require,module,exports){
+arguments[4][9][0].apply(exports,arguments)
+},{"dup":9}],76:[function(require,module,exports){
 //! moment.js
 //! version : 2.10.6
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -17094,7 +22758,7 @@ module.exports={
     return _moment;
 
 }));
-},{}],15:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -17133,8 +22797,8 @@ var Email = (function (_Phrase) {
       );
     }
   }, {
-    key: 'validate',
-    value: function validate(input) {
+    key: 'filter',
+    value: function filter(input) {
       return (/^[\d\w_+.-]+@[\d\w_.-]{1,63}\.\w{2,63}$/.test(input)
       );
     }
@@ -17144,7 +22808,7 @@ var Email = (function (_Phrase) {
       return (0, _laconaPhrase.createElement)(
         'argument',
         { text: 'email address', displayWhen: this.displayWhen },
-        (0, _laconaPhrase.createElement)('freetext', { validate: this.validate })
+        (0, _laconaPhrase.createElement)('freetext', { validate: this.filter })
       );
     }
   }]);
@@ -17154,13 +22818,176 @@ var Email = (function (_Phrase) {
 
 exports['default'] = Email;
 module.exports = exports['default'];
-},{"lacona-phrase":16}],16:[function(require,module,exports){
-arguments[4][10][0].apply(exports,arguments)
-},{"../package":18,"dup":10,"inherits":17}],17:[function(require,module,exports){
-arguments[4][11][0].apply(exports,arguments)
-},{"dup":11}],18:[function(require,module,exports){
-arguments[4][12][0].apply(exports,arguments)
-},{"dup":12}],19:[function(require,module,exports){
+},{"lacona-phrase":78}],78:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":80,"dup":2,"inherits":79}],79:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],80:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],81:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _laconaPhrase = require('lacona-phrase');
+
+var File = (function (_Phrase) {
+  _inherits(File, _Phrase);
+
+  function File() {
+    _classCallCheck(this, File);
+
+    _get(Object.getPrototypeOf(File.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  // import _ from 'lodash'
+  // import {createElement, Phrase, Source} from 'lacona-phrase'
+  // import {resolve} from 'path'
+  // import fs from 'fs'
+  // import thenify from 'thenify'
+  //
+  // const readdir = thenify(fs.readdir)
+  // const stat = thenify(fs.stat)
+  // //
+  // // function getUserHome() {
+  // //   return process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME']
+  // // }
+  //
+  // class Directory extends Source {
+  //   create () {
+  //     this.replaceData({})
+  //
+  //     readdir(this.props.directory).then(files => {
+  //       const statPromises = _.chain(files)
+  //         .reject(file => _.startsWith(file, '.'))
+  //         .reject(file => _.endsWith(file, '\r'))
+  //         .map(file => Promise.all([file, stat(resolve(this.props.directory, file))]))
+  //         .value()
+  //       return Promise.all(statPromises)
+  //     }).then(stats => {
+  //       return _.chain(stats)
+  //         .indexBy(stat => stat[0])
+  //         .mapValues(stat => ({isDir: stat[1].isDirectory()}))
+  //         .value()
+  //     }).then(files => {
+  //       this.replaceData(files)
+  //     })
+  //   }
+  // }
+  //
+  //
+  // class TrueFile extends Phrase {
+  //   getValue (result) {
+  //     if (result && result.dir) {
+  //       return result.dir.prefix + result.dir.suffix
+  //     } else if (result && result.file) {
+  //       return result.file
+  //     }
+  //   }
+  //
+  //   describe () {
+  //     const dirItems = _.chain(this.files)
+  //       .map(({isDir}, file) => {
+  //         if (!isDir) return
+  //         const val = `${file}/`
+  //         const newDir = resolve(this.props.directory, file)
+  //
+  //         return (
+  //           <sequence>
+  //             <literal text={val} value={val} id='prefix' />
+  //             <TrueFile directory={newDir} id='suffix'/>
+  //           </sequence>
+  //         )
+  //       })
+  //       .filter()
+  //       .value()
+  //
+  //     const fileItems = _.chain(this.files)
+  //       .map(({isDir}, file) => (
+  //         isDir ? null : {text: file, value: file}
+  //       ))
+  //       .filter()
+  //       .value()
+  //
+  //     return (
+  //       <choice>
+  //         <placeholder descriptor='directory' id='dir'>
+  //           <choice>
+  //             <literal text='' value={{prefix: '', suffix: ''}} />
+  //             {dirItems}
+  //           </choice>
+  //         </placeholder>
+  //         {fileItems.length > 0 ?
+  //           <placeholder descriptor='file' id='file'>
+  //             <list items={fileItems} />
+  //           </placeholder> :
+  //           null
+  //         }
+  //       </choice>
+  //     )
+  //   }
+  //
+  //   source () {
+  //     return {
+  //       files: <Directory directory={this.props.directory} />
+  //     }
+  //   }
+  // }
+  //
+  // export default class File extends Phrase {
+  //   getValue (result) {
+  //     if (result) {
+  //       return result.prefix + result.suffix
+  //     }
+  //   }
+  //
+  //   describe () {
+  //     return (
+  //       <placeholder descriptor='path' showForEmpty={true}>
+  //         <choice>
+  //           <sequence>
+  //             <literal text='/' value='/' id='prefix' />
+  //             <TrueFile directory='/' id='suffix' />
+  //           </sequence>
+  //           <sequence>
+  //             <literal text='~/' value={`${getUserHome()}/`} id='prefix' />
+  //             <TrueFile directory={`${getUserHome()}/`} id='suffix' />
+  //           </sequence>
+  //         </choice>
+  //       </placeholder>
+  //     )
+  //   }
+  // }
+
+  _createClass(File, [{
+    key: 'describe',
+    value: function describe() {
+      return null;
+    }
+  }]);
+
+  return File;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = File;
+module.exports = exports['default'];
+},{"lacona-phrase":82}],82:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":84,"dup":2,"inherits":83}],83:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],84:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],85:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -17202,8 +23029,8 @@ var DigitString = (function () {
   }
 
   _createClass(DigitString, [{
-    key: 'validate',
-    value: function validate(input) {
+    key: 'filter',
+    value: function filter(input) {
       if (!/^[0-9]+$/.test(input)) return false;
 
       if (input.length > this.props.maxLength) return false;
@@ -17237,9 +23064,9 @@ var DigitString = (function () {
     key: 'describe',
     value: function describe() {
       if (this.props.descriptor) {
-        return (0, _laconaPhrase.createElement)('placeholder', { text: this.props.descriptor, displayWhen: this.displayWhen.bind(this) }, (0, _laconaPhrase.createElement)('freetext', { validate: this.validate.bind(this), splitOn: /\D/, score: 1 }));
+        return (0, _laconaPhrase.createElement)('placeholder', { text: this.props.descriptor, displayWhen: this.displayWhen.bind(this) }, (0, _laconaPhrase.createElement)('freetext', { validate: this.filter.bind(this), splitOn: /\D/, score: 1 }));
       } else {
-        return (0, _laconaPhrase.createElement)('freetext', { validate: this.validate.bind(this), splitOn: /\D/, score: 1 });
+        return (0, _laconaPhrase.createElement)('freetext', { validate: this.filter.bind(this), splitOn: /\D/, score: 1 });
       }
     }
   }]);
@@ -17258,7 +23085,7 @@ DigitString.defaultProps = {
 };
 module.exports = exports['default'];
 
-},{"babel-runtime/core-js/object/define-property":601,"lacona-phrase":23,"lodash":26}],20:[function(require,module,exports){
+},{"babel-runtime/core-js/object/define-property":689,"lacona-phrase":89,"lodash":92}],86:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -17278,7 +23105,7 @@ exports.DigitString = _interopRequire(_digitstring);
 var _ordinal = require('./ordinal');
 
 exports.Ordinal = _interopRequire(_ordinal);
-},{"./digitstring":19,"./integer":21,"./ordinal":22}],21:[function(require,module,exports){
+},{"./digitstring":85,"./integer":87,"./ordinal":88}],87:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -17364,8 +23191,8 @@ var Integer = (function (_Phrase) {
       return parseInt(result, 10);
     }
   }, {
-    key: 'validate',
-    value: function validate(input) {
+    key: 'filter',
+    value: function filter(input) {
       if (!/^[\-\+]?\d+$/.test(input)) return false;
 
       var number = parseInt(input, 10);
@@ -17390,7 +23217,7 @@ var Integer = (function (_Phrase) {
   }, {
     key: 'describe',
     value: function describe() {
-      return (0, _laconaPhrase.createElement)('placeholder', { text: this.props.descriptor, displayWhen: this.displayWhen.bind(this) }, (0, _laconaPhrase.createElement)('freetext', { validate: this.validate.bind(this), limit: this.props.limit, splitOn: /\D/, score: 1 }));
+      return (0, _laconaPhrase.createElement)('placeholder', { text: this.props.descriptor, displayWhen: this.displayWhen.bind(this) }, (0, _laconaPhrase.createElement)('freetext', { validate: this.filter.bind(this), limit: this.props.limit, splitOn: /\D/, score: 1 }));
     }
   }]);
 
@@ -17406,7 +23233,7 @@ Integer.defaultProps = {
 };
 module.exports = exports['default'];
 
-},{"babel-runtime/core-js/object/create":600,"babel-runtime/core-js/object/define-property":601,"babel-runtime/core-js/object/get-own-property-descriptor":602,"babel-runtime/core-js/object/set-prototype-of":603,"lacona-phrase":23,"lodash":26}],22:[function(require,module,exports){
+},{"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":89,"lodash":92}],88:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -17492,8 +23319,8 @@ var Ordinal = (function (_Phrase) {
       return parseInt(result, 10);
     }
   }, {
-    key: 'validate',
-    value: function validate(input) {
+    key: 'filter',
+    value: function filter(input) {
       if (!/^(?:\d+th|\d*1st|\d*2nd|\d*3rd)$/.test(input)) return false;
 
       var number = parseInt(input, 10);
@@ -17510,7 +23337,7 @@ var Ordinal = (function (_Phrase) {
   }, {
     key: 'describe',
     value: function describe() {
-      return (0, _laconaPhrase.createElement)('placeholder', { text: this.props.descriptor, displayWhen: this.displayWhen.bind(this) }, (0, _laconaPhrase.createElement)('freetext', { validate: this.validate.bind(this), limit: this.props.limit, splitOn: /[ ,]/, score: 1 }));
+      return (0, _laconaPhrase.createElement)('placeholder', { text: this.props.descriptor, displayWhen: this.displayWhen.bind(this) }, (0, _laconaPhrase.createElement)('freetext', { validate: this.filter.bind(this), limit: this.props.limit, splitOn: /[ ,]/, score: 1 }));
     }
   }]);
 
@@ -17526,15 +23353,15 @@ Ordinal.defaultProps = {
 };
 module.exports = exports['default'];
 
-},{"babel-runtime/core-js/object/create":600,"babel-runtime/core-js/object/define-property":601,"babel-runtime/core-js/object/get-own-property-descriptor":602,"babel-runtime/core-js/object/set-prototype-of":603,"lacona-phrase":23,"lodash":26}],23:[function(require,module,exports){
-arguments[4][10][0].apply(exports,arguments)
-},{"../package":25,"dup":10,"inherits":24}],24:[function(require,module,exports){
-arguments[4][11][0].apply(exports,arguments)
-},{"dup":11}],25:[function(require,module,exports){
-arguments[4][12][0].apply(exports,arguments)
-},{"dup":12}],26:[function(require,module,exports){
-arguments[4][13][0].apply(exports,arguments)
-},{"dup":13}],27:[function(require,module,exports){
+},{"babel-runtime/core-js/object/create":688,"babel-runtime/core-js/object/define-property":689,"babel-runtime/core-js/object/get-own-property-descriptor":690,"babel-runtime/core-js/object/set-prototype-of":691,"lacona-phrase":89,"lodash":92}],89:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":91,"dup":2,"inherits":90}],90:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],91:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],92:[function(require,module,exports){
+arguments[4][9][0].apply(exports,arguments)
+},{"dup":9}],93:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -17575,8 +23402,8 @@ var PhoneNumber = (function (_Phrase) {
       );
     }
   }, {
-    key: 'validate',
-    value: function validate(input) {
+    key: 'filter',
+    value: function filter(input) {
       return (/^\+?\(?(\d[ ()/-]{0,2}){7,15}$/.test(input)
       );
     }
@@ -17586,7 +23413,7 @@ var PhoneNumber = (function (_Phrase) {
       return (0, _laconaPhrase.createElement)(
         'argument',
         { text: 'phone number', displayWhen: this.displayWhen },
-        (0, _laconaPhrase.createElement)('freetext', { validate: this.validate, splitOn: /\w/ })
+        (0, _laconaPhrase.createElement)('freetext', { validate: this.filter, splitOn: /\w/ })
       );
     }
   }]);
@@ -17596,14 +23423,226 @@ var PhoneNumber = (function (_Phrase) {
 
 exports['default'] = PhoneNumber;
 module.exports = exports['default'];
-},{"lacona-phrase":28}],28:[function(require,module,exports){
-arguments[4][10][0].apply(exports,arguments)
-},{"../package":30,"dup":10,"inherits":29}],29:[function(require,module,exports){
-arguments[4][11][0].apply(exports,arguments)
-},{"dup":11}],30:[function(require,module,exports){
-arguments[4][12][0].apply(exports,arguments)
-},{"dup":12}],31:[function(require,module,exports){
-(function (global){
+},{"lacona-phrase":94}],94:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":96,"dup":2,"inherits":95}],95:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],96:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],97:[function(require,module,exports){
+/** @jsx createElement */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _laconaPhrase = require('lacona-phrase');
+
+var PreferencePane = (function (_Phrase) {
+  _inherits(PreferencePane, _Phrase);
+
+  function PreferencePane() {
+    _classCallCheck(this, PreferencePane);
+
+    _get(Object.getPrototypeOf(PreferencePane.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(PreferencePane, [{
+    key: 'describe',
+    value: function describe() {
+      return null;
+    }
+  }]);
+
+  return PreferencePane;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = PreferencePane;
+module.exports = exports['default'];
+},{"lacona-phrase":98}],98:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":100,"dup":2,"inherits":99}],99:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],100:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],101:[function(require,module,exports){
+/** @jsx createElement */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _laconaPhrase = require('lacona-phrase');
+
+var StringPhrase = (function (_Phrase) {
+  _inherits(StringPhrase, _Phrase);
+
+  function StringPhrase() {
+    _classCallCheck(this, StringPhrase);
+
+    _get(Object.getPrototypeOf(StringPhrase.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(StringPhrase, [{
+    key: 'filter',
+    value: function filter(input) {
+      if (this.props.trimmed && (/^\s/.test(input) || /\s$/.test(input))) {
+        return false;
+      }
+      return true;
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'argument',
+        { text: this.props.argument || 'string' },
+        (0, _laconaPhrase.createElement)('freetext', { consumeAll: this.props.consumeAll, splitOn: this.props.splitOn, limit: this.props.limit, validate: this.filter.bind(this) })
+      );
+    }
+  }]);
+
+  return StringPhrase;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = StringPhrase;
+
+StringPhrase.defaultProps = {
+  trimmed: false
+};
+module.exports = exports['default'];
+},{"lacona-phrase":102}],102:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":104,"dup":2,"inherits":103}],103:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],104:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],105:[function(require,module,exports){
+/** @jsx createElement */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _laconaPhrase = require('lacona-phrase');
+
+var RunningApplication = (function (_Phrase) {
+  _inherits(RunningApplication, _Phrase);
+
+  function RunningApplication() {
+    _classCallCheck(this, RunningApplication);
+
+    _get(Object.getPrototypeOf(RunningApplication.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(RunningApplication, [{
+    key: 'describe',
+    value: function describe() {
+      return null;
+    }
+  }]);
+
+  return RunningApplication;
+})(_laconaPhrase.Phrase);
+
+exports.RunningApplication = RunningApplication;
+
+var OpenWindow = (function (_Phrase2) {
+  _inherits(OpenWindow, _Phrase2);
+
+  function OpenWindow() {
+    _classCallCheck(this, OpenWindow);
+
+    _get(Object.getPrototypeOf(OpenWindow.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(OpenWindow, [{
+    key: 'describe',
+    value: function describe() {
+      return null;
+    }
+  }]);
+
+  return OpenWindow;
+})(_laconaPhrase.Phrase);
+
+exports.OpenWindow = OpenWindow;
+
+var BrowserTab = (function (_Phrase3) {
+  _inherits(BrowserTab, _Phrase3);
+
+  function BrowserTab() {
+    _classCallCheck(this, BrowserTab);
+
+    _get(Object.getPrototypeOf(BrowserTab.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(BrowserTab, [{
+    key: 'describe',
+    value: function describe() {
+      return null;
+    }
+  }]);
+
+  return BrowserTab;
+})(_laconaPhrase.Phrase);
+
+exports.BrowserTab = BrowserTab;
+
+var MountedVolume = (function (_Phrase4) {
+  _inherits(MountedVolume, _Phrase4);
+
+  function MountedVolume() {
+    _classCallCheck(this, MountedVolume);
+
+    _get(Object.getPrototypeOf(MountedVolume.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(MountedVolume, [{
+    key: 'describe',
+    value: function describe() {
+      return null;
+    }
+  }]);
+
+  return MountedVolume;
+})(_laconaPhrase.Phrase);
+
+exports.MountedVolume = MountedVolume;
+},{"lacona-phrase":106}],106:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":108,"dup":2,"inherits":107}],107:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],108:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],109:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -17617,7 +23656,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -17693,18 +23732,19 @@ URL.defaultProps = {
   limit: 1
 };
 module.exports = exports['default'];
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-phrase":32}],32:[function(require,module,exports){
-arguments[4][10][0].apply(exports,arguments)
-},{"../package":34,"dup":10,"inherits":33}],33:[function(require,module,exports){
-arguments[4][11][0].apply(exports,arguments)
-},{"dup":11}],34:[function(require,module,exports){
-arguments[4][12][0].apply(exports,arguments)
-},{"dup":12}],35:[function(require,module,exports){
-arguments[4][10][0].apply(exports,arguments)
-},{"../package":37,"dup":10,"inherits":36}],36:[function(require,module,exports){
-arguments[4][11][0].apply(exports,arguments)
-},{"dup":11}],37:[function(require,module,exports){
+},{"lacona-phrase":110,"lodash":113}],110:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":112,"dup":2,"inherits":111}],111:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],112:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"dup":4}],113:[function(require,module,exports){
+arguments[4][9][0].apply(exports,arguments)
+},{"dup":9}],114:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":116,"dup":2,"inherits":115}],115:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],116:[function(require,module,exports){
 module.exports={
   "name": "lacona-phrase",
   "version": "0.7.0",
@@ -17750,7 +23790,684 @@ module.exports={
   }
 }
 
-},{}],38:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+var output = {
+  webSearch: {
+    searchEngines: [{ name: 'Google', url: 'https://www.google.com/search?q={0}' }, { name: 'Yahoo', url: 'https://search.yahoo.com/search?p={0}' }, { name: 'Bing', url: 'https://www.bing.com/search?q={0}' }]
+  },
+  music: [{ name: 'I\'m Good',
+    artist: 'The Mowgli\'s',
+    album: 'I\'m Good',
+    genre: 'Pop' }, { name: 'Baby Love',
+    artist: 'Petite Meller',
+    album: 'Baby Love',
+    genre: 'Pop' }, { name: 'T-Shirt Weather',
+    artist: 'Circa Waves',
+    album: 'T-Shirt Weather',
+    genre: 'Pop' }, { name: 'Fade Out Lines - The Avener Rework',
+    artist: 'The Avener & Phoebe Killdeer',
+    album: 'Fade Out Lines',
+    genre: 'Pop' }, { name: 'Salt',
+    artist: 'Bad Suns',
+    album: 'Language & Perspective',
+    genre: 'Pop' }, { name: 'Ship To Wreck',
+    artist: 'Florence + The Machine',
+    album: 'Ship To Wreck',
+    genre: 'Pop' }, { name: 'Couch Potato',
+    artist: 'Shortstraw',
+    album: 'Good Morning, Sunshine',
+    genre: 'Pop' }, { name: 'Good Day',
+    artist: 'distant cousins',
+    album: 'Good Day',
+    genre: 'Pop' }, { name: 'Ex\'s & Oh\'s',
+    artist: 'Elle King',
+    album: 'Love Stuff',
+    genre: 'Pop' }, { name: 'Irresistible',
+    artist: 'Fall Out Boy',
+    album: 'American Beauty/American Psycho',
+    genre: 'Pop' }, { name: 'Centuries',
+    artist: 'Fall Out Boy',
+    album: 'American Beauty/American Psycho',
+    genre: 'Pop' }, { name: 'Light Me Up',
+    artist: 'Flyte',
+    album: 'Light Me Up',
+    genre: 'Pop' }, { name: 'Violins',
+    artist: 'I\'m From Barcelona',
+    album: 'Violins',
+    genre: 'Pop' }, { name: 'I Bet My Life',
+    artist: 'Imagine Dragons',
+    album: 'Smoke + Mirrors (Deluxe)',
+    genre: 'Pop' }, { name: 'RIVA (Restart the Game) - Radio Edit',
+    artist: 'Klingande',
+    album: 'RIVA (Restart The Game) [Radio Edit]',
+    genre: 'Pop' }, { name: 'Lean On (feat. MØ & DJ Snake)',
+    artist: 'Major Lazer',
+    album: 'Lean On (feat. MØ & DJ Snake)',
+    genre: 'Pop' }, { name: 'Got It',
+    artist: 'Marian Hill',
+    album: 'Sway',
+    genre: 'Pop' }, { name: 'Can You Blame Me',
+    artist: 'Matt and Kim',
+    album: 'Can You Blame Me',
+    genre: 'Pop' }, { name: 'Talk About You',
+    artist: 'MIKA',
+    album: 'Talk About You',
+    genre: 'Pop' }, { name: 'Love Like Mine',
+    artist: 'Miami Horror',
+    album: 'Love Like Mine',
+    genre: 'Pop' }, { name: 'Our Own House',
+    artist: 'MisterWives',
+    album: 'Our Own House',
+    genre: 'Pop' }, { name: 'The Rhythm',
+    artist: 'MNEK',
+    album: 'The Rhythm',
+    genre: 'Pop' }, { name: 'Magic (feat. Nile Rodgers and Brandy)',
+    artist: 'Mystery Skulls',
+    album: 'Forever',
+    genre: 'Pop' }, { name: 'Never Gets Old',
+    artist: 'Penguin Prison',
+    album: 'Never Gets Old',
+    genre: 'Pop' }, { name: 'Karaoke',
+    artist: 'Smallpools',
+    album: 'Karaoke',
+    genre: 'Pop' }, { name: 'Robot Love',
+    artist: 'Urban Cone',
+    album: 'Robot Love',
+    genre: 'Pop' }, { name: 'King',
+    artist: 'Years & Years',
+    album: 'King',
+    genre: 'Pop' }, { name: 'So Cruel',
+    artist: 'Young Empires',
+    album: 'So Cruel',
+    genre: 'Pop' }, { name: 'The Night Is Still Young',
+    artist: 'Nicki Minaj',
+    album: 'The Pinkprint',
+    genre: 'Pop' }, { name: 'I Will Never Let You Down',
+    artist: 'Rita Ora',
+    album: 'I Will Never Let You Down',
+    genre: 'Pop' }, { name: 'Never Been In Love (feat. Icona Pop)',
+    artist: 'Cobra Starship',
+    album: 'Never Been In Love (feat. Icona Pop)',
+    genre: 'Pop' }, { name: 'What I did for Love (feat. Emeli Sandé)',
+    artist: 'David Guetta',
+    album: 'Listen (Deluxe)',
+    genre: 'Pop' }, { name: 'Want To Want Me',
+    artist: 'Jason Derulo',
+    album: 'Want To Want Me',
+    genre: 'Pop' }, { name: 'Iron Man',
+    artist: 'Black Sabbath',
+    album: 'Paranoid',
+    genre: 'Metal' }, { name: 'Stronger',
+    artist: 'Clean Bandit',
+    album: 'New Eyes',
+    genre: 'Rock' }, { name: 'Stole the Show',
+    artist: 'Kygo',
+    album: 'Stole the Show',
+    genre: 'Jazz' }, { name: 'In Your Arms',
+    artist: 'Nico & Vinz',
+    album: 'Black Star Elephant',
+    genre: 'Folk' }, { name: 'Intoxicated',
+    artist: 'Martin Solveig',
+    album: 'Intoxicated (Radio Edit)',
+    genre: 'Indie' }, { name: 'Runaway (U & I)',
+    artist: 'Galantis',
+    album: 'Runaway (U & I)',
+    genre: 'Pop' }, { name: 'Outside',
+    artist: 'Calvin Harris',
+    album: 'Motion',
+    genre: 'Pop' }, { name: 'Crazy For You',
+    artist: 'Hedley',
+    album: 'Wild Life',
+    genre: 'Pop' }, { name: 'Kathleen',
+    artist: 'Catfish and the Bottlemen',
+    album: 'The Balcony',
+    genre: 'Pop' }, { name: 'Work This Body',
+    artist: 'Walk the Moon',
+    album: 'TALKING IS HARD',
+    genre: 'Pop' }, { name: 'Seeing Stars',
+    artist: 'BØRNS',
+    album: 'Candy',
+    genre: 'Pop' }, { name: 'If It\'s Not You',
+    artist: 'Keljet',
+    album: 'Keljet x AYER - If It\'s Not You',
+    genre: 'Pop' }, { name: 'The Nights',
+    artist: 'Avicii',
+    album: 'The Days / Nights',
+    genre: 'Pop' }, { name: 'Pay No Mind',
+    artist: 'Madeon',
+    album: 'Adventure (Deluxe)',
+    genre: 'Pop' }, { name: 'Best Fake Smile',
+    artist: 'James Bay',
+    album: 'Chaos And The Calm',
+    genre: 'Pop' }, { name: 'Savages',
+    artist: 'Marina and The Diamonds',
+    album: 'FROOT',
+    genre: 'Pop' }, { name: 'Human Contact',
+    artist: 'Catey Shaw',
+    album: 'The Brooklyn EP',
+    genre: 'Pop' }, { name: 'Hum Hum',
+    artist: 'Mating Ritual',
+    album: 'Hum Hum',
+    genre: 'Pop' }, { name: 'Cold Cold Man',
+    artist: 'Saint Motel',
+    album: 'My Type EP',
+    genre: 'Pop' }],
+  contacts: [{
+    firstName: 'Tony',
+    lastName: 'Stark',
+    nickName: 'Iron Man',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Tony Stark' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Tony Stark' } }]
+  }, {
+    firstName: 'Donald',
+    lastName: 'Blake',
+    nickName: 'Thor',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Donald Blake' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Donald Blake' } }]
+  }, {
+    firstName: 'Henry',
+    lastName: 'Pym',
+    nickName: 'Ant Man',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Henry Pym' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Henry Pym' } }]
+  }, {
+    firstName: 'Bruce',
+    lastName: 'Banner',
+    nickName: 'Hulk',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Bruce Banner' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Bruce Banner' } }]
+  }, {
+    firstName: 'Steve',
+    lastName: 'Rogers',
+    nickName: 'Captian America',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Steve Rogers' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Steve Rogers' } }]
+  }, {
+    firstName: 'Clinton',
+    lastName: 'Barton',
+    nickName: 'Hawkeye',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Clinton Barton' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Clinton Barton' } }]
+  }, {
+    firstName: 'Wanda',
+    lastName: 'Maximoff',
+    nickName: 'Scarlet Witch',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Wanda Maximoff' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Wanda Maximoff' } }]
+  }, {
+    firstName: 'Victor',
+    lastName: 'Shade',
+    nickName: 'Vision',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Victor Shade' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Victor Shade' } }]
+  }, {
+    firstName: 'Natalia',
+    lastName: 'Romanova',
+    nickName: 'Black Widow',
+    emails: [{ label: 'mobile', value: { label: 'contact', value: 'Natalia Romanova' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Natalia Romanova' } }]
+  }, {
+    firstName: 'Jennifer',
+    lastName: 'Walters',
+    nickName: 'She-Hulk',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Jennifer Walters' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Jennifer Walters' } }]
+  }, {
+    firstName: 'Hank',
+    lastName: 'McCoy',
+    nickName: 'Beast',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Hank McCoy' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Hank McCoy' } }]
+  }, {
+    firstName: 'Peter',
+    lastName: 'Quill',
+    nickName: 'Starlord',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Peter Quill' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Peter Quill' } }]
+  }, {
+    firstName: 'Reed',
+    lastName: 'Richards',
+    nickName: 'Mr. Fantastic',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Reed Richards' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Reed Richards' } }]
+  }, {
+    firstName: 'Susan',
+    lastName: 'Richards',
+    nickName: 'Invisible Woman',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Susan Richards' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Susan Richards' } }]
+  }, {
+    firstName: 'Jim',
+    lastName: 'Hammond',
+    nickName: 'Human Torch',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Jim Hammond' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Jim Hammond' } }]
+  }, {
+    firstName: 'Benjamin',
+    lastName: 'Grimm',
+    nickName: 'Thing',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Benjamin Grimm' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Benjamin Grimm' } }]
+  }, {
+    firstName: 'Peter',
+    lastName: 'Parker',
+    nickName: 'Spiderman',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Peter Parker' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Peter Parker' } }]
+  }, {
+    firstName: 'Luke',
+    lastName: 'Cage',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Luke Cage' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Luke Cage' } }]
+  }, {
+    firstName: 'Logan',
+    lastName: 'Howlett',
+    nickName: 'Wolverine',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Logan Howlett' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Logan Howlett' } }]
+  }, {
+    firstName: 'James',
+    lastName: 'Barnes',
+    nickName: 'Bucky',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'James Barnes' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'James Barnes' } }]
+  }, {
+    firstName: 'Steven',
+    lastName: 'Strange',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Steven Strange' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Steven Strange' } }]
+  }, {
+    firstName: 'Matt',
+    lastName: 'Murdock',
+    nickName: 'Daredevil',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Matt Murdock' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Matt Murdock' } }]
+  }, {
+    firstName: 'Scott',
+    lastName: 'Summers',
+    nickName: 'Cyclops',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Scott Summers' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Scott Summers' } }]
+  }, {
+    firstName: 'Charles',
+    lastName: 'Xavier',
+    nickName: 'Professor X',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Charles Xavier' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Charles Xavier' } }]
+  }, {
+    firstName: 'Bobby',
+    lastName: 'Drake',
+    nickName: 'Iceman',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Bobby Drake' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Bobby Drake' } }]
+  }, {
+    firstName: 'Jean',
+    lastName: 'Grey-Summers',
+    nickName: 'Phoenix',
+    emails: [{ label: 'work', work: { label: 'contact', value: 'Jean Grey-Summers' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Jean Grey-Summers' } }]
+  }, {
+    firstName: 'Kurt',
+    lastName: 'Wagner',
+    nickName: 'Nightcrawler',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Kurt Wagner' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Kurt Wagner' } }]
+  }, {
+    firstName: 'Ororo',
+    lastName: 'Monroe',
+    nickName: 'Storm',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Ororo Monroe' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Ororo Monroe' } }]
+  }, {
+    firstName: 'Anna',
+    lastName: 'Marie',
+    nickName: 'Rogue',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Anna Marie' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Anna Marie' } }]
+  }, {
+    firstName: 'Erik',
+    lastName: 'Lehnsherr',
+    nickName: 'Magneto',
+    emails: [{ label: 'work', value: { label: 'contact', value: 'Erik Lehnsherr' } }],
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+    phoneNumbers: [{ label: 'mobile', value: { label: 'contact', value: 'Erik Lehnsherr' } }]
+  }],
+  userContact: {
+    dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }, { label: '_$!<Anniversary>!$_', value: { month: 9, day: 11 } }],
+    relationships: [{
+      label: '_$!<Mother>!$_',
+      value: {
+        phoneNumbers: [{ label: 'mobile', value: { label: 'relationship', value: 'your mother' } }],
+        dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+        emails: [{ label: 'work', value: { label: 'relationship', value: 'your mother' } }]
+      }
+    }, {
+      label: '_$!<Brother>!$_',
+      value: {
+        phoneNumbers: [{ label: 'mobile', value: { label: 'relationship', value: 'your brother' } }],
+        dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+        emails: [{ label: 'work', value: { label: 'relationship', value: 'your brother' } }]
+      }
+    }, {
+      label: 'husband',
+      value: {
+        phoneNumbers: [{ label: 'mobile', value: { label: 'relationship', value: 'your husband' } }],
+        dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+        emails: [{ label: 'work', value: { label: 'relationship', value: 'your husband' } }]
+      }
+    }, {
+      label: 'wife',
+      value: {
+        phoneNumbers: [{ label: 'mobile', value: { label: 'relationship', value: 'your wife' } }],
+        dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+        emails: [{ label: 'work', value: { label: 'relationship', value: 'your wife' } }]
+      }
+    }, {
+      label: '_$!<Father>!$_',
+      value: {
+        phoneNumbers: [{ label: 'mobile', value: { label: 'relationship', value: 'your father' } }],
+        dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+        emails: [{ label: 'work', value: { label: 'relationship', value: 'your father' } }]
+      }
+    }, {
+      label: '_$!<Partner>!$_',
+      value: {
+        phoneNumbers: [{ label: 'mobile', value: { label: 'relationship', value: 'your partner' } }],
+        dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+        emails: [{ label: 'work', value: { label: 'relationship', value: 'your partner' } }]
+      }
+    }, {
+      label: '_$!<Sister>!$_',
+      value: {
+        phoneNumbers: [{ label: 'mobile', value: { label: 'relationship', value: 'your sister' } }],
+        dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+        emails: [{ label: 'work', value: { label: 'relationship', value: 'your sister' } }]
+      }
+    }, {
+      label: '_$!<Assistant>!$_',
+      value: {
+        phoneNumbers: [{ label: 'mobile', value: { label: 'relationship', value: 'your assistant' } }],
+        dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+        emails: [{ label: 'work', value: { label: 'relationship', value: 'your assistant' } }]
+      }
+    }, {
+      label: '_$!<Manager>!$_',
+      value: {
+        phoneNumbers: [{ label: 'mobile', value: { label: 'relationship', value: 'your manager' } }],
+        dates: [{ label: '_$!<Birthday>!$_', value: { month: 9, day: 11 } }],
+        emails: [{ label: 'work', value: { label: 'relationship', value: 'your manager' } }]
+      }
+    }]
+  },
+  volumes: [{ name: 'Lacona.dmg', ejectable: true }, { name: 'Alfred.dmg', ejectable: true }, { name: 'CD Drive', ejectable: true }],
+  usHolidays: [{ text: 'New Years Day', value: new Date(2016, 0, 1) }, { text: 'Martin Luther King Jr. Day', value: new Date(2016, 0, 18) }, { text: 'Martin Luther King Day', value: new Date(2016, 0, 18) }, { text: 'Dr. Martin Luther King Jr. Day', value: new Date(2016, 0, 18) }, { text: 'Dr. Martin Luther King Day', value: new Date(2016, 0, 18) }, { text: 'Valentines Day', value: new Date(2016, 1, 14) }, { text: "Washington's Birthday", value: new Date(2016, 1, 15) }, { text: 'Presidents Day', value: new Date(2016, 1, 15) }, { text: 'Memorial Day', value: new Date(2016, 4, 30) }, { text: 'Independence Day', value: new Date(2016, 6, 4) }, { text: 'The Fourth of July', value: new Date(2016, 6, 4) }, { text: 'Labor Day', value: new Date(2015, 8, 7) }, { text: 'Columbus Day', value: new Date(2015, 9, 12) }, { text: 'Christopher Columbus Day', value: new Date(2015, 9, 12) }, { text: 'American Indian Day', value: new Date(2015, 9, 12) }, { text: 'Native American Day', value: new Date(2015, 9, 12) }, { text: "Indigenous People's Day ", value: new Date(2015, 9, 12) }, { text: 'Veterans Day', value: new Date(2015, 10, 11) }, { text: 'Thanksgiving Day', value: new Date(2015, 10, 26) }, { text: 'Christmas Eve', value: new Date(2015, 11, 24) }, { text: 'Christmas Day', value: new Date(2015, 11, 25) }, { text: 'New Years Eve', value: new Date(2015, 11, 31) }],
+  apps: [{ name: 'Calendar', type: 'app' }, { name: 'Contacts', type: 'app' }, { name: 'FaceTime', type: 'app' }, { name: 'Finder', type: 'app' }, { name: 'Game Center', type: 'app' }, { name: 'GarageBand', type: 'app' }, { name: 'iBooks', type: 'app' }, { name: 'iMovie', type: 'app' }, { name: 'iPhoto', type: 'app' }, { name: 'iTunes', type: 'app' }, { name: 'Keynote', type: 'app' }, { name: 'App Store', type: 'app' }, { name: 'Mail', type: 'app' }, { name: 'Maps', type: 'app' }, { name: 'Messages', type: 'app' }, { name: 'Notes', type: 'app' }, { name: 'Numbers', type: 'app' }, { name: 'Pages', type: 'app' }, { name: 'Photo Booth', type: 'app' }, { name: 'Reminders', type: 'app' }, { name: 'Safari', type: 'app' }, { name: 'Google Chrome', type: 'app' }, { name: 'Firefox', type: 'app' }, { name: 'Automator', type: 'app' }, { name: 'Calculator', type: 'app' }, { name: 'Chess', type: 'app' }, { name: 'Dictionary', type: 'app' }, { name: 'DVD Player', type: 'app' }, { name: 'Font Book', type: 'app' }, { name: 'Image Capture', type: 'app' }, { name: 'Preview', type: 'app' }, { name: 'QuickTime Player', type: 'app' }, { name: 'Stickies', type: 'app' }, { name: 'System Information', type: 'app' }, { name: 'TextEdit', type: 'app' }, { name: 'VoiceOver Utility', type: 'app' }],
+  bookmarks: [{ kMDItemDisplayName: 'Facebook', kMDItemURL: 'http://facebook.com' }, { kMDItemDisplayName: 'Twitter', kMDItemURL: 'http://twitter.com' }, { kMDItemDisplayName: 'Google', kMDItemURL: 'http://google.com' }, { kMDItemDisplayName: 'Lifehacker', kMDItemURL: 'http://lifehacker.com' }, { kMDItemDisplayName: 'xkcd', kMDItemURL: 'http://xkcd.com' }, { kMDItemDisplayName: 'Github', kMDItemURL: 'http://github.com' }, { kMDItemDisplayName: 'Gmail', kMDItemURL: 'http://gmail.com' }, { kMDItemDisplayName: 'Youtube', kMDItemURL: 'http://youtube.com' }, { kMDItemDisplayName: 'Wikipedia', kMDItemURL: 'http://wikipedia.org' }, { kMDItemDisplayName: 'Ebay', kMDItemURL: 'http://ebay.com' }],
+  preferencePanes: [{ kMDItemDisplayName: 'Displays', kMDItemPath: 'Displays' }, { kMDItemDisplayName: 'Desktop & Screen Saver', kMDItemPath: 'Desktop & Screen Saver' }, { kMDItemDisplayName: 'Extensions', kMDItemPath: 'Extensions' }, { kMDItemDisplayName: 'Energy Saver', kMDItemPath: 'Energy Saver' }, { kMDItemDisplayName: 'Sound', kMDItemPath: 'Sound' }, { kMDItemDisplayName: 'Keyboard', kMDItemPath: 'Keyboard' }, { kMDItemDisplayName: 'Internet Accounts', kMDItemPath: 'Internet Accounts' }, { kMDItemDisplayName: 'Date & Time', kMDItemPath: 'Date & Time' }, { kMDItemDisplayName: 'Accessibility', kMDItemPath: 'Accessibility' }, { kMDItemDisplayName: 'Security & Privacy', kMDItemPath: 'Security & Privacy' }, { kMDItemDisplayName: 'Dock', kMDItemPath: 'Dock' }, { kMDItemDisplayName: 'Profiles', kMDItemPath: 'Profiles' }, { kMDItemDisplayName: 'Network', kMDItemPath: 'Network' }, { kMDItemDisplayName: 'Notifications', kMDItemPath: 'Notifications' }, { kMDItemDisplayName: 'Fibre Channel', kMDItemPath: 'Fibre Channel' }, { kMDItemDisplayName: 'App Store', kMDItemPath: 'App Store' }, { kMDItemDisplayName: 'Time Machine', kMDItemPath: 'Time Machine' }, { kMDItemDisplayName: 'General', kMDItemPath: 'General' }, { kMDItemDisplayName: 'Dictation & Speech', kMDItemPath: 'Dictation & Speech' }, { kMDItemDisplayName: 'Spotlight', kMDItemPath: 'Spotlight' }, { kMDItemDisplayName: 'Ink', kMDItemPath: 'Ink' }, { kMDItemDisplayName: 'Language & Region', kMDItemPath: 'Language & Region' }, { kMDItemDisplayName: 'CDs & DVDs', kMDItemPath: 'CDs & DVDs' }, { kMDItemDisplayName: 'Sharing', kMDItemPath: 'Sharing' }, { kMDItemDisplayName: 'Users & Groups', kMDItemPath: 'Users & Groups' }, { kMDItemDisplayName: 'Bluetooth', kMDItemPath: 'Bluetooth' }, { kMDItemDisplayName: 'Mouse', kMDItemPath: 'Mouse' }, { kMDItemDisplayName: 'Trackpad', kMDItemPath: 'Trackpad' }, { kMDItemDisplayName: 'Mission Control', kMDItemPath: 'Mission Control' }, { kMDItemDisplayName: 'Startup Disk', kMDItemPath: 'Startup Disk' }, { kMDItemDisplayName: 'Parental Controls', kMDItemPath: 'Parental Controls' }, { kMDItemDisplayName: 'Printers & Scanners', kMDItemPath: 'Printers & Scanners' }, { kMDItemDisplayName: 'iCloud', kMDItemPath: 'iCloud' }],
+  spotlightFiles: [{ kMDItemPath: '/Users/LaconaUser/Documents/log.csv' }, { kMDItemPath: '/Users/LaconaUser/Documents/lacona-logo.png' }, { kMDItemPath: '/Users/LaconaUser/Documents/kickstarter-video.m4v' }, { kMDItemPath: '/Users/LaconaUser/Documents/document.docx' }, { kMDItemPath: '/Users/LaconaUser/Documents/my-document.docx' }, { kMDItemPath: '/Users/LaconaUser/Projects/test/main.js' }, { kMDItemPath: '/Users/LaconaUser/Projects/test/package.json' }, { kMDItemPath: '/Users/LaconaUser/Projects/test/lodash.js' }, { kMDItemPath: '/Users/LaconaUser/Projects/test/react-router.jsx' }, { kMDItemPath: '/Users/LaconaUser/Documents/Presentations/briefing 1_2.keynote' }, { kMDItemPath: '/Users/LaconaUser/Documents/Presentations/briefing 2_24.keynote' }, { kMDItemPath: '/Users/LaconaUser/Documents/Presentations/briefing 5_5.keynote' }, { kMDItemPath: '/Users/LaconaUser/status-updates.txt' }, { kMDItemPath: '/Users/LaconaUser/todo.txt' }, { kMDItemPath: '/Users/LaconaUser/Projects/cpp-test/main.cpp' }, { kMDItemPath: '/Users/LaconaUser/Projects/cpp-test/main.h' }, { kMDItemPath: '/Users/LaconaUser/Projects/cpp-test/quick-brown-fox.js' }, { kMDItemPath: '/Users/LaconaUser/Projects/cpp-test/overjumper.cs' }, { kMDItemPath: '/Users/LaconaUser/Projects/cpp-test/overjumper.h' }, { kMDItemPath: '/Users/LaconaUser/Projects/cpp-test/lazy_dog.js' }],
+  rootFiles: { '/': [{ file: 'Applications', isDir: true }, { file: 'Library', isDir: true }, { file: 'Users', isDir: true }, { file: 'bin', isDir: true }, { file: 'etc', isDir: true }, { file: 'home', isDir: true }, { file: 'net', isDir: true }, { file: 'tmp', isDir: true }, { file: 'usr', isDir: true }, { file: 'var', isDir: true }],
+    '/Applications/': [{ file: 'App Store.app', isDir: true }, { file: 'Atom.app', isDir: true }, { file: 'Automator.app', isDir: true }, { file: 'Calculator.app', isDir: true }, { file: 'Calendar.app', isDir: true }, { file: 'Chess.app', isDir: true }, { file: 'Contacts.app', isDir: true }, { file: 'DVD Player.app', isDir: true }, { file: 'Dash.app', isDir: true }, { file: 'Dashboard.app', isDir: true }, { file: 'Dictionary.app', isDir: true }, { file: 'FaceTime.app', isDir: true }, { file: 'Font Book.app', isDir: true }, { file: 'Game Center.app', isDir: true }, { file: 'GarageBand.app', isDir: true }, { file: 'GitHub.app', isDir: true }, { file: 'Google Chrome.app', isDir: true }, { file: 'Image Capture.app', isDir: true }, { file: 'Keynote.app', isDir: true }, { file: 'Launchpad.app', isDir: true }, { file: 'Mail.app', isDir: true }, { file: 'Maps.app', isDir: true }, { file: 'Messages.app', isDir: true }, { file: 'Mission Control.app', isDir: true }, { file: 'Notes.app', isDir: true }, { file: 'Numbers.app', isDir: true }, { file: 'Pages.app', isDir: true }, { file: 'Photo Booth.app', isDir: true }, { file: 'Photos.app', isDir: true }, { file: 'Preview.app', isDir: true }, { file: 'QuickTime Player.app', isDir: true }, { file: 'Reminders.app', isDir: true }, { file: 'Safari.app', isDir: true }, { file: 'Slack.app', isDir: true }, { file: 'Stickies.app', isDir: true }, { file: 'System Preferences.app', isDir: true }, { file: 'TextEdit.app', isDir: true }, { file: 'Time Machine.app', isDir: true }, { file: 'Utilities', isDir: true }, { file: 'Xcode.app', isDir: true }, { file: 'iBooks.app', isDir: true }, { file: 'iMovie.app', isDir: true }, { file: 'iPhoto.app', isDir: true }, { file: 'iTunes.app', isDir: true }],
+    '/Applications/App Store.app/': [{ file: '...', isDir: false }],
+    '/Applications/Atom.app/': [{ file: '...', isDir: false }],
+    '/Applications/Automator.app/': [{ file: '...', isDir: false }],
+    '/Applications/Calculator.app/': [{ file: '...', isDir: false }],
+    '/Applications/Calendar.app/': [{ file: '...', isDir: false }],
+    '/Applications/Chess.app/': [{ file: '...', isDir: false }],
+    '/Applications/Contacts.app/': [{ file: '...', isDir: false }],
+    '/Applications/DVD Player.app/': [{ file: '...', isDir: false }],
+    '/Applications/Dash.app/': [{ file: '...', isDir: false }],
+    '/Applications/Dashboard.app/': [{ file: '...', isDir: false }],
+    '/Applications/Dictionary.app/': [{ file: '...', isDir: false }],
+    '/Applications/FaceTime.app/': [{ file: '...', isDir: false }],
+    '/Applications/Font Book.app/': [{ file: '...', isDir: false }],
+    '/Applications/Game Center.app/': [{ file: '...', isDir: false }],
+    '/Applications/GarageBand.app/': [{ file: '...', isDir: false }],
+    '/Applications/GitHub.app/': [{ file: '...', isDir: false }],
+    '/Applications/Google Chrome.app/': [{ file: '...', isDir: false }],
+    '/Applications/Image Capture.app/': [{ file: '...', isDir: false }],
+    '/Applications/Keynote.app/': [{ file: '...', isDir: false }],
+    '/Applications/Launchpad.app/': [{ file: '...', isDir: false }],
+    '/Applications/Mail.app/': [{ file: '...', isDir: false }],
+    '/Applications/Maps.app/': [{ file: '...', isDir: false }],
+    '/Applications/Messages.app/': [{ file: '...', isDir: false }],
+    '/Applications/Mission Control.app/': [{ file: '...', isDir: false }],
+    '/Applications/Notes.app/': [{ file: '...', isDir: false }],
+    '/Applications/Numbers.app/': [{ file: '...', isDir: false }],
+    '/Applications/Pages.app/': [{ file: '...', isDir: false }],
+    '/Applications/Photo Booth.app/': [{ file: '...', isDir: false }],
+    '/Applications/Photos.app/': [{ file: '...', isDir: false }],
+    '/Applications/Preview.app/': [{ file: '...', isDir: false }],
+    '/Applications/QuickTime Player.app/': [{ file: '...', isDir: false }],
+    '/Applications/Reminders.app/': [{ file: '...', isDir: false }],
+    '/Applications/Safari.app/': [{ file: '...', isDir: false }],
+    '/Applications/Slack.app/': [{ file: '...', isDir: false }],
+    '/Applications/Stickies.app/': [{ file: '...', isDir: false }],
+    '/Applications/System Preferences.app/': [{ file: '...', isDir: false }],
+    '/Applications/TextEdit.app/': [{ file: '...', isDir: false }],
+    '/Applications/Time Machine.app/': [{ file: '...', isDir: false }],
+    '/Applications/Utilities/': [{ file: '...', isDir: false }],
+    '/Applications/Xcode.app/': [{ file: '...', isDir: false }],
+    '/Applications/iBooks.app/': [{ file: '...', isDir: false }],
+    '/Applications/iMovie.app/': [{ file: '...', isDir: false }],
+    '/Applications/iPhoto.app/': [{ file: '...', isDir: false }],
+    '/Applications/iTunes.app/': [{ file: '...', isDir: false }],
+    '/Library/': [{ file: 'Application Support', isDir: true }, { file: 'Audio', isDir: true }, { file: 'Caches', isDir: true }, { file: 'ColorPickers', isDir: true }, { file: 'ColorSync', isDir: true }, { file: 'Components', isDir: true }, { file: 'Compositions', isDir: true }, { file: 'Contextual Menu Items', isDir: true }, { file: 'CoreMediaIO', isDir: true }, { file: 'Desktop Pictures', isDir: true }, { file: 'Developer', isDir: true }, { file: 'Dictionaries', isDir: true }, { file: 'DirectoryServices', isDir: true }, { file: 'Documentation', isDir: true }, { file: 'DropboxHelperTools', isDir: true }, { file: 'Extensions', isDir: true }, { file: 'Filesystems', isDir: true }, { file: 'Fonts', isDir: true }, { file: 'Frameworks', isDir: true }, { file: 'Google', isDir: true }, { file: 'Graphics', isDir: true }, { file: 'Image Capture', isDir: true }, { file: 'Input Methods', isDir: true }, { file: 'Internet Plug-Ins', isDir: true }, { file: 'Java', isDir: true }, { file: 'Keyboard Layouts', isDir: true }, { file: 'Keychains', isDir: true }, { file: 'LaunchAgents', isDir: true }, { file: 'LaunchDaemons', isDir: true }, { file: 'Logs', isDir: true }, { file: 'Messages', isDir: true }, { file: 'Modem Scripts', isDir: true }, { file: 'OpenDirectory', isDir: true }, { file: 'PDF Services', isDir: true }, { file: 'Perl', isDir: true }, { file: 'PreferencePanes', isDir: true }, { file: 'Preferences', isDir: true }, { file: 'Printers', isDir: true }, { file: 'PrivilegedHelperTools', isDir: true }, { file: 'Python', isDir: true }, { file: 'QuickLook', isDir: true }, { file: 'QuickTime', isDir: true }, { file: 'Receipts', isDir: true }, { file: 'Ruby', isDir: true }, { file: 'Sandbox', isDir: true }, { file: 'Screen Savers', isDir: true }, { file: 'ScriptingAdditions', isDir: true }, { file: 'Scripts', isDir: true }, { file: 'Security', isDir: true }, { file: 'Server', isDir: true }, { file: 'Speech', isDir: true }, { file: 'Spelling', isDir: true }, { file: 'Spotlight', isDir: true }, { file: 'StartupItems', isDir: true }, { file: 'SystemMigration', isDir: true }, { file: 'SystemProfiler', isDir: true }, { file: 'Updates', isDir: true }, { file: 'User Pictures', isDir: true }, { file: 'Video', isDir: true }, { file: 'WebServer', isDir: true }, { file: 'Widgets', isDir: true }, { file: 'iTunes', isDir: true }],
+    '/Library/Application Support/': [{ file: '...', isDir: false }],
+    '/Library/Audio/': [{ file: '...', isDir: false }],
+    '/Library/Caches/': [{ file: '...', isDir: false }],
+    '/Library/ColorPickers/': [{ file: '...', isDir: false }],
+    '/Library/ColorSync/': [{ file: '...', isDir: false }],
+    '/Library/Components/': [{ file: '...', isDir: false }],
+    '/Library/Compositions/': [{ file: '...', isDir: false }],
+    '/Library/Contextual Menu Items/': [{ file: '...', isDir: false }],
+    '/Library/CoreMediaIO/': [{ file: '...', isDir: false }],
+    '/Library/Desktop Pictures/': [{ file: '...', isDir: false }],
+    '/Library/Developer/': [{ file: '...', isDir: false }],
+    '/Library/Dictionaries/': [{ file: '...', isDir: false }],
+    '/Library/DirectoryServices/': [{ file: '...', isDir: false }],
+    '/Library/Documentation/': [{ file: '...', isDir: false }],
+    '/Library/DropboxHelperTools/': [{ file: '...', isDir: false }],
+    '/Library/Extensions/': [{ file: '...', isDir: false }],
+    '/Library/Filesystems/': [{ file: '...', isDir: false }],
+    '/Library/Fonts/': [{ file: '...', isDir: false }],
+    '/Library/Frameworks/': [{ file: '...', isDir: false }],
+    '/Library/Google/': [{ file: '...', isDir: false }],
+    '/Library/Graphics/': [{ file: '...', isDir: false }],
+    '/Library/Image Capture/': [{ file: '...', isDir: false }],
+    '/Library/Input Methods/': [{ file: '...', isDir: false }],
+    '/Library/Internet Plug-Ins/': [{ file: '...', isDir: false }],
+    '/Library/Java/': [{ file: '...', isDir: false }],
+    '/Library/Keyboard Layouts/': [{ file: '...', isDir: false }],
+    '/Library/Keychains/': [{ file: '...', isDir: false }],
+    '/Library/LaunchAgents/': [{ file: '...', isDir: false }],
+    '/Library/LaunchDaemons/': [{ file: '...', isDir: false }],
+    '/Library/Logs/': [{ file: '...', isDir: false }],
+    '/Library/Messages/': [{ file: '...', isDir: false }],
+    '/Library/Modem Scripts/': [{ file: '...', isDir: false }],
+    '/Library/OpenDirectory/': [{ file: '...', isDir: false }],
+    '/Library/PDF Services/': [{ file: '...', isDir: false }],
+    '/Library/Perl/': [{ file: '...', isDir: false }],
+    '/Library/PreferencePanes/': [{ file: '...', isDir: false }],
+    '/Library/Preferences/': [{ file: '...', isDir: false }],
+    '/Library/Printers/': [{ file: '...', isDir: false }],
+    '/Library/PrivilegedHelperTools/': [{ file: '...', isDir: false }],
+    '/Library/Python/': [{ file: '...', isDir: false }],
+    '/Library/QuickLook/': [{ file: '...', isDir: false }],
+    '/Library/QuickTime/': [{ file: '...', isDir: false }],
+    '/Library/Receipts/': [{ file: '...', isDir: false }],
+    '/Library/Ruby/': [{ file: '...', isDir: false }],
+    '/Library/Sandbox/': [{ file: '...', isDir: false }],
+    '/Library/Screen Savers/': [{ file: '...', isDir: false }],
+    '/Library/ScriptingAdditions/': [{ file: '...', isDir: false }],
+    '/Library/Scripts/': [{ file: '...', isDir: false }],
+    '/Library/Security/': [{ file: '...', isDir: false }],
+    '/Library/Server/': [{ file: '...', isDir: false }],
+    '/Library/Speech/': [{ file: '...', isDir: false }],
+    '/Library/Spelling/': [{ file: '...', isDir: false }],
+    '/Library/Spotlight/': [{ file: '...', isDir: false }],
+    '/Library/StartupItems/': [{ file: '...', isDir: false }],
+    '/Library/SystemMigration/': [{ file: '...', isDir: false }],
+    '/Library/SystemProfiler/': [{ file: '...', isDir: false }],
+    '/Library/Updates/': [{ file: '...', isDir: false }],
+    '/Library/User Pictures/': [{ file: '...', isDir: false }],
+    '/Library/Video/': [{ file: '...', isDir: false }],
+    '/Library/WebServer/': [{ file: '...', isDir: false }],
+    '/Library/Widgets/': [{ file: '...', isDir: false }],
+    '/Library/iTunes/': [{ file: '...', isDir: false }],
+    '/Users/': [{ file: 'LaconaUser', isDir: true }, { file: 'Guest', isDir: true }, { file: 'Shared', isDir: true }],
+    '/Users/LaconaUser/': [{ file: 'Desktop', isDir: true }, { file: 'Documents', isDir: true }, { file: 'Downloads', isDir: true }, { file: 'Library', isDir: true }, { file: 'Movies', isDir: true }, { file: 'Music', isDir: true }, { file: 'Pictures', isDir: true }],
+    '/Users/LaconaUser/Desktop/': [{ file: 'mydocument.pages', isDir: false }, { file: 'mockup.html', isDir: false }, { file: 'kickstarter.url', isDir: false }],
+    '/Users/LaconaUser/Documents/': [{ file: 'University', isDir: true }, { file: 'Resumes', isDir: true }, { file: 'Ideas', isDir: true }, { file: 'Presentations', isDir: true }, { file: 'Projects', isDir: true }, { file: 'NLP', isDir: true }],
+    '/Users/LaconaUser/Documents/University/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Documents/Resumes/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Documents/Ideas/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Documents/Presentations/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Documents/Projects/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Documents/NLP/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Downloads/': [{ file: 'Lacona.dmg', isDir: false }],
+    '/Users/LaconaUser/Library/': [{ file: 'Accounts', isDir: true }, { file: 'Application Scripts', isDir: true }, { file: 'Application Support', isDir: true }, { file: 'Assistants', isDir: true }, { file: 'Audio', isDir: true }, { file: 'Autosave Information', isDir: true }, { file: 'Caches', isDir: true }, { file: 'Calendars', isDir: true }, { file: 'ColorPickers', isDir: true }, { file: 'Colors', isDir: true }, { file: 'Compositions', isDir: true }, { file: 'Containers', isDir: true }, { file: 'Cookies', isDir: true }, { file: 'Developer', isDir: true }, { file: 'Dictionaries', isDir: true }, { file: 'Favorites', isDir: true }, { file: 'FlashlightPlugins', isDir: true }, { file: 'FontCollections', isDir: true }, { file: 'Fonts', isDir: true }, { file: 'GameKit', isDir: true }, { file: 'Google', isDir: true }, { file: 'Group Containers', isDir: true }, { file: 'IdentityServices', isDir: true }, { file: 'Input Methods', isDir: true }, { file: 'Internet Plug-Ins', isDir: true }, { file: 'Keyboard Layouts', isDir: true }, { file: 'Keychains', isDir: true }, { file: 'LanguageModeling', isDir: true }, { file: 'LaunchAgents', isDir: true }, { file: 'Logs', isDir: true }, { file: 'Mail', isDir: true }, { file: 'Messages', isDir: true }, { file: 'Mobile Documents', isDir: true }, { file: 'PreferencePanes', isDir: true }, { file: 'Preferences', isDir: true }, { file: 'Printers', isDir: true }, { file: 'PubSub', isDir: true }, { file: 'Safari', isDir: true }, { file: 'Saved Application State', isDir: true }, { file: 'Saved Searches', isDir: true }, { file: 'Screen Savers', isDir: true }, { file: 'ScriptingAdditions', isDir: true }, { file: 'Services', isDir: true }, { file: 'Sounds', isDir: true }, { file: 'Spelling', isDir: true }, { file: 'SyncedPreferences', isDir: true }, { file: 'Voices', isDir: true }, { file: 'WebKit', isDir: true }, { file: 'com.apple.nsurlsessiond', isDir: true }, { file: 'iMovie', isDir: true }, { file: 'iTunes', isDir: true }],
+    '/Users/LaconaUser/Library/Accounts/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Application Scripts/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Application Support/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Assistants/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Audio/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Autosave Information/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Caches/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Calendars/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/ColorPickers/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Colors/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Compositions/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Containers/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Cookies/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Developer/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Dictionaries/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Favorites/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/FlashlightPlugins/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/FontCollections/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Fonts/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/GameKit/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Google/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Group Containers/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/IdentityServices/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Input Methods/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Internet Plug-Ins/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Keyboard Layouts/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Keychains/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/LanguageModeling/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/LaunchAgents/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Logs/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Mail/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Messages/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Mobile Documents/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/PreferencePanes/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Preferences/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Printers/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/PubSub/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Safari/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Saved Application State/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Saved Searches/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Screen Savers/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/ScriptingAdditions/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Services/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Sounds/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Spelling/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/SyncedPreferences/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/Voices/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/WebKit/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/com.apple.nsurlsessiond/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/iMovie/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Library/iTunes/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Movies/': [{ file: 'The Avengers.avi', isDir: false }, { file: 'X-Men First Class.avi', isDir: false }, { file: 'Iron Man.avi', isDir: false }],
+    '/Users/LaconaUser/Music/': [{ file: 'Audio Music Apps', isDir: true }, { file: 'GarageBand', isDir: true }, { file: 'iTunes', isDir: true }],
+    '/Users/LaconaUser/Music/Audio Music Apps/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Music/GarageBand/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Music/iTunes/': [{ file: '...', isDir: false }],
+    '/Users/LaconaUser/Pictures/': [{ file: 'Photos Library.photoslibrary', isDir: false }],
+    '/Users/Guest/': [{ file: '...', isDir: false }],
+    '/Users/Shared/': [{ file: '...', isDir: false }],
+    '/bin/': [{ file: 'bash', isDir: false }, { file: 'cat', isDir: false }, { file: 'chmod', isDir: false }, { file: 'cp', isDir: false }, { file: 'csh', isDir: false }, { file: 'date', isDir: false }, { file: 'dd', isDir: false }, { file: 'df', isDir: false }, { file: 'domainname', isDir: false }, { file: 'echo', isDir: false }, { file: 'ed', isDir: false }, { file: 'expr', isDir: false }, { file: 'hostname', isDir: false }, { file: 'kill', isDir: false }, { file: 'ksh', isDir: false }, { file: 'launchctl', isDir: false }, { file: 'link', isDir: false }, { file: 'ln', isDir: false }, { file: 'ls', isDir: false }, { file: 'mkdir', isDir: false }, { file: 'mv', isDir: false }, { file: 'pax', isDir: false }, { file: 'ps', isDir: false }, { file: 'pwd', isDir: false }, { file: 'rcp', isDir: false }, { file: 'rm', isDir: false }, { file: 'rmdir', isDir: false }, { file: 'sh', isDir: false }, { file: 'sleep', isDir: false }, { file: 'stty', isDir: false }, { file: 'sync', isDir: false }, { file: 'tcsh', isDir: false }, { file: 'test', isDir: false }, { file: 'unlink', isDir: false }, { file: 'wait4path', isDir: false }, { file: 'zsh', isDir: false }],
+    '/etc/': [],
+    '/home/': [],
+    '/net/': [],
+    '/tmp/': [{ file: 'KSOutOfProcessFetcher.0.OlaJUhhgKAnFsX7fZ0FyXTFxIgg=',
+      isDir: false }, { file: 'com.apple.launchd.CWPFO2w3Rj', isDir: false }, { file: 'com.apple.launchd.eM0bByeRbW', isDir: false }, { file: 'tmphosts', isDir: false }, { file: 'tmphosts1', isDir: false }, { file: 'some.tmp', isDir: false }, { file: 'test.tmp', isDir: false }, { file: 'yes.txt', isDir: false }],
+    '/usr/': [{ file: 'X11', isDir: true }, { file: 'X11R6', isDir: true }, { file: 'bin', isDir: true }, { file: 'include', isDir: true }, { file: 'lib', isDir: true }, { file: 'libexec', isDir: true }, { file: 'local', isDir: true }, { file: 'sbin', isDir: true }, { file: 'share', isDir: true }, { file: 'standalone', isDir: true }],
+    '/usr/X11/': [{ file: '...', isDir: false }],
+    '/usr/X11R6/': [{ file: '...', isDir: false }],
+    '/usr/bin/': [{ file: '...', isDir: false }],
+    '/usr/include/': [{ file: '...', isDir: false }],
+    '/usr/lib/': [{ file: '...', isDir: false }],
+    '/usr/libexec/': [{ file: '...', isDir: false }],
+    '/usr/local/': [{ file: '...', isDir: false }],
+    '/usr/sbin/': [{ file: '...', isDir: false }],
+    '/usr/share/': [{ file: '...', isDir: false }],
+    '/usr/standalone/': [{ file: '...', isDir: false }],
+    '/var/': [{ file: 'Keychains', isDir: true }, { file: 'agentx', isDir: true }, { file: 'at', isDir: true }, { file: 'audit', isDir: true }, { file: 'backups', isDir: true }, { file: 'db', isDir: true }, { file: 'empty', isDir: true }, { file: 'folders', isDir: true }, { file: 'folders~orig', isDir: true }, { file: 'jabberd', isDir: true }, { file: 'lib', isDir: true }, { file: 'log', isDir: true }, { file: 'mail', isDir: true }, { file: 'msgs', isDir: true }, { file: 'netboot', isDir: true }, { file: 'networkd', isDir: true }, { file: 'root', isDir: true }, { file: 'rpc', isDir: true }, { file: 'run', isDir: true }, { file: 'rwho', isDir: true }, { file: 'spool', isDir: true }, { file: 'tmp', isDir: true }, { file: 'vm', isDir: true }, { file: 'yp', isDir: true }],
+    '/var/Keychains/': [{ file: '...', isDir: false }],
+    '/var/agentx/': [{ file: '...', isDir: false }],
+    '/var/at/': [{ file: '...', isDir: false }],
+    '/var/audit/': [{ file: '...', isDir: false }],
+    '/var/backups/': [{ file: '...', isDir: false }],
+    '/var/db/': [{ file: '...', isDir: false }],
+    '/var/empty/': [{ file: '...', isDir: false }],
+    '/var/folders/': [{ file: '...', isDir: false }],
+    '/var/folders~orig/': [{ file: '...', isDir: false }],
+    '/var/jabberd/': [{ file: '...', isDir: false }],
+    '/var/lib/': [{ file: '...', isDir: false }],
+    '/var/log/': [{ file: '...', isDir: false }],
+    '/var/mail/': [{ file: '...', isDir: false }],
+    '/var/msgs/': [{ file: '...', isDir: false }],
+    '/var/netboot/': [{ file: '...', isDir: false }],
+    '/var/networkd/': [{ file: '...', isDir: false }],
+    '/var/root/': [{ file: '...', isDir: false }],
+    '/var/rpc/': [{ file: '...', isDir: false }],
+    '/var/run/': [{ file: '...', isDir: false }],
+    '/var/rwho/': [{ file: '...', isDir: false }],
+    '/var/spool/': [{ file: '...', isDir: false }],
+    '/var/tmp/': [{ file: '...', isDir: false }],
+    '/var/vm/': [{ file: '...', isDir: false }],
+    '/var/yp/': [{ file: '...', isDir: false }] }
+
+};
+
+exports['default'] = output;
+module.exports = exports['default'];
+
+},{}],118:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17764,7 +24481,7 @@ exports["default"] = (function (a, b) {
 
 module.exports = exports["default"];
 
-},{}],39:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -17824,73 +24541,65 @@ function andify(array) {
   }
 }
 
+var settingMap = {
+  'shutdown': 'shutdown the computer',
+  'restart': 'restart the computer',
+  'log out': 'log out of the computer',
+  'sleep': 'put the computer to sleep',
+  'lock': 'lock the computer',
+  'display-off': 'turn the display off',
+  'screensaver': 'turn on the screensaver',
+  'empty-trash': 'empty the trash'
+};
+
 function getExecute(showNotification) {
   if (global.location && global.location.hash === '#videodemo') return;
 
   return function (result) {
+    console.log(result);
     var message = undefined;
     if (result.open) {
-      if (result.open.openin) {
+      if (result.open.verb === 'openin') {
         message = [_react2['default'].createElement(
           'span',
           { className: 'category-action' },
           'open '
-        ), outputifyOpen(result.open.things), ' in ', outputifyOpen(result.open.openin)];
+        ), outputifyOpen(result.open.items), ' in ', outputifyOpen(result.open.apps)];
       } else if (result.open) {
         if (result.open.verb === 'open') {
-          message = outputifyDefaultOpen(result.open.things);
+          message = outputifyDefaultOpen(result.open.items);
         } else if (result.open.verb === 'switch') {
           message = [_react2['default'].createElement(
             'span',
             { className: 'category-action' },
             'switch focus to '
-          ), outputifyOpen(result.open.things)];
+          ), outputifyOpen(result.open.items)];
         } else if (result.open.verb === 'close') {
           message = [_react2['default'].createElement(
             'span',
             { className: 'category-action' },
             'close the frontmost window of '
-          ), outputifyOpen(result.open.things)];
+          ), outputifyOpen(result.open.items)];
         } else if (result.open.verb === 'quit') {
           message = [_react2['default'].createElement(
             'span',
             { className: 'category-action' },
             'quit '
-          ), outputifyOpen(result.open.things)];
+          ), outputifyOpen(result.open.items)];
         } else if (result.open.verb === 'kill') {
           message = [_react2['default'].createElement(
             'span',
             { className: 'category-action' },
             'kill '
-          ), outputifyOpen(result.open.things)];
+          ), outputifyOpen(result.open.items)];
         }
       }
     } else if (result.date) {
-      if (result.date.reminder) {
+      if (result.date.verb === 'remind') {
         var time = undefined;
 
-        if (result.date.reminder.datetime) {
-          time = ['with an alert on ', formatDate(result.date.reminder.datetime)];
-        } else if (result.date.reminder.date) {
-          time = ['with an alert on ', _react2['default'].createElement(
-            'span',
-            { className: 'descriptor-date' },
-            (0, _moment2['default'])(result.date.reminder.date).format('dddd, MMMM Do, YYYY')
-          ), ' at ', _react2['default'].createElement(
-            'span',
-            { className: 'descriptor-time' },
-            '9:00 am'
-          )];
-        } else if (result.date.reminder.time) {
-          time = ['with an alert ', _react2['default'].createElement(
-            'span',
-            { className: 'descriptor-date' },
-            'today'
-          ), ' at ', _react2['default'].createElement(
-            'span',
-            { className: 'descriptor-time' },
-            (0, _moment2['default'])(result.date.reminder.time).format('h:mm a')
-          )];
+        if (result.date.date) {
+          time = ['with an alert on ', formatDate(result.date.date)];
         } else {
           time = ['without an alert'];
         }
@@ -17902,40 +24611,17 @@ function getExecute(showNotification) {
         ), ' called ', _react2['default'].createElement(
           'span',
           { className: 'descriptor-reminder-title' },
-          result.date.reminder.title
+          result.date.title
         ), ' ', time];
-      } else if (result.date.event) {
+      } else if (result.date.verb === 'schedule') {
         var _location = undefined;
-        if (result.date.event.location) _location = [' with location ', _react2['default'].createElement(
+        if (result.date.location) _location = [' with location ', _react2['default'].createElement(
           'span',
           { className: 'descriptor-location' },
-          result.date.event.location
+          result.date.location
         ), ''];
 
-        var time = undefined;
-        if (result.date.event.datetime) {
-          time = formatDateAsRange(result.date.event.datetime);
-        } else if (result.date.event.period) {
-          time = formatDateRange(result.date.event.period);
-        } else if (result.date.event.date) {
-          time = [_react2['default'].createElement(
-            'span',
-            { className: 'descriptor-date' },
-            (0, _moment2['default'])(result.date.event.date).format('dddd, MMMM Do, YYYY')
-          ), ' all day'];
-        } else if (result.date.event.time) {
-          var m = (0, _moment2['default'])(result.date.event.time);
-          var todayTomorrow = m.isAfter((0, _moment2['default'])()) ? (0, _moment2['default'])() : (0, _moment2['default'])().add(1, 'days');
-          time = [_react2['default'].createElement(
-            'span',
-            { className: 'descriptor-date' },
-            todayTomorrow.format('dddd, MMMM Do, YYYY')
-          ), ' at ', _react2['default'].createElement(
-            'span',
-            { className: 'descriptor-time' },
-            m.format('h:mma')
-          )];
-        }
+        var time = formatDateRange(result.date.range);
 
         message = [_react2['default'].createElement(
           'span',
@@ -17944,48 +24630,61 @@ function getExecute(showNotification) {
         ), ' called ', _react2['default'].createElement(
           'span',
           { className: 'descriptor-calendar-event' },
-          result.date.event.title
+          result.date.title
         ), ' ', _location, ' on ', time];
       }
     } else if (result.settings) {
-      if (result.settings.settings) {
-        if (result.settings.settings.duration) {
+      var verb = result.settings.verb;
+
+      if (result.settings.direction === -1) {
+        if (result.settings.verb === 'turn off') {
+          verb = 'turn on';
+        } else if (result.settings.verb === 'turn on') {
+          verb = 'turn off';
+        }
+      }
+
+      if (verb === 'turn on' || verb === 'turn off' || verb === 'toggle') {
+        if (result.settings.duration) {
           message = [_react2['default'].createElement(
             'span',
             { className: 'category-action' },
-            result.settings.settings.verb
+            verb
           ), ' ', _react2['default'].createElement(
             'span',
             { className: 'descriptor-setting' },
-            result.settings.settings.setting
-          ), ', wait ', formatDuration(result.settings.settings.duration), ', and then change it back'];
+            result.settings.setting
+          ), ', wait ', formatDuration(result.settings.duration), ', and then change it back'];
         } else {
           message = [_react2['default'].createElement(
             'span',
             { className: 'category-action' },
-            result.settings.settings.verb
+            verb
           ), ' ', _react2['default'].createElement(
             'span',
             { className: 'descriptor-setting' },
-            result.settings.settings.setting
+            result.settings.setting
           )];
         }
-      } else if (result.settings.actions) {
-        if (result.settings.actions.object) {
+      } else {
+        if (verb === 'eject') {
+          var volumes = _.map(result.settings.volumes, function (volume) {
+            return _react2['default'].createElement(
+              'span',
+              { className: 'descriptor-volume' },
+              volume
+            );
+          });
           message = [_react2['default'].createElement(
             'span',
             { className: 'category-action' },
-            result.settings.actions.verb
-          ), ' ', _react2['default'].createElement(
-            'span',
-            { className: 'descriptor-volume' },
-            result.settings.actions.object
-          )];
+            verb
+          ), ' ', andify(volumes)];
         } else {
           message = [_react2['default'].createElement(
             'span',
             { className: 'category-action' },
-            result.settings.actions.verb
+            settingMap[verb]
           )];
         }
       }
@@ -17998,7 +24697,7 @@ function getExecute(showNotification) {
         ), ' a ', _react2['default'].createElement(
           'span',
           { className: 'descriptor-search-engine' },
-          result.search.engines[0]
+          result.search.engines[0].name
         ), ' search for ', _react2['default'].createElement(
           'span',
           { className: 'descriptor-query' },
@@ -18009,11 +24708,12 @@ function getExecute(showNotification) {
           'the default browser'
         )];
       } else {
-        var enginePhrases = _.map(result.search.engines, function (engine) {
+        var enginePhrases = _.map(result.search.engines, function (_ref) {
+          var name = _ref.name;
           return _react2['default'].createElement(
             'span',
             { className: 'descriptor-search-engine' },
-            engine
+            name
           );
         });
         var engines = andify(enginePhrases);
@@ -18032,236 +24732,234 @@ function getExecute(showNotification) {
         )];
       }
     } else if (result.play) {
-      if (result.play.something) {
-        var descriptions = _.map(result.play.something, function (thing) {
-          if (thing.song) {
+      if (result.play.music) {
+        var descriptions = _.map(result.play.music, function (_ref2) {
+          var song = _ref2.song;
+          var album = _ref2.album;
+          var artist = _ref2.artist;
+          var genre = _ref2.genre;
+          var playlist = _ref2.playlist;
+          var composer = _ref2.composer;
+
+          if (song) {
             return [_react2['default'].createElement(
               'span',
               { className: 'descriptor-song' },
-              thing.song
+              song
             )];
-          } else if (thing.album) {
+          } else if (album) {
             return ['all songs on ', _react2['default'].createElement(
               'span',
               { className: 'descriptor-album' },
-              thing.album
+              album
             )];
-          } else if (thing.artist) {
+          } else if (artist) {
             return ['all songs by ', _react2['default'].createElement(
               'span',
               { className: 'descriptor-artist' },
-              thing.artist
+              artist
             )];
-          } else if (thing.genre) {
+          } else if (genre) {
             return ['all songs in the ', _react2['default'].createElement(
               'span',
               { className: 'descriptor-genre' },
-              thing.genre
+              genre
             ), ' genre'];
-          } else if (thing.playlist) {
+          } else if (playlist) {
             return ['all songs in the ', _react2['default'].createElement(
               'span',
               { className: 'descriptor-playlist' },
-              thing.playlist
+              playlist
             ), ' playlist'];
-          } else if (thing.composer) {
+          } else if (composer) {
             return ['all songs composed by ', _react2['default'].createElement(
               'span',
               { className: 'descriptor-composer' },
-              thing.composer
+              composer
             )];
           }
         });
 
         var allDescriptions = andify(descriptions);
 
-        if (result.play.shuffled) {
+        // if (result.play.shuffled) {
+        //   message = [<span className='category-action'>play</span>, ' ', allDescriptions, ' ', <span className='descriptor-shuffled'>shuffled</span>, ' in ', <span className='descriptor-application'>iTunes</span>]
+        // } else {
+        message = [_react2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'play'
+        ), ' ', allDescriptions, ' in ', _react2['default'].createElement(
+          'span',
+          { className: 'descriptor-application' },
+          'iTunes'
+        )];
+        // }
+      } else if (result.play.verb === 'play') {
           message = [_react2['default'].createElement(
             'span',
             { className: 'category-action' },
             'play'
-          ), ' ', allDescriptions, ' ', _react2['default'].createElement(
+          ), ' ', _react2['default'].createElement(
             'span',
-            { className: 'descriptor-shuffled' },
-            'shuffled'
+            { className: 'category-argument5' },
+            'the current song'
           ), ' in ', _react2['default'].createElement(
             'span',
             { className: 'descriptor-application' },
             'iTunes'
           )];
-        } else {
+        } else if (result.play.verb === 'next') {
           message = [_react2['default'].createElement(
             'span',
             { className: 'category-action' },
             'play'
-          ), ' ', allDescriptions, ' in ', _react2['default'].createElement(
+          ), ' ', _react2['default'].createElement(
+            'span',
+            { className: 'category-argument5' },
+            'the next song'
+          ), ' in ', _react2['default'].createElement(
+            'span',
+            { className: 'descriptor-application' },
+            'iTunes'
+          )];
+        } else if (result.play.verb === 'previous') {
+          message = [_react2['default'].createElement(
+            'span',
+            { className: 'category-action' },
+            'play'
+          ), ' ', _react2['default'].createElement(
+            'span',
+            { className: 'category-argument5' },
+            'the previous song'
+          ), ' in ', _react2['default'].createElement(
+            'span',
+            { className: 'descriptor-application' },
+            'iTunes'
+          )];
+        } else if (result.play.verb === 'stop') {
+          message = [_react2['default'].createElement(
+            'span',
+            { className: 'category-action' },
+            'stop'
+          ), ' the music in ', _react2['default'].createElement(
+            'span',
+            { className: 'descriptor-application' },
+            'iTunes'
+          )];
+        } else if (result.play.verb === 'pause') {
+          message = [_react2['default'].createElement(
+            'span',
+            { className: 'category-action' },
+            'pause'
+          ), ' the music in ', _react2['default'].createElement(
             'span',
             { className: 'descriptor-application' },
             'iTunes'
           )];
         }
-      } else if (result.play.next) {
-        message = [_react2['default'].createElement(
-          'span',
-          { className: 'category-action' },
-          'play'
-        ), ' ', _react2['default'].createElement(
-          'span',
-          { className: 'category-argument5' },
-          'the next song'
-        ), ' in ', _react2['default'].createElement(
-          'span',
-          { className: 'descriptor-application' },
-          'iTunes'
-        )];
-      } else if (result.play.previous) {
-        message = [_react2['default'].createElement(
-          'span',
-          { className: 'category-action' },
-          'play'
-        ), ' ', _react2['default'].createElement(
-          'span',
-          { className: 'category-argument5' },
-          'the previous song'
-        ), ' in ', _react2['default'].createElement(
-          'span',
-          { className: 'descriptor-application' },
-          'iTunes'
-        )];
-      } else if (result.play.stop) {
-        message = [_react2['default'].createElement(
-          'span',
-          { className: 'category-action' },
-          'stop'
-        ), ' the music in ', _react2['default'].createElement(
-          'span',
-          { className: 'descriptor-application' },
-          'iTunes'
-        )];
-      } else if (result.play.pause) {
-        message = [_react2['default'].createElement(
-          'span',
-          { className: 'category-action' },
-          'pause'
-        ), ' the music in ', _react2['default'].createElement(
-          'span',
-          { className: 'descriptor-application' },
-          'iTunes'
-        )];
-      }
     } else if (result.contact) {
-      if (result.contact.email) {
-        if (result.contact.email.message) {
+      if (result.contact.verb === 'email') {
+        if (result.contact.subject) {
           message = [_react2['default'].createElement(
             'span',
             { className: 'category-action' },
             'start'
-          ), ' a new email to ', outputifyContacts(result.contact.email.to), ' with ', _react2['default'].createElement(
+          ), ' a new email to ', outputifyContacts(result.contact.to), ' with ', _react2['default'].createElement(
             'span',
-            { className: 'descriptor-message' },
-            result.contact.email.message
+            { className: 'descriptor-subject' },
+            result.contact.subject
           ), ' in the subject'];
         } else {
           message = [_react2['default'].createElement(
             'span',
             { className: 'category-action' },
             'start'
-          ), ' a new email to ', outputifyContacts(result.contact.email.to)];
+          ), ' a new email to ', outputifyContacts(result.contact.to)];
         }
-      } else if (result.contact.call) {
+      } else if (result.contact.verb === 'call') {
         message = [_react2['default'].createElement(
           'span',
           { className: 'category-action' },
           'call'
-        ), ' ', outputifyContacts(result.contact.call), ' through your iPhone'];
-      } else if (result.contact.facetime) {
+        ), ' ', outputifyContacts(result.contact.to), ' through your iPhone'];
+      } else if (result.contact.verb === 'facetime') {
         message = [_react2['default'].createElement(
           'span',
           { className: 'category-action' },
           'call'
-        ), ' ', outputifyContacts(result.contact.facetime), ' using the ', _react2['default'].createElement(
+        ), ' ', outputifyContacts(result.contact.to), ' using the ', _react2['default'].createElement(
           'span',
           { className: 'descriptor-application' },
           'FaceTime'
         ), ' app'];
-      } else if (result.contact.text) {
-        if (result.contact.text.message) {
+      } else if (result.contact.verb === 'text') {
+        // if (result.contact.text.message) {
+        //   message = [<span className='category-action'>send</span>, ' ', <span className='descriptor-message'>{result.contact.text.message}</span>, ' to ', outputifyContacts(result.contact.text.to), ' using the ', <span className='descriptor-application'>Messages</span>, ' app']
+        // } else {
+        message = [_react2['default'].createElement(
+          'span',
+          { className: 'category-action' },
+          'open'
+        ), ' ', _react2['default'].createElement(
+          'span',
+          { className: 'descriptor-application' },
+          'Messages'
+        ), ' to a conversation with ', outputifyContacts(result.contact.to)];
+        // }
+      }
+    } else if (result.translate) {
+        console.log(result.translate);
+        if (result.translate.to && result.translate.to.length > 1) {
+          var languages = _.map(result.translate.to, function (lang) {
+            return _react2['default'].createElement(
+              'span',
+              { className: 'descriptor-language' },
+              lang.name
+            );
+          });
+
           message = [_react2['default'].createElement(
             'span',
             { className: 'category-action' },
-            'send'
-          ), ' ', _react2['default'].createElement(
+            'load '
+          ), 'translations of ', _react2['default'].createElement(
             'span',
-            { className: 'descriptor-message' },
-            result.contact.text.message
-          ), ' to ', outputifyContacts(result.contact.text.to), ' using the ', _react2['default'].createElement(
+            { className: 'descriptor-phrase' },
+            result.translate.phrase
+          ), ' from ', _react2['default'].createElement(
+            'span',
+            { className: 'descriptor-language' },
+            result.translate.from && result.translate.from.name || 'an auto-detected language'
+          ), ' to ', andify(languages), ' in ', _react2['default'].createElement(
             'span',
             { className: 'descriptor-application' },
-            'Messages'
-          ), ' app'];
+            'the default browser'
+          )];
         } else {
           message = [_react2['default'].createElement(
             'span',
             { className: 'category-action' },
-            'open'
-          ), ' ', _react2['default'].createElement(
+            'load '
+          ), 'a translation of ', _react2['default'].createElement(
             'span',
-            { className: 'descriptor-application' },
-            'Messages'
-          ), ' to a conversation with ', outputifyContacts(result.contact.text.to)];
-        }
-      }
-    } else if (result.translate) {
-      if (result.translate.to && result.translate.to.length > 1) {
-        var languages = _.map(result.translate.to, function (lang) {
-          return _react2['default'].createElement(
+            { className: 'descriptor-phrase' },
+            result.translate.phrase
+          ), ' from ', _react2['default'].createElement(
             'span',
             { className: 'descriptor-language' },
-            lang
-          );
-        });
-
-        message = [_react2['default'].createElement(
-          'span',
-          { className: 'category-action' },
-          'load '
-        ), 'translations of ', _react2['default'].createElement(
-          'span',
-          { className: 'descriptor-phrase' },
-          result.translate.phrase
-        ), ' from ', _react2['default'].createElement(
-          'span',
-          { className: 'descriptor-language' },
-          result.translate.from || 'an auto-detected language'
-        ), ' to ', andify(languages), ' in ', _react2['default'].createElement(
-          'span',
-          { className: 'descriptor-application' },
-          'the default browser'
-        )];
-      } else {
-        message = [_react2['default'].createElement(
-          'span',
-          { className: 'category-action' },
-          'load '
-        ), 'a translation of ', _react2['default'].createElement(
-          'span',
-          { className: 'descriptor-phrase' },
-          result.translate.phrase
-        ), ' from ', _react2['default'].createElement(
-          'span',
-          { className: 'descriptor-language' },
-          result.translate.from || 'an auto-detected language'
-        ), ' to ', _react2['default'].createElement(
-          'span',
-          { className: 'descriptor-language' },
-          result.translate.to && result.translate.to[0] || 'English'
-        ), ' in ', _react2['default'].createElement(
-          'span',
-          { className: 'descriptor-application' },
-          'the default browser'
-        )];
+            result.translate.from && result.translate.from.name || 'an auto-detected language'
+          ), ' to ', _react2['default'].createElement(
+            'span',
+            { className: 'descriptor-language' },
+            result.translate.to && result.translate.to[0].name || 'English'
+          ), ' in ', _react2['default'].createElement(
+            'span',
+            { className: 'descriptor-application' },
+            'the default browser'
+          )];
+        }
       }
-    }
 
     if (message == null) {
       message = 'something went wrong with: ' + JSON.stringify(result);
@@ -18272,7 +24970,6 @@ function getExecute(showNotification) {
 }
 
 function formatDate(datetime) {
-  console.log(datetime);
   if (_.isDate(datetime)) {
     return [_react2['default'].createElement(
       'span',
@@ -18379,29 +25076,29 @@ function outputifyContacts(objs) {
 }
 
 function colorizeContact(obj) {
-  if (obj.number) {
+  if (obj.label === 'number' && _.isString(obj.value)) {
     return _react2['default'].createElement(
       'span',
       { className: 'descriptor-phone-number' },
-      obj.number
+      obj.value
     );
-  } else if (obj.relationship) {
-    return _react2['default'].createElement(
-      'span',
-      { className: 'descriptor-relationship' },
-      obj.relationship
-    );
-  } else if (obj.contact) {
-    return _react2['default'].createElement(
-      'span',
-      { className: 'descriptor-contact' },
-      obj.contact
-    );
-  } else if (obj.address) {
+  } else if (obj.label === 'email' && _.isString(obj.value)) {
     return _react2['default'].createElement(
       'span',
       { className: 'descriptor-email-address' },
-      obj.address
+      obj.value
+    );
+  } else if (obj.value.label === 'relationship') {
+    return _react2['default'].createElement(
+      'span',
+      { className: 'descriptor-relationship' },
+      obj.value.value
+    );
+  } else if (obj.value.label === 'contact') {
+    return _react2['default'].createElement(
+      'span',
+      { className: 'descriptor-contact' },
+      obj.value.value
     );
   }
 }
@@ -18413,23 +25110,23 @@ function colorizeOpen(obj) {
       { className: 'descriptor-preference-pane' },
       obj.pref
     );
+  } else if (obj.type === 'app') {
+    return _react2['default'].createElement(
+      'span',
+      { className: 'descriptor-application' },
+      obj.name
+    );
   } else if (obj.url) {
     return _react2['default'].createElement(
       'span',
       { className: 'descriptor-url' },
       obj.url
     );
-  } else if (obj.file) {
+  } else if (obj.path) {
     return _react2['default'].createElement(
       'span',
       { className: 'descriptor-file' },
-      obj.file
-    );
-  } else if (obj.app) {
-    return _react2['default'].createElement(
-      'span',
-      { className: 'descriptor-application' },
-      obj.app
+      obj.path
     );
   }
 }
@@ -18441,9 +25138,10 @@ function outputifyOpen(objs) {
 
 function outputifyDefaultOpen(objs) {
   var groups = _.groupBy(objs, function (obj) {
-    return _Object$keys(obj)[0];
+    return obj.type || _Object$keys(obj)[0];
   });
   var message = [];
+  console.log(groups);
   if (groups.app) {
     message.push([_react2['default'].createElement(
       'span',
@@ -18462,16 +25160,12 @@ function outputifyDefaultOpen(objs) {
       'the default browser'
     )]);
   }
-  if (groups.file) {
+  if (groups.path) {
     message.push([_react2['default'].createElement(
       'span',
       { className: 'category-action' },
       'open '
-    ), _react2['default'].createElement(
-      'span',
-      { className: 'descriptor-file' },
-      groups.file
-    ), ' in ', _react2['default'].createElement(
+    ), outputifyOpen(groups.path), ' in ', _react2['default'].createElement(
       'span',
       { className: 'descriptor-application' },
       'the default application'
@@ -18485,7 +25179,7 @@ function outputifyDefaultOpen(objs) {
     ), ' the ', _react2['default'].createElement(
       'span',
       { className: 'descriptor-preference-pane' },
-      groups.pref,
+      groups.pref[0].pref,
       ' '
     ), 'system preference pane']);
   }
@@ -18565,7 +25259,7 @@ function outputifyDefaultOpen(objs) {
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/core-js/object/keys":50,"babel-runtime/helpers/interop-require-default":56,"moment-duration-format":304,"react":473}],40:[function(require,module,exports){
+},{"babel-runtime/core-js/object/keys":130,"babel-runtime/helpers/interop-require-default":136,"moment-duration-format":385,"react":554}],120:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -18911,7 +25605,7 @@ Lacona.defaultProps = {
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/core-js/get-iterator":46,"babel-runtime/helpers/class-call-check":52,"babel-runtime/helpers/create-class":53,"babel-runtime/helpers/get":54,"babel-runtime/helpers/inherits":55,"babel-runtime/helpers/interop-require-default":56,"babel-runtime/helpers/to-consumable-array":57,"lacona":488,"react":473,"react-addons-css-transition-group":305,"react-lacona":309}],41:[function(require,module,exports){
+},{"babel-runtime/core-js/get-iterator":126,"babel-runtime/helpers/class-call-check":132,"babel-runtime/helpers/create-class":133,"babel-runtime/helpers/get":134,"babel-runtime/helpers/inherits":135,"babel-runtime/helpers/interop-require-default":136,"babel-runtime/helpers/to-consumable-array":137,"lacona":570,"react":554,"react-addons-css-transition-group":386,"react-lacona":390}],121:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -18961,7 +25655,7 @@ var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTran
 
 var MS_PER_INPUT = 10;
 
-var examples = ['open Calendar', 'open Facebook', 'open kickstarter.com', 'open ~/Downloads/Lacona.dmg', 'open todo.txt', 'open my-document.docx with Pages', 'open lacona.io in Safari', "schedule Dinner with Vicky at Sacco's Flatbread for 7pm tomorrow", 'schedule Vacation 10a Monday to 6:30p Thursday', 'remind me to Pick up the car September 12 at 11:30am', 'remind me to Buy a gift 7 days before 12/1', 'search Google for pictures of cats', 'search Wikipedia for Pluto', 'Google stormtroopers', 'Amazon Avengers', 'play Robot Love', 'play Walk the Moon', 'play Jason Derulo, Flyte, and Elle King', 'play Jams', 'play next song', 'pause', 'call Mom', 'email Tony Stark', 'text Leaving now :) to Hank McCoy', 'email Dinner Plans to Peter Parker', 'facetime Bruce Banner', 'email app@lacona.io', 'call +1 617 867 5309'];
+var examples = ['open Calendar', 'open Facebook', 'open kickstarter.com', 'open ~/Downloads/Lacona.dmg', 'open todo.txt', 'open my-document.docx with Pages', 'open lacona.io in Safari', "schedule Dinner with Vicky at Sacco's Flatbread for 7pm tomorrow", 'schedule Vacation 10a Monday to 6:30p Thursday', 'remind me to Pick up the car September 12 at 11:30am', 'remind me to Buy a gift 7 days before 12/1', 'search Google for pictures of cats', 'search Wikipedia for Pluto', 'Google stormtroopers', 'Amazon Avengers', 'play Robot Love', 'play Walk the Moon', 'play Jason Derulo, Flyte, and Elle King', 'play next song', 'pause', 'call Mom', 'email Tony Stark', 'email Dinner Plans to Peter Parker', 'facetime Bruce Banner', 'email app@lacona.io', 'call +1 617 867 5309'];
 
 var Lightbox = (function (_React$Component) {
   _inherits(Lightbox, _React$Component);
@@ -19740,7 +26434,7 @@ var Page = (function (_React$Component4) {
                 )
               )
             ),
-            _react2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '0', grammar: _sentenceJsx.open.grammar, execute: function (open) {
+            _react2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '0', grammar: _sentenceJsx.open.grammar, extensions: _sentenceJsx.open.extensions, execute: function (open) {
                 return _this2.execute({ open: open });
               } })
           ),
@@ -19770,12 +26464,12 @@ var Page = (function (_React$Component4) {
                 _react2['default'].createElement(
                   'li',
                   null,
-                  'Due to browser limitations, this may sometimes be choppy. The real app will be silky smooth!'
+                  'Due to browser limitations, this may sometimes be choppy.'
                 ),
                 _react2['default'].createElement(
                   'li',
                   null,
-                  'This demo only supports US date formats. The real product will support European formats as well.'
+                  'This demo US assumes date formats.'
                 )
               ),
               _react2['default'].createElement(
@@ -20120,35 +26814,6 @@ var Page = (function (_React$Component4) {
                   'li',
                   { onClick: this.type.bind(this, '2', function () {
                       return false;
-                    }, 'disable autosleep for 3 hours') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'disable'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'descriptor-setting' },
-                    'autosleep'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'for'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'descriptor-amount-of-time' },
-                    '3 hours'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '2', function () {
-                      return false;
                     }, 'shutdown') },
                   _react2['default'].createElement(
                     'span',
@@ -20248,7 +26913,7 @@ var Page = (function (_React$Component4) {
                 )
               )
             ),
-            _react2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '2', grammar: _sentenceJsx.settings.grammar, execute: function (settings) {
+            _react2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '2', grammar: _sentenceJsx.settings.grammar, extensions: _sentenceJsx.settings.extensions, execute: function (settings) {
                 return _this2.execute({ settings: settings });
               } })
           ),
@@ -20512,23 +27177,6 @@ var Page = (function (_React$Component4) {
                   'li',
                   { onClick: this.type.bind(this, '4', function () {
                       return false;
-                    }, 'play Jams') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'play'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'descriptor-playlist' },
-                    'Jams'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '4', function () {
-                      return false;
                     }, 'play next song') },
                   _react2['default'].createElement(
                     'span',
@@ -20620,35 +27268,6 @@ var Page = (function (_React$Component4) {
                   'li',
                   { onClick: this.type.bind(this, '5', function () {
                       return false;
-                    }, 'text Leaving now :) to Hank McCoy') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'text'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'descriptor-message' },
-                    'Leaving now :)'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'to'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'descriptor-contact' },
-                    'Hank McCoy'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '5', function () {
-                      return false;
                     }, 'email Dinner Plans to Clinton and Natalia') },
                   _react2['default'].createElement(
                     'span',
@@ -20658,7 +27277,7 @@ var Page = (function (_React$Component4) {
                   ' ',
                   _react2['default'].createElement(
                     'span',
-                    { className: 'descriptor-message' },
+                    { className: 'descriptor-subject' },
                     'Dinner Plans'
                   ),
                   ' ',
@@ -20724,23 +27343,17 @@ var Page = (function (_React$Component4) {
                   'li',
                   { onClick: this.type.bind(this, '5', function () {
                       return false;
-                    }, 'text my Husband Leaving soon!') },
+                    }, 'call my Husband') },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-action' },
-                    'text'
+                    'call'
                   ),
                   ' ',
                   _react2['default'].createElement(
                     'span',
                     { className: 'descriptor-relationship' },
                     'my Husband'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'descriptor-message' },
-                    'Leaving soon!'
                   )
                 ),
                 _react2['default'].createElement(
@@ -20779,7 +27392,7 @@ var Page = (function (_React$Component4) {
                 )
               )
             ),
-            _react2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '5', grammar: _sentenceJsx.contact.grammar, execute: function (contact) {
+            _react2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '5', grammar: _sentenceJsx.contact.grammar, extensions: _sentenceJsx.contact.extensions, execute: function (contact) {
                 return _this2.execute({ contact: contact });
               } })
           ),
@@ -21510,7 +28123,7 @@ exports['default'] = Page;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./execute.jsx":39,"./lacona.jsx":40,"./sentence.jsx":43,"async-each-series":44,"babel-runtime/helpers/class-call-check":52,"babel-runtime/helpers/create-class":53,"babel-runtime/helpers/get":54,"babel-runtime/helpers/inherits":55,"babel-runtime/helpers/interop-require-default":56,"react":473,"react-addons-css-transition-group":305,"react-google-analytics":307}],42:[function(require,module,exports){
+},{"./execute.jsx":119,"./lacona.jsx":120,"./sentence.jsx":123,"async-each-series":124,"babel-runtime/helpers/class-call-check":132,"babel-runtime/helpers/create-class":133,"babel-runtime/helpers/get":134,"babel-runtime/helpers/inherits":135,"babel-runtime/helpers/interop-require-default":136,"react":554,"react-addons-css-transition-group":386,"react-google-analytics":388}],122:[function(require,module,exports){
 'use strict';
 
 var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
@@ -21533,19 +28146,11 @@ require('babel/polyfill');
 
 (0, _reactDom.render)(_react2['default'].createElement(_pageJsx2['default'], { isMobile: _detect2['default'] }), document.getElementById('page'));
 
-},{"./detect":38,"./page.jsx":41,"babel-runtime/helpers/interop-require-default":56,"babel/polyfill":302,"react":473,"react-dom":306}],43:[function(require,module,exports){
-(function (global){
+},{"./detect":118,"./page.jsx":121,"babel-runtime/helpers/interop-require-default":136,"babel/polyfill":382,"react":554,"react-dom":387}],123:[function(require,module,exports){
+(function (process,global){
 /** @jsx createElement */
 
 'use strict';
-
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
 
 var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
 
@@ -21559,2002 +28164,92 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 var _laconaPhrase = require('lacona-phrase');
 
-var _laconaPhraseDatetime = require('lacona-phrase-datetime');
+var _laconaCommandCommunicate = require('lacona-command-communicate');
 
-var _laconaPhraseUrl = require('lacona-phrase-url');
+var _laconaCommandCommunicate2 = _interopRequireDefault(_laconaCommandCommunicate);
 
-var _laconaPhraseUrl2 = _interopRequireDefault(_laconaPhraseUrl);
+var _laconaCommandEvents = require('lacona-command-events');
 
-var _laconaPhraseEmail = require('lacona-phrase-email');
+var _laconaCommandEvents2 = _interopRequireDefault(_laconaCommandEvents);
 
-var _laconaPhraseEmail2 = _interopRequireDefault(_laconaPhraseEmail);
+var _laconaCommandItunes = require('lacona-command-itunes');
 
-var _laconaPhrasePhonenumber = require('lacona-phrase-phonenumber');
+var _laconaCommandItunes2 = _interopRequireDefault(_laconaCommandItunes);
 
-var _laconaPhrasePhonenumber2 = _interopRequireDefault(_laconaPhrasePhonenumber);
+var _laconaCommandSearchInternet = require('lacona-command-search-internet');
 
-var userFiles = [{
-  name: 'Desktop',
-  children: ['mydocument.pages', 'mockup.html', 'kickstarter.url']
-}, {
-  name: 'Documents',
-  children: [{
-    name: 'University',
-    children: ['...']
-  }, {
-    name: 'Resumes',
-    children: ['...']
-  }, {
-    name: 'Ideas',
-    children: ['...']
-  }, {
-    name: 'Presentations',
-    children: ['...']
-  }, {
-    name: 'Projects',
-    children: ['...']
-  }, {
-    name: 'NLP',
-    children: ['...']
-  }]
-}, {
-  name: 'Downloads',
-  children: ['Lacona.dmg']
-}, {
-  name: 'Library',
-  children: [{
-    name: 'Accounts',
-    children: ['...']
-  }, {
-    name: 'Application Scripts',
-    children: ['...']
-  }, {
-    name: 'Application Support',
-    children: ['...']
-  }, {
-    name: 'Assistants',
-    children: ['...']
-  }, {
-    name: 'Audio',
-    children: ['...']
-  }, {
-    name: 'Autosave Information',
-    children: ['...']
-  }, {
-    name: 'Caches',
-    children: ['...']
-  }, {
-    name: 'Calendars',
-    children: ['...']
-  }, {
-    name: 'ColorPickers',
-    children: ['...']
-  }, {
-    name: 'Colors',
-    children: ['...']
-  }, {
-    name: 'Compositions',
-    children: ['...']
-  }, {
-    name: 'Containers',
-    children: ['...']
-  }, {
-    name: 'Cookies',
-    children: ['...']
-  }, {
-    name: 'Developer',
-    children: ['...']
-  }, {
-    name: 'Dictionaries',
-    children: ['...']
-  }, {
-    name: 'Favorites',
-    children: ['...']
-  }, {
-    name: 'FlashlightPlugins',
-    children: ['...']
-  }, {
-    name: 'FontCollections',
-    children: ['...']
-  }, {
-    name: 'Fonts',
-    children: ['...']
-  }, {
-    name: 'GameKit',
-    children: ['...']
-  }, {
-    name: 'Google',
-    children: ['...']
-  }, {
-    name: 'Group Containers',
-    children: ['...']
-  }, {
-    name: 'IdentityServices',
-    children: ['...']
-  }, {
-    name: 'Input Methods',
-    children: ['...']
-  }, {
-    name: 'Internet Plug-Ins',
-    children: ['...']
-  }, {
-    name: 'Keyboard Layouts',
-    children: ['...']
-  }, {
-    name: 'Keychains',
-    children: ['...']
-  }, {
-    name: 'LanguageModeling',
-    children: ['...']
-  }, {
-    name: 'LaunchAgents',
-    children: ['...']
-  }, {
-    name: 'Logs',
-    children: ['...']
-  }, {
-    name: 'Mail',
-    children: ['...']
-  }, {
-    name: 'Messages',
-    children: ['...']
-  }, {
-    name: 'Mobile Documents',
-    children: ['...']
-  }, {
-    name: 'PreferencePanes',
-    children: ['...']
-  }, {
-    name: 'Preferences',
-    children: ['...']
-  }, {
-    name: 'Printers',
-    children: ['...']
-  }, {
-    name: 'PubSub',
-    children: ['...']
-  }, {
-    name: 'Safari',
-    children: ['...']
-  }, {
-    name: 'Saved Application State',
-    children: ['...']
-  }, {
-    name: 'Saved Searches',
-    children: ['...']
-  }, {
-    name: 'Screen Savers',
-    children: ['...']
-  }, {
-    name: 'ScriptingAdditions',
-    children: ['...']
-  }, {
-    name: 'Services',
-    children: ['...']
-  }, {
-    name: 'Sounds',
-    children: ['...']
-  }, {
-    name: 'Spelling',
-    children: ['...']
-  }, {
-    name: 'SyncedPreferences',
-    children: ['...']
-  }, {
-    name: 'Voices',
-    children: ['...']
-  }, {
-    name: 'WebKit',
-    children: ['...']
-  }, {
-    name: 'com.apple.nsurlsessiond',
-    children: ['...']
-  }, {
-    name: 'iMovie',
-    children: ['...']
-  }, {
-    name: 'iTunes',
-    children: ['...']
-  }]
-}, {
-  name: 'Movies',
-  children: ['The Avengers.avi', 'X-Men First Class.avi', 'Iron Man.avi']
-}, {
-  name: 'Music',
-  children: [{
-    name: 'Audio Music Apps',
-    children: ['...']
-  }, {
-    name: 'GarageBand',
-    children: ['...']
-  }, {
-    name: 'iTunes',
-    children: ['...']
-  }]
-}, {
-  name: 'Pictures',
-  children: ['Photos Library.photoslibrary']
-}];
+var _laconaCommandSearchInternet2 = _interopRequireDefault(_laconaCommandSearchInternet);
 
-var rootFiles = [{
-  name: 'Applications',
-  children: [{
-    name: 'App Store.app',
-    children: ['...']
-  }, {
-    name: 'Atom.app',
-    children: ['...']
-  }, {
-    name: 'Automator.app',
-    children: ['...']
-  }, {
-    name: 'Calculator.app',
-    children: ['...']
-  }, {
-    name: 'Calendar.app',
-    children: ['...']
-  }, {
-    name: 'Chess.app',
-    children: ['...']
-  }, {
-    name: 'Contacts.app',
-    children: ['...']
-  }, {
-    name: 'DVD Player.app',
-    children: ['...']
-  }, {
-    name: 'Dash.app',
-    children: ['...']
-  }, {
-    name: 'Dashboard.app',
-    children: ['...']
-  }, {
-    name: 'Dictionary.app',
-    children: ['...']
-  }, {
-    name: 'FaceTime.app',
-    children: ['...']
-  }, {
-    name: 'Font Book.app',
-    children: ['...']
-  }, {
-    name: 'Game Center.app',
-    children: ['...']
-  }, {
-    name: 'GarageBand.app',
-    children: ['...']
-  }, {
-    name: 'GitHub.app',
-    children: ['...']
-  }, {
-    name: 'Google Chrome.app',
-    children: ['...']
-  }, {
-    name: 'Image Capture.app',
-    children: ['...']
-  }, {
-    name: 'Keynote.app',
-    children: ['...']
-  }, {
-    name: 'Launchpad.app',
-    children: ['...']
-  }, {
-    name: 'Mail.app',
-    children: ['...']
-  }, {
-    name: 'Maps.app',
-    children: ['...']
-  }, {
-    name: 'Messages.app',
-    children: ['...']
-  }, {
-    name: 'Mission Control.app',
-    children: ['...']
-  }, {
-    name: 'Notes.app',
-    children: ['...']
-  }, {
-    name: 'Numbers.app',
-    children: ['...']
-  }, {
-    name: 'Pages.app',
-    children: ['...']
-  }, {
-    name: 'Photo Booth.app',
-    children: ['...']
-  }, {
-    name: 'Photos.app',
-    children: ['...']
-  }, {
-    name: 'Preview.app',
-    children: ['...']
-  }, {
-    name: 'QuickTime Player.app',
-    children: ['...']
-  }, {
-    name: 'Reminders.app',
-    children: ['...']
-  }, {
-    name: 'Safari.app',
-    children: ['...']
-  }, {
-    name: 'Slack.app',
-    children: ['...']
-  }, {
-    name: 'Stickies.app',
-    children: ['...']
-  }, {
-    name: 'System Preferences.app',
-    children: ['...']
-  }, {
-    name: 'TextEdit.app',
-    children: ['...']
-  }, {
-    name: 'Time Machine.app',
-    children: ['...']
-  }, {
-    name: 'Utilities',
-    children: ['...']
-  }, {
-    name: 'Xcode.app',
-    children: ['...']
-  }, {
-    name: 'iBooks.app',
-    children: ['...']
-  }, {
-    name: 'iMovie.app',
-    children: ['...']
-  }, {
-    name: 'iPhoto.app',
-    children: ['...']
-  }, {
-    name: 'iTunes.app',
-    children: ['...']
-  }]
-}, {
-  name: 'Library',
-  children: [{
-    name: 'Application Support',
-    children: ['...']
-  }, {
-    name: 'Audio',
-    children: ['...']
-  }, {
-    name: 'Caches',
-    children: ['...']
-  }, {
-    name: 'ColorPickers',
-    children: ['...']
-  }, {
-    name: 'ColorSync',
-    children: ['...']
-  }, {
-    name: 'Components',
-    children: ['...']
-  }, {
-    name: 'Compositions',
-    children: ['...']
-  }, {
-    name: 'Contextual Menu Items',
-    children: ['...']
-  }, {
-    name: 'CoreMediaIO',
-    children: ['...']
-  }, {
-    name: 'Desktop Pictures',
-    children: ['...']
-  }, {
-    name: 'Developer',
-    children: ['...']
-  }, {
-    name: 'Dictionaries',
-    children: ['...']
-  }, {
-    name: 'DirectoryServices',
-    children: ['...']
-  }, {
-    name: 'Documentation',
-    children: ['...']
-  }, {
-    name: 'DropboxHelperTools',
-    children: ['...']
-  }, {
-    name: 'Extensions',
-    children: ['...']
-  }, {
-    name: 'Filesystems',
-    children: ['...']
-  }, {
-    name: 'Fonts',
-    children: ['...']
-  }, {
-    name: 'Frameworks',
-    children: ['...']
-  }, {
-    name: 'Google',
-    children: ['...']
-  }, {
-    name: 'Graphics',
-    children: ['...']
-  }, {
-    name: 'Image Capture',
-    children: ['...']
-  }, {
-    name: 'Input Methods',
-    children: ['...']
-  }, {
-    name: 'Internet Plug-Ins',
-    children: ['...']
-  }, {
-    name: 'Java',
-    children: ['...']
-  }, {
-    name: 'Keyboard Layouts',
-    children: ['...']
-  }, {
-    name: 'Keychains',
-    children: ['...']
-  }, {
-    name: 'LaunchAgents',
-    children: ['...']
-  }, {
-    name: 'LaunchDaemons',
-    children: ['...']
-  }, {
-    name: 'Logs',
-    children: ['...']
-  }, {
-    name: 'Messages',
-    children: ['...']
-  }, {
-    name: 'Modem Scripts',
-    children: ['...']
-  }, {
-    name: 'OpenDirectory',
-    children: ['...']
-  }, {
-    name: 'PDF Services',
-    children: ['...']
-  }, {
-    name: 'Perl',
-    children: ['...']
-  }, {
-    name: 'PreferencePanes',
-    children: ['...']
-  }, {
-    name: 'Preferences',
-    children: ['...']
-  }, {
-    name: 'Printers',
-    children: ['...']
-  }, {
-    name: 'PrivilegedHelperTools',
-    children: ['...']
-  }, {
-    name: 'Python',
-    children: ['...']
-  }, {
-    name: 'QuickLook',
-    children: ['...']
-  }, {
-    name: 'QuickTime',
-    children: ['...']
-  }, {
-    name: 'Receipts',
-    children: ['...']
-  }, {
-    name: 'Ruby',
-    children: ['...']
-  }, {
-    name: 'Sandbox',
-    children: ['...']
-  }, {
-    name: 'Screen Savers',
-    children: ['...']
-  }, {
-    name: 'ScriptingAdditions',
-    children: ['...']
-  }, {
-    name: 'Scripts',
-    children: ['...']
-  }, {
-    name: 'Security',
-    children: ['...']
-  }, {
-    name: 'Server',
-    children: ['...']
-  }, {
-    name: 'Speech',
-    children: ['...']
-  }, {
-    name: 'Spelling',
-    children: ['...']
-  }, {
-    name: 'Spotlight',
-    children: ['...']
-  }, {
-    name: 'StartupItems',
-    children: ['...']
-  }, {
-    name: 'SystemMigration',
-    children: ['...']
-  }, {
-    name: 'SystemProfiler',
-    children: ['...']
-  }, {
-    name: 'Updates',
-    children: ['...']
-  }, {
-    name: 'User Pictures',
-    children: ['...']
-  }, {
-    name: 'Video',
-    children: ['...']
-  }, {
-    name: 'WebServer',
-    children: ['...']
-  }, {
-    name: 'Widgets',
-    children: ['...']
-  }, {
-    name: 'iTunes',
-    children: ['...']
-  }]
-}, {
-  name: 'Users',
-  children: [{
-    name: 'LaconaUser',
-    children: userFiles
-  }, {
-    name: 'Guest',
-    children: ['...']
-  }, {
-    name: 'Shared',
-    children: ['...']
-  }]
-}, {
-  name: 'bin',
-  children: ['bash', 'cat', 'chmod', 'cp', 'csh', 'date', 'dd', 'df', 'domainname', 'echo', 'ed', 'expr', 'hostname', 'kill', 'ksh', 'launchctl', 'link', 'ln', 'ls', 'mkdir', 'mv', 'pax', 'ps', 'pwd', 'rcp', 'rm', 'rmdir', 'sh', 'sleep', 'stty', 'sync', 'tcsh', 'test', 'unlink', 'wait4path', 'zsh']
-}, {
-  name: 'etc',
-  children: []
-}, {
-  name: 'home',
-  children: []
-}, {
-  name: 'net',
-  children: []
-}, {
-  name: 'tmp',
-  children: ['KSOutOfProcessFetcher.0.OlaJUhhgKAnFsX7fZ0FyXTFxIgg=', 'com.apple.launchd.CWPFO2w3Rj', 'com.apple.launchd.eM0bByeRbW', 'tmphosts', 'tmphosts1', 'some.tmp', 'test.tmp', 'yes.txt']
-}, {
-  name: 'usr',
-  children: [{
-    name: 'X11',
-    children: ['...']
-  }, {
-    name: 'X11R6',
-    children: ['...']
-  }, {
-    name: 'bin',
-    children: ['...']
-  }, {
-    name: 'include',
-    children: ['...']
-  }, {
-    name: 'lib',
-    children: ['...']
-  }, {
-    name: 'libexec',
-    children: ['...']
-  }, {
-    name: 'local',
-    children: ['...']
-  }, {
-    name: 'sbin',
-    children: ['...']
-  }, {
-    name: 'share',
-    children: ['...']
-  }, {
-    name: 'standalone',
-    children: ['...']
-  }]
-}, {
-  name: 'var',
-  children: [{
-    name: 'Keychains',
-    children: ['...']
-  }, {
-    name: 'agentx',
-    children: ['...']
-  }, {
-    name: 'at',
-    children: ['...']
-  }, {
-    name: 'audit',
-    children: ['...']
-  }, {
-    name: 'backups',
-    children: ['...']
-  }, {
-    name: 'db',
-    children: ['...']
-  }, {
-    name: 'empty',
-    children: ['...']
-  }, {
-    name: 'folders',
-    children: ['...']
-  }, {
-    name: 'folders~orig',
-    children: ['...']
-  }, {
-    name: 'jabberd',
-    children: ['...']
-  }, {
-    name: 'lib',
-    children: ['...']
-  }, {
-    name: 'log',
-    children: ['...']
-  }, {
-    name: 'mail',
-    children: ['...']
-  }, {
-    name: 'msgs',
-    children: ['...']
-  }, {
-    name: 'netboot',
-    children: ['...']
-  }, {
-    name: 'networkd',
-    children: ['...']
-  }, {
-    name: 'root',
-    children: ['...']
-  }, {
-    name: 'rpc',
-    children: ['...']
-  }, {
-    name: 'run',
-    children: ['...']
-  }, {
-    name: 'rwho',
-    children: ['...']
-  }, {
-    name: 'spool',
-    children: ['...']
-  }, {
-    name: 'tmp',
-    children: ['...']
-  }, {
-    name: 'vm',
-    children: ['...']
-  }, {
-    name: 'yp',
-    children: ['...']
-  }]
-}];
+var _laconaCommandOpen = require('lacona-command-open');
 
-var tunes = [{ name: 'I\'m Good',
-  artist: 'The Mowgli\'s',
-  album: 'I\'m Good',
-  genre: 'Pop' }, { name: 'Baby Love',
-  artist: 'Petite Meller',
-  album: 'Baby Love',
-  genre: 'Pop' }, { name: 'T-Shirt Weather',
-  artist: 'Circa Waves',
-  album: 'T-Shirt Weather',
-  genre: 'Pop' }, { name: 'Fade Out Lines - The Avener Rework',
-  artist: 'The Avener & Phoebe Killdeer',
-  album: 'Fade Out Lines',
-  genre: 'Pop' }, { name: 'Salt',
-  artist: 'Bad Suns',
-  album: 'Language & Perspective',
-  genre: 'Pop' }, { name: 'Ship To Wreck',
-  artist: 'Florence + The Machine',
-  album: 'Ship To Wreck',
-  genre: 'Pop' }, { name: 'Couch Potato',
-  artist: 'Shortstraw',
-  album: 'Good Morning, Sunshine',
-  genre: 'Pop' }, { name: 'Good Day',
-  artist: 'distant cousins',
-  album: 'Good Day',
-  genre: 'Pop' }, { name: 'Ex\'s & Oh\'s',
-  artist: 'Elle King',
-  album: 'Love Stuff',
-  genre: 'Pop' }, { name: 'Irresistible',
-  artist: 'Fall Out Boy',
-  album: 'American Beauty/American Psycho',
-  genre: 'Pop' }, { name: 'Centuries',
-  artist: 'Fall Out Boy',
-  album: 'American Beauty/American Psycho',
-  genre: 'Pop' }, { name: 'Light Me Up',
-  artist: 'Flyte',
-  album: 'Light Me Up',
-  genre: 'Pop' }, { name: 'Violins',
-  artist: 'I\'m From Barcelona',
-  album: 'Violins',
-  genre: 'Pop' }, { name: 'I Bet My Life',
-  artist: 'Imagine Dragons',
-  album: 'Smoke + Mirrors (Deluxe)',
-  genre: 'Pop' }, { name: 'RIVA (Restart the Game) - Radio Edit',
-  artist: 'Klingande',
-  album: 'RIVA (Restart The Game) [Radio Edit]',
-  genre: 'Pop' }, { name: 'Lean On (feat. MØ & DJ Snake)',
-  artist: 'Major Lazer',
-  album: 'Lean On (feat. MØ & DJ Snake)',
-  genre: 'Pop' }, { name: 'Got It',
-  artist: 'Marian Hill',
-  album: 'Sway',
-  genre: 'Pop' }, { name: 'Can You Blame Me',
-  artist: 'Matt and Kim',
-  album: 'Can You Blame Me',
-  genre: 'Pop' }, { name: 'Talk About You',
-  artist: 'MIKA',
-  album: 'Talk About You',
-  genre: 'Pop' }, { name: 'Love Like Mine',
-  artist: 'Miami Horror',
-  album: 'Love Like Mine',
-  genre: 'Pop' }, { name: 'Our Own House',
-  artist: 'MisterWives',
-  album: 'Our Own House',
-  genre: 'Pop' }, { name: 'The Rhythm',
-  artist: 'MNEK',
-  album: 'The Rhythm',
-  genre: 'Pop' }, { name: 'Magic (feat. Nile Rodgers and Brandy)',
-  artist: 'Mystery Skulls',
-  album: 'Forever',
-  genre: 'Pop' }, { name: 'Never Gets Old',
-  artist: 'Penguin Prison',
-  album: 'Never Gets Old',
-  genre: 'Pop' }, { name: 'Karaoke',
-  artist: 'Smallpools',
-  album: 'Karaoke',
-  genre: 'Pop' }, { name: 'Robot Love',
-  artist: 'Urban Cone',
-  album: 'Robot Love',
-  genre: 'Pop' }, { name: 'King',
-  artist: 'Years & Years',
-  album: 'King',
-  genre: 'Pop' }, { name: 'So Cruel',
-  artist: 'Young Empires',
-  album: 'So Cruel',
-  genre: 'Pop' }, { name: 'The Night Is Still Young',
-  artist: 'Nicki Minaj',
-  album: 'The Pinkprint',
-  genre: 'Pop' }, { name: 'I Will Never Let You Down',
-  artist: 'Rita Ora',
-  album: 'I Will Never Let You Down',
-  genre: 'Pop' }, { name: 'Never Been In Love (feat. Icona Pop)',
-  artist: 'Cobra Starship',
-  album: 'Never Been In Love (feat. Icona Pop)',
-  genre: 'Pop' }, { name: 'What I did for Love (feat. Emeli Sandé)',
-  artist: 'David Guetta',
-  album: 'Listen (Deluxe)',
-  genre: 'Pop' }, { name: 'Want To Want Me',
-  artist: 'Jason Derulo',
-  album: 'Want To Want Me',
-  genre: 'Pop' }, { name: 'Iron Man',
-  artist: 'Black Sabbath',
-  album: 'Paranoid',
-  genre: 'Metal' }, { name: 'Stronger',
-  artist: 'Clean Bandit',
-  album: 'New Eyes',
-  genre: 'Rock' }, { name: 'Stole the Show',
-  artist: 'Kygo',
-  album: 'Stole the Show',
-  genre: 'Jazz' }, { name: 'In Your Arms',
-  artist: 'Nico & Vinz',
-  album: 'Black Star Elephant',
-  genre: 'Folk' }, { name: 'Intoxicated',
-  artist: 'Martin Solveig',
-  album: 'Intoxicated (Radio Edit)',
-  genre: 'Indie' }, { name: 'Runaway (U & I)',
-  artist: 'Galantis',
-  album: 'Runaway (U & I)',
-  genre: 'Pop' }, { name: 'Outside',
-  artist: 'Calvin Harris',
-  album: 'Motion',
-  genre: 'Pop' }, { name: 'Crazy For You',
-  artist: 'Hedley',
-  album: 'Wild Life',
-  genre: 'Pop' }, { name: 'Kathleen',
-  artist: 'Catfish and the Bottlemen',
-  album: 'The Balcony',
-  genre: 'Pop' }, { name: 'Work This Body',
-  artist: 'Walk the Moon',
-  album: 'TALKING IS HARD',
-  genre: 'Pop' }, { name: 'Seeing Stars',
-  artist: 'BØRNS',
-  album: 'Candy',
-  genre: 'Pop' }, { name: 'If It\'s Not You',
-  artist: 'Keljet',
-  album: 'Keljet x AYER - If It\'s Not You',
-  genre: 'Pop' }, { name: 'The Nights',
-  artist: 'Avicii',
-  album: 'The Days / Nights',
-  genre: 'Pop' }, { name: 'Pay No Mind',
-  artist: 'Madeon',
-  album: 'Adventure (Deluxe)',
-  genre: 'Pop' }, { name: 'Best Fake Smile',
-  artist: 'James Bay',
-  album: 'Chaos And The Calm',
-  genre: 'Pop' }, { name: 'Savages',
-  artist: 'Marina and The Diamonds',
-  album: 'FROOT',
-  genre: 'Pop' }, { name: 'Human Contact',
-  artist: 'Catey Shaw',
-  album: 'The Brooklyn EP',
-  genre: 'Pop' }, { name: 'Hum Hum',
-  artist: 'Mating Ritual',
-  album: 'Hum Hum',
-  genre: 'Pop' }, { name: 'Cold Cold Man',
-  artist: 'Saint Motel',
-  album: 'My Type EP',
-  genre: 'Pop' }, { name: 'Theme Music' }];
+var _laconaCommandOpen2 = _interopRequireDefault(_laconaCommandOpen);
 
-var FileList = (function (_Phrase) {
-  _inherits(FileList, _Phrase);
+var _laconaCommandOsx = require('lacona-command-osx');
 
-  function FileList() {
-    _classCallCheck(this, FileList);
+var _laconaCommandOsx2 = _interopRequireDefault(_laconaCommandOsx);
 
-    _get(Object.getPrototypeOf(FileList.prototype), 'constructor', this).apply(this, arguments);
-  }
+var _laconaCommandSettings = require('lacona-command-settings');
 
-  _createClass(FileList, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      if (result.dir) {
-        var dir = result.dir === '~' ? '/Users/LaconaUser' : result.dir;
-        return dir + '/' + result.file;
-      } else {
-        return result;
-      }
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      if (_lodash2['default'].isPlainObject(this.props.directoryOrFile)) {
-        return (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          (0, _laconaPhrase.createElement)('literal', { text: this.props.directoryOrFile.name + '/', id: 'dir', value: this.props.directoryOrFile.name }),
-          (0, _laconaPhrase.createElement)(
-            'argument',
-            { text: 'content', id: 'file' },
-            (0, _laconaPhrase.createElement)(
-              'choice',
-              null,
-              (0, _laconaPhrase.createElement)('literal', { text: '', value: '' }),
-              _lodash2['default'].map(this.props.directoryOrFile.children, function (child) {
-                return (0, _laconaPhrase.createElement)(FileList, { directoryOrFile: child });
-              })
-            )
-          )
-        );
-      } else {
-        return (0, _laconaPhrase.createElement)('literal', { text: this.props.directoryOrFile, value: this.props.directoryOrFile });
-      }
-    }
-  }]);
+var _laconaCommandSettings2 = _interopRequireDefault(_laconaCommandSettings);
 
-  return FileList;
-})(_laconaPhrase.Phrase);
+var _laconaCommandTranslate = require('lacona-command-translate');
 
-var File = (function (_Phrase2) {
-  _inherits(File, _Phrase2);
+var _laconaCommandTranslate2 = _interopRequireDefault(_laconaCommandTranslate);
 
-  function File() {
-    _classCallCheck(this, File);
+// import {Date as DatePhrase, DateTime, Time, TimePeriod, TimeDuration} from 'lacona-phrase-datetime'
+// import URL from 'lacona-phrase-url'
+// import Email from 'lacona-phrase-email'
+// import PhoneNumber from 'lacona-phrase-phonenumber'
 
-    _get(Object.getPrototypeOf(File.prototype), 'constructor', this).apply(this, arguments);
-  }
+process.env.LACONA_ENV = 'demo';
 
-  _createClass(File, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'choice',
-        null,
-        (0, _laconaPhrase.createElement)(
-          'argument',
-          { text: 'path', showForEmpty: true },
-          (0, _laconaPhrase.createElement)(
-            'choice',
-            null,
-            (0, _laconaPhrase.createElement)(FileList, { directoryOrFile: { name: '~', children: userFiles } }),
-            (0, _laconaPhrase.createElement)(FileList, { directoryOrFile: { name: '', children: rootFiles } })
-          )
-        ),
-        (0, _laconaPhrase.createElement)(
-          'argument',
-          { text: 'file', showForEmpty: true },
-          (0, _laconaPhrase.createElement)('list', { items: [{ text: 'log.csv', value: '/Users/LaconaUser/Documents/log.csv' }, { text: 'lacona-logo.png', value: '/Users/LaconaUser/Documents/lacona-logo.png' }, { text: 'kickstarter-video.m4v', value: '/Users/LaconaUser/Documents/kickstarter-video.m4v' }, { text: 'document.docx', value: '/Users/LaconaUser/Documents/document.docx' }, { text: 'my-document.docx', value: '/Users/LaconaUser/Documents/my-document.docx' }, { text: 'main.js', value: '/Users/LaconaUser/Projects/test/main.js' }, { text: 'package.json', value: '/Users/LaconaUser/Projects/test/package.json' }, { text: 'lodash.js', value: '/Users/LaconaUser/Projects/test/lodash.js' }, { text: 'react-router.jsx', value: '/Users/LaconaUser/Projects/test/react-router.jsx' }, { text: 'briefing 1_2.keynote', value: '/Users/LaconaUser/Documents/Presentations/briefing 1_2.keynote' }, { text: 'briefing 2_24.keynote', value: '/Users/LaconaUser/Documents/Presentations/briefing 2_24.keynote' }, { text: 'briefing 5_5.keynote', value: '/Users/LaconaUser/Documents/Presentations/briefing 5_5.keynote' }, { text: 'status-updates.txt', value: '/Users/LaconaUser/status-updates.txt' }, { text: 'todo.txt', value: '/Users/LaconaUser/todo.txt' }, { text: 'main.cpp', value: '/Users/LaconaUser/Projects/cpp-test/main.cpp' }, { text: 'main.h', value: '/Users/LaconaUser/Projects/cpp-test/main.h' }, { text: 'quick-brown-fox.js', value: '/Users/LaconaUser/Projects/cpp-test/quick-brown-fox.js' }, { text: 'overjumper.cs', value: '/Users/LaconaUser/Projects/cpp-test/overjumper.cs' }, { text: 'overjumper.h', value: '/Users/LaconaUser/Projects/cpp-test/overjumper.h' }, { text: 'lazy_dog.js', value: '/Users/LaconaUser/Projects/cpp-test/lazy_dog.js' }], fuzzy: true })
-        )
-      );
-    }
-  }]);
-
-  return File;
-})(_laconaPhrase.Phrase);
-
-var SystemPreference = (function (_Phrase3) {
-  _inherits(SystemPreference, _Phrase3);
-
-  function SystemPreference() {
-    _classCallCheck(this, SystemPreference);
-
-    _get(Object.getPrototypeOf(SystemPreference.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(SystemPreference, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'argument',
-        { text: 'preference pane', showForEmpty: true },
-        (0, _laconaPhrase.createElement)('list', { items: [{ text: 'Displays', value: 'Displays' }, { text: 'Desktop & Screen Saver', value: 'Desktop & Screen Saver' }, { text: 'Extensions', value: 'Extensions' }, { text: 'Energy Saver', value: 'Energy Saver' }, { text: 'Sound', value: 'Sound' }, { text: 'Keyboard', value: 'Keyboard' }, { text: 'Internet Accounts', value: 'Internet Accounts' }, { text: 'Date & Time', value: 'Date & Time' }, { text: 'Accessibility', value: 'Accessibility' }, { text: 'Security & Privacy', value: 'Security & Privacy' }, { text: 'Dock', value: 'Dock' }, { text: 'Profiles', value: 'Profiles' }, { text: 'Network', value: 'Network' }, { text: 'Notifications', value: 'Notifications' }, { text: 'Fibre Channel', value: 'Fibre Channel' }, { text: 'App Store', value: 'App Store' }, { text: 'Time Machine', value: 'Time Machine' }, { text: 'General', value: 'General' }, { text: 'Dictation & Speech', value: 'Dictation & Speech' }, { text: 'Spotlight', value: 'Spotlight' }, { text: 'Ink', value: 'Ink' }, { text: 'Language & Region', value: 'Language & Region' }, { text: 'CDs & DVDs', value: 'CDs & DVDs' }, { text: 'Sharing', value: 'Sharing' }, { text: 'Users & Groups', value: 'Users & Groups' }, { text: 'Bluetooth', value: 'Bluetooth' }, { text: 'Mouse', value: 'Mouse' }, { text: 'Trackpad', value: 'Trackpad' }, { text: 'Mission Control', value: 'Mission Control' }, { text: 'Startup Disk', value: 'Startup Disk' }, { text: 'Parental Controls', value: 'Parental Controls' }, { text: 'Printers & Scanners', value: 'Printers & Scanners' }, { text: 'iCloud', value: 'iCloud' }] })
-      );
-    }
-  }]);
-
-  return SystemPreference;
-})(_laconaPhrase.Phrase);
-
-var Application = (function (_Phrase4) {
-  _inherits(Application, _Phrase4);
-
-  function Application() {
-    _classCallCheck(this, Application);
-
-    _get(Object.getPrototypeOf(Application.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Application, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'argument',
-        { text: 'application', showForEmpty: true },
-        (0, _laconaPhrase.createElement)('list', { score: 1, items: [{ text: 'Calendar', value: 'Calendar' }, { text: 'Contacts', value: 'Contacts' }, { text: 'FaceTime', value: 'FaceTime' }, { text: 'Finder', value: 'Finder' }, { text: 'Game Center', value: 'Game Center' }, { text: 'GarageBand', value: 'GarageBand' }, { text: 'iBooks', value: 'iBooks' }, { text: 'iMovie', value: 'iMovie' }, { text: 'iPhoto', value: 'iPhoto' }, { text: 'iTunes', value: 'iTunes' }, { text: 'Keynote', value: 'Keynote' }, { text: 'App Store', value: 'App Store' }, { text: 'Mail', value: 'Mail' }, { text: 'Maps', value: 'Maps' }, { text: 'Messages', value: 'Messages' }, { text: 'Notes', value: 'Notes' }, { text: 'Numbers', value: 'Numbers' }, { text: 'Pages', value: 'Pages' }, { text: 'Photo Booth', value: 'Photo Booth' }, { text: 'Reminders', value: 'Reminders' }, { text: 'Safari', value: 'Safari' }, { text: 'Google Chrome', value: 'Google Chrome' }, { text: 'Firefox', value: 'Firefox' }, { text: 'Automator', value: 'Automator' }, { text: 'Calculator', value: 'Calculator' }, { text: 'Chess', value: 'Chess' }, { text: 'Dictionary', value: 'Dictionary' }, { text: 'DVD Player', value: 'DVD Player' }, { text: 'Font Book', value: 'Font Book' }, { text: 'Image Capture', value: 'Image Capture' }, { text: 'Preview', value: 'Preview' }, { text: 'QuickTime Player', value: 'QuickTime Player' }, { text: 'Stickies', value: 'Stickies' }, { text: 'System Information', value: 'System Information' }, { text: 'TextEdit', value: 'TextEdit' }, { text: 'VoiceOver Utility', value: 'VoiceOver Utility' }], fuzzy: true })
-      );
-    }
-  }]);
-
-  return Application;
-})(_laconaPhrase.Phrase);
-
-var Bookmark = (function (_Phrase5) {
-  _inherits(Bookmark, _Phrase5);
-
-  function Bookmark() {
-    _classCallCheck(this, Bookmark);
-
-    _get(Object.getPrototypeOf(Bookmark.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Bookmark, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'argument',
-        { text: 'bookmark', showForEmpty: true },
-        (0, _laconaPhrase.createElement)('list', { items: [{ text: 'Facebook', value: 'http://facebook.com' }, { text: 'Twitter', value: 'http://twitter.com' }, { text: 'Google', value: 'http://google.com' }, { text: 'Lifehacker', value: 'http://lifehacker.com' }, { text: 'xkcd', value: 'http://xkcd.com' }, { text: 'Github', value: 'http://github.com' }, { text: 'Gmail', value: 'http://gmail.com' }, { text: 'Youtube', value: 'http://youtube.com' }, { text: 'Wikipedia', value: 'http://wikipedia.org' }, { text: 'Ebay', value: 'http://ebay.com' }], fuzzy: true })
-      );
-    }
-  }]);
-
-  return Bookmark;
-})(_laconaPhrase.Phrase);
-
-var AppsGroup = (function (_Phrase6) {
-  _inherits(AppsGroup, _Phrase6);
-
-  function AppsGroup() {
-    _classCallCheck(this, AppsGroup);
-
-    _get(Object.getPrototypeOf(AppsGroup.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(AppsGroup, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'repeat',
-        { unique: true, separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', ', ', and '], limit: 1, max: this.props.max }) },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          null,
-          (0, _laconaPhrase.createElement)(Application, { id: 'app' })
-        )
-      );
-    }
-  }]);
-
-  return AppsGroup;
-})(_laconaPhrase.Phrase);
-
-var OpenableGroup = (function (_Phrase7) {
-  _inherits(OpenableGroup, _Phrase7);
-
-  function OpenableGroup() {
-    _classCallCheck(this, OpenableGroup);
-
-    _get(Object.getPrototypeOf(OpenableGroup.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(OpenableGroup, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'repeat',
-        { unique: true, separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', ', ', and '], limit: 1 }) },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          null,
-          (0, _laconaPhrase.createElement)(Application, { id: 'app' }),
-          (0, _laconaPhrase.createElement)(_laconaPhraseUrl2['default'], { id: 'url' }),
-          (0, _laconaPhrase.createElement)(Bookmark, { id: 'url' }),
-          (0, _laconaPhrase.createElement)(File, { id: 'file' }),
-          (0, _laconaPhrase.createElement)(SystemPreference, { id: 'pref' })
-        )
-      );
-    }
-  }]);
-
-  return OpenableGroup;
-})(_laconaPhrase.Phrase);
-
-var OpenInableGroup = (function (_Phrase8) {
-  _inherits(OpenInableGroup, _Phrase8);
-
-  function OpenInableGroup() {
-    _classCallCheck(this, OpenInableGroup);
-
-    _get(Object.getPrototypeOf(OpenInableGroup.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(OpenInableGroup, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'repeat',
-        { unique: true, separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', ', ', and '], limit: 1 }) },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          null,
-          (0, _laconaPhrase.createElement)(_laconaPhraseUrl2['default'], { id: 'url' }),
-          (0, _laconaPhrase.createElement)(Bookmark, { id: 'url' }),
-          (0, _laconaPhrase.createElement)(File, { id: 'file' })
-        )
-      );
-    }
-  }]);
-
-  return OpenInableGroup;
-})(_laconaPhrase.Phrase);
-
-var Open = (function (_Phrase9) {
-  _inherits(Open, _Phrase9);
-
-  function Open() {
-    _classCallCheck(this, Open);
-
-    _get(Object.getPrototypeOf(Open.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Open, [{
-    key: 'filter',
-    value: function filter(result) {
-      var allPrefs = _lodash2['default'].filter(result.things, 'pref');
-      return allPrefs.length < 2;
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'choice',
-        { id: 'open' },
-        (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          (0, _laconaPhrase.createElement)('literal', { text: 'open ', category: 'action', value: 'open', id: 'verb' }),
-          (0, _laconaPhrase.createElement)(
-            'choice',
-            { merge: true },
-            (0, _laconaPhrase.createElement)(OpenableGroup, { id: 'things' }),
-            (0, _laconaPhrase.createElement)(
-              'sequence',
-              null,
-              (0, _laconaPhrase.createElement)(OpenInableGroup, { id: 'things' }),
-              (0, _laconaPhrase.createElement)('list', { items: [' with ', ' using ', ' in '], limit: 1, category: 'conjunction' }),
-              (0, _laconaPhrase.createElement)(AppsGroup, { id: 'openin' })
-            )
-          )
-        ),
-        (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          (0, _laconaPhrase.createElement)('literal', { text: 'switch to ', category: 'action', value: 'switch', id: 'verb' }),
-          (0, _laconaPhrase.createElement)(AppsGroup, { max: 1, id: 'things' })
-        ),
-        (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          (0, _laconaPhrase.createElement)('list', { items: [{ text: 'close ', value: 'close' }, { text: 'quit ', value: 'quit' }, { text: 'kill ', value: 'kill' }, { text: 'launch ', value: 'open' }], id: 'verb', category: 'action', limit: 2 }),
-          (0, _laconaPhrase.createElement)(AppsGroup, { id: 'things' })
-        )
-      );
-    }
-  }]);
-
-  return Open;
-})(_laconaPhrase.Phrase);
-
-var open = {
-  grammar: (0, _laconaPhrase.createElement)(Open, { id: 'open' })
-};
-
-exports.open = open;
-
-var Birthday = (function (_Phrase10) {
-  _inherits(Birthday, _Phrase10);
-
-  function Birthday() {
-    _classCallCheck(this, Birthday);
-
-    _get(Object.getPrototypeOf(Birthday.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Birthday, [{
-    key: 'getValue',
-    value: function getValue() {
-      return new Date(2015, 9, 11, 0, 0, 0, 0);
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'sequence',
-        null,
-        (0, _laconaPhrase.createElement)('literal', { text: 'on ' }),
-        (0, _laconaPhrase.createElement)(
-          'argument',
-          { text: 'birthday', merge: true },
-          (0, _laconaPhrase.createElement)(
-            'choice',
-            null,
-            (0, _laconaPhrase.createElement)(
-              'sequence',
-              null,
-              (0, _laconaPhrase.createElement)(Contact, { argument: false, merge: true }),
-              (0, _laconaPhrase.createElement)('literal', { text: '\'s birthday' })
-            ),
-            (0, _laconaPhrase.createElement)(
-              'sequence',
-              null,
-              (0, _laconaPhrase.createElement)(Relationship, { argument: false, merge: true }),
-              (0, _laconaPhrase.createElement)('literal', { text: '\'s birthday' })
-            )
-          )
-        )
-      );
-    }
-  }]);
-
-  return Birthday;
-})(_laconaPhrase.Phrase);
-
-Birthday['extends'] = [_laconaPhraseDatetime.Date];
-
-var Holiday = (function (_Phrase11) {
-  _inherits(Holiday, _Phrase11);
-
-  function Holiday() {
-    _classCallCheck(this, Holiday);
-
-    _get(Object.getPrototypeOf(Holiday.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Holiday, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'argument',
-        { text: 'holiday', showForEmpty: true },
-        (0, _laconaPhrase.createElement)('list', { items: [{ text: 'New Years Day', value: new Date(2016, 0, 1) }, { text: 'Martin Luther King Jr. Day', value: new Date(2016, 0, 18) }, { text: 'Martin Luther King Day', value: new Date(2016, 0, 18) }, { text: 'Dr. Martin Luther King Jr. Day', value: new Date(2016, 0, 18) }, { text: 'Dr. Martin Luther King Day', value: new Date(2016, 0, 18) }, { text: 'Valentines Day', value: new Date(2016, 1, 14) }, { text: "Washington's Birthday", value: new Date(2016, 1, 15) }, { text: 'Presidents Day', value: new Date(2016, 1, 15) }, { text: 'Presidents Day', value: new Date(2016, 1, 15) }, { text: 'Memorial Day', value: new Date(2016, 4, 30) }, { text: 'Independence Day', value: new Date(2016, 6, 4) }, { text: 'The Fourth of July', value: new Date(2016, 6, 4) }, { text: 'Labor Day', value: new Date(2015, 8, 7) }, { text: 'Columbus Day', value: new Date(2015, 9, 12) }, { text: 'Christopher Columbus Day', value: new Date(2015, 9, 12) }, { text: 'American Indian Day', value: new Date(2015, 9, 12) }, { text: 'Native American Day', value: new Date(2015, 9, 12) }, { text: "Indigenous People's Day ", value: new Date(2015, 9, 12) }, { text: 'Veterans Day', value: new Date(2015, 10, 11) }, { text: 'Thanksgiving Day', value: new Date(2015, 10, 26) }, { text: 'Christmas Eve', value: new Date(2015, 11, 24) }, { text: 'Christmas Day', value: new Date(2015, 11, 25) }, { text: 'New Years Eve', value: new Date(2015, 11, 31) }] })
-      );
-    }
-  }]);
-
-  return Holiday;
-})(_laconaPhrase.Phrase);
-
-Holiday['extends'] = [_laconaPhraseDatetime.Date];
-
-var LocationWithAt = (function (_Phrase12) {
-  _inherits(LocationWithAt, _Phrase12);
-
-  function LocationWithAt() {
-    _classCallCheck(this, LocationWithAt);
-
-    _get(Object.getPrototypeOf(LocationWithAt.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(LocationWithAt, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'sequence',
-        null,
-        (0, _laconaPhrase.createElement)('list', { items: [' at ', ' on ', ' in '], limit: 1, category: 'conjunction' }),
-        (0, _laconaPhrase.createElement)(
-          'argument',
-          { text: 'location', merge: true },
-          (0, _laconaPhrase.createElement)('freetext', { limit: 1, splitOn: ' ' })
-        )
-      );
-    }
-  }]);
-
-  return LocationWithAt;
-})(_laconaPhrase.Phrase);
-
-var date = {
-  grammar: (0, _laconaPhrase.createElement)(
+global.config = require('./demo-config');
+function toGrammar(name, command) {
+  return (0, _laconaPhrase.createElement)(
     'choice',
-    { id: 'date' },
-    (0, _laconaPhrase.createElement)(
-      'sequence',
-      { id: 'event', unique: true },
-      (0, _laconaPhrase.createElement)('list', { items: ['schedule ', 'create an event ', 'create event ', 'add an event ', 'add event '], limit: 1, category: 'action' }),
-      (0, _laconaPhrase.createElement)(
-        'argument',
-        { text: 'calendar event', id: 'title' },
-        (0, _laconaPhrase.createElement)('freetext', { limit: 1, splitOn: ' ' })
-      ),
-      (0, _laconaPhrase.createElement)(LocationWithAt, { optional: true, id: 'location', prefered: false }),
-      (0, _laconaPhrase.createElement)('list', { items: [' for ', ' at ', ' '], category: 'conjunction', limit: 1 }),
-      (0, _laconaPhrase.createElement)(
-        'choice',
-        { limit: 1, merge: true },
-        (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.DateTime, { id: 'datetime' }),
-        (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.Time, { id: 'time' }),
-        (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.Date, { id: 'date' }),
-        (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.TimePeriod, { id: 'period' })
-      ),
-      (0, _laconaPhrase.createElement)(LocationWithAt, { optional: true, prefered: false, id: 'location' })
-    ),
-    (0, _laconaPhrase.createElement)(
-      'sequence',
-      { id: 'reminder' },
-      (0, _laconaPhrase.createElement)('list', { items: ['remind me to ', 'create reminder ', 'create a reminder ', 'add a reminder ', 'add reminder '], limit: 1, category: 'action' }),
-      (0, _laconaPhrase.createElement)(
-        'argument',
-        { text: 'reminder title', id: 'title' },
-        (0, _laconaPhrase.createElement)('freetext', { limit: 1, splitOn: ' ' })
-      ),
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        { optional: true, merge: true },
-        (0, _laconaPhrase.createElement)('literal', { text: ' ', category: 'conjunction' }),
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          { merge: true },
-          (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.Time, { id: 'time', includeAt: true, allowPast: false }),
-          (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.Date, { id: 'date', allowPast: false }),
-          (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.DateTime, { id: 'datetime', includeAt: true, allowPast: false })
-        )
-      )
-    )
-  ),
-  extensions: [Birthday, Holiday]
-};
-
-exports.date = date;
-var engines = [{ text: 'Google', value: 'Google' }, { text: 'Wikipedia', value: 'Wikipedia' }, { text: 'Bing', value: 'Bing' }, { text: 'Yahoo', value: 'Yahoo' }, { text: 'Amazon', value: 'Amazon' }, { text: 'Google Images', value: 'Google Images' }, { text: 'DuckDuckGo', value: 'DuckDuckGo' }, { text: 'Pinterest', value: 'Pinterest' }, { text: 'Google Maps', value: 'Google Maps' }, { text: 'Gmail', value: 'Gmail' }, { text: 'Google Drive', value: 'Google Drive' }, { text: 'Apple Maps', value: 'Apple Maps' }, { text: 'Twitter', value: 'Twitter' }, { text: 'IMDB', value: 'IMDB' }, { text: 'LinkedIn', value: 'LinkedIn' }, { text: 'Youtube', value: 'Youtube' }, { text: 'Rotten Tomatoes', value: 'Rotten Tomatoes' }, { text: 'Yubnub', value: 'Yubnub' }, { text: 'Wolfram Alpha', value: 'Wolfram|Alpha' }, { text: 'Facebook', value: 'Facebook' }, { text: 'eBay', value: 'eBay' }];
-
-var SearchEngines = (function (_Phrase13) {
-  _inherits(SearchEngines, _Phrase13);
-
-  function SearchEngines() {
-    _classCallCheck(this, SearchEngines);
-
-    _get(Object.getPrototypeOf(SearchEngines.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(SearchEngines, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'repeat',
-        { unique: true, separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', ', ', and'], limit: 1 }) },
-        (0, _laconaPhrase.createElement)(
-          'argument',
-          { text: 'search engine' },
-          (0, _laconaPhrase.createElement)('list', { items: engines, fuzzy: true, limit: 5 })
-        )
-      );
-    }
-  }]);
-
-  return SearchEngines;
-})(_laconaPhrase.Phrase);
+    { id: name },
+    _lodash2['default'].map(command.sentences, function (_ref) {
+      var Sentence = _ref.Sentence;
+      return (0, _laconaPhrase.createElement)(Sentence, null);
+    })
+  );
+}
 
 var search = {
-  grammar: (0, _laconaPhrase.createElement)(
-    'choice',
-    { limit: 1, id: 'search' },
-    (0, _laconaPhrase.createElement)(
-      'sequence',
-      null,
-      (0, _laconaPhrase.createElement)('literal', { text: 'search ', category: 'action' }),
-      (0, _laconaPhrase.createElement)(SearchEngines, { id: 'engines' }),
-      (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
-      (0, _laconaPhrase.createElement)('decorator', { text: 'for ', category: 'conjunction' }),
-      (0, _laconaPhrase.createElement)(
-        'argument',
-        { text: 'query', id: 'query' },
-        (0, _laconaPhrase.createElement)('freetext', { consumeAll: true })
-      )
-    ),
-    (0, _laconaPhrase.createElement)(
-      'sequence',
-      null,
-      (0, _laconaPhrase.createElement)('literal', { text: 'search ', category: 'action' }),
-      (0, _laconaPhrase.createElement)('literal', { text: 'for ', category: 'conjunction', optional: true, prefered: true, limited: true }),
-      (0, _laconaPhrase.createElement)(
-        'argument',
-        { text: 'query', id: 'query' },
-        (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
-      ),
-      (0, _laconaPhrase.createElement)('list', { items: [' on ', ' with ', ' using '], limit: 1 }),
-      (0, _laconaPhrase.createElement)(
-        'descriptor',
-        { text: 'search engine', argument: true },
-        (0, _laconaPhrase.createElement)('list', { items: engines, fuzzy: true, limit: 5 })
-      ),
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        { optional: true },
-        (0, _laconaPhrase.createElement)('list', { items: [' and ', ', ', ', and'], limit: 1 }),
-        (0, _laconaPhrase.createElement)(SearchEngines, { id: 'engines' })
-      )
-    )
-  )
+  grammar: toGrammar('search', _laconaCommandSearchInternet2['default'])
 };
 
 exports.search = search;
-/*
-if (global.location && global.location.hash === '#videodemo') {
-  search.grammar = (
-    <choice>
-      <sequence>
-        <literal text='ابحث ' category='action' />
-        <literal text='في ' category='conjunction' />
-        <argument text='محرك البحث'>
-          <choice>
-            <literal text='جوجل' />
-            <literal text='يملي' />
-          </choice>
-        </argument>
-        <literal text=' ' />
-        <argument text='بحث'>
-          <freetext />
-        </argument>
-      </sequence>
+var date = {
+  grammar: toGrammar('date', _laconaCommandEvents2['default']),
+  extensions: _laconaCommandOsx2['default'].extensions
+};
+exports.date = date;
+var open = {
+  grammar: toGrammar('open', _laconaCommandOpen2['default']),
+  extensions: _laconaCommandOsx2['default'].extensions
+};
 
-      <sequence>
-        <literal text='найти ' category='action' />
-        <literal text='в ' category='conjunction' />
-        <argument text='поисковик'>
-          <choice>
-            <literal text='Яндексе' />
-            <literal text='Гугле' />
-          </choice>
-        </argument>
-        <literal text=' ' />
-        <argument text='запрос'>
-          <freetext />
-        </argument>
-      </sequence>
-
-      <sequence>
-        <literal text='buscar ' category='action' />
-        <literal text='en ' category='conjunction' />
-        <argument text='buscador'>
-          <literal text='Google' />
-        </argument>
-        <literal text=' ' category='conjunction' />
-        <argument text='consulta'>
-          <freetext />
-        </argument>
-      </sequence>
-
-      <sequence>
-        <literal text='在' category='conjunction' />
-        <argument text='搜寻引擎'>
-          <choice>
-            <literal text='百度' />
-            <literal text='Google' />
-          </choice>
-        </argument>
-        <literal text='上' category='conjunction' />
-        <literal text='搜索' category='action' />
-        <argument text='查询'>
-          <freetext />
-        </argument>
-      </sequence>
-    </choice>
-  )
-}*/
-
-function itemify(x) {
-  return { text: x, value: x };
-}
-
-var MusicItems = (function (_Phrase14) {
-  _inherits(MusicItems, _Phrase14);
-
-  function MusicItems() {
-    _classCallCheck(this, MusicItems);
-
-    _get(Object.getPrototypeOf(MusicItems.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(MusicItems, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'repeat',
-        { unique: true, separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', ', ', and '], limit: 1 }) },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          null,
-          (0, _laconaPhrase.createElement)(
-            'argument',
-            { text: 'song', showForEmpty: true, id: 'song' },
-            (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: _lodash2['default'].chain(tunes).map('name').filter().map(itemify).value(), limit: 10 })
-          ),
-          (0, _laconaPhrase.createElement)(
-            'argument',
-            { text: 'album', showForEmpty: true, id: 'album' },
-            (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: _lodash2['default'].chain(tunes).map('album').filter().unique().map(itemify).value(), limit: 10 })
-          ),
-          (0, _laconaPhrase.createElement)(
-            'argument',
-            { text: 'artist', showForEmpty: true, id: 'artist' },
-            (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: _lodash2['default'].chain(tunes).map('artist').filter().unique().map(itemify).value(), limit: 10 })
-          ),
-          (0, _laconaPhrase.createElement)(
-            'argument',
-            { text: 'genre', showForEmpty: true, id: 'genre' },
-            (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: _lodash2['default'].chain(tunes).map('genre').filter().unique().map(itemify).value(), limit: 10 })
-          ),
-          (0, _laconaPhrase.createElement)(
-            'argument',
-            { text: 'playlist', showForEmpty: true, id: 'playlist' },
-            (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: ['Jams', 'Chill', 'Workout', 'Driving'].map(itemify) })
-          ),
-          (0, _laconaPhrase.createElement)(
-            'argument',
-            { text: 'composer', showForEmpty: true, id: 'composer' },
-            (0, _laconaPhrase.createElement)('literal', null)
-          )
-        )
-      );
-    }
-  }]);
-
-  return MusicItems;
-})(_laconaPhrase.Phrase);
-
+exports.open = open;
 var play = {
-  grammar: (0, _laconaPhrase.createElement)(
-    'choice',
-    { id: 'play' },
-    (0, _laconaPhrase.createElement)(
-      'sequence',
-      null,
-      (0, _laconaPhrase.createElement)('literal', { text: 'play ', category: 'action' }),
-      (0, _laconaPhrase.createElement)(
-        'choice',
-        { merge: true },
-        (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          (0, _laconaPhrase.createElement)(MusicItems, { id: 'something' }),
-          (0, _laconaPhrase.createElement)(
-            'sequence',
-            { merge: true, optional: true, id: 'shuffled', value: true },
-            (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
-            (0, _laconaPhrase.createElement)(
-              'descriptor',
-              { argument: true, text: 'shuffled' },
-              (0, _laconaPhrase.createElement)('literal', { text: 'shuffled' })
-            )
-          )
-        ),
-        (0, _laconaPhrase.createElement)('list', { id: 'previous', value: true, items: ['previous track', 'previous song'], limit: 1, category: 'argument5' })
-      )
-    ),
-    (0, _laconaPhrase.createElement)(
-      'choice',
-      { limit: 1, value: { next: true } },
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        null,
-        (0, _laconaPhrase.createElement)('literal', { text: 'play ', category: 'action' }),
-        (0, _laconaPhrase.createElement)('list', { items: ['next track', 'next song'], limit: 1, category: 'argument5' })
-      ),
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        null,
-        (0, _laconaPhrase.createElement)('literal', { text: 'skip ', category: 'action' }),
-        (0, _laconaPhrase.createElement)('list', { items: ['track', 'song', 'this track', 'this song'], limit: 1, category: 'argument5' })
-      )
-    ),
-    (0, _laconaPhrase.createElement)('list', { value: { pause: true }, items: ['pause music', 'pause this track', 'pause iTunes', 'pause track', 'pause song'], limit: 1, category: 'action' }),
-    (0, _laconaPhrase.createElement)('list', { value: { stop: true }, items: ['stop music', 'stop iTunes', 'stop track', 'stop song'], limit: 1, category: 'action' })
-  )
+  grammar: toGrammar('play', _laconaCommandItunes2['default'])
 };
 
 exports.play = play;
-var contacts = [{ text: 'Tony Stark', value: 'Tony Stark' }, { text: 'Donald Blake', value: 'Donald Blake' }, { text: 'Henry Pym', value: 'Henry Pym' }, { text: 'Bruce Banner', value: 'Bruce Banner' }, { text: 'Steve Rogers', value: 'Steve Rogers' }, { text: 'Clinton Barton', value: 'Clinton Barton' }, { text: 'Wanda Maximoff', value: 'Wanda Maximoff' }, { text: 'Victor Shade', value: 'Victor Shade' }, { text: 'Natalia Romanova', value: 'Natalia Romanova' }, { text: 'Jennifer Walters', value: 'Jennifer Walters' }, { text: 'Hank McCoy', value: 'Hank McCoy' }, { text: 'Peter Quill', value: 'Peter Quill' }, { text: 'Reed Richards', value: 'Reed Richards' }, { text: 'Susan Richards', value: 'Susan Richards' }, { text: 'Jim Hammond', value: 'Jim Hammond' }, { text: 'Benjamin Grimm', value: 'Benjamin Grimm' }, { text: 'Peter Parker', value: 'Peter Parker' }, { text: 'Luke Cage', value: 'Luke Cage' }, { text: 'Logan Howlett', value: 'Logan Howlett' }, { text: 'James Barnes', value: 'James Barnes' }, { text: 'Steven Strange', value: 'Steven Strange' }, { text: 'Matt Murdock', value: 'Matt Murdock' }, { text: 'Scott Summers', value: 'Scott Summers' }, { text: 'Charles Xavier', value: 'Charles Xavier' }, { text: 'Bobby Drake', value: 'Bobby Drake' }, { text: 'Jean Grey-Summers', value: 'Jean Grey-Summers' }, { text: 'Kurt Wagner', value: 'Kurt Wagner' }, { text: 'Ororo Monroe', value: 'Ororo Monroe' }, { text: 'Anna Marie', value: 'Anna Marie' }, { text: 'Erik Lehnsherr', value: 'Erik Lehnsherr' }];
-
-var Contact = (function (_Phrase15) {
-  _inherits(Contact, _Phrase15);
-
-  function Contact() {
-    _classCallCheck(this, Contact);
-
-    _get(Object.getPrototypeOf(Contact.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Contact, [{
-    key: 'describe',
-    value: function describe() {
-      var firstNames = _lodash2['default'].map(contacts, function (_ref) {
-        var text = _ref.text;
-        var value = _ref.value;
-        return {
-          text: text.split(' ')[0],
-          value: value,
-          qualifier: text
-        };
-      });
-
-      return (0, _laconaPhrase.createElement)(
-        'descriptor',
-        { placeholder: true, argument: this.props.argument, text: 'contact', showForEmpty: true },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          { limit: 1 },
-          (0, _laconaPhrase.createElement)('list', { items: contacts }),
-          (0, _laconaPhrase.createElement)('list', { items: firstNames })
-        )
-      );
-    }
-  }]);
-
-  return Contact;
-})(_laconaPhrase.Phrase);
-
-Contact.defaultProps = {
-  argument: true
-};
-
-var Relationship = (function (_Phrase16) {
-  _inherits(Relationship, _Phrase16);
-
-  function Relationship() {
-    _classCallCheck(this, Relationship);
-
-    _get(Object.getPrototypeOf(Relationship.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Relationship, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'descriptor',
-        { placeholder: true, argument: this.props.argument, text: 'relationship', showForEmpty: true },
-        (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          (0, _laconaPhrase.createElement)('literal', { text: 'my ', optional: true, limited: true }),
-          (0, _laconaPhrase.createElement)('list', { merge: true, items: [{ text: 'Mom', value: 'your mom' }, { text: 'Dad', value: 'your dad' }, { text: 'Landlord', value: 'your landlord' }, { text: 'Boss', value: 'your boss' }, { text: 'Girlfriend', value: 'your girlfriend' }, { text: 'Wife', value: 'your wife' }, { text: 'Boyfriend', value: 'your boyfriend' }, { text: 'Husband', value: 'your husband' }] })
-        )
-      );
-    }
-  }]);
-
-  return Relationship;
-})(_laconaPhrase.Phrase);
-
-Relationship.defaultProps = {
-  argument: true
-};
-
-var EmailGroup = (function (_Phrase17) {
-  _inherits(EmailGroup, _Phrase17);
-
-  function EmailGroup() {
-    _classCallCheck(this, EmailGroup);
-
-    _get(Object.getPrototypeOf(EmailGroup.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(EmailGroup, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'repeat',
-        { unique: true, separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1 }) },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          null,
-          (0, _laconaPhrase.createElement)(_laconaPhraseEmail2['default'], { id: 'address' }),
-          (0, _laconaPhrase.createElement)(Relationship, { id: 'relationship' }),
-          (0, _laconaPhrase.createElement)(Contact, { id: 'contact' })
-        )
-      );
-    }
-  }]);
-
-  return EmailGroup;
-})(_laconaPhrase.Phrase);
-
-var NumberGroup = (function (_Phrase18) {
-  _inherits(NumberGroup, _Phrase18);
-
-  function NumberGroup() {
-    _classCallCheck(this, NumberGroup);
-
-    _get(Object.getPrototypeOf(NumberGroup.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(NumberGroup, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'repeat',
-        { unique: true, separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1, max: this.props.max }) },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          null,
-          (0, _laconaPhrase.createElement)(_laconaPhrasePhonenumber2['default'], { id: 'number' }),
-          (0, _laconaPhrase.createElement)(Relationship, { id: 'relationship' }),
-          (0, _laconaPhrase.createElement)(Contact, { id: 'contact' })
-        )
-      );
-    }
-  }]);
-
-  return NumberGroup;
-})(_laconaPhrase.Phrase);
-
-var AllGroup = (function (_Phrase19) {
-  _inherits(AllGroup, _Phrase19);
-
-  function AllGroup() {
-    _classCallCheck(this, AllGroup);
-
-    _get(Object.getPrototypeOf(AllGroup.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(AllGroup, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'repeat',
-        { unique: true, separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1, max: this.props.max }) },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          null,
-          (0, _laconaPhrase.createElement)(Relationship, { id: 'relationship' }),
-          (0, _laconaPhrase.createElement)(Contact, { id: 'contact' }),
-          (0, _laconaPhrase.createElement)(_laconaPhrasePhonenumber2['default'], { id: 'number' }),
-          (0, _laconaPhrase.createElement)(_laconaPhraseEmail2['default'], { id: 'address' })
-        )
-      );
-    }
-  }]);
-
-  return AllGroup;
-})(_laconaPhrase.Phrase);
-
 var contact = {
-  grammar: (0, _laconaPhrase.createElement)(
-    'choice',
-    { id: 'contact' },
-    (0, _laconaPhrase.createElement)(
-      'choice',
-      { id: 'email' },
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        null,
-        (0, _laconaPhrase.createElement)('list', { items: ['email ', 'send an email to ', 'send email to ', 'shoot an email to '], category: 'action', limit: 1 }),
-        (0, _laconaPhrase.createElement)(EmailGroup, { id: 'to' })
-      ),
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        null,
-        (0, _laconaPhrase.createElement)('list', { items: ['send '], category: 'action', limit: 1 }),
-        (0, _laconaPhrase.createElement)(EmailGroup, { id: 'to' }),
-        (0, _laconaPhrase.createElement)('literal', { text: ' an email' })
-      ),
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        null,
-        (0, _laconaPhrase.createElement)('list', { items: ['email ', 'send '], category: 'action', limit: 1 }),
-        (0, _laconaPhrase.createElement)(
-          'argument',
-          { text: 'message', id: 'message' },
-          (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
-        ),
-        (0, _laconaPhrase.createElement)('literal', { text: ' to ', category: 'conjunction' }),
-        (0, _laconaPhrase.createElement)(EmailGroup, { id: 'to' })
-      ),
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        null,
-        (0, _laconaPhrase.createElement)('list', { items: ['email ', 'send an email to ', 'send email to ', 'shoot an email to '], category: 'action', limit: 1 }),
-        (0, _laconaPhrase.createElement)(EmailGroup, { id: 'to' }),
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          { limit: 1 },
-          (0, _laconaPhrase.createElement)('literal', { text: ' about ' }),
-          (0, _laconaPhrase.createElement)('literal', { text: ' ' })
-        ),
-        (0, _laconaPhrase.createElement)(
-          'argument',
-          { text: 'message', id: 'message' },
-          (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
-        )
-      ),
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        null,
-        (0, _laconaPhrase.createElement)('list', { items: ['send '], category: 'action', limit: 1 }),
-        (0, _laconaPhrase.createElement)(EmailGroup, { id: 'to' }),
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          { limit: 1, category: 'action' },
-          (0, _laconaPhrase.createElement)('literal', { text: ' an email about ' }),
-          (0, _laconaPhrase.createElement)('literal', { text: ' an email ' }),
-          (0, _laconaPhrase.createElement)('literal', { text: ' email about ' }),
-          (0, _laconaPhrase.createElement)('literal', { text: ' email ' })
-        ),
-        (0, _laconaPhrase.createElement)(
-          'argument',
-          { text: 'message', id: 'message' },
-          (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
-        )
-      )
-    ),
-    (0, _laconaPhrase.createElement)(
-      'sequence',
-      { id: 'call' },
-      (0, _laconaPhrase.createElement)('list', { items: ['call ', 'ring ', 'call up ', 'ring up '], category: 'action', limit: 1 }),
-      (0, _laconaPhrase.createElement)(NumberGroup, { merge: true, max: 1 })
-    ),
-    (0, _laconaPhrase.createElement)(
-      'sequence',
-      { id: 'facetime' },
-      (0, _laconaPhrase.createElement)('literal', { text: 'facetime ', category: 'action' }),
-      (0, _laconaPhrase.createElement)(AllGroup, { merge: true, max: 1 })
-    ),
-    (0, _laconaPhrase.createElement)(
-      'choice',
-      { id: 'text' },
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        null,
-        (0, _laconaPhrase.createElement)('list', { items: ['text ', 'iMessage ', 'shoot a text to ', 'send a text to '], limit: 1, category: 'action' }),
-        (0, _laconaPhrase.createElement)(AllGroup, null)
-      ),
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        null,
-        (0, _laconaPhrase.createElement)('list', { items: ['text ', 'iMessage '], limit: 1, category: 'action' }),
-        (0, _laconaPhrase.createElement)(
-          'argument',
-          { text: 'message', id: 'message' },
-          (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
-        ),
-        (0, _laconaPhrase.createElement)('literal', { text: ' to ', category: 'conjunction' }),
-        (0, _laconaPhrase.createElement)(AllGroup, { id: 'to' })
-      ),
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        null,
-        (0, _laconaPhrase.createElement)('list', { items: ['send '], limit: 1, category: 'action' }),
-        (0, _laconaPhrase.createElement)(AllGroup, { id: 'to' }),
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          { limit: 1, category: 'action' },
-          (0, _laconaPhrase.createElement)('literal', { text: ' a text saying ' }),
-          (0, _laconaPhrase.createElement)('literal', { text: ' an iMessage saying' }),
-          (0, _laconaPhrase.createElement)('literal', { text: ' a text ' }),
-          (0, _laconaPhrase.createElement)('literal', { text: ' an iMessage' })
-        ),
-        (0, _laconaPhrase.createElement)(
-          'argument',
-          { text: 'message', id: 'message' },
-          (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
-        )
-      ),
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        null,
-        (0, _laconaPhrase.createElement)('list', { items: ['text ', 'iMessage '], limit: 1, category: 'action' }),
-        (0, _laconaPhrase.createElement)(AllGroup, { id: 'to' }),
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          { limit: 1 },
-          (0, _laconaPhrase.createElement)('literal', { text: ' saying ' }),
-          (0, _laconaPhrase.createElement)('literal', { text: ' ' })
-        ),
-        (0, _laconaPhrase.createElement)(
-          'argument',
-          { text: 'message', id: 'message' },
-          (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
-        )
-      )
-    )
-  )
+  grammar: toGrammar('contact', _laconaCommandCommunicate2['default']),
+  extensions: _laconaCommandOsx2['default'].extensions
 };
 
 exports.contact = contact;
-
-var Language = (function (_Phrase20) {
-  _inherits(Language, _Phrase20);
-
-  function Language() {
-    _classCallCheck(this, Language);
-
-    _get(Object.getPrototypeOf(Language.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Language, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'argument',
-        { text: 'language' },
-        (0, _laconaPhrase.createElement)('list', { items: [{ text: 'Afrikaans', value: 'Afrikaans' }, { text: 'Albanian', value: 'Albanian' }, { text: 'Arabic', value: 'Arabic' }, { text: 'Armenian', value: 'Armenian' }, { text: 'Azerbaijani', value: 'Azerbaijani' }, { text: 'Basque', value: 'Basque' }, { text: 'Belarusian', value: 'Belarusian' }, { text: 'Bengali', value: 'Bengali' }, { text: 'Bosnian', value: 'Bosnian' }, { text: 'Bulgarian', value: 'Bulgarian' }, { text: 'Catalan', value: 'Catalan' }, { text: 'Cebuano', value: 'Cebuano' }, { text: 'Chichewa', value: 'Chichewa' }, { text: 'Chinese', value: 'Chinese (Simplified)' }, { text: 'Chinese (Simplified)', value: 'Chinese (Simplified)' }, { text: 'Chinese (Traditional)', value: 'Chinese (Traditional)' }, { text: 'Croatian', value: 'Croatian' }, { text: 'Czech', value: 'Czech' }, { text: 'Danish', value: 'Danish' }, { text: 'Dutch', value: 'Dutch' }, { text: 'English', value: 'English' }, { text: 'Esperanto', value: 'Esperanto' }, { text: 'Estonian', value: 'Estonian' }, { text: 'Filipino', value: 'Filipino' }, { text: 'Finnish', value: 'Finnish' }, { text: 'French', value: 'French' }, { text: 'Galician', value: 'Galician' }, { text: 'Georgian', value: 'Georgian' }, { text: 'German', value: 'German' }, { text: 'Greek', value: 'Greek' }, { text: 'Gujarati', value: 'Gujarati' }, { text: 'Haitian Creole', value: 'Creole' }, { text: 'Hausa', value: 'Hausa' }, { text: 'Hebrew', value: 'Hebrew' }, { text: 'Hindi', value: 'Hindi' }, { text: 'Hmong', value: 'Hmong' }, { text: 'Hungarian', value: 'Hungarian' }, { text: 'Icelandic', value: 'Icelandic' }, { text: 'Igbo', value: 'Igbo' }, { text: 'Indonesian', value: 'Indonesian' }, { text: 'Irish', value: 'Irish' }, { text: 'Italian', value: 'Italian' }, { text: 'Japanese', value: 'Japanese' }, { text: 'Javanese', value: 'Javanese' }, { text: 'Kannada', value: 'Kannada' }, { text: 'Kazakh', value: 'Kazakh' }, { text: 'Khmer', value: 'Khmer' }, { text: 'Korean', value: 'Korean' }, { text: 'Lao', value: 'Lao' }, { text: 'Latin', value: 'Latin' }, { text: 'Latvian', value: 'Latvian' }, { text: 'Lithuanian', value: 'Lithuanian' }, { text: 'Macedonian', value: 'Macedonian' }, { text: 'Malagasy', value: 'Malagasy' }, { text: 'Malay', value: 'Malay' }, { text: 'Malayalam', value: 'Malayalam' }, { text: 'Maltese', value: 'Maltese' }, { text: 'Maori', value: 'Maori' }, { text: 'Marathi', value: 'Marathi' }, { text: 'Mongolian', value: 'Mongolian' }, { text: 'Myanmar', value: 'Burmese' }, { text: 'Burmese', value: 'Burmese' }, { text: 'Nepali', value: 'Nepali' }, { text: 'Norwegian', value: 'Norwegian' }, { text: 'Persian', value: 'Persian' }, { text: 'Polish', value: 'Polish' }, { text: 'Portuguese', value: 'Portuguese' }, { text: 'Punjabi', value: 'Punjabi' }, { text: 'Romanian', value: 'Romanian' }, { text: 'Russian', value: 'Russian' }, { text: 'Serbian', value: 'Serbian' }, { text: 'Sesotho', value: 'Sesotho' }, { text: 'Sinhala', value: 'Sinhala' }, { text: 'Slovak', value: 'Slovak' }, { text: 'Slovenian', value: 'Slovenian' }, { text: 'Somali', value: 'Somali' }, { text: 'Spanish', value: 'Spanish' }, { text: 'Sundanese', value: 'Sundanese' }, { text: 'Swahili', value: 'Swahili' }, { text: 'Swedish', value: 'Swedish' }, { text: 'Tajik', value: 'Tajik' }, { text: 'Tamil', value: 'Tamil' }, { text: 'Telugu', value: 'Telugu' }, { text: 'Thai', value: 'Thai' }, { text: 'Turkish', value: 'Turkish' }, { text: 'Ukrainian', value: 'Ukrainian' }, { text: 'Urdu', value: 'Urdu' }, { text: 'Uzbek', value: 'Uzbek' }, { text: 'Vietnamese', value: 'Vietnamese' }, { text: 'Welsh', value: 'Welsh' }, { text: 'Yiddish', value: 'Yiddish' }, { text: 'Yoruba', value: 'Yoruba' }, { text: 'Zulu', value: 'Zulu' }] })
-      );
-    }
-  }]);
-
-  return Language;
-})(_laconaPhrase.Phrase);
-
 var translate = {
-  grammar: (0, _laconaPhrase.createElement)(
-    'sequence',
-    { id: 'translate' },
-    (0, _laconaPhrase.createElement)('literal', { text: 'translate ', category: 'action' }),
-    (0, _laconaPhrase.createElement)(
-      'argument',
-      { text: 'phrase', id: 'phrase' },
-      (0, _laconaPhrase.createElement)('freetext', { splitOn: ' ', limit: 1 })
-    ),
-    (0, _laconaPhrase.createElement)(
-      'sequence',
-      { optional: true, merge: true },
-      (0, _laconaPhrase.createElement)('literal', { text: ' from ', category: 'conjunction' }),
-      (0, _laconaPhrase.createElement)(Language, { id: 'from' })
-    ),
-    (0, _laconaPhrase.createElement)(
-      'sequence',
-      { optional: true, merge: true },
-      (0, _laconaPhrase.createElement)('literal', { text: ' to ' }),
-      (0, _laconaPhrase.createElement)(
-        'repeat',
-        { separator: (0, _laconaPhrase.createElement)('list', { items: [', ', ' and ', ', and '], category: 'conjunction', limit: 1 }), id: 'to' },
-        (0, _laconaPhrase.createElement)(Language, null)
-      )
-    )
-  )
+  grammar: toGrammar('translate', _laconaCommandTranslate2['default'])
 };
 
 exports.translate = translate;
 var settings = {
-  grammar: (0, _laconaPhrase.createElement)(
-    'choice',
-    { id: 'settings' },
-    (0, _laconaPhrase.createElement)(
-      'sequence',
-      { id: 'settings' },
-      (0, _laconaPhrase.createElement)(
-        'choice',
-        { merge: true },
-        (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          (0, _laconaPhrase.createElement)('list', { items: [{ text: 'disable ', value: 'turn off' }, { text: 'enable ', value: 'turn on' }, { text: 'toggle ', value: 'toggle' }, { text: 'turn off ', value: 'turn off' }, { text: 'turn on ', value: 'turn on' }], limit: 3, category: 'action', id: 'verb' }),
-          (0, _laconaPhrase.createElement)(
-            'argument',
-            { text: 'setting', merge: true },
-            (0, _laconaPhrase.createElement)(
-              'choice',
-              null,
-              (0, _laconaPhrase.createElement)('list', { items: ['wifi', 'airport'], value: { setting: 'wifi' }, limit: 1 }),
-              (0, _laconaPhrase.createElement)('literal', { text: 'bluetooth', value: { setting: 'bluetooth' } }),
-              (0, _laconaPhrase.createElement)('literal', { text: 'Do Not Disturb', value: { setting: 'Do Not Disturb' } }),
-              (0, _laconaPhrase.createElement)('literal', { text: 'notifications', value: { setting: 'Do Not Disturb', direction: -1 } }),
-              (0, _laconaPhrase.createElement)('list', { items: ['sound', 'audio'], value: { setting: 'the sound' }, limit: 1 }),
-              (0, _laconaPhrase.createElement)('list', { items: ['sleep', 'autosleep'], value: { setting: 'automatic sleeping' }, limit: 1 }),
-              (0, _laconaPhrase.createElement)('literal', { text: 'Dock magnification', value: { setting: 'Dock magnification' } }),
-              (0, _laconaPhrase.createElement)('list', { items: ['Dock hiding', 'dock autohide', 'dock autohiding'], value: { setting: 'Dock hiding' }, limit: 1 })
-            )
-          )
-        ),
-        (0, _laconaPhrase.createElement)('list', { items: ['caffeinate', 'do not sleep', 'do not go to sleep'], limit: 1, category: 'action', value: { setting: 'automatic sleeping', verb: 'turn off' } }),
-        (0, _laconaPhrase.createElement)('list', { items: ['do not disturb', 'do not disturb me'], limit: 1, category: 'action', value: { setting: 'Do Not Disturb', verb: 'turn on' } })
-      ),
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        { optional: true, id: 'duration' },
-        (0, _laconaPhrase.createElement)('literal', { text: ' for ', category: 'conjunction' }),
-        (0, _laconaPhrase.createElement)(
-          'argument',
-          { text: 'amount of time', merge: true },
-          (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.TimeDuration, null)
-        )
-      )
-    ),
-    (0, _laconaPhrase.createElement)(
-      'choice',
-      { id: 'actions' },
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        null,
-        (0, _laconaPhrase.createElement)('list', { items: [{ text: 'restart', value: 'restart the computer' }, { text: 'shutdown', value: 'shutdown the computer' }, { text: 'sleep', value: 'put the computer to sleep' }, { text: 'lock', value: 'lock the computer' }], category: 'action', id: 'verb' }),
-        (0, _laconaPhrase.createElement)('list', { items: [' computer', ' the computer', ' system', ' the system'], limit: 1, optional: true, prefered: false, limited: true, category: 'action' })
-      ),
-      (0, _laconaPhrase.createElement)('literal', { text: 'empty Trash', category: 'action', value: 'empty the Trash', id: 'verb' }),
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        { id: 'verb' },
-        (0, _laconaPhrase.createElement)('literal', { text: 'turn on ', category: 'action', value: 'turn on the screensaver', merge: true }),
-        (0, _laconaPhrase.createElement)('literal', { text: 'the ', optional: true, prefered: false, limited: true, category: 'action' }),
-        (0, _laconaPhrase.createElement)('list', { items: ['screensaver', 'screen saver'], limit: 1, category: 'action' })
-      ),
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        { id: 'verb' },
-        (0, _laconaPhrase.createElement)('literal', { text: 'turn off ', category: 'action' }),
-        (0, _laconaPhrase.createElement)('literal', { text: 'the ', optional: true, prefered: false, limited: true, category: 'action' }),
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          { merge: true },
-          (0, _laconaPhrase.createElement)('list', { items: ['display', 'screen'], limit: 1, category: 'action', value: 'turn off the display' }),
-          (0, _laconaPhrase.createElement)('list', { items: ['computer', 'system'], limit: 1, category: 'action', value: 'shutdown the computer' })
-        )
-      ),
-      (0, _laconaPhrase.createElement)(
-        'sequence',
-        null,
-        (0, _laconaPhrase.createElement)('list', { items: ['eject ', 'unmount ', 'dismount '], category: 'action', id: 'verb', value: 'eject' }),
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          { merge: true },
-          (0, _laconaPhrase.createElement)('list', { items: ['all', 'everything', 'all devices'], limit: 1, category: 'action', id: 'verb', value: 'eject every volume and drive' }),
-          (0, _laconaPhrase.createElement)(
-            'argument',
-            { text: 'volume', id: 'object' },
-            (0, _laconaPhrase.createElement)('list', { items: [{ text: 'Lacona.dmg', value: ' Lacona.dmg' }, { text: 'Flash Drive', value: 'Flash Drive' }, { text: 'Remote Disc', value: 'Remote Disc' }] })
-          )
-        )
-      )
-    )
-  )
+  grammar: toGrammar('settings', _laconaCommandSettings2['default']),
+  extensions: _laconaCommandOsx2['default'].extensions
 };
 
 exports.settings = settings;
@@ -23570,10 +28265,2131 @@ var all = {
     translate.grammar,
     settings.grammar
   ),
-  extensions: [Birthday, Holiday]
+  extensions: _laconaCommandOsx2['default'].extensions
 };
 
 exports.all = all;
+/*
+
+const userFiles = [
+  {
+    name: 'Desktop',
+    children: ['mydocument.pages', 'mockup.html', 'kickstarter.url'],
+  },
+  {
+    name: 'Documents',
+    children: [
+      {
+        name: 'University',
+        children: ['...']
+      },
+      {
+        name: 'Resumes',
+        children: ['...']
+      },
+      {
+        name: 'Ideas',
+        children: ['...']
+      },
+      {
+        name: 'Presentations',
+        children: ['...']
+      },
+      {
+        name: 'Projects',
+        children: ['...']
+      },
+      {
+        name: 'NLP',
+        children: ['...']
+      }
+    ]
+  },
+  {
+    name: 'Downloads',
+    children: ['Lacona.dmg']
+  },
+  {
+    name: 'Library',
+    children: [
+      {
+        name: 'Accounts',
+        children: ['...']
+      },
+      {
+        name: 'Application Scripts',
+        children: ['...']
+      },
+      {
+        name: 'Application Support',
+        children: ['...']
+      },
+      {
+        name: 'Assistants',
+        children: ['...']
+      },
+      {
+        name: 'Audio',
+        children: ['...']
+      },
+      {
+        name: 'Autosave Information',
+        children: ['...']
+      },
+      {
+        name: 'Caches',
+        children: ['...']
+      },
+      {
+        name: 'Calendars',
+        children: ['...']
+      },
+      {
+        name: 'ColorPickers',
+        children: ['...']
+      },
+      {
+        name: 'Colors',
+        children: ['...']
+      },
+      {
+        name: 'Compositions',
+        children: ['...']
+      },
+      {
+        name: 'Containers',
+        children: ['...']
+      },
+      {
+        name: 'Cookies',
+        children: ['...']
+      },
+      {
+        name: 'Developer',
+        children: ['...']
+      },
+      {
+        name: 'Dictionaries',
+        children: ['...']
+      },
+      {
+        name: 'Favorites',
+        children: ['...']
+      },
+      {
+        name: 'FlashlightPlugins',
+        children: ['...']
+      },
+      {
+        name: 'FontCollections',
+        children: ['...']
+      },
+      {
+        name: 'Fonts',
+        children: ['...']
+      },
+      {
+        name: 'GameKit',
+        children: ['...']
+      },
+      {
+        name: 'Google',
+        children: ['...']
+      },
+      {
+        name: 'Group Containers',
+        children: ['...']
+      },
+      {
+        name: 'IdentityServices',
+        children: ['...']
+      },
+      {
+        name: 'Input Methods',
+        children: ['...']
+      },
+      {
+        name: 'Internet Plug-Ins',
+        children: ['...']
+      },
+      {
+        name: 'Keyboard Layouts',
+        children: ['...']
+      },
+      {
+        name: 'Keychains',
+        children: ['...']
+      },
+      {
+        name: 'LanguageModeling',
+        children: ['...']
+      },
+      {
+        name: 'LaunchAgents',
+        children: ['...']
+      },
+      {
+        name: 'Logs',
+        children: ['...']
+      },
+      {
+        name: 'Mail',
+        children: ['...']
+      },
+      {
+        name: 'Messages',
+        children: ['...']
+      },
+      {
+        name: 'Mobile Documents',
+        children: ['...']
+      },
+      {
+        name: 'PreferencePanes',
+        children: ['...']
+      },
+      {
+        name: 'Preferences',
+        children: ['...']
+      },
+      {
+        name: 'Printers',
+        children: ['...']
+      },
+      {
+        name: 'PubSub',
+        children: ['...']
+      },
+      {
+        name: 'Safari',
+        children: ['...']
+      },
+      {
+        name: 'Saved Application State',
+        children: ['...']
+      },
+      {
+        name: 'Saved Searches',
+        children: ['...']
+      },
+      {
+        name: 'Screen Savers',
+        children: ['...']
+      },
+      {
+        name: 'ScriptingAdditions',
+        children: ['...']
+      },
+      {
+        name: 'Services',
+        children: ['...']
+      },
+      {
+        name: 'Sounds',
+        children: ['...']
+      },
+      {
+        name: 'Spelling',
+        children: ['...']
+      },
+      {
+        name: 'SyncedPreferences',
+        children: ['...']
+      },
+      {
+        name: 'Voices',
+        children: ['...']
+      },
+      {
+        name: 'WebKit',
+        children: ['...']
+      },
+      {
+        name: 'com.apple.nsurlsessiond',
+        children: ['...']
+      },
+      {
+        name: 'iMovie',
+        children: ['...']
+      },
+      {
+        name: 'iTunes',
+        children: ['...']
+      }
+    ]
+  },
+  {
+    name: 'Movies',
+    children: ['The Avengers.avi', 'X-Men First Class.avi', 'Iron Man.avi']
+  },
+  {
+    name: 'Music',
+    children: [
+      {
+        name: 'Audio Music Apps',
+        children: ['...']
+      },
+      {
+        name: 'GarageBand',
+        children: ['...']
+      },
+      {
+        name: 'iTunes',
+        children: ['...']
+      }
+    ]
+  },
+  {
+    name: 'Pictures',
+    children: ['Photos Library.photoslibrary']
+  }
+]
+
+const rootFiles = [
+  {
+    name: 'Applications',
+    children: [
+      {
+        name: 'App Store.app',
+        children: ['...']
+      },
+      {
+        name: 'Atom.app',
+        children: ['...']
+      },
+      {
+        name: 'Automator.app',
+        children: ['...']
+      },
+      {
+        name: 'Calculator.app',
+        children: ['...']
+      },
+      {
+        name: 'Calendar.app',
+        children: ['...']
+      },
+      {
+        name: 'Chess.app',
+        children: ['...']
+      },
+      {
+        name: 'Contacts.app',
+        children: ['...']
+      },
+      {
+        name: 'DVD Player.app',
+        children: ['...']
+      },
+      {
+        name: 'Dash.app',
+        children: ['...']
+      },
+      {
+        name: 'Dashboard.app',
+        children: ['...']
+      },
+      {
+        name: 'Dictionary.app',
+        children: ['...']
+      },
+      {
+        name: 'FaceTime.app',
+        children: ['...']
+      },
+      {
+        name: 'Font Book.app',
+        children: ['...']
+      },
+      {
+        name: 'Game Center.app',
+        children: ['...']
+      },
+      {
+        name: 'GarageBand.app',
+        children: ['...']
+      },
+      {
+        name: 'GitHub.app',
+        children: ['...']
+      },
+      {
+        name: 'Google Chrome.app',
+        children: ['...']
+      },
+      {
+        name: 'Image Capture.app',
+        children: ['...']
+      },
+      {
+        name: 'Keynote.app',
+        children: ['...']
+      },
+      {
+        name: 'Launchpad.app',
+        children: ['...']
+      },
+      {
+        name: 'Mail.app',
+        children: ['...']
+      },
+      {
+        name: 'Maps.app',
+        children: ['...']
+      },
+      {
+        name: 'Messages.app',
+        children: ['...']
+      },
+      {
+        name: 'Mission Control.app',
+        children: ['...']
+      },
+      {
+        name: 'Notes.app',
+        children: ['...']
+      },
+      {
+        name: 'Numbers.app',
+        children: ['...']
+      },
+      {
+        name: 'Pages.app',
+        children: ['...']
+      },
+      {
+        name: 'Photo Booth.app',
+        children: ['...']
+      },
+      {
+        name: 'Photos.app',
+        children: ['...']
+      },
+      {
+        name: 'Preview.app',
+        children: ['...']
+      },
+      {
+        name: 'QuickTime Player.app',
+        children: ['...']
+      },
+      {
+        name: 'Reminders.app',
+        children: ['...']
+      },
+      {
+        name: 'Safari.app',
+        children: ['...']
+      },
+      {
+        name: 'Slack.app',
+        children: ['...']
+      },
+      {
+        name: 'Stickies.app',
+        children: ['...']
+      },
+      {
+        name: 'System Preferences.app',
+        children: ['...']
+      },
+      {
+        name: 'TextEdit.app',
+        children: ['...']
+      },
+      {
+        name: 'Time Machine.app',
+        children: ['...']
+      },
+      {
+        name: 'Utilities',
+        children: ['...']
+      },
+      {
+        name: 'Xcode.app',
+        children: ['...']
+      },
+      {
+        name: 'iBooks.app',
+        children: ['...']
+      },
+      {
+        name: 'iMovie.app',
+        children: ['...']
+      },
+      {
+        name: 'iPhoto.app',
+        children: ['...']
+      },
+      {
+        name: 'iTunes.app',
+        children: ['...']
+      }
+    ]
+  },
+  {
+    name: 'Library',
+    children: [
+      {
+        name: 'Application Support',
+        children: ['...']
+      },
+      {
+        name: 'Audio',
+        children: ['...']
+      },
+      {
+        name: 'Caches',
+        children: ['...']
+      },
+      {
+        name: 'ColorPickers',
+        children: ['...']
+      },
+      {
+        name: 'ColorSync',
+        children: ['...']
+      },
+      {
+        name: 'Components',
+        children: ['...']
+      },
+      {
+        name: 'Compositions',
+        children: ['...']
+      },
+      {
+        name: 'Contextual Menu Items',
+        children: ['...']
+      },
+      {
+        name: 'CoreMediaIO',
+        children: ['...']
+      },
+      {
+        name: 'Desktop Pictures',
+        children: ['...']
+      },
+      {
+        name: 'Developer',
+        children: ['...']
+      },
+      {
+        name: 'Dictionaries',
+        children: ['...']
+      },
+      {
+        name: 'DirectoryServices',
+        children: ['...']
+      },
+      {
+        name: 'Documentation',
+        children: ['...']
+      },
+      {
+        name: 'DropboxHelperTools',
+        children: ['...']
+      },
+      {
+        name: 'Extensions',
+        children: ['...']
+      },
+      {
+        name: 'Filesystems',
+        children: ['...']
+      },
+      {
+        name: 'Fonts',
+        children: ['...']
+      },
+      {
+        name: 'Frameworks',
+        children: ['...']
+      },
+      {
+        name: 'Google',
+        children: ['...']
+      },
+      {
+        name: 'Graphics',
+        children: ['...']
+      },
+      {
+        name: 'Image Capture',
+        children: ['...']
+      },
+      {
+        name: 'Input Methods',
+        children: ['...']
+      },
+      {
+        name: 'Internet Plug-Ins',
+        children: ['...']
+      },
+      {
+        name: 'Java',
+        children: ['...']
+      },
+      {
+        name: 'Keyboard Layouts',
+        children: ['...']
+      },
+      {
+        name: 'Keychains',
+        children: ['...']
+      },
+      {
+        name: 'LaunchAgents',
+        children: ['...']
+      },
+      {
+        name: 'LaunchDaemons',
+        children: ['...']
+      },
+      {
+        name: 'Logs',
+        children: ['...']
+      },
+      {
+        name: 'Messages',
+        children: ['...']
+      },
+      {
+        name: 'Modem Scripts',
+        children: ['...']
+      },
+      {
+        name: 'OpenDirectory',
+        children: ['...']
+      },
+      {
+        name: 'PDF Services',
+        children: ['...']
+      },
+      {
+        name: 'Perl',
+        children: ['...']
+      },
+      {
+        name: 'PreferencePanes',
+        children: ['...']
+      },
+      {
+        name: 'Preferences',
+        children: ['...']
+      },
+      {
+        name: 'Printers',
+        children: ['...']
+      },
+      {
+        name: 'PrivilegedHelperTools',
+        children: ['...']
+      },
+      {
+        name: 'Python',
+        children: ['...']
+      },
+      {
+        name: 'QuickLook',
+        children: ['...']
+      },
+      {
+        name: 'QuickTime',
+        children: ['...']
+      },
+      {
+        name: 'Receipts',
+        children: ['...']
+      },
+      {
+        name: 'Ruby',
+        children: ['...']
+      },
+      {
+        name: 'Sandbox',
+        children: ['...']
+      },
+      {
+        name: 'Screen Savers',
+        children: ['...']
+      },
+      {
+        name: 'ScriptingAdditions',
+        children: ['...']
+      },
+      {
+        name: 'Scripts',
+        children: ['...']
+      },
+      {
+        name: 'Security',
+        children: ['...']
+      },
+      {
+        name: 'Server',
+        children: ['...']
+      },
+      {
+        name: 'Speech',
+        children: ['...']
+      },
+      {
+        name: 'Spelling',
+        children: ['...']
+      },
+      {
+        name: 'Spotlight',
+        children: ['...']
+      },
+      {
+        name: 'StartupItems',
+        children: ['...']
+      },
+      {
+        name: 'SystemMigration',
+        children: ['...']
+      },
+      {
+        name: 'SystemProfiler',
+        children: ['...']
+      },
+      {
+        name: 'Updates',
+        children: ['...']
+      },
+      {
+        name: 'User Pictures',
+        children: ['...']
+      },
+      {
+        name: 'Video',
+        children: ['...']
+      },
+      {
+        name: 'WebServer',
+        children: ['...']
+      },
+      {
+        name: 'Widgets',
+        children: ['...']
+      },
+      {
+        name: 'iTunes',
+        children: ['...']
+      }
+    ]
+  },
+  {
+    name: 'Users',
+    children: [
+      {
+        name: 'LaconaUser',
+        children: userFiles
+      },
+      {
+        name: 'Guest',
+        children: ['...']
+      },
+      {
+        name: 'Shared',
+        children: ['...']
+      }
+
+    ]
+  },
+  {
+    name: 'bin',
+    children: ['bash', 'cat', 'chmod', 'cp', 'csh', 'date', 'dd', 'df', 'domainname', 'echo', 'ed', 'expr', 'hostname', 'kill', 'ksh', 'launchctl', 'link', 'ln', 'ls', 'mkdir', 'mv', 'pax', 'ps', 'pwd', 'rcp', 'rm', 'rmdir', 'sh', 'sleep', 'stty', 'sync', 'tcsh', 'test', 'unlink', 'wait4path', 'zsh']
+  },
+  {
+    name: 'etc',
+    children: [
+
+    ]
+  },
+  {
+    name: 'home',
+    children: []
+  },
+  {
+    name: 'net',
+    children: []
+  },
+  {
+    name: 'tmp',
+    children: ['KSOutOfProcessFetcher.0.OlaJUhhgKAnFsX7fZ0FyXTFxIgg=', 'com.apple.launchd.CWPFO2w3Rj', 'com.apple.launchd.eM0bByeRbW', 'tmphosts', 'tmphosts1', 'some.tmp', 'test.tmp', 'yes.txt']
+  },
+  {
+    name: 'usr',
+    children: [
+      {
+        name: 'X11',
+        children: ['...']
+      },
+      {
+        name: 'X11R6',
+        children: ['...']
+      },
+      {
+        name: 'bin',
+        children: ['...']
+      },
+      {
+        name: 'include',
+        children: ['...']
+      },
+      {
+        name: 'lib',
+        children: ['...']
+      },
+      {
+        name: 'libexec',
+        children: ['...']
+      },
+      {
+        name: 'local',
+        children: ['...']
+      },
+      {
+        name: 'sbin',
+        children: ['...']
+      },
+      {
+        name: 'share',
+        children: ['...']
+      },
+      {
+        name: 'standalone',
+        children: ['...']
+      }
+    ]
+  },
+  {
+    name: 'var',
+    children: [
+      {
+        name: 'Keychains',
+        children: ['...']
+      },
+      {
+        name: 'agentx',
+        children: ['...']
+      },
+      {
+        name: 'at',
+        children: ['...']
+      },
+      {
+        name: 'audit',
+        children: ['...']
+      },
+      {
+        name: 'backups',
+        children: ['...']
+      },
+      {
+        name: 'db',
+        children: ['...']
+      },
+      {
+        name: 'empty',
+        children: ['...']
+      },
+      {
+        name: 'folders',
+        children: ['...']
+      },
+      {
+        name: 'folders~orig',
+        children: ['...']
+      },
+      {
+        name: 'jabberd',
+        children: ['...']
+      },
+      {
+        name: 'lib',
+        children: ['...']
+      },
+      {
+        name: 'log',
+        children: ['...']
+      },
+      {
+        name: 'mail',
+        children: ['...']
+      },
+      {
+        name: 'msgs',
+        children: ['...']
+      },
+      {
+        name: 'netboot',
+        children: ['...']
+      },
+      {
+        name: 'networkd',
+        children: ['...']
+      },
+      {
+        name: 'root',
+        children: ['...']
+      },
+      {
+        name: 'rpc',
+        children: ['...']
+      },
+      {
+        name: 'run',
+        children: ['...']
+      },
+      {
+        name: 'rwho',
+        children: ['...']
+      },
+      {
+        name: 'spool',
+        children: ['...']
+      },
+      {
+        name: 'tmp',
+        children: ['...']
+      },
+      {
+        name: 'vm',
+        children: ['...']
+      },
+      {
+        name: 'yp',
+        children: ['...']
+      }
+    ]
+  }
+]
+
+const tunes = [ { name: 'I\'m Good',
+    artist: 'The Mowgli\'s',
+    album: 'I\'m Good',
+    genre: 'Pop' },
+  { name: 'Baby Love',
+    artist: 'Petite Meller',
+    album: 'Baby Love',
+    genre: 'Pop' },
+  { name: 'T-Shirt Weather',
+    artist: 'Circa Waves',
+    album: 'T-Shirt Weather',
+    genre: 'Pop' },
+  { name: 'Fade Out Lines - The Avener Rework',
+    artist: 'The Avener & Phoebe Killdeer',
+    album: 'Fade Out Lines',
+    genre: 'Pop' },
+  { name: 'Salt',
+    artist: 'Bad Suns',
+    album: 'Language & Perspective',
+    genre: 'Pop' },
+  { name: 'Ship To Wreck',
+    artist: 'Florence + The Machine',
+    album: 'Ship To Wreck',
+    genre: 'Pop' },
+  { name: 'Couch Potato',
+    artist: 'Shortstraw',
+    album: 'Good Morning, Sunshine',
+    genre: 'Pop' },
+  { name: 'Good Day',
+    artist: 'distant cousins',
+    album: 'Good Day',
+    genre: 'Pop' },
+  { name: 'Ex\'s & Oh\'s',
+    artist: 'Elle King',
+    album: 'Love Stuff',
+    genre: 'Pop' },
+  { name: 'Irresistible',
+    artist: 'Fall Out Boy',
+    album: 'American Beauty/American Psycho',
+    genre: 'Pop' },
+  { name: 'Centuries',
+    artist: 'Fall Out Boy',
+    album: 'American Beauty/American Psycho',
+    genre: 'Pop' },
+  { name: 'Light Me Up',
+    artist: 'Flyte',
+    album: 'Light Me Up',
+    genre: 'Pop' },
+  { name: 'Violins',
+    artist: 'I\'m From Barcelona',
+    album: 'Violins',
+    genre: 'Pop' },
+  { name: 'I Bet My Life',
+    artist: 'Imagine Dragons',
+    album: 'Smoke + Mirrors (Deluxe)',
+    genre: 'Pop' },
+  { name: 'RIVA (Restart the Game) - Radio Edit',
+    artist: 'Klingande',
+    album: 'RIVA (Restart The Game) [Radio Edit]',
+    genre: 'Pop' },
+  { name: 'Lean On (feat. MØ & DJ Snake)',
+    artist: 'Major Lazer',
+    album: 'Lean On (feat. MØ & DJ Snake)',
+    genre: 'Pop' },
+  { name: 'Got It',
+    artist: 'Marian Hill',
+    album: 'Sway',
+    genre: 'Pop' },
+  { name: 'Can You Blame Me',
+    artist: 'Matt and Kim',
+    album: 'Can You Blame Me',
+    genre: 'Pop' },
+  { name: 'Talk About You',
+    artist: 'MIKA',
+    album: 'Talk About You',
+    genre: 'Pop' },
+  { name: 'Love Like Mine',
+    artist: 'Miami Horror',
+    album: 'Love Like Mine',
+    genre: 'Pop' },
+  { name: 'Our Own House',
+    artist: 'MisterWives',
+    album: 'Our Own House',
+    genre: 'Pop' },
+  { name: 'The Rhythm',
+    artist: 'MNEK',
+    album: 'The Rhythm',
+    genre: 'Pop' },
+  { name: 'Magic (feat. Nile Rodgers and Brandy)',
+    artist: 'Mystery Skulls',
+    album: 'Forever',
+    genre: 'Pop' },
+  { name: 'Never Gets Old',
+    artist: 'Penguin Prison',
+    album: 'Never Gets Old',
+    genre: 'Pop' },
+  { name: 'Karaoke',
+    artist: 'Smallpools',
+    album: 'Karaoke',
+    genre: 'Pop' },
+  { name: 'Robot Love',
+    artist: 'Urban Cone',
+    album: 'Robot Love',
+    genre: 'Pop' },
+  { name: 'King',
+    artist: 'Years & Years',
+    album: 'King',
+    genre: 'Pop' },
+  { name: 'So Cruel',
+    artist: 'Young Empires',
+    album: 'So Cruel',
+    genre: 'Pop' },
+  { name: 'The Night Is Still Young',
+    artist: 'Nicki Minaj',
+    album: 'The Pinkprint',
+    genre: 'Pop' },
+  { name: 'I Will Never Let You Down',
+    artist: 'Rita Ora',
+    album: 'I Will Never Let You Down',
+    genre: 'Pop' },
+  { name: 'Never Been In Love (feat. Icona Pop)',
+    artist: 'Cobra Starship',
+    album: 'Never Been In Love (feat. Icona Pop)',
+    genre: 'Pop' },
+  { name: 'What I did for Love (feat. Emeli Sandé)',
+    artist: 'David Guetta',
+    album: 'Listen (Deluxe)',
+    genre: 'Pop' },
+  { name: 'Want To Want Me',
+    artist: 'Jason Derulo',
+    album: 'Want To Want Me',
+    genre: 'Pop' },
+  { name: 'Iron Man',
+    artist: 'Black Sabbath',
+    album: 'Paranoid',
+    genre: 'Metal' },
+  { name: 'Stronger',
+    artist: 'Clean Bandit',
+    album: 'New Eyes',
+    genre: 'Rock' },
+  { name: 'Stole the Show',
+    artist: 'Kygo',
+    album: 'Stole the Show',
+    genre: 'Jazz' },
+  { name: 'In Your Arms',
+    artist: 'Nico & Vinz',
+    album: 'Black Star Elephant',
+    genre: 'Folk' },
+  { name: 'Intoxicated',
+    artist: 'Martin Solveig',
+    album: 'Intoxicated (Radio Edit)',
+    genre: 'Indie' },
+  { name: 'Runaway (U & I)',
+    artist: 'Galantis',
+    album: 'Runaway (U & I)',
+    genre: 'Pop' },
+  { name: 'Outside',
+    artist: 'Calvin Harris',
+    album: 'Motion',
+    genre: 'Pop' },
+  { name: 'Crazy For You',
+    artist: 'Hedley',
+    album: 'Wild Life',
+    genre: 'Pop' },
+  { name: 'Kathleen',
+    artist: 'Catfish and the Bottlemen',
+    album: 'The Balcony',
+    genre: 'Pop' },
+  { name: 'Work This Body',
+    artist: 'Walk the Moon',
+    album: 'TALKING IS HARD',
+    genre: 'Pop' },
+  { name: 'Seeing Stars',
+    artist: 'BØRNS',
+    album: 'Candy',
+    genre: 'Pop' },
+  { name: 'If It\'s Not You',
+    artist: 'Keljet',
+    album: 'Keljet x AYER - If It\'s Not You',
+    genre: 'Pop' },
+  { name: 'The Nights',
+    artist: 'Avicii',
+    album: 'The Days / Nights',
+    genre: 'Pop' },
+  { name: 'Pay No Mind',
+    artist: 'Madeon',
+    album: 'Adventure (Deluxe)',
+    genre: 'Pop' },
+  { name: 'Best Fake Smile',
+    artist: 'James Bay',
+    album: 'Chaos And The Calm',
+    genre: 'Pop' },
+  { name: 'Savages',
+    artist: 'Marina and The Diamonds',
+    album: 'FROOT',
+    genre: 'Pop' },
+  { name: 'Human Contact',
+    artist: 'Catey Shaw',
+    album: 'The Brooklyn EP',
+    genre: 'Pop' },
+  { name: 'Hum Hum',
+    artist: 'Mating Ritual',
+    album: 'Hum Hum',
+    genre: 'Pop' },
+  { name: 'Cold Cold Man',
+    artist: 'Saint Motel',
+    album: 'My Type EP',
+    genre: 'Pop' },
+  { name: 'Theme Music'} ]
+
+class FileList extends Phrase {
+  getValue (result) {
+    if (result.dir) {
+      const dir = result.dir === '~' ? '/Users/LaconaUser' : result.dir
+      return `${dir}/${result.file}`
+    } else {
+      return result
+    }
+  }
+
+  describe () {
+    if (_.isPlainObject(this.props.directoryOrFile)) {
+      return (
+          <sequence>
+            <literal text={`${this.props.directoryOrFile.name}/`} id='dir' value={this.props.directoryOrFile.name} />
+            <argument text='content' id='file'>
+              <choice>
+                <literal text='' value='' />
+                {_.map(this.props.directoryOrFile.children, child => <FileList directoryOrFile={child} />)}
+              </choice>
+            </argument>
+          </sequence>
+      )
+    } else {
+      return (
+        <literal text={this.props.directoryOrFile} value={this.props.directoryOrFile} />
+      )
+    }
+  }
+}
+
+class File extends Phrase {
+  describe () {
+    return (
+      <choice>
+        <argument text='path' showForEmpty={true}>
+          <choice>
+            <FileList directoryOrFile={{name: '~', children: userFiles}} />
+            <FileList directoryOrFile={{name: '', children: rootFiles}} />
+          </choice>
+        </argument>
+        <argument text='file' showForEmpty={true}>
+          <list items={[
+            {text: 'log.csv', value: '/Users/LaconaUser/Documents/log.csv'},
+            {text: 'lacona-logo.png', value: '/Users/LaconaUser/Documents/lacona-logo.png'},
+            {text: 'kickstarter-video.m4v', value: '/Users/LaconaUser/Documents/kickstarter-video.m4v'},
+            {text: 'document.docx', value: '/Users/LaconaUser/Documents/document.docx'},
+            {text: 'my-document.docx', value: '/Users/LaconaUser/Documents/my-document.docx'},
+            {text: 'main.js', value: '/Users/LaconaUser/Projects/test/main.js'},
+            {text: 'package.json', value: '/Users/LaconaUser/Projects/test/package.json'},
+            {text: 'lodash.js', value: '/Users/LaconaUser/Projects/test/lodash.js'},
+            {text: 'react-router.jsx', value: '/Users/LaconaUser/Projects/test/react-router.jsx'},
+            {text: 'briefing 1_2.keynote', value: '/Users/LaconaUser/Documents/Presentations/briefing 1_2.keynote'},
+            {text: 'briefing 2_24.keynote', value: '/Users/LaconaUser/Documents/Presentations/briefing 2_24.keynote'},
+            {text: 'briefing 5_5.keynote', value: '/Users/LaconaUser/Documents/Presentations/briefing 5_5.keynote'},
+            {text: 'status-updates.txt', value: '/Users/LaconaUser/status-updates.txt'},
+            {text: 'todo.txt', value: '/Users/LaconaUser/todo.txt'},
+            {text: 'main.cpp', value: '/Users/LaconaUser/Projects/cpp-test/main.cpp'},
+            {text: 'main.h', value: '/Users/LaconaUser/Projects/cpp-test/main.h'},
+            {text: 'quick-brown-fox.js', value: '/Users/LaconaUser/Projects/cpp-test/quick-brown-fox.js'},
+            {text: 'overjumper.cs', value: '/Users/LaconaUser/Projects/cpp-test/overjumper.cs'},
+            {text: 'overjumper.h', value: '/Users/LaconaUser/Projects/cpp-test/overjumper.h'},
+            {text: 'lazy_dog.js', value: '/Users/LaconaUser/Projects/cpp-test/lazy_dog.js'}
+          ]} fuzzy={true} />
+      </argument>
+      </choice>
+    )
+  }
+}
+
+class SystemPreference extends Phrase {
+  describe () {
+    return (
+      <argument text='preference pane' showForEmpty={true}>
+        <list items={[
+          {text: 'Displays', value: 'Displays'},
+          {text: 'Desktop & Screen Saver', value: 'Desktop & Screen Saver'},
+          {text: 'Extensions', value: 'Extensions'},
+          {text: 'Energy Saver', value: 'Energy Saver'},
+          {text: 'Sound', value: 'Sound'},
+          {text: 'Keyboard', value: 'Keyboard'},
+          {text: 'Internet Accounts', value: 'Internet Accounts'},
+          {text: 'Date & Time', value: 'Date & Time'},
+          {text: 'Accessibility', value: 'Accessibility'},
+          {text: 'Security & Privacy', value: 'Security & Privacy'},
+          {text: 'Dock', value: 'Dock'},
+          {text: 'Profiles', value: 'Profiles'},
+          {text: 'Network', value: 'Network'},
+          {text: 'Notifications', value: 'Notifications'},
+          {text: 'Fibre Channel', value: 'Fibre Channel'},
+          {text: 'App Store', value: 'App Store'},
+          {text: 'Time Machine', value: 'Time Machine'},
+          {text: 'General', value: 'General'},
+          {text: 'Dictation & Speech', value: 'Dictation & Speech'},
+          {text: 'Spotlight', value: 'Spotlight'},
+          {text: 'Ink', value: 'Ink'},
+          {text: 'Language & Region', value: 'Language & Region'},
+          {text: 'CDs & DVDs', value: 'CDs & DVDs'},
+          {text: 'Sharing', value: 'Sharing'},
+          {text: 'Users & Groups', value: 'Users & Groups'},
+          {text: 'Bluetooth', value: 'Bluetooth'},
+          {text: 'Mouse', value: 'Mouse'},
+          {text: 'Trackpad', value: 'Trackpad'},
+          {text: 'Mission Control', value: 'Mission Control'},
+          {text: 'Startup Disk', value: 'Startup Disk'},
+          {text: 'Parental Controls', value: 'Parental Controls'},
+          {text: 'Printers & Scanners', value: 'Printers & Scanners'},
+          {text: 'iCloud', value: 'iCloud'}
+        ]} />
+      </argument>
+    )
+  }
+}
+
+class Application extends Phrase {
+  describe () {
+    return (
+      <argument text='application' showForEmpty={true}>
+        <list score={1} items={[
+          {text: 'Calendar', value: 'Calendar'},
+          {text: 'Contacts', value: 'Contacts'},
+          {text: 'FaceTime', value: 'FaceTime'},
+          {text: 'Finder', value: 'Finder'},
+          {text: 'Game Center', value: 'Game Center'},
+          {text: 'GarageBand', value: 'GarageBand'},
+          {text: 'iBooks', value: 'iBooks'},
+          {text: 'iMovie', value: 'iMovie'},
+          {text: 'iPhoto', value: 'iPhoto'},
+          {text: 'iTunes', value: 'iTunes'},
+          {text: 'Keynote', value: 'Keynote'},
+          {text: 'App Store', value: 'App Store'},
+          {text: 'Mail', value: 'Mail'},
+          {text: 'Maps', value: 'Maps'},
+          {text: 'Messages', value: 'Messages'},
+          {text: 'Notes', value: 'Notes'},
+          {text: 'Numbers', value: 'Numbers'},
+          {text: 'Pages', value: 'Pages'},
+          {text: 'Photo Booth', value: 'Photo Booth'},
+          {text: 'Reminders', value: 'Reminders'},
+          {text: 'Safari', value: 'Safari'},
+          {text: 'Google Chrome', value: 'Google Chrome'},
+          {text: 'Firefox', value: 'Firefox'},
+          {text: 'Automator', value: 'Automator'},
+          {text: 'Calculator', value: 'Calculator'},
+          {text: 'Chess', value: 'Chess'},
+          {text: 'Dictionary', value: 'Dictionary'},
+          {text: 'DVD Player', value: 'DVD Player'},
+          {text: 'Font Book', value: 'Font Book'},
+          {text: 'Image Capture', value: 'Image Capture'},
+          {text: 'Preview', value: 'Preview'},
+          {text: 'QuickTime Player', value: 'QuickTime Player'},
+          {text: 'Stickies', value: 'Stickies'},
+          {text: 'System Information', value: 'System Information'},
+          {text: 'TextEdit', value: 'TextEdit'},
+          {text: 'VoiceOver Utility', value: 'VoiceOver Utility'}
+        ]} fuzzy={true} />
+      </argument>
+    )
+  }
+}
+
+class Bookmark extends Phrase {
+  describe () {
+    return (
+      <argument text='bookmark' showForEmpty={true}>
+        <list items={[
+          {text: 'Facebook', value:'http://facebook.com'},
+          {text: 'Twitter', value:'http://twitter.com'},
+          {text: 'Google', value:'http://google.com'},
+          {text: 'Lifehacker', value:'http://lifehacker.com'},
+          {text: 'xkcd', value:'http://xkcd.com'},
+          {text: 'Github', value:'http://github.com'},
+          {text: 'Gmail', value:'http://gmail.com'},
+          {text: 'Youtube', value:'http://youtube.com'},
+          {text: 'Wikipedia', value:'http://wikipedia.org'},
+          {text: 'Ebay', value:'http://ebay.com'}
+        ]} fuzzy={true} />
+    </argument>
+    )
+  }
+}
+
+class AppsGroup extends Phrase {
+  describe () {
+    return (
+      <repeat unique={true} separator={<list items={[' and ', ', ', ', and ']} limit={1} max={this.props.max} />}>
+        <choice>
+          <Application id='app' />
+        </choice>
+      </repeat>
+    )
+  }
+}
+
+class OpenableGroup extends Phrase {
+  describe () {
+    return (
+      <repeat unique={true} separator={<list items={[' and ', ', ', ', and ']} limit={1} />}>
+        <choice>
+          <Application id='app' />
+          <URL id='url' />
+          <Bookmark id='url' />
+          <File id='file' />
+          <SystemPreference id='pref' />
+        </choice>
+      </repeat>
+    )
+  }
+}
+
+class OpenInableGroup extends Phrase {
+  describe () {
+    return (
+      <repeat unique={true} separator={<list items={[' and ', ', ', ', and ']} limit={1} />}>
+        <choice>
+          <URL id='url' />
+          <Bookmark id='url' />
+          <File id='file' />
+        </choice>
+      </repeat>
+    )
+  }
+}
+
+class Open extends Phrase {
+  filter (result) {
+    const allPrefs = _.filter(result.things, 'pref')
+    return allPrefs.length < 2
+  }
+
+  describe () {
+    return (
+      <choice id='open'>
+        <sequence>
+          <literal text='open ' category='action' value='open' id='verb' />
+          <choice merge={true}>
+            <OpenableGroup id='things' />
+            <sequence>
+              <OpenInableGroup id='things' />
+              <list items={[' with ', ' using ', ' in ']} limit={1} category='conjunction' />
+              <AppsGroup id='openin' />
+            </sequence>
+          </choice>
+        </sequence>
+        <sequence>
+          <literal text='switch to ' category='action' value='switch' id='verb' />
+          <AppsGroup max={1} id='things' />
+        </sequence>
+        <sequence>
+          <list items={[
+              {text: 'close ', value: 'close'},
+              {text: 'quit ', value: 'quit'},
+              {text: 'kill ', value: 'kill'},
+              {text: 'launch ', value: 'open'}
+            ]} id='verb' category='action' limit={2} />
+          <AppsGroup id='things' />
+        </sequence>
+      </choice>
+    )
+  }
+}
+
+export const open = {
+  grammar: <Open id='open' />
+}
+
+class Birthday extends Phrase {
+  getValue () {
+    return new Date(2015, 9, 11, 0, 0, 0, 0)
+  }
+
+  describe () {
+    return (
+      <sequence>
+        <literal text='on ' />
+        <argument text='birthday' merge={true}>
+          <choice>
+            <sequence>
+              <Contact argument={false} merge={true} />
+              <literal text="'s birthday" />
+            </sequence>
+            <sequence>
+              <Relationship argument={false} merge={true} />
+              <literal text="'s birthday" />
+            </sequence>
+          </choice>
+        </argument>
+      </sequence>
+    )
+  }
+}
+Birthday.extends = [DatePhrase]
+
+class Holiday extends Phrase {
+  describe () {
+    return (
+      <argument text='holiday' showForEmpty={true}>
+        <list items={[
+          {text: 'New Years Day', value: new Date(2016, 0, 1)},
+          {text: 'Martin Luther King Jr. Day', value: new Date(2016, 0, 18)},
+          {text: 'Martin Luther King Day', value: new Date(2016, 0, 18)},
+          {text: 'Dr. Martin Luther King Jr. Day', value: new Date(2016, 0, 18)},
+          {text: 'Dr. Martin Luther King Day', value: new Date(2016, 0, 18)},
+          {text: 'Valentines Day', value: new Date(2016, 1, 14)},
+          {text: "Washington's Birthday", value: new Date(2016, 1, 15)},
+          {text: 'Presidents Day', value: new Date(2016, 1, 15)},
+          {text: 'Presidents Day', value: new Date(2016, 1, 15)},
+          {text: 'Memorial Day', value: new Date(2016, 4, 30)},
+          {text: 'Independence Day', value: new Date(2016, 6, 4)},
+          {text: 'The Fourth of July', value: new Date(2016, 6, 4)},
+          {text: 'Labor Day', value: new Date(2015, 8, 7)},
+          {text: 'Columbus Day', value: new Date(2015, 9, 12)},
+          {text: 'Christopher Columbus Day', value: new Date(2015, 9, 12)},
+          {text: 'American Indian Day', value: new Date(2015, 9, 12)},
+          {text: 'Native American Day', value: new Date(2015, 9, 12)},
+          {text: "Indigenous People's Day ", value: new Date(2015, 9, 12)},
+          {text: 'Veterans Day', value: new Date(2015, 10, 11)},
+          {text: 'Thanksgiving Day', value: new Date(2015, 10, 26)},
+          {text: 'Christmas Eve', value: new Date(2015, 11, 24)},
+          {text: 'Christmas Day', value: new Date(2015, 11, 25)},
+          {text: 'New Years Eve', value: new Date(2015, 11, 31)}]} />
+      </argument>
+    )
+  }
+}
+Holiday.extends = [DatePhrase]
+
+class LocationWithAt extends Phrase {
+  describe () {
+    return (
+      <sequence>
+        <list items={[' at ', ' on ', ' in ']} limit={1} category='conjunction' />
+        <argument text='location' merge={true}>
+          <freetext limit={1} splitOn=' ' />
+        </argument>
+      </sequence>
+    )
+  }
+}
+
+export const date = {
+  grammar: (
+    <choice id='date'>
+      <sequence id='event' unique={true}>
+        <list items={['schedule ', 'create an event ', 'create event ', 'add an event ', 'add event ']} limit={1} category='action' />
+        <argument text='calendar event' id='title'>
+          <freetext limit={1} splitOn=' ' />
+        </argument>
+        <LocationWithAt optional={true} id='location' prefered={false} />
+        <list items={[' for ', ' at ', ' ']} category='conjunction' limit={1} />
+        <choice limit={1} merge={true}>
+          <DateTime id='datetime' />
+          <Time id='time' />
+          <DatePhrase id='date' />
+          <TimePeriod id='period' />
+        </choice>
+        <LocationWithAt optional={true} prefered={false} id='location' />
+      </sequence>
+      <sequence id='reminder'>
+        <list items={['remind me to ', 'create reminder ', 'create a reminder ', 'add a reminder ', 'add reminder ']} limit={1} category='action' />
+        <argument text='reminder title' id='title'>
+          <freetext limit={1} splitOn=' ' />
+        </argument>
+        <sequence optional={true} merge={true}>
+          <literal text=' ' category='conjunction' />
+          <choice merge={true}>
+            <Time id='time' includeAt={true} allowPast={false} />
+            <DatePhrase id='date' allowPast={false} />
+            <DateTime id='datetime' includeAt={true} allowPast={false} />
+          </choice>
+        </sequence>
+      </sequence>
+    </choice>
+  ),
+  extensions: [Birthday, Holiday]
+}
+
+const engines = [
+  {text: 'Google', value: 'Google'},
+  {text: 'Wikipedia', value: 'Wikipedia'},
+  {text: 'Bing', value: 'Bing'},
+  {text: 'Yahoo', value: 'Yahoo'},
+  {text: 'Amazon', value: 'Amazon'},
+  {text: 'Google Images', value: 'Google Images'},
+  {text: 'DuckDuckGo', value: 'DuckDuckGo'},
+  {text: 'Pinterest', value: 'Pinterest'},
+  {text: 'Google Maps', value: 'Google Maps'},
+  {text: 'Gmail', value: 'Gmail'},
+  {text: 'Google Drive', value: 'Google Drive'},
+  {text: 'Apple Maps', value: 'Apple Maps'},
+  {text: 'Twitter', value: 'Twitter'},
+  {text: 'IMDB', value: 'IMDB'},
+  {text: 'LinkedIn', value: 'LinkedIn'},
+  {text: 'Youtube', value: 'Youtube'},
+  {text: 'Rotten Tomatoes', value: 'Rotten Tomatoes'},
+  {text: 'Yubnub', value: 'Yubnub'},
+  {text: 'Wolfram Alpha', value: 'Wolfram|Alpha'},
+  {text: 'Facebook', value: 'Facebook'},
+  {text: 'eBay', value: 'eBay'}
+]
+
+class SearchEngines extends Phrase {
+  describe () {
+    return (
+      <repeat unique={true} separator={<list items={[' and ', ', ', ', and']} limit={1} />}>
+        <argument text='search engine'>
+          <list items={engines} fuzzy={true} limit={5} />
+        </argument>
+      </repeat>
+    )
+  }
+}
+
+export const search = {
+  grammar: (
+    <choice limit={1} id='search'>
+      <sequence>
+        <literal text='search ' category='action' />
+        <SearchEngines id='engines' />
+        <literal text=' ' />
+        <decorator text='for ' category='conjunction' />
+        <argument text='query' id='query'>
+          <freetext consumeAll={true} />
+        </argument>
+      </sequence>
+      <sequence>
+        <literal text='search ' category='action' />
+        <literal text='for ' category='conjunction' optional={true} prefered={true} limited={true} />
+        <argument text='query' id='query'>
+          <freetext splitOn={' '} limit={1} />
+        </argument>
+        <list items={[' on ', ' with ', ' using ']} limit={1} />
+        <descriptor text='search engine' argument={true}>
+          <list items={engines} fuzzy={true} limit={5} />
+        </descriptor>
+        <sequence optional={true}>
+          <list items={[' and ', ', ', ', and']} limit={1} />
+          <SearchEngines id='engines'/>
+        </sequence>
+      </sequence>
+    </choice>
+  )
+}
+
+
+// if (global.location && global.location.hash === '#videodemo') {
+//   search.grammar = (
+//     <choice>
+//       <sequence>
+//         <literal text='ابحث ' category='action' />
+//         <literal text='في ' category='conjunction' />
+//         <argument text='محرك البحث'>
+//           <choice>
+//             <literal text='جوجل' />
+//             <literal text='يملي' />
+//           </choice>
+//         </argument>
+//         <literal text=' ' />
+//         <argument text='بحث'>
+//           <freetext />
+//         </argument>
+//       </sequence>
+//
+//       <sequence>
+//         <literal text='найти ' category='action' />
+//         <literal text='в ' category='conjunction' />
+//         <argument text='поисковик'>
+//           <choice>
+//             <literal text='Яндексе' />
+//             <literal text='Гугле' />
+//           </choice>
+//         </argument>
+//         <literal text=' ' />
+//         <argument text='запрос'>
+//           <freetext />
+//         </argument>
+//       </sequence>
+//
+//       <sequence>
+//         <literal text='buscar ' category='action' />
+//         <literal text='en ' category='conjunction' />
+//         <argument text='buscador'>
+//           <literal text='Google' />
+//         </argument>
+//         <literal text=' ' category='conjunction' />
+//         <argument text='consulta'>
+//           <freetext />
+//         </argument>
+//       </sequence>
+//
+//       <sequence>
+//         <literal text='在' category='conjunction' />
+//         <argument text='搜寻引擎'>
+//           <choice>
+//             <literal text='百度' />
+//             <literal text='Google' />
+//           </choice>
+//         </argument>
+//         <literal text='上' category='conjunction' />
+//         <literal text='搜索' category='action' />
+//         <argument text='查询'>
+//           <freetext />
+//         </argument>
+//       </sequence>
+//     </choice>
+//   )
+// }
+
+function itemify (x) {
+  return {text: x, value: x}
+}
+
+class MusicItems extends Phrase {
+  describe () {
+    return (
+      <repeat unique={true} separator={<list items={[' and ', ', ', ', and ']} limit={1} />}>
+        <choice>
+          <argument text='song' showForEmpty={true} id='song'>
+            <list fuzzy={true} items={_.chain(tunes).map('name').filter().map(itemify).value()} limit={10} />
+          </argument>
+          <argument text='album' showForEmpty={true} id='album'>
+            <list fuzzy={true} items={_.chain(tunes).map('album').filter().unique().map(itemify).value()} limit={10} />
+          </argument>
+          <argument text='artist' showForEmpty={true} id='artist'>
+            <list fuzzy={true} items={_.chain(tunes).map('artist').filter().unique().map(itemify).value()} limit={10} />
+          </argument>
+          <argument text='genre' showForEmpty={true} id='genre'>
+            <list fuzzy={true} items={_.chain(tunes).map('genre').filter().unique().map(itemify).value()} limit={10} />
+          </argument>
+          <argument text='playlist' showForEmpty={true} id='playlist'>
+            <list fuzzy={true} items={['Jams', 'Chill', 'Workout', 'Driving'].map(itemify)} />
+          </argument>
+          <argument text='composer' showForEmpty={true} id='composer'><literal /></argument>
+        </choice>
+      </repeat>
+    )
+  }
+}
+
+export const play = {
+  grammar: (
+    <choice id='play'>
+      <sequence>
+        <literal text='play ' category='action'/>
+        <choice merge={true}>
+          <sequence>
+            <MusicItems id='something' />
+            <sequence merge={true} optional={true} id='shuffled' value={true}>
+              <literal text=' ' />
+              <descriptor argument={true} text='shuffled'>
+                <literal text='shuffled' />
+              </descriptor>
+            </sequence>
+          </sequence>
+          <list id='previous' value={true} items={['previous track', 'previous song']} limit={1} category='argument5' />
+        </choice>
+      </sequence>
+      <choice limit={1} value={{next: true}}>
+        <sequence>
+          <literal text='play ' category='action'/>
+          <list items={['next track', 'next song']} limit={1} category='argument5' />
+        </sequence>
+        <sequence>
+          <literal text='skip ' category='action'/>
+          <list items={['track', 'song', 'this track', 'this song']} limit={1} category='argument5' />
+        </sequence>
+      </choice>
+      <list value={{pause: true}} items={['pause music', 'pause this track', 'pause iTunes', 'pause track', 'pause song']} limit={1} category='action' />
+      <list value={{stop: true}} items={['stop music', 'stop iTunes', 'stop track', 'stop song']} limit={1} category='action' />
+    </choice>
+  )
+}
+
+const contacts = [
+  {text: 'Tony Stark', value: 'Tony Stark'},
+  {text: 'Donald Blake', value: 'Donald Blake'},
+  {text: 'Henry Pym', value: 'Henry Pym'},
+  {text: 'Bruce Banner', value: 'Bruce Banner'},
+  {text: 'Steve Rogers', value: 'Steve Rogers'},
+  {text: 'Clinton Barton', value: 'Clinton Barton'},
+  {text: 'Wanda Maximoff', value: 'Wanda Maximoff'},
+  {text: 'Victor Shade', value: 'Victor Shade'},
+  {text: 'Natalia Romanova', value: 'Natalia Romanova'},
+  {text: 'Jennifer Walters', value: 'Jennifer Walters'},
+  {text: 'Hank McCoy', value: 'Hank McCoy'},
+  {text: 'Peter Quill', value: 'Peter Quill'},
+  {text: 'Reed Richards', value: 'Reed Richards'},
+  {text: 'Susan Richards', value: 'Susan Richards'},
+  {text: 'Jim Hammond', value: 'Jim Hammond'},
+  {text: 'Benjamin Grimm', value: 'Benjamin Grimm'},
+  {text: 'Peter Parker', value: 'Peter Parker'},
+  {text: 'Luke Cage', value: 'Luke Cage'},
+  {text: 'Logan Howlett', value: 'Logan Howlett'},
+  {text: 'James Barnes', value: 'James Barnes'},
+  {text: 'Steven Strange', value: 'Steven Strange'},
+  {text: 'Matt Murdock', value: 'Matt Murdock'},
+  {text: 'Scott Summers', value: 'Scott Summers'},
+  {text: 'Charles Xavier', value: 'Charles Xavier'},
+  {text: 'Bobby Drake', value: 'Bobby Drake'},
+  {text: 'Jean Grey-Summers', value: 'Jean Grey-Summers'},
+  {text: 'Kurt Wagner', value: 'Kurt Wagner'},
+  {text: 'Ororo Monroe', value: 'Ororo Monroe'},
+  {text: 'Anna Marie', value: 'Anna Marie'},
+  {text: 'Erik Lehnsherr', value: 'Erik Lehnsherr'}
+]
+
+class Contact extends Phrase {
+  describe () {
+    const firstNames = _.map(contacts, ({text, value}) => ({
+      text: text.split(' ')[0],
+      value,
+      qualifier: text
+    }))
+
+    return (
+      <descriptor placeholder={true} argument={this.props.argument} text='contact' showForEmpty={true}>
+        <choice limit={1}>
+          <list items={contacts} />
+          <list items={firstNames} />
+        </choice>
+      </descriptor>
+    )
+  }
+}
+Contact.defaultProps = {
+  argument: true
+}
+
+
+class Relationship extends Phrase {
+  describe () {
+    return (
+      <descriptor placeholder={true} argument={this.props.argument} text='relationship' showForEmpty={true}>
+        <sequence>
+          <literal text='my ' optional={true} limited={true} />
+          <list merge={true} items={[
+            {text: 'Mom', value: 'your mom'},
+            {text: 'Dad', value: 'your dad'},
+            {text: 'Landlord', value: 'your landlord'},
+            {text: 'Boss', value: 'your boss'},
+            {text: 'Girlfriend', value: 'your girlfriend'},
+            {text: 'Wife', value: 'your wife'},
+            {text: 'Boyfriend', value: 'your boyfriend'},
+            {text: 'Husband', value: 'your husband'}
+          ]} />
+        </sequence>
+      </descriptor>
+    )
+  }
+}
+Relationship.defaultProps = {
+  argument: true
+}
+
+class EmailGroup extends Phrase {
+  describe () {
+    return (
+      <repeat unique={true} separator={<list items={[' and ', ', and ', ', ']} limit={1} />}>
+        <choice>
+          <Email id='address' />
+          <Relationship id='relationship' />
+          <Contact id='contact' />
+        </choice>
+      </repeat>
+    )
+  }
+}
+
+class NumberGroup extends Phrase {
+  describe () {
+    return (
+      <repeat unique={true} separator={<list items={[' and ', ', and ', ', ']} limit={1} max={this.props.max} />}>
+        <choice>
+          <PhoneNumber id='number' />
+          <Relationship id='relationship' />
+          <Contact id='contact' />
+        </choice>
+      </repeat>
+    )
+  }
+}
+
+class AllGroup extends Phrase {
+  describe () {
+    return (
+      <repeat unique={true} separator={<list items={[' and ', ', and ', ', ']} limit={1} max={this.props.max} />}>
+        <choice>
+          <Relationship id='relationship' />
+          <Contact id='contact' />
+          <PhoneNumber id='number' />
+          <Email id='address' />
+        </choice>
+      </repeat>
+    )
+  }
+}
+
+
+export const contact = {
+  grammar: (
+    <choice id='contact'>
+      <choice id='email'>
+        <sequence>
+          <list items={['email ', 'send an email to ', 'send email to ', 'shoot an email to ']} category='action' limit={1} />
+          <EmailGroup id='to' />
+        </sequence>
+        <sequence>
+          <list items={['send ']} category='action' limit={1} />
+          <EmailGroup id='to' />
+          <literal text=' an email' />
+        </sequence>
+        <sequence>
+          <list items={['email ', 'send ']} category='action' limit={1}/>
+          <argument text='message' id='message'>
+            <freetext splitOn=' ' limit={1} />
+          </argument>
+          <literal text=' to ' category='conjunction' />
+          <EmailGroup id='to' />
+        </sequence>
+        <sequence>
+          <list items={['email ', 'send an email to ', 'send email to ', 'shoot an email to ']} category='action' limit={1} />
+          <EmailGroup id='to' />
+          <choice limit={1}>
+            <literal text=' about ' />
+            <literal text=' ' />
+          </choice>
+          <argument text='message' id='message'>
+            <freetext splitOn=' ' limit={1} />
+          </argument>
+        </sequence>
+        <sequence>
+          <list items={['send ']} category='action' limit={1} />
+          <EmailGroup id='to' />
+          <choice limit={1} category='action'>
+            <literal text=' an email about ' />
+            <literal text=' an email ' />
+            <literal text=' email about ' />
+            <literal text=' email ' />
+          </choice>
+          <argument text='message' id='message'>
+            <freetext splitOn=' ' limit={1} />
+          </argument>
+        </sequence>
+      </choice>
+      <sequence id='call'>
+        <list items={['call ', 'ring ', 'call up ', 'ring up ']} category='action' limit={1} />
+        <NumberGroup merge={true} max={1} />
+      </sequence>
+      <sequence id='facetime'>
+        <literal text='facetime ' category='action' />
+        <AllGroup merge={true} max={1} />
+      </sequence>
+      <choice id='text'>
+        <sequence>
+          <list items={['text ', 'iMessage ', 'shoot a text to ', 'send a text to ']} limit={1} category='action' />
+          <AllGroup />
+        </sequence>
+        <sequence>
+          <list items={['text ', 'iMessage ']} limit={1} category='action' />
+          <argument text='message' id='message'>
+            <freetext splitOn=' ' limit={1} />
+          </argument>
+          <literal text=' to ' category='conjunction' />
+          <AllGroup id='to' />
+        </sequence>
+        <sequence>
+          <list items={['send ']} limit={1} category='action' />
+          <AllGroup id='to' />
+          <choice limit={1} category='action'>
+            <literal text=' a text saying ' />
+            <literal text=' an iMessage saying' />
+            <literal text=' a text ' />
+            <literal text=' an iMessage' />
+          </choice>
+          <argument text='message' id='message'>
+            <freetext splitOn=' ' limit={1} />
+          </argument>
+        </sequence>
+        <sequence>
+          <list items={['text ', 'iMessage ']} limit={1} category='action' />
+          <AllGroup id='to' />
+          <choice limit={1}>
+            <literal text=' saying ' />
+            <literal text=' ' />
+          </choice>
+          <argument text='message' id='message'>
+            <freetext splitOn=' ' limit={1} />
+          </argument>
+        </sequence>
+      </choice>
+    </choice>
+  )
+}
+
+class Language extends Phrase {
+  describe () {
+    return (
+      <argument text='language'>
+        <list items={[
+          {text: 'Afrikaans', value: 'Afrikaans'},
+          {text: 'Albanian', value: 'Albanian'},
+          {text: 'Arabic', value: 'Arabic'},
+          {text: 'Armenian', value: 'Armenian'},
+          {text: 'Azerbaijani', value: 'Azerbaijani'},
+          {text: 'Basque', value: 'Basque'},
+          {text: 'Belarusian', value: 'Belarusian'},
+          {text: 'Bengali', value: 'Bengali'},
+          {text: 'Bosnian', value: 'Bosnian'},
+          {text: 'Bulgarian', value: 'Bulgarian'},
+          {text: 'Catalan', value: 'Catalan'},
+          {text: 'Cebuano', value: 'Cebuano'},
+          {text: 'Chichewa', value: 'Chichewa'},
+          {text: 'Chinese', value: 'Chinese (Simplified)'},
+          {text: 'Chinese (Simplified)', value: 'Chinese (Simplified)'},
+          {text: 'Chinese (Traditional)', value: 'Chinese (Traditional)'},
+          {text: 'Croatian', value: 'Croatian'},
+          {text: 'Czech', value: 'Czech'},
+          {text: 'Danish', value: 'Danish'},
+          {text: 'Dutch', value: 'Dutch'},
+          {text: 'English', value: 'English'},
+          {text: 'Esperanto', value: 'Esperanto'},
+          {text: 'Estonian', value: 'Estonian'},
+          {text: 'Filipino', value: 'Filipino'},
+          {text: 'Finnish', value: 'Finnish'},
+          {text: 'French', value: 'French'},
+          {text: 'Galician', value: 'Galician'},
+          {text: 'Georgian', value: 'Georgian'},
+          {text: 'German', value: 'German'},
+          {text: 'Greek', value: 'Greek'},
+          {text: 'Gujarati', value: 'Gujarati'},
+          {text: 'Haitian Creole', value: 'Creole'},
+          {text: 'Hausa', value: 'Hausa'},
+          {text: 'Hebrew', value: 'Hebrew'},
+          {text: 'Hindi', value: 'Hindi'},
+          {text: 'Hmong', value: 'Hmong'},
+          {text: 'Hungarian', value: 'Hungarian'},
+          {text: 'Icelandic', value: 'Icelandic'},
+          {text: 'Igbo', value: 'Igbo'},
+          {text: 'Indonesian', value: 'Indonesian'},
+          {text: 'Irish', value: 'Irish'},
+          {text: 'Italian', value: 'Italian'},
+          {text: 'Japanese', value: 'Japanese'},
+          {text: 'Javanese', value: 'Javanese'},
+          {text: 'Kannada', value: 'Kannada'},
+          {text: 'Kazakh', value: 'Kazakh'},
+          {text: 'Khmer', value: 'Khmer'},
+          {text: 'Korean', value: 'Korean'},
+          {text: 'Lao', value: 'Lao'},
+          {text: 'Latin', value: 'Latin'},
+          {text: 'Latvian', value: 'Latvian'},
+          {text: 'Lithuanian', value: 'Lithuanian'},
+          {text: 'Macedonian', value: 'Macedonian'},
+          {text: 'Malagasy', value: 'Malagasy'},
+          {text: 'Malay', value: 'Malay'},
+          {text: 'Malayalam', value: 'Malayalam'},
+          {text: 'Maltese', value: 'Maltese'},
+          {text: 'Maori', value: 'Maori'},
+          {text: 'Marathi', value: 'Marathi'},
+          {text: 'Mongolian', value: 'Mongolian'},
+          {text: 'Myanmar', value: 'Burmese'},
+          {text: 'Burmese', value: 'Burmese'},
+          {text: 'Nepali', value: 'Nepali'},
+          {text: 'Norwegian', value: 'Norwegian'},
+          {text: 'Persian', value: 'Persian'},
+          {text: 'Polish', value: 'Polish'},
+          {text: 'Portuguese', value: 'Portuguese'},
+          {text: 'Punjabi', value: 'Punjabi'},
+          {text: 'Romanian', value: 'Romanian'},
+          {text: 'Russian', value: 'Russian'},
+          {text: 'Serbian', value: 'Serbian'},
+          {text: 'Sesotho', value: 'Sesotho'},
+          {text: 'Sinhala', value: 'Sinhala'},
+          {text: 'Slovak', value: 'Slovak'},
+          {text: 'Slovenian', value: 'Slovenian'},
+          {text: 'Somali', value: 'Somali'},
+          {text: 'Spanish', value: 'Spanish'},
+          {text: 'Sundanese', value: 'Sundanese'},
+          {text: 'Swahili', value: 'Swahili'},
+          {text: 'Swedish', value: 'Swedish'},
+          {text: 'Tajik', value: 'Tajik'},
+          {text: 'Tamil', value: 'Tamil'},
+          {text: 'Telugu', value: 'Telugu'},
+          {text: 'Thai', value: 'Thai'},
+          {text: 'Turkish', value: 'Turkish'},
+          {text: 'Ukrainian', value: 'Ukrainian'},
+          {text: 'Urdu', value: 'Urdu'},
+          {text: 'Uzbek', value: 'Uzbek'},
+          {text: 'Vietnamese', value: 'Vietnamese'},
+          {text: 'Welsh', value: 'Welsh'},
+          {text: 'Yiddish', value: 'Yiddish'},
+          {text: 'Yoruba', value: 'Yoruba'},
+          {text: 'Zulu', value: 'Zulu'}
+        ]} />
+      </argument>
+    )
+  }
+}
+
+export const translate = {
+  grammar: (
+    <sequence id='translate'>
+      <literal text='translate ' category='action' />
+      <argument text='phrase' id='phrase'>
+        <freetext splitOn=' ' limit={1} />
+      </argument>
+      <sequence optional={true} merge={true}>
+        <literal text=' from ' category='conjunction' />
+        <Language id='from' />
+      </sequence>
+      <sequence optional={true} merge={true}>
+        <literal text=' to ' />
+        <repeat separator={<list items={[', ', ' and ', ', and ']} category='conjunction' limit={1} />} id='to'>
+          <Language />
+        </repeat>
+      </sequence>
+    </sequence>
+  )
+}
+
+export const settings = {
+  grammar: (
+    <choice id='settings'>
+      <sequence id='settings'>
+        <choice merge={true}>
+          <sequence>
+            <list items={[
+                {text: 'disable ', value: 'turn off'},
+                {text: 'enable ', value: 'turn on'},
+                {text: 'toggle ', value: 'toggle'},
+                {text: 'turn off ', value: 'turn off'},
+                {text: 'turn on ', value: 'turn on'}
+              ]} limit={3} category='action' id='verb' />
+            <argument text='setting' merge={true}>
+              <choice>
+                <list items={['wifi', 'airport']} value={{setting: 'wifi'}} limit={1} />
+                <literal text='bluetooth' value={{setting: 'bluetooth'}} />
+                <literal text='Do Not Disturb' value={{setting: 'Do Not Disturb'}} />
+                <literal text='notifications' value={{setting: 'Do Not Disturb', direction: -1}} />
+                <list items={['sound', 'audio']} value={{setting: 'the sound'}} limit={1} />
+                <list items={['sleep', 'autosleep']} value={{setting: 'automatic sleeping'}} limit={1} />
+                <literal text='Dock magnification' value={{setting: 'Dock magnification'}} />
+                <list items={['Dock hiding', 'dock autohide', 'dock autohiding']} value={{setting: 'Dock hiding'}} limit={1} />
+              </choice>
+            </argument>
+          </sequence>
+          <list items={['caffeinate', 'do not sleep', 'do not go to sleep']} limit={1} category='action' value={{setting: 'automatic sleeping', verb: 'turn off'}} />
+          <list items={['do not disturb', 'do not disturb me']} limit={1} category='action' value={{setting: 'Do Not Disturb', verb: 'turn on'}} />
+        </choice>
+        <sequence optional={true} id='duration'>
+          <literal text=' for ' category='conjunction' />
+          <argument text='amount of time' merge={true}>
+            <TimeDuration />
+          </argument>
+        </sequence>
+      </sequence>
+      <choice id='actions'>
+        <sequence>
+          <list items={[
+              {text: 'restart', value: 'restart the computer'},
+              {text: 'shutdown', value: 'shutdown the computer'},
+              {text: 'sleep', value: 'put the computer to sleep'},
+              {text: 'lock', value: 'lock the computer'}
+            ]} category='action' id='verb' />
+          <list items={[' computer', ' the computer', ' system', ' the system']} limit={1} optional={true} prefered={false} limited={true} category='action' />
+        </sequence>
+        <literal text='empty Trash' category='action' value='empty the Trash' id='verb'/>
+        <sequence id='verb'>
+          <literal text='turn on ' category='action' value='turn on the screensaver' merge={true} />
+          <literal text='the ' optional={true} prefered={false} limited={true} category='action' />
+          <list items={['screensaver', 'screen saver']} limit={1} category='action' />
+        </sequence>
+        <sequence id='verb'>
+          <literal text='turn off ' category='action' />
+          <literal text='the ' optional={true} prefered={false} limited={true} category='action' />
+          <choice merge={true}>
+            <list items={['display', 'screen']} limit={1} category='action' value='turn off the display' />
+            <list items={['computer', 'system']} limit={1} category='action' value='shutdown the computer' />
+          </choice>
+        </sequence>
+        <sequence>
+          <list items={['eject ', 'unmount ', 'dismount ']} category='action' id='verb' value='eject' />
+          <choice merge={true}>
+            <list items={['all', 'everything', 'all devices']} limit={1} category='action' id='verb' value='eject every volume and drive' />
+            <argument text='volume' id='object'>
+              <list items={[
+                  {text: 'Lacona.dmg', value:' Lacona.dmg'},
+                  {text: 'Flash Drive', value: 'Flash Drive'},
+                  {text: 'Remote Disc', value: 'Remote Disc'}
+                ]} />
+            </argument>
+          </choice>
+        </sequence>
+      </choice>
+    </choice>
+  )
+}
+
+export const all = {
+  grammar: (
+    <choice>
+      {open.grammar}
+      {date.grammar}
+      {search.grammar}
+      {play.grammar}
+      {contact.grammar}
+      {translate.grammar}
+      {settings.grammar}
+    </choice>
+  ),
+  extensions: [Birthday, Holiday]
+}
+
 // export default class Sentence extends Phrase {
 //   describe() {
 //     const themeChoices = _.map(themes, theme => <literal value={`theme-${_.kebabCase(theme)}-light`} text={`${theme} Light`} fuzzy={true} />)
@@ -23646,9 +30462,10 @@ exports.all = all;
 //     )
 //   }
 // }
+*/
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/helpers/class-call-check":52,"babel-runtime/helpers/create-class":53,"babel-runtime/helpers/get":54,"babel-runtime/helpers/inherits":55,"babel-runtime/helpers/interop-require-default":56,"lacona-phrase":35,"lacona-phrase-datetime":4,"lacona-phrase-email":15,"lacona-phrase-phonenumber":27,"lacona-phrase-url":31}],44:[function(require,module,exports){
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./demo-config":117,"_process":384,"babel-runtime/helpers/interop-require-default":136,"lacona-command-communicate":1,"lacona-command-events":10,"lacona-command-itunes":14,"lacona-command-open":18,"lacona-command-osx":31,"lacona-command-search-internet":45,"lacona-command-settings":49,"lacona-command-translate":53,"lacona-phrase":114}],124:[function(require,module,exports){
 (function (process){
 module.exports = function (arr, iterator, callback) {
   callback = callback || function () {};
@@ -23680,21 +30497,21 @@ function nextTick (cb) {
   }
 }
 }).call(this,require('_process'))
-},{"_process":303}],45:[function(require,module,exports){
+},{"_process":384}],125:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/array/from"), __esModule: true };
-},{"core-js/library/fn/array/from":58}],46:[function(require,module,exports){
+},{"core-js/library/fn/array/from":138}],126:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/get-iterator"), __esModule: true };
-},{"core-js/library/fn/get-iterator":59}],47:[function(require,module,exports){
+},{"core-js/library/fn/get-iterator":139}],127:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/object/create"), __esModule: true };
-},{"core-js/library/fn/object/create":60}],48:[function(require,module,exports){
+},{"core-js/library/fn/object/create":140}],128:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/object/define-property"), __esModule: true };
-},{"core-js/library/fn/object/define-property":61}],49:[function(require,module,exports){
+},{"core-js/library/fn/object/define-property":141}],129:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/object/get-own-property-descriptor"), __esModule: true };
-},{"core-js/library/fn/object/get-own-property-descriptor":62}],50:[function(require,module,exports){
+},{"core-js/library/fn/object/get-own-property-descriptor":142}],130:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/object/keys"), __esModule: true };
-},{"core-js/library/fn/object/keys":63}],51:[function(require,module,exports){
+},{"core-js/library/fn/object/keys":143}],131:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/object/set-prototype-of"), __esModule: true };
-},{"core-js/library/fn/object/set-prototype-of":64}],52:[function(require,module,exports){
+},{"core-js/library/fn/object/set-prototype-of":144}],132:[function(require,module,exports){
 "use strict";
 
 exports["default"] = function (instance, Constructor) {
@@ -23704,7 +30521,7 @@ exports["default"] = function (instance, Constructor) {
 };
 
 exports.__esModule = true;
-},{}],53:[function(require,module,exports){
+},{}],133:[function(require,module,exports){
 "use strict";
 
 var _Object$defineProperty = require("babel-runtime/core-js/object/define-property")["default"];
@@ -23729,7 +30546,7 @@ exports["default"] = (function () {
 })();
 
 exports.__esModule = true;
-},{"babel-runtime/core-js/object/define-property":48}],54:[function(require,module,exports){
+},{"babel-runtime/core-js/object/define-property":128}],134:[function(require,module,exports){
 "use strict";
 
 var _Object$getOwnPropertyDescriptor = require("babel-runtime/core-js/object/get-own-property-descriptor")["default"];
@@ -23774,7 +30591,7 @@ exports["default"] = function get(_x, _x2, _x3) {
 };
 
 exports.__esModule = true;
-},{"babel-runtime/core-js/object/get-own-property-descriptor":49}],55:[function(require,module,exports){
+},{"babel-runtime/core-js/object/get-own-property-descriptor":129}],135:[function(require,module,exports){
 "use strict";
 
 var _Object$create = require("babel-runtime/core-js/object/create")["default"];
@@ -23798,7 +30615,7 @@ exports["default"] = function (subClass, superClass) {
 };
 
 exports.__esModule = true;
-},{"babel-runtime/core-js/object/create":47,"babel-runtime/core-js/object/set-prototype-of":51}],56:[function(require,module,exports){
+},{"babel-runtime/core-js/object/create":127,"babel-runtime/core-js/object/set-prototype-of":131}],136:[function(require,module,exports){
 "use strict";
 
 exports["default"] = function (obj) {
@@ -23808,7 +30625,7 @@ exports["default"] = function (obj) {
 };
 
 exports.__esModule = true;
-},{}],57:[function(require,module,exports){
+},{}],137:[function(require,module,exports){
 "use strict";
 
 var _Array$from = require("babel-runtime/core-js/array/from")["default"];
@@ -23824,50 +30641,50 @@ exports["default"] = function (arr) {
 };
 
 exports.__esModule = true;
-},{"babel-runtime/core-js/array/from":45}],58:[function(require,module,exports){
+},{"babel-runtime/core-js/array/from":125}],138:[function(require,module,exports){
 require('../../modules/es6.string.iterator');
 require('../../modules/es6.array.from');
 module.exports = require('../../modules/$.core').Array.from;
-},{"../../modules/$.core":70,"../../modules/es6.array.from":105,"../../modules/es6.string.iterator":110}],59:[function(require,module,exports){
+},{"../../modules/$.core":150,"../../modules/es6.array.from":185,"../../modules/es6.string.iterator":190}],139:[function(require,module,exports){
 require('../modules/web.dom.iterable');
 require('../modules/es6.string.iterator');
 module.exports = require('../modules/core.get-iterator');
-},{"../modules/core.get-iterator":104,"../modules/es6.string.iterator":110,"../modules/web.dom.iterable":111}],60:[function(require,module,exports){
+},{"../modules/core.get-iterator":184,"../modules/es6.string.iterator":190,"../modules/web.dom.iterable":191}],140:[function(require,module,exports){
 var $ = require('../../modules/$');
 module.exports = function create(P, D){
   return $.create(P, D);
 };
-},{"../../modules/$":88}],61:[function(require,module,exports){
+},{"../../modules/$":168}],141:[function(require,module,exports){
 var $ = require('../../modules/$');
 module.exports = function defineProperty(it, key, desc){
   return $.setDesc(it, key, desc);
 };
-},{"../../modules/$":88}],62:[function(require,module,exports){
+},{"../../modules/$":168}],142:[function(require,module,exports){
 var $ = require('../../modules/$');
 require('../../modules/es6.object.get-own-property-descriptor');
 module.exports = function getOwnPropertyDescriptor(it, key){
   return $.getDesc(it, key);
 };
-},{"../../modules/$":88,"../../modules/es6.object.get-own-property-descriptor":107}],63:[function(require,module,exports){
+},{"../../modules/$":168,"../../modules/es6.object.get-own-property-descriptor":187}],143:[function(require,module,exports){
 require('../../modules/es6.object.keys');
 module.exports = require('../../modules/$.core').Object.keys;
-},{"../../modules/$.core":70,"../../modules/es6.object.keys":108}],64:[function(require,module,exports){
+},{"../../modules/$.core":150,"../../modules/es6.object.keys":188}],144:[function(require,module,exports){
 require('../../modules/es6.object.set-prototype-of');
 module.exports = require('../../modules/$.core').Object.setPrototypeOf;
-},{"../../modules/$.core":70,"../../modules/es6.object.set-prototype-of":109}],65:[function(require,module,exports){
+},{"../../modules/$.core":150,"../../modules/es6.object.set-prototype-of":189}],145:[function(require,module,exports){
 module.exports = function(it){
   if(typeof it != 'function')throw TypeError(it + ' is not a function!');
   return it;
 };
-},{}],66:[function(require,module,exports){
+},{}],146:[function(require,module,exports){
 module.exports = function(){ /* empty */ };
-},{}],67:[function(require,module,exports){
+},{}],147:[function(require,module,exports){
 var isObject = require('./$.is-object');
 module.exports = function(it){
   if(!isObject(it))throw TypeError(it + ' is not an object!');
   return it;
 };
-},{"./$.is-object":81}],68:[function(require,module,exports){
+},{"./$.is-object":161}],148:[function(require,module,exports){
 // getting tag from 19.1.3.6 Object.prototype.toString()
 var cof = require('./$.cof')
   , TAG = require('./$.wks')('toStringTag')
@@ -23884,16 +30701,16 @@ module.exports = function(it){
     // ES3 arguments fallback
     : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
 };
-},{"./$.cof":69,"./$.wks":102}],69:[function(require,module,exports){
+},{"./$.cof":149,"./$.wks":182}],149:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = function(it){
   return toString.call(it).slice(8, -1);
 };
-},{}],70:[function(require,module,exports){
+},{}],150:[function(require,module,exports){
 var core = module.exports = {version: '1.2.6'};
 if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
-},{}],71:[function(require,module,exports){
+},{}],151:[function(require,module,exports){
 // optional / simple context binding
 var aFunction = require('./$.a-function');
 module.exports = function(fn, that, length){
@@ -23914,18 +30731,18 @@ module.exports = function(fn, that, length){
     return fn.apply(that, arguments);
   };
 };
-},{"./$.a-function":65}],72:[function(require,module,exports){
+},{"./$.a-function":145}],152:[function(require,module,exports){
 // 7.2.1 RequireObjectCoercible(argument)
 module.exports = function(it){
   if(it == undefined)throw TypeError("Can't call method on  " + it);
   return it;
 };
-},{}],73:[function(require,module,exports){
+},{}],153:[function(require,module,exports){
 // Thank's IE8 for his funny defineProperty
 module.exports = !require('./$.fails')(function(){
   return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
 });
-},{"./$.fails":75}],74:[function(require,module,exports){
+},{"./$.fails":155}],154:[function(require,module,exports){
 var global    = require('./$.global')
   , core      = require('./$.core')
   , ctx       = require('./$.ctx')
@@ -23972,7 +30789,7 @@ $export.P = 8;  // proto
 $export.B = 16; // bind
 $export.W = 32; // wrap
 module.exports = $export;
-},{"./$.core":70,"./$.ctx":71,"./$.global":76}],75:[function(require,module,exports){
+},{"./$.core":150,"./$.ctx":151,"./$.global":156}],155:[function(require,module,exports){
 module.exports = function(exec){
   try {
     return !!exec();
@@ -23980,17 +30797,17 @@ module.exports = function(exec){
     return true;
   }
 };
-},{}],76:[function(require,module,exports){
+},{}],156:[function(require,module,exports){
 // https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
 var global = module.exports = typeof window != 'undefined' && window.Math == Math
   ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
 if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
-},{}],77:[function(require,module,exports){
+},{}],157:[function(require,module,exports){
 var hasOwnProperty = {}.hasOwnProperty;
 module.exports = function(it, key){
   return hasOwnProperty.call(it, key);
 };
-},{}],78:[function(require,module,exports){
+},{}],158:[function(require,module,exports){
 var $          = require('./$')
   , createDesc = require('./$.property-desc');
 module.exports = require('./$.descriptors') ? function(object, key, value){
@@ -23999,13 +30816,13 @@ module.exports = require('./$.descriptors') ? function(object, key, value){
   object[key] = value;
   return object;
 };
-},{"./$":88,"./$.descriptors":73,"./$.property-desc":91}],79:[function(require,module,exports){
+},{"./$":168,"./$.descriptors":153,"./$.property-desc":171}],159:[function(require,module,exports){
 // fallback for non-array-like ES3 and non-enumerable old V8 strings
 var cof = require('./$.cof');
 module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
   return cof(it) == 'String' ? it.split('') : Object(it);
 };
-},{"./$.cof":69}],80:[function(require,module,exports){
+},{"./$.cof":149}],160:[function(require,module,exports){
 // check on default Array iterator
 var Iterators  = require('./$.iterators')
   , ITERATOR   = require('./$.wks')('iterator')
@@ -24014,11 +30831,11 @@ var Iterators  = require('./$.iterators')
 module.exports = function(it){
   return it !== undefined && (Iterators.Array === it || ArrayProto[ITERATOR] === it);
 };
-},{"./$.iterators":87,"./$.wks":102}],81:[function(require,module,exports){
+},{"./$.iterators":167,"./$.wks":182}],161:[function(require,module,exports){
 module.exports = function(it){
   return typeof it === 'object' ? it !== null : typeof it === 'function';
 };
-},{}],82:[function(require,module,exports){
+},{}],162:[function(require,module,exports){
 // call something on iterator step with safe closing on error
 var anObject = require('./$.an-object');
 module.exports = function(iterator, fn, value, entries){
@@ -24031,7 +30848,7 @@ module.exports = function(iterator, fn, value, entries){
     throw e;
   }
 };
-},{"./$.an-object":67}],83:[function(require,module,exports){
+},{"./$.an-object":147}],163:[function(require,module,exports){
 'use strict';
 var $              = require('./$')
   , descriptor     = require('./$.property-desc')
@@ -24045,7 +30862,7 @@ module.exports = function(Constructor, NAME, next){
   Constructor.prototype = $.create(IteratorPrototype, {next: descriptor(1, next)});
   setToStringTag(Constructor, NAME + ' Iterator');
 };
-},{"./$":88,"./$.hide":78,"./$.property-desc":91,"./$.set-to-string-tag":94,"./$.wks":102}],84:[function(require,module,exports){
+},{"./$":168,"./$.hide":158,"./$.property-desc":171,"./$.set-to-string-tag":174,"./$.wks":182}],164:[function(require,module,exports){
 'use strict';
 var LIBRARY        = require('./$.library')
   , $export        = require('./$.export')
@@ -24112,7 +30929,7 @@ module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED
   }
   return methods;
 };
-},{"./$":88,"./$.export":74,"./$.has":77,"./$.hide":78,"./$.iter-create":83,"./$.iterators":87,"./$.library":89,"./$.redefine":92,"./$.set-to-string-tag":94,"./$.wks":102}],85:[function(require,module,exports){
+},{"./$":168,"./$.export":154,"./$.has":157,"./$.hide":158,"./$.iter-create":163,"./$.iterators":167,"./$.library":169,"./$.redefine":172,"./$.set-to-string-tag":174,"./$.wks":182}],165:[function(require,module,exports){
 var ITERATOR     = require('./$.wks')('iterator')
   , SAFE_CLOSING = false;
 
@@ -24134,13 +30951,13 @@ module.exports = function(exec, skipClosing){
   } catch(e){ /* empty */ }
   return safe;
 };
-},{"./$.wks":102}],86:[function(require,module,exports){
+},{"./$.wks":182}],166:[function(require,module,exports){
 module.exports = function(done, value){
   return {value: value, done: !!done};
 };
-},{}],87:[function(require,module,exports){
+},{}],167:[function(require,module,exports){
 module.exports = {};
-},{}],88:[function(require,module,exports){
+},{}],168:[function(require,module,exports){
 var $Object = Object;
 module.exports = {
   create:     $Object.create,
@@ -24154,9 +30971,9 @@ module.exports = {
   getSymbols: $Object.getOwnPropertySymbols,
   each:       [].forEach
 };
-},{}],89:[function(require,module,exports){
+},{}],169:[function(require,module,exports){
 module.exports = true;
-},{}],90:[function(require,module,exports){
+},{}],170:[function(require,module,exports){
 // most Object methods by ES6 should accept primitives
 var $export = require('./$.export')
   , core    = require('./$.core')
@@ -24167,7 +30984,7 @@ module.exports = function(KEY, exec){
   exp[KEY] = exec(fn);
   $export($export.S + $export.F * fails(function(){ fn(1); }), 'Object', exp);
 };
-},{"./$.core":70,"./$.export":74,"./$.fails":75}],91:[function(require,module,exports){
+},{"./$.core":150,"./$.export":154,"./$.fails":155}],171:[function(require,module,exports){
 module.exports = function(bitmap, value){
   return {
     enumerable  : !(bitmap & 1),
@@ -24176,9 +30993,9 @@ module.exports = function(bitmap, value){
     value       : value
   };
 };
-},{}],92:[function(require,module,exports){
+},{}],172:[function(require,module,exports){
 module.exports = require('./$.hide');
-},{"./$.hide":78}],93:[function(require,module,exports){
+},{"./$.hide":158}],173:[function(require,module,exports){
 // Works with __proto__ only. Old v8 can't work with null proto objects.
 /* eslint-disable no-proto */
 var getDesc  = require('./$').getDesc
@@ -24205,7 +31022,7 @@ module.exports = {
     }({}, false) : undefined),
   check: check
 };
-},{"./$":88,"./$.an-object":67,"./$.ctx":71,"./$.is-object":81}],94:[function(require,module,exports){
+},{"./$":168,"./$.an-object":147,"./$.ctx":151,"./$.is-object":161}],174:[function(require,module,exports){
 var def = require('./$').setDesc
   , has = require('./$.has')
   , TAG = require('./$.wks')('toStringTag');
@@ -24213,14 +31030,14 @@ var def = require('./$').setDesc
 module.exports = function(it, tag, stat){
   if(it && !has(it = stat ? it : it.prototype, TAG))def(it, TAG, {configurable: true, value: tag});
 };
-},{"./$":88,"./$.has":77,"./$.wks":102}],95:[function(require,module,exports){
+},{"./$":168,"./$.has":157,"./$.wks":182}],175:[function(require,module,exports){
 var global = require('./$.global')
   , SHARED = '__core-js_shared__'
   , store  = global[SHARED] || (global[SHARED] = {});
 module.exports = function(key){
   return store[key] || (store[key] = {});
 };
-},{"./$.global":76}],96:[function(require,module,exports){
+},{"./$.global":156}],176:[function(require,module,exports){
 var toInteger = require('./$.to-integer')
   , defined   = require('./$.defined');
 // true  -> String#at
@@ -24238,40 +31055,40 @@ module.exports = function(TO_STRING){
       : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
   };
 };
-},{"./$.defined":72,"./$.to-integer":97}],97:[function(require,module,exports){
+},{"./$.defined":152,"./$.to-integer":177}],177:[function(require,module,exports){
 // 7.1.4 ToInteger
 var ceil  = Math.ceil
   , floor = Math.floor;
 module.exports = function(it){
   return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
 };
-},{}],98:[function(require,module,exports){
+},{}],178:[function(require,module,exports){
 // to indexed object, toObject with fallback for non-array-like ES3 strings
 var IObject = require('./$.iobject')
   , defined = require('./$.defined');
 module.exports = function(it){
   return IObject(defined(it));
 };
-},{"./$.defined":72,"./$.iobject":79}],99:[function(require,module,exports){
+},{"./$.defined":152,"./$.iobject":159}],179:[function(require,module,exports){
 // 7.1.15 ToLength
 var toInteger = require('./$.to-integer')
   , min       = Math.min;
 module.exports = function(it){
   return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
 };
-},{"./$.to-integer":97}],100:[function(require,module,exports){
+},{"./$.to-integer":177}],180:[function(require,module,exports){
 // 7.1.13 ToObject(argument)
 var defined = require('./$.defined');
 module.exports = function(it){
   return Object(defined(it));
 };
-},{"./$.defined":72}],101:[function(require,module,exports){
+},{"./$.defined":152}],181:[function(require,module,exports){
 var id = 0
   , px = Math.random();
 module.exports = function(key){
   return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
 };
-},{}],102:[function(require,module,exports){
+},{}],182:[function(require,module,exports){
 var store  = require('./$.shared')('wks')
   , uid    = require('./$.uid')
   , Symbol = require('./$.global').Symbol;
@@ -24279,7 +31096,7 @@ module.exports = function(name){
   return store[name] || (store[name] =
     Symbol && Symbol[name] || (Symbol || uid)('Symbol.' + name));
 };
-},{"./$.global":76,"./$.shared":95,"./$.uid":101}],103:[function(require,module,exports){
+},{"./$.global":156,"./$.shared":175,"./$.uid":181}],183:[function(require,module,exports){
 var classof   = require('./$.classof')
   , ITERATOR  = require('./$.wks')('iterator')
   , Iterators = require('./$.iterators');
@@ -24288,7 +31105,7 @@ module.exports = require('./$.core').getIteratorMethod = function(it){
     || it['@@iterator']
     || Iterators[classof(it)];
 };
-},{"./$.classof":68,"./$.core":70,"./$.iterators":87,"./$.wks":102}],104:[function(require,module,exports){
+},{"./$.classof":148,"./$.core":150,"./$.iterators":167,"./$.wks":182}],184:[function(require,module,exports){
 var anObject = require('./$.an-object')
   , get      = require('./core.get-iterator-method');
 module.exports = require('./$.core').getIterator = function(it){
@@ -24296,7 +31113,7 @@ module.exports = require('./$.core').getIterator = function(it){
   if(typeof iterFn != 'function')throw TypeError(it + ' is not iterable!');
   return anObject(iterFn.call(it));
 };
-},{"./$.an-object":67,"./$.core":70,"./core.get-iterator-method":103}],105:[function(require,module,exports){
+},{"./$.an-object":147,"./$.core":150,"./core.get-iterator-method":183}],185:[function(require,module,exports){
 'use strict';
 var ctx         = require('./$.ctx')
   , $export     = require('./$.export')
@@ -24334,7 +31151,7 @@ $export($export.S + $export.F * !require('./$.iter-detect')(function(iter){ Arra
   }
 });
 
-},{"./$.ctx":71,"./$.export":74,"./$.is-array-iter":80,"./$.iter-call":82,"./$.iter-detect":85,"./$.to-length":99,"./$.to-object":100,"./core.get-iterator-method":103}],106:[function(require,module,exports){
+},{"./$.ctx":151,"./$.export":154,"./$.is-array-iter":160,"./$.iter-call":162,"./$.iter-detect":165,"./$.to-length":179,"./$.to-object":180,"./core.get-iterator-method":183}],186:[function(require,module,exports){
 'use strict';
 var addToUnscopables = require('./$.add-to-unscopables')
   , step             = require('./$.iter-step')
@@ -24369,7 +31186,7 @@ Iterators.Arguments = Iterators.Array;
 addToUnscopables('keys');
 addToUnscopables('values');
 addToUnscopables('entries');
-},{"./$.add-to-unscopables":66,"./$.iter-define":84,"./$.iter-step":86,"./$.iterators":87,"./$.to-iobject":98}],107:[function(require,module,exports){
+},{"./$.add-to-unscopables":146,"./$.iter-define":164,"./$.iter-step":166,"./$.iterators":167,"./$.to-iobject":178}],187:[function(require,module,exports){
 // 19.1.2.6 Object.getOwnPropertyDescriptor(O, P)
 var toIObject = require('./$.to-iobject');
 
@@ -24378,7 +31195,7 @@ require('./$.object-sap')('getOwnPropertyDescriptor', function($getOwnPropertyDe
     return $getOwnPropertyDescriptor(toIObject(it), key);
   };
 });
-},{"./$.object-sap":90,"./$.to-iobject":98}],108:[function(require,module,exports){
+},{"./$.object-sap":170,"./$.to-iobject":178}],188:[function(require,module,exports){
 // 19.1.2.14 Object.keys(O)
 var toObject = require('./$.to-object');
 
@@ -24387,11 +31204,11 @@ require('./$.object-sap')('keys', function($keys){
     return $keys(toObject(it));
   };
 });
-},{"./$.object-sap":90,"./$.to-object":100}],109:[function(require,module,exports){
+},{"./$.object-sap":170,"./$.to-object":180}],189:[function(require,module,exports){
 // 19.1.3.19 Object.setPrototypeOf(O, proto)
 var $export = require('./$.export');
 $export($export.S, 'Object', {setPrototypeOf: require('./$.set-proto').set});
-},{"./$.export":74,"./$.set-proto":93}],110:[function(require,module,exports){
+},{"./$.export":154,"./$.set-proto":173}],190:[function(require,module,exports){
 'use strict';
 var $at  = require('./$.string-at')(true);
 
@@ -24409,11 +31226,11 @@ require('./$.iter-define')(String, 'String', function(iterated){
   this._i += point.length;
   return {value: point, done: false};
 });
-},{"./$.iter-define":84,"./$.string-at":96}],111:[function(require,module,exports){
+},{"./$.iter-define":164,"./$.string-at":176}],191:[function(require,module,exports){
 require('./es6.array.iterator');
 var Iterators = require('./$.iterators');
 Iterators.NodeList = Iterators.HTMLCollection = Iterators.Array;
-},{"./$.iterators":87,"./es6.array.iterator":106}],112:[function(require,module,exports){
+},{"./$.iterators":167,"./es6.array.iterator":186}],192:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -24426,9 +31243,9 @@ if (global._babelPolyfill) {
 }
 global._babelPolyfill = true;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"core-js/shim":299,"regenerator/runtime":300}],113:[function(require,module,exports){
-arguments[4][65][0].apply(exports,arguments)
-},{"dup":65}],114:[function(require,module,exports){
+},{"core-js/shim":379,"regenerator/runtime":380}],193:[function(require,module,exports){
+arguments[4][145][0].apply(exports,arguments)
+},{"dup":145}],194:[function(require,module,exports){
 // 22.1.3.31 Array.prototype[@@unscopables]
 var UNSCOPABLES = require('./$.wks')('unscopables')
   , ArrayProto  = Array.prototype;
@@ -24436,9 +31253,9 @@ if(ArrayProto[UNSCOPABLES] == undefined)require('./$.hide')(ArrayProto, UNSCOPAB
 module.exports = function(key){
   ArrayProto[UNSCOPABLES][key] = true;
 };
-},{"./$.hide":142,"./$.wks":194}],115:[function(require,module,exports){
-arguments[4][67][0].apply(exports,arguments)
-},{"./$.is-object":149,"dup":67}],116:[function(require,module,exports){
+},{"./$.hide":222,"./$.wks":274}],195:[function(require,module,exports){
+arguments[4][147][0].apply(exports,arguments)
+},{"./$.is-object":229,"dup":147}],196:[function(require,module,exports){
 // 22.1.3.3 Array.prototype.copyWithin(target, start, end = this.length)
 'use strict';
 var toObject = require('./$.to-object')
@@ -24466,7 +31283,7 @@ module.exports = [].copyWithin || function copyWithin(target/*= 0*/, start/*= 0,
     from += inc;
   } return O;
 };
-},{"./$.to-index":187,"./$.to-length":190,"./$.to-object":191}],117:[function(require,module,exports){
+},{"./$.to-index":267,"./$.to-length":270,"./$.to-object":271}],197:[function(require,module,exports){
 // 22.1.3.6 Array.prototype.fill(value, start = 0, end = this.length)
 'use strict';
 var toObject = require('./$.to-object')
@@ -24483,7 +31300,7 @@ module.exports = [].fill || function fill(value /*, start = 0, end = @length */)
   while(endPos > index)O[index++] = value;
   return O;
 };
-},{"./$.to-index":187,"./$.to-length":190,"./$.to-object":191}],118:[function(require,module,exports){
+},{"./$.to-index":267,"./$.to-length":270,"./$.to-object":271}],198:[function(require,module,exports){
 // false -> Array#indexOf
 // true  -> Array#includes
 var toIObject = require('./$.to-iobject')
@@ -24505,7 +31322,7 @@ module.exports = function(IS_INCLUDES){
     } return !IS_INCLUDES && -1;
   };
 };
-},{"./$.to-index":187,"./$.to-iobject":189,"./$.to-length":190}],119:[function(require,module,exports){
+},{"./$.to-index":267,"./$.to-iobject":269,"./$.to-length":270}],199:[function(require,module,exports){
 // 0 -> Array#forEach
 // 1 -> Array#map
 // 2 -> Array#filter
@@ -24549,7 +31366,7 @@ module.exports = function(TYPE){
     return IS_FIND_INDEX ? -1 : IS_SOME || IS_EVERY ? IS_EVERY : result;
   };
 };
-},{"./$.array-species-create":120,"./$.ctx":128,"./$.iobject":145,"./$.to-length":190,"./$.to-object":191}],120:[function(require,module,exports){
+},{"./$.array-species-create":200,"./$.ctx":208,"./$.iobject":225,"./$.to-length":270,"./$.to-object":271}],200:[function(require,module,exports){
 // 9.4.2.3 ArraySpeciesCreate(originalArray, length)
 var isObject = require('./$.is-object')
   , isArray  = require('./$.is-array')
@@ -24566,11 +31383,11 @@ module.exports = function(original, length){
     }
   } return new (C === undefined ? Array : C)(length);
 };
-},{"./$.is-array":147,"./$.is-object":149,"./$.wks":194}],121:[function(require,module,exports){
-arguments[4][68][0].apply(exports,arguments)
-},{"./$.cof":122,"./$.wks":194,"dup":68}],122:[function(require,module,exports){
-arguments[4][69][0].apply(exports,arguments)
-},{"dup":69}],123:[function(require,module,exports){
+},{"./$.is-array":227,"./$.is-object":229,"./$.wks":274}],201:[function(require,module,exports){
+arguments[4][148][0].apply(exports,arguments)
+},{"./$.cof":202,"./$.wks":274,"dup":148}],202:[function(require,module,exports){
+arguments[4][149][0].apply(exports,arguments)
+},{"dup":149}],203:[function(require,module,exports){
 'use strict';
 var $            = require('./$')
   , hide         = require('./$.hide')
@@ -24730,7 +31547,7 @@ module.exports = {
     setSpecies(NAME);
   }
 };
-},{"./$":157,"./$.ctx":128,"./$.defined":129,"./$.descriptors":130,"./$.for-of":138,"./$.has":141,"./$.hide":142,"./$.is-object":149,"./$.iter-define":153,"./$.iter-step":155,"./$.redefine-all":171,"./$.set-species":176,"./$.strict-new":180,"./$.uid":193}],124:[function(require,module,exports){
+},{"./$":237,"./$.ctx":208,"./$.defined":209,"./$.descriptors":210,"./$.for-of":218,"./$.has":221,"./$.hide":222,"./$.is-object":229,"./$.iter-define":233,"./$.iter-step":235,"./$.redefine-all":251,"./$.set-species":256,"./$.strict-new":260,"./$.uid":273}],204:[function(require,module,exports){
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
 var forOf   = require('./$.for-of')
   , classof = require('./$.classof');
@@ -24742,7 +31559,7 @@ module.exports = function(NAME){
     return arr;
   };
 };
-},{"./$.classof":121,"./$.for-of":138}],125:[function(require,module,exports){
+},{"./$.classof":201,"./$.for-of":218}],205:[function(require,module,exports){
 'use strict';
 var hide              = require('./$.hide')
   , redefineAll       = require('./$.redefine-all')
@@ -24829,7 +31646,7 @@ module.exports = {
   frozenStore: frozenStore,
   WEAK: WEAK
 };
-},{"./$.an-object":115,"./$.array-methods":119,"./$.for-of":138,"./$.has":141,"./$.hide":142,"./$.is-object":149,"./$.redefine-all":171,"./$.strict-new":180,"./$.uid":193}],126:[function(require,module,exports){
+},{"./$.an-object":195,"./$.array-methods":199,"./$.for-of":218,"./$.has":221,"./$.hide":222,"./$.is-object":229,"./$.redefine-all":251,"./$.strict-new":260,"./$.uid":273}],206:[function(require,module,exports){
 'use strict';
 var global         = require('./$.global')
   , $export        = require('./$.export')
@@ -24909,15 +31726,15 @@ module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK){
 
   return C;
 };
-},{"./$.export":133,"./$.fails":135,"./$.for-of":138,"./$.global":140,"./$.is-object":149,"./$.iter-detect":154,"./$.redefine":172,"./$.redefine-all":171,"./$.set-to-string-tag":177,"./$.strict-new":180}],127:[function(require,module,exports){
-arguments[4][70][0].apply(exports,arguments)
-},{"dup":70}],128:[function(require,module,exports){
-arguments[4][71][0].apply(exports,arguments)
-},{"./$.a-function":113,"dup":71}],129:[function(require,module,exports){
-arguments[4][72][0].apply(exports,arguments)
-},{"dup":72}],130:[function(require,module,exports){
-arguments[4][73][0].apply(exports,arguments)
-},{"./$.fails":135,"dup":73}],131:[function(require,module,exports){
+},{"./$.export":213,"./$.fails":215,"./$.for-of":218,"./$.global":220,"./$.is-object":229,"./$.iter-detect":234,"./$.redefine":252,"./$.redefine-all":251,"./$.set-to-string-tag":257,"./$.strict-new":260}],207:[function(require,module,exports){
+arguments[4][150][0].apply(exports,arguments)
+},{"dup":150}],208:[function(require,module,exports){
+arguments[4][151][0].apply(exports,arguments)
+},{"./$.a-function":193,"dup":151}],209:[function(require,module,exports){
+arguments[4][152][0].apply(exports,arguments)
+},{"dup":152}],210:[function(require,module,exports){
+arguments[4][153][0].apply(exports,arguments)
+},{"./$.fails":215,"dup":153}],211:[function(require,module,exports){
 var isObject = require('./$.is-object')
   , document = require('./$.global').document
   // in old IE typeof document.createElement is 'object'
@@ -24925,7 +31742,7 @@ var isObject = require('./$.is-object')
 module.exports = function(it){
   return is ? document.createElement(it) : {};
 };
-},{"./$.global":140,"./$.is-object":149}],132:[function(require,module,exports){
+},{"./$.global":220,"./$.is-object":229}],212:[function(require,module,exports){
 // all enumerable object keys, includes symbols
 var $ = require('./$');
 module.exports = function(it){
@@ -24940,7 +31757,7 @@ module.exports = function(it){
   }
   return keys;
 };
-},{"./$":157}],133:[function(require,module,exports){
+},{"./$":237}],213:[function(require,module,exports){
 var global    = require('./$.global')
   , core      = require('./$.core')
   , hide      = require('./$.hide')
@@ -24982,7 +31799,7 @@ $export.P = 8;  // proto
 $export.B = 16; // bind
 $export.W = 32; // wrap
 module.exports = $export;
-},{"./$.core":127,"./$.ctx":128,"./$.global":140,"./$.hide":142,"./$.redefine":172}],134:[function(require,module,exports){
+},{"./$.core":207,"./$.ctx":208,"./$.global":220,"./$.hide":222,"./$.redefine":252}],214:[function(require,module,exports){
 var MATCH = require('./$.wks')('match');
 module.exports = function(KEY){
   var re = /./;
@@ -24995,9 +31812,9 @@ module.exports = function(KEY){
     } catch(f){ /* empty */ }
   } return true;
 };
-},{"./$.wks":194}],135:[function(require,module,exports){
-arguments[4][75][0].apply(exports,arguments)
-},{"dup":75}],136:[function(require,module,exports){
+},{"./$.wks":274}],215:[function(require,module,exports){
+arguments[4][155][0].apply(exports,arguments)
+},{"dup":155}],216:[function(require,module,exports){
 'use strict';
 var hide     = require('./$.hide')
   , redefine = require('./$.redefine')
@@ -25024,7 +31841,7 @@ module.exports = function(KEY, length, exec){
     );
   }
 };
-},{"./$.defined":129,"./$.fails":135,"./$.hide":142,"./$.redefine":172,"./$.wks":194}],137:[function(require,module,exports){
+},{"./$.defined":209,"./$.fails":215,"./$.hide":222,"./$.redefine":252,"./$.wks":274}],217:[function(require,module,exports){
 'use strict';
 // 21.2.5.3 get RegExp.prototype.flags
 var anObject = require('./$.an-object');
@@ -25038,7 +31855,7 @@ module.exports = function(){
   if(that.sticky)     result += 'y';
   return result;
 };
-},{"./$.an-object":115}],138:[function(require,module,exports){
+},{"./$.an-object":195}],218:[function(require,module,exports){
 var ctx         = require('./$.ctx')
   , call        = require('./$.iter-call')
   , isArrayIter = require('./$.is-array-iter')
@@ -25058,7 +31875,7 @@ module.exports = function(iterable, entries, fn, that){
     call(iterator, f, step.value, entries);
   }
 };
-},{"./$.an-object":115,"./$.ctx":128,"./$.is-array-iter":146,"./$.iter-call":151,"./$.to-length":190,"./core.get-iterator-method":195}],139:[function(require,module,exports){
+},{"./$.an-object":195,"./$.ctx":208,"./$.is-array-iter":226,"./$.iter-call":231,"./$.to-length":270,"./core.get-iterator-method":275}],219:[function(require,module,exports){
 // fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
 var toIObject = require('./$.to-iobject')
   , getNames  = require('./$').getNames
@@ -25079,15 +31896,15 @@ module.exports.get = function getOwnPropertyNames(it){
   if(windowNames && toString.call(it) == '[object Window]')return getWindowNames(it);
   return getNames(toIObject(it));
 };
-},{"./$":157,"./$.to-iobject":189}],140:[function(require,module,exports){
-arguments[4][76][0].apply(exports,arguments)
-},{"dup":76}],141:[function(require,module,exports){
-arguments[4][77][0].apply(exports,arguments)
-},{"dup":77}],142:[function(require,module,exports){
-arguments[4][78][0].apply(exports,arguments)
-},{"./$":157,"./$.descriptors":130,"./$.property-desc":170,"dup":78}],143:[function(require,module,exports){
+},{"./$":237,"./$.to-iobject":269}],220:[function(require,module,exports){
+arguments[4][156][0].apply(exports,arguments)
+},{"dup":156}],221:[function(require,module,exports){
+arguments[4][157][0].apply(exports,arguments)
+},{"dup":157}],222:[function(require,module,exports){
+arguments[4][158][0].apply(exports,arguments)
+},{"./$":237,"./$.descriptors":210,"./$.property-desc":250,"dup":158}],223:[function(require,module,exports){
 module.exports = require('./$.global').document && document.documentElement;
-},{"./$.global":140}],144:[function(require,module,exports){
+},{"./$.global":220}],224:[function(require,module,exports){
 // fast apply, http://jsperf.lnkit.com/fast-apply/5
 module.exports = function(fn, args, that){
   var un = that === undefined;
@@ -25104,26 +31921,26 @@ module.exports = function(fn, args, that){
                       : fn.call(that, args[0], args[1], args[2], args[3]);
   } return              fn.apply(that, args);
 };
-},{}],145:[function(require,module,exports){
-arguments[4][79][0].apply(exports,arguments)
-},{"./$.cof":122,"dup":79}],146:[function(require,module,exports){
-arguments[4][80][0].apply(exports,arguments)
-},{"./$.iterators":156,"./$.wks":194,"dup":80}],147:[function(require,module,exports){
+},{}],225:[function(require,module,exports){
+arguments[4][159][0].apply(exports,arguments)
+},{"./$.cof":202,"dup":159}],226:[function(require,module,exports){
+arguments[4][160][0].apply(exports,arguments)
+},{"./$.iterators":236,"./$.wks":274,"dup":160}],227:[function(require,module,exports){
 // 7.2.2 IsArray(argument)
 var cof = require('./$.cof');
 module.exports = Array.isArray || function(arg){
   return cof(arg) == 'Array';
 };
-},{"./$.cof":122}],148:[function(require,module,exports){
+},{"./$.cof":202}],228:[function(require,module,exports){
 // 20.1.2.3 Number.isInteger(number)
 var isObject = require('./$.is-object')
   , floor    = Math.floor;
 module.exports = function isInteger(it){
   return !isObject(it) && isFinite(it) && floor(it) === it;
 };
-},{"./$.is-object":149}],149:[function(require,module,exports){
-arguments[4][81][0].apply(exports,arguments)
-},{"dup":81}],150:[function(require,module,exports){
+},{"./$.is-object":229}],229:[function(require,module,exports){
+arguments[4][161][0].apply(exports,arguments)
+},{"dup":161}],230:[function(require,module,exports){
 // 7.2.8 IsRegExp(argument)
 var isObject = require('./$.is-object')
   , cof      = require('./$.cof')
@@ -25132,21 +31949,21 @@ module.exports = function(it){
   var isRegExp;
   return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : cof(it) == 'RegExp');
 };
-},{"./$.cof":122,"./$.is-object":149,"./$.wks":194}],151:[function(require,module,exports){
-arguments[4][82][0].apply(exports,arguments)
-},{"./$.an-object":115,"dup":82}],152:[function(require,module,exports){
-arguments[4][83][0].apply(exports,arguments)
-},{"./$":157,"./$.hide":142,"./$.property-desc":170,"./$.set-to-string-tag":177,"./$.wks":194,"dup":83}],153:[function(require,module,exports){
-arguments[4][84][0].apply(exports,arguments)
-},{"./$":157,"./$.export":133,"./$.has":141,"./$.hide":142,"./$.iter-create":152,"./$.iterators":156,"./$.library":159,"./$.redefine":172,"./$.set-to-string-tag":177,"./$.wks":194,"dup":84}],154:[function(require,module,exports){
-arguments[4][85][0].apply(exports,arguments)
-},{"./$.wks":194,"dup":85}],155:[function(require,module,exports){
-arguments[4][86][0].apply(exports,arguments)
-},{"dup":86}],156:[function(require,module,exports){
-arguments[4][87][0].apply(exports,arguments)
-},{"dup":87}],157:[function(require,module,exports){
-arguments[4][88][0].apply(exports,arguments)
-},{"dup":88}],158:[function(require,module,exports){
+},{"./$.cof":202,"./$.is-object":229,"./$.wks":274}],231:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./$.an-object":195,"dup":162}],232:[function(require,module,exports){
+arguments[4][163][0].apply(exports,arguments)
+},{"./$":237,"./$.hide":222,"./$.property-desc":250,"./$.set-to-string-tag":257,"./$.wks":274,"dup":163}],233:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./$":237,"./$.export":213,"./$.has":221,"./$.hide":222,"./$.iter-create":232,"./$.iterators":236,"./$.library":239,"./$.redefine":252,"./$.set-to-string-tag":257,"./$.wks":274,"dup":164}],234:[function(require,module,exports){
+arguments[4][165][0].apply(exports,arguments)
+},{"./$.wks":274,"dup":165}],235:[function(require,module,exports){
+arguments[4][166][0].apply(exports,arguments)
+},{"dup":166}],236:[function(require,module,exports){
+arguments[4][167][0].apply(exports,arguments)
+},{"dup":167}],237:[function(require,module,exports){
+arguments[4][168][0].apply(exports,arguments)
+},{"dup":168}],238:[function(require,module,exports){
 var $         = require('./$')
   , toIObject = require('./$.to-iobject');
 module.exports = function(object, el){
@@ -25157,24 +31974,24 @@ module.exports = function(object, el){
     , key;
   while(length > index)if(O[key = keys[index++]] === el)return key;
 };
-},{"./$":157,"./$.to-iobject":189}],159:[function(require,module,exports){
+},{"./$":237,"./$.to-iobject":269}],239:[function(require,module,exports){
 module.exports = false;
-},{}],160:[function(require,module,exports){
+},{}],240:[function(require,module,exports){
 // 20.2.2.14 Math.expm1(x)
 module.exports = Math.expm1 || function expm1(x){
   return (x = +x) == 0 ? x : x > -1e-6 && x < 1e-6 ? x + x * x / 2 : Math.exp(x) - 1;
 };
-},{}],161:[function(require,module,exports){
+},{}],241:[function(require,module,exports){
 // 20.2.2.20 Math.log1p(x)
 module.exports = Math.log1p || function log1p(x){
   return (x = +x) > -1e-8 && x < 1e-8 ? x - x * x / 2 : Math.log(1 + x);
 };
-},{}],162:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 // 20.2.2.28 Math.sign(x)
 module.exports = Math.sign || function sign(x){
   return (x = +x) == 0 || x != x ? x : x < 0 ? -1 : 1;
 };
-},{}],163:[function(require,module,exports){
+},{}],243:[function(require,module,exports){
 var global    = require('./$.global')
   , macrotask = require('./$.task').set
   , Observer  = global.MutationObserver || global.WebKitMutationObserver
@@ -25239,7 +32056,7 @@ module.exports = function asap(fn){
     notify();
   } last = task;
 };
-},{"./$.cof":122,"./$.global":140,"./$.task":186}],164:[function(require,module,exports){
+},{"./$.cof":202,"./$.global":220,"./$.task":266}],244:[function(require,module,exports){
 // 19.1.2.1 Object.assign(target, source, ...)
 var $        = require('./$')
   , toObject = require('./$.to-object')
@@ -25273,9 +32090,9 @@ module.exports = require('./$.fails')(function(){
   }
   return T;
 } : Object.assign;
-},{"./$":157,"./$.fails":135,"./$.iobject":145,"./$.to-object":191}],165:[function(require,module,exports){
-arguments[4][90][0].apply(exports,arguments)
-},{"./$.core":127,"./$.export":133,"./$.fails":135,"dup":90}],166:[function(require,module,exports){
+},{"./$":237,"./$.fails":215,"./$.iobject":225,"./$.to-object":271}],245:[function(require,module,exports){
+arguments[4][170][0].apply(exports,arguments)
+},{"./$.core":207,"./$.export":213,"./$.fails":215,"dup":170}],246:[function(require,module,exports){
 var $         = require('./$')
   , toIObject = require('./$.to-iobject')
   , isEnum    = $.isEnum;
@@ -25292,7 +32109,7 @@ module.exports = function(isEntries){
     } return result;
   };
 };
-},{"./$":157,"./$.to-iobject":189}],167:[function(require,module,exports){
+},{"./$":237,"./$.to-iobject":269}],247:[function(require,module,exports){
 // all object keys, includes non-enumerable and symbols
 var $        = require('./$')
   , anObject = require('./$.an-object')
@@ -25302,7 +32119,7 @@ module.exports = Reflect && Reflect.ownKeys || function ownKeys(it){
     , getSymbols = $.getSymbols;
   return getSymbols ? keys.concat(getSymbols(it)) : keys;
 };
-},{"./$":157,"./$.an-object":115,"./$.global":140}],168:[function(require,module,exports){
+},{"./$":237,"./$.an-object":195,"./$.global":220}],248:[function(require,module,exports){
 'use strict';
 var path      = require('./$.path')
   , invoke    = require('./$.invoke')
@@ -25327,17 +32144,17 @@ module.exports = function(/* ...pargs */){
     return invoke(fn, args, that);
   };
 };
-},{"./$.a-function":113,"./$.invoke":144,"./$.path":169}],169:[function(require,module,exports){
+},{"./$.a-function":193,"./$.invoke":224,"./$.path":249}],249:[function(require,module,exports){
 module.exports = require('./$.global');
-},{"./$.global":140}],170:[function(require,module,exports){
-arguments[4][91][0].apply(exports,arguments)
-},{"dup":91}],171:[function(require,module,exports){
+},{"./$.global":220}],250:[function(require,module,exports){
+arguments[4][171][0].apply(exports,arguments)
+},{"dup":171}],251:[function(require,module,exports){
 var redefine = require('./$.redefine');
 module.exports = function(target, src){
   for(var key in src)redefine(target, key, src[key]);
   return target;
 };
-},{"./$.redefine":172}],172:[function(require,module,exports){
+},{"./$.redefine":252}],252:[function(require,module,exports){
 // add fake Function#toString
 // for correct work wrapped methods / constructors with methods like LoDash isNative
 var global    = require('./$.global')
@@ -25365,7 +32182,7 @@ require('./$.core').inspectSource = function(it){
 })(Function.prototype, TO_STRING, function toString(){
   return typeof this == 'function' && this[SRC] || $toString.call(this);
 });
-},{"./$.core":127,"./$.global":140,"./$.hide":142,"./$.uid":193}],173:[function(require,module,exports){
+},{"./$.core":207,"./$.global":220,"./$.hide":222,"./$.uid":273}],253:[function(require,module,exports){
 module.exports = function(regExp, replace){
   var replacer = replace === Object(replace) ? function(part){
     return replace[part];
@@ -25374,14 +32191,14 @@ module.exports = function(regExp, replace){
     return String(it).replace(regExp, replacer);
   };
 };
-},{}],174:[function(require,module,exports){
+},{}],254:[function(require,module,exports){
 // 7.2.9 SameValue(x, y)
 module.exports = Object.is || function is(x, y){
   return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
 };
-},{}],175:[function(require,module,exports){
-arguments[4][93][0].apply(exports,arguments)
-},{"./$":157,"./$.an-object":115,"./$.ctx":128,"./$.is-object":149,"dup":93}],176:[function(require,module,exports){
+},{}],255:[function(require,module,exports){
+arguments[4][173][0].apply(exports,arguments)
+},{"./$":237,"./$.an-object":195,"./$.ctx":208,"./$.is-object":229,"dup":173}],256:[function(require,module,exports){
 'use strict';
 var global      = require('./$.global')
   , $           = require('./$')
@@ -25395,11 +32212,11 @@ module.exports = function(KEY){
     get: function(){ return this; }
   });
 };
-},{"./$":157,"./$.descriptors":130,"./$.global":140,"./$.wks":194}],177:[function(require,module,exports){
-arguments[4][94][0].apply(exports,arguments)
-},{"./$":157,"./$.has":141,"./$.wks":194,"dup":94}],178:[function(require,module,exports){
-arguments[4][95][0].apply(exports,arguments)
-},{"./$.global":140,"dup":95}],179:[function(require,module,exports){
+},{"./$":237,"./$.descriptors":210,"./$.global":220,"./$.wks":274}],257:[function(require,module,exports){
+arguments[4][174][0].apply(exports,arguments)
+},{"./$":237,"./$.has":221,"./$.wks":274,"dup":174}],258:[function(require,module,exports){
+arguments[4][175][0].apply(exports,arguments)
+},{"./$.global":220,"dup":175}],259:[function(require,module,exports){
 // 7.3.20 SpeciesConstructor(O, defaultConstructor)
 var anObject  = require('./$.an-object')
   , aFunction = require('./$.a-function')
@@ -25408,14 +32225,14 @@ module.exports = function(O, D){
   var C = anObject(O).constructor, S;
   return C === undefined || (S = anObject(C)[SPECIES]) == undefined ? D : aFunction(S);
 };
-},{"./$.a-function":113,"./$.an-object":115,"./$.wks":194}],180:[function(require,module,exports){
+},{"./$.a-function":193,"./$.an-object":195,"./$.wks":274}],260:[function(require,module,exports){
 module.exports = function(it, Constructor, name){
   if(!(it instanceof Constructor))throw TypeError(name + ": use the 'new' operator!");
   return it;
 };
-},{}],181:[function(require,module,exports){
-arguments[4][96][0].apply(exports,arguments)
-},{"./$.defined":129,"./$.to-integer":188,"dup":96}],182:[function(require,module,exports){
+},{}],261:[function(require,module,exports){
+arguments[4][176][0].apply(exports,arguments)
+},{"./$.defined":209,"./$.to-integer":268,"dup":176}],262:[function(require,module,exports){
 // helper for String#{startsWith, endsWith, includes}
 var isRegExp = require('./$.is-regexp')
   , defined  = require('./$.defined');
@@ -25424,7 +32241,7 @@ module.exports = function(that, searchString, NAME){
   if(isRegExp(searchString))throw TypeError('String#' + NAME + " doesn't accept regex!");
   return String(defined(that));
 };
-},{"./$.defined":129,"./$.is-regexp":150}],183:[function(require,module,exports){
+},{"./$.defined":209,"./$.is-regexp":230}],263:[function(require,module,exports){
 // https://github.com/ljharb/proposal-string-pad-left-right
 var toLength = require('./$.to-length')
   , repeat   = require('./$.string-repeat')
@@ -25442,7 +32259,7 @@ module.exports = function(that, maxLength, fillString, left){
   if(stringFiller.length > fillLen)stringFiller = stringFiller.slice(0, fillLen);
   return left ? stringFiller + S : S + stringFiller;
 };
-},{"./$.defined":129,"./$.string-repeat":184,"./$.to-length":190}],184:[function(require,module,exports){
+},{"./$.defined":209,"./$.string-repeat":264,"./$.to-length":270}],264:[function(require,module,exports){
 'use strict';
 var toInteger = require('./$.to-integer')
   , defined   = require('./$.defined');
@@ -25455,7 +32272,7 @@ module.exports = function repeat(count){
   for(;n > 0; (n >>>= 1) && (str += str))if(n & 1)res += str;
   return res;
 };
-},{"./$.defined":129,"./$.to-integer":188}],185:[function(require,module,exports){
+},{"./$.defined":209,"./$.to-integer":268}],265:[function(require,module,exports){
 var $export = require('./$.export')
   , defined = require('./$.defined')
   , fails   = require('./$.fails')
@@ -25485,7 +32302,7 @@ var trim = exporter.trim = function(string, TYPE){
 };
 
 module.exports = exporter;
-},{"./$.defined":129,"./$.export":133,"./$.fails":135}],186:[function(require,module,exports){
+},{"./$.defined":209,"./$.export":213,"./$.fails":215}],266:[function(require,module,exports){
 var ctx                = require('./$.ctx')
   , invoke             = require('./$.invoke')
   , html               = require('./$.html')
@@ -25561,7 +32378,7 @@ module.exports = {
   set:   setTask,
   clear: clearTask
 };
-},{"./$.cof":122,"./$.ctx":128,"./$.dom-create":131,"./$.global":140,"./$.html":143,"./$.invoke":144}],187:[function(require,module,exports){
+},{"./$.cof":202,"./$.ctx":208,"./$.dom-create":211,"./$.global":220,"./$.html":223,"./$.invoke":224}],267:[function(require,module,exports){
 var toInteger = require('./$.to-integer')
   , max       = Math.max
   , min       = Math.min;
@@ -25569,15 +32386,15 @@ module.exports = function(index, length){
   index = toInteger(index);
   return index < 0 ? max(index + length, 0) : min(index, length);
 };
-},{"./$.to-integer":188}],188:[function(require,module,exports){
-arguments[4][97][0].apply(exports,arguments)
-},{"dup":97}],189:[function(require,module,exports){
-arguments[4][98][0].apply(exports,arguments)
-},{"./$.defined":129,"./$.iobject":145,"dup":98}],190:[function(require,module,exports){
-arguments[4][99][0].apply(exports,arguments)
-},{"./$.to-integer":188,"dup":99}],191:[function(require,module,exports){
-arguments[4][100][0].apply(exports,arguments)
-},{"./$.defined":129,"dup":100}],192:[function(require,module,exports){
+},{"./$.to-integer":268}],268:[function(require,module,exports){
+arguments[4][177][0].apply(exports,arguments)
+},{"dup":177}],269:[function(require,module,exports){
+arguments[4][178][0].apply(exports,arguments)
+},{"./$.defined":209,"./$.iobject":225,"dup":178}],270:[function(require,module,exports){
+arguments[4][179][0].apply(exports,arguments)
+},{"./$.to-integer":268,"dup":179}],271:[function(require,module,exports){
+arguments[4][180][0].apply(exports,arguments)
+},{"./$.defined":209,"dup":180}],272:[function(require,module,exports){
 // 7.1.1 ToPrimitive(input [, PreferredType])
 var isObject = require('./$.is-object');
 // instead of the ES6 spec version, we didn't implement @@toPrimitive case
@@ -25590,13 +32407,13 @@ module.exports = function(it, S){
   if(!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
   throw TypeError("Can't convert object to primitive value");
 };
-},{"./$.is-object":149}],193:[function(require,module,exports){
-arguments[4][101][0].apply(exports,arguments)
-},{"dup":101}],194:[function(require,module,exports){
-arguments[4][102][0].apply(exports,arguments)
-},{"./$.global":140,"./$.shared":178,"./$.uid":193,"dup":102}],195:[function(require,module,exports){
-arguments[4][103][0].apply(exports,arguments)
-},{"./$.classof":121,"./$.core":127,"./$.iterators":156,"./$.wks":194,"dup":103}],196:[function(require,module,exports){
+},{"./$.is-object":229}],273:[function(require,module,exports){
+arguments[4][181][0].apply(exports,arguments)
+},{"dup":181}],274:[function(require,module,exports){
+arguments[4][182][0].apply(exports,arguments)
+},{"./$.global":220,"./$.shared":258,"./$.uid":273,"dup":182}],275:[function(require,module,exports){
+arguments[4][183][0].apply(exports,arguments)
+},{"./$.classof":201,"./$.core":207,"./$.iterators":236,"./$.wks":274,"dup":183}],276:[function(require,module,exports){
 'use strict';
 var $                 = require('./$')
   , $export           = require('./$.export')
@@ -25873,21 +32690,21 @@ $export($export.P + $export.F * (fails(function(){
       ':' + lz(d.getUTCSeconds()) + '.' + (m > 99 ? m : '0' + lz(m)) + 'Z';
   }
 });
-},{"./$":157,"./$.a-function":113,"./$.an-object":115,"./$.array-includes":118,"./$.array-methods":119,"./$.cof":122,"./$.descriptors":130,"./$.dom-create":131,"./$.export":133,"./$.fails":135,"./$.has":141,"./$.html":143,"./$.invoke":144,"./$.iobject":145,"./$.is-array":147,"./$.is-object":149,"./$.property-desc":170,"./$.to-index":187,"./$.to-integer":188,"./$.to-iobject":189,"./$.to-length":190,"./$.to-object":191,"./$.uid":193}],197:[function(require,module,exports){
+},{"./$":237,"./$.a-function":193,"./$.an-object":195,"./$.array-includes":198,"./$.array-methods":199,"./$.cof":202,"./$.descriptors":210,"./$.dom-create":211,"./$.export":213,"./$.fails":215,"./$.has":221,"./$.html":223,"./$.invoke":224,"./$.iobject":225,"./$.is-array":227,"./$.is-object":229,"./$.property-desc":250,"./$.to-index":267,"./$.to-integer":268,"./$.to-iobject":269,"./$.to-length":270,"./$.to-object":271,"./$.uid":273}],277:[function(require,module,exports){
 // 22.1.3.3 Array.prototype.copyWithin(target, start, end = this.length)
 var $export = require('./$.export');
 
 $export($export.P, 'Array', {copyWithin: require('./$.array-copy-within')});
 
 require('./$.add-to-unscopables')('copyWithin');
-},{"./$.add-to-unscopables":114,"./$.array-copy-within":116,"./$.export":133}],198:[function(require,module,exports){
+},{"./$.add-to-unscopables":194,"./$.array-copy-within":196,"./$.export":213}],278:[function(require,module,exports){
 // 22.1.3.6 Array.prototype.fill(value, start = 0, end = this.length)
 var $export = require('./$.export');
 
 $export($export.P, 'Array', {fill: require('./$.array-fill')});
 
 require('./$.add-to-unscopables')('fill');
-},{"./$.add-to-unscopables":114,"./$.array-fill":117,"./$.export":133}],199:[function(require,module,exports){
+},{"./$.add-to-unscopables":194,"./$.array-fill":197,"./$.export":213}],279:[function(require,module,exports){
 'use strict';
 // 22.1.3.9 Array.prototype.findIndex(predicate, thisArg = undefined)
 var $export = require('./$.export')
@@ -25902,7 +32719,7 @@ $export($export.P + $export.F * forced, 'Array', {
   }
 });
 require('./$.add-to-unscopables')(KEY);
-},{"./$.add-to-unscopables":114,"./$.array-methods":119,"./$.export":133}],200:[function(require,module,exports){
+},{"./$.add-to-unscopables":194,"./$.array-methods":199,"./$.export":213}],280:[function(require,module,exports){
 'use strict';
 // 22.1.3.8 Array.prototype.find(predicate, thisArg = undefined)
 var $export = require('./$.export')
@@ -25917,11 +32734,11 @@ $export($export.P + $export.F * forced, 'Array', {
   }
 });
 require('./$.add-to-unscopables')(KEY);
-},{"./$.add-to-unscopables":114,"./$.array-methods":119,"./$.export":133}],201:[function(require,module,exports){
-arguments[4][105][0].apply(exports,arguments)
-},{"./$.ctx":128,"./$.export":133,"./$.is-array-iter":146,"./$.iter-call":151,"./$.iter-detect":154,"./$.to-length":190,"./$.to-object":191,"./core.get-iterator-method":195,"dup":105}],202:[function(require,module,exports){
-arguments[4][106][0].apply(exports,arguments)
-},{"./$.add-to-unscopables":114,"./$.iter-define":153,"./$.iter-step":155,"./$.iterators":156,"./$.to-iobject":189,"dup":106}],203:[function(require,module,exports){
+},{"./$.add-to-unscopables":194,"./$.array-methods":199,"./$.export":213}],281:[function(require,module,exports){
+arguments[4][185][0].apply(exports,arguments)
+},{"./$.ctx":208,"./$.export":213,"./$.is-array-iter":226,"./$.iter-call":231,"./$.iter-detect":234,"./$.to-length":270,"./$.to-object":271,"./core.get-iterator-method":275,"dup":185}],282:[function(require,module,exports){
+arguments[4][186][0].apply(exports,arguments)
+},{"./$.add-to-unscopables":194,"./$.iter-define":233,"./$.iter-step":235,"./$.iterators":236,"./$.to-iobject":269,"dup":186}],283:[function(require,module,exports){
 'use strict';
 var $export = require('./$.export');
 
@@ -25941,9 +32758,9 @@ $export($export.S + $export.F * require('./$.fails')(function(){
     return result;
   }
 });
-},{"./$.export":133,"./$.fails":135}],204:[function(require,module,exports){
+},{"./$.export":213,"./$.fails":215}],284:[function(require,module,exports){
 require('./$.set-species')('Array');
-},{"./$.set-species":176}],205:[function(require,module,exports){
+},{"./$.set-species":256}],285:[function(require,module,exports){
 'use strict';
 var $             = require('./$')
   , isObject      = require('./$.is-object')
@@ -25957,7 +32774,7 @@ if(!(HAS_INSTANCE in FunctionProto))$.setDesc(FunctionProto, HAS_INSTANCE, {valu
   while(O = $.getProto(O))if(this.prototype === O)return true;
   return false;
 }});
-},{"./$":157,"./$.is-object":149,"./$.wks":194}],206:[function(require,module,exports){
+},{"./$":237,"./$.is-object":229,"./$.wks":274}],286:[function(require,module,exports){
 var setDesc    = require('./$').setDesc
   , createDesc = require('./$.property-desc')
   , has        = require('./$.has')
@@ -25974,7 +32791,7 @@ NAME in FProto || require('./$.descriptors') && setDesc(FProto, NAME, {
     return name;
   }
 });
-},{"./$":157,"./$.descriptors":130,"./$.has":141,"./$.property-desc":170}],207:[function(require,module,exports){
+},{"./$":237,"./$.descriptors":210,"./$.has":221,"./$.property-desc":250}],287:[function(require,module,exports){
 'use strict';
 var strong = require('./$.collection-strong');
 
@@ -25992,7 +32809,7 @@ require('./$.collection')('Map', function(get){
     return strong.def(this, key === 0 ? 0 : key, value);
   }
 }, strong, true);
-},{"./$.collection":126,"./$.collection-strong":123}],208:[function(require,module,exports){
+},{"./$.collection":206,"./$.collection-strong":203}],288:[function(require,module,exports){
 // 20.2.2.3 Math.acosh(x)
 var $export = require('./$.export')
   , log1p   = require('./$.math-log1p')
@@ -26007,7 +32824,7 @@ $export($export.S + $export.F * !($acosh && Math.floor($acosh(Number.MAX_VALUE))
       : log1p(x - 1 + sqrt(x - 1) * sqrt(x + 1));
   }
 });
-},{"./$.export":133,"./$.math-log1p":161}],209:[function(require,module,exports){
+},{"./$.export":213,"./$.math-log1p":241}],289:[function(require,module,exports){
 // 20.2.2.5 Math.asinh(x)
 var $export = require('./$.export');
 
@@ -26016,7 +32833,7 @@ function asinh(x){
 }
 
 $export($export.S, 'Math', {asinh: asinh});
-},{"./$.export":133}],210:[function(require,module,exports){
+},{"./$.export":213}],290:[function(require,module,exports){
 // 20.2.2.7 Math.atanh(x)
 var $export = require('./$.export');
 
@@ -26025,7 +32842,7 @@ $export($export.S, 'Math', {
     return (x = +x) == 0 ? x : Math.log((1 + x) / (1 - x)) / 2;
   }
 });
-},{"./$.export":133}],211:[function(require,module,exports){
+},{"./$.export":213}],291:[function(require,module,exports){
 // 20.2.2.9 Math.cbrt(x)
 var $export = require('./$.export')
   , sign    = require('./$.math-sign');
@@ -26035,7 +32852,7 @@ $export($export.S, 'Math', {
     return sign(x = +x) * Math.pow(Math.abs(x), 1 / 3);
   }
 });
-},{"./$.export":133,"./$.math-sign":162}],212:[function(require,module,exports){
+},{"./$.export":213,"./$.math-sign":242}],292:[function(require,module,exports){
 // 20.2.2.11 Math.clz32(x)
 var $export = require('./$.export');
 
@@ -26044,7 +32861,7 @@ $export($export.S, 'Math', {
     return (x >>>= 0) ? 31 - Math.floor(Math.log(x + 0.5) * Math.LOG2E) : 32;
   }
 });
-},{"./$.export":133}],213:[function(require,module,exports){
+},{"./$.export":213}],293:[function(require,module,exports){
 // 20.2.2.12 Math.cosh(x)
 var $export = require('./$.export')
   , exp     = Math.exp;
@@ -26054,12 +32871,12 @@ $export($export.S, 'Math', {
     return (exp(x = +x) + exp(-x)) / 2;
   }
 });
-},{"./$.export":133}],214:[function(require,module,exports){
+},{"./$.export":213}],294:[function(require,module,exports){
 // 20.2.2.14 Math.expm1(x)
 var $export = require('./$.export');
 
 $export($export.S, 'Math', {expm1: require('./$.math-expm1')});
-},{"./$.export":133,"./$.math-expm1":160}],215:[function(require,module,exports){
+},{"./$.export":213,"./$.math-expm1":240}],295:[function(require,module,exports){
 // 20.2.2.16 Math.fround(x)
 var $export   = require('./$.export')
   , sign      = require('./$.math-sign')
@@ -26086,7 +32903,7 @@ $export($export.S, 'Math', {
     return $sign * result;
   }
 });
-},{"./$.export":133,"./$.math-sign":162}],216:[function(require,module,exports){
+},{"./$.export":213,"./$.math-sign":242}],296:[function(require,module,exports){
 // 20.2.2.17 Math.hypot([value1[, value2[, … ]]])
 var $export = require('./$.export')
   , abs     = Math.abs;
@@ -26113,7 +32930,7 @@ $export($export.S, 'Math', {
     return larg === Infinity ? Infinity : larg * Math.sqrt(sum);
   }
 });
-},{"./$.export":133}],217:[function(require,module,exports){
+},{"./$.export":213}],297:[function(require,module,exports){
 // 20.2.2.18 Math.imul(x, y)
 var $export = require('./$.export')
   , $imul   = Math.imul;
@@ -26131,7 +32948,7 @@ $export($export.S + $export.F * require('./$.fails')(function(){
     return 0 | xl * yl + ((UINT16 & xn >>> 16) * yl + xl * (UINT16 & yn >>> 16) << 16 >>> 0);
   }
 });
-},{"./$.export":133,"./$.fails":135}],218:[function(require,module,exports){
+},{"./$.export":213,"./$.fails":215}],298:[function(require,module,exports){
 // 20.2.2.21 Math.log10(x)
 var $export = require('./$.export');
 
@@ -26140,12 +32957,12 @@ $export($export.S, 'Math', {
     return Math.log(x) / Math.LN10;
   }
 });
-},{"./$.export":133}],219:[function(require,module,exports){
+},{"./$.export":213}],299:[function(require,module,exports){
 // 20.2.2.20 Math.log1p(x)
 var $export = require('./$.export');
 
 $export($export.S, 'Math', {log1p: require('./$.math-log1p')});
-},{"./$.export":133,"./$.math-log1p":161}],220:[function(require,module,exports){
+},{"./$.export":213,"./$.math-log1p":241}],300:[function(require,module,exports){
 // 20.2.2.22 Math.log2(x)
 var $export = require('./$.export');
 
@@ -26154,12 +32971,12 @@ $export($export.S, 'Math', {
     return Math.log(x) / Math.LN2;
   }
 });
-},{"./$.export":133}],221:[function(require,module,exports){
+},{"./$.export":213}],301:[function(require,module,exports){
 // 20.2.2.28 Math.sign(x)
 var $export = require('./$.export');
 
 $export($export.S, 'Math', {sign: require('./$.math-sign')});
-},{"./$.export":133,"./$.math-sign":162}],222:[function(require,module,exports){
+},{"./$.export":213,"./$.math-sign":242}],302:[function(require,module,exports){
 // 20.2.2.30 Math.sinh(x)
 var $export = require('./$.export')
   , expm1   = require('./$.math-expm1')
@@ -26175,7 +32992,7 @@ $export($export.S + $export.F * require('./$.fails')(function(){
       : (exp(x - 1) - exp(-x - 1)) * (Math.E / 2);
   }
 });
-},{"./$.export":133,"./$.fails":135,"./$.math-expm1":160}],223:[function(require,module,exports){
+},{"./$.export":213,"./$.fails":215,"./$.math-expm1":240}],303:[function(require,module,exports){
 // 20.2.2.33 Math.tanh(x)
 var $export = require('./$.export')
   , expm1   = require('./$.math-expm1')
@@ -26188,7 +33005,7 @@ $export($export.S, 'Math', {
     return a == Infinity ? 1 : b == Infinity ? -1 : (a - b) / (exp(x) + exp(-x));
   }
 });
-},{"./$.export":133,"./$.math-expm1":160}],224:[function(require,module,exports){
+},{"./$.export":213,"./$.math-expm1":240}],304:[function(require,module,exports){
 // 20.2.2.34 Math.trunc(x)
 var $export = require('./$.export');
 
@@ -26197,7 +33014,7 @@ $export($export.S, 'Math', {
     return (it > 0 ? Math.floor : Math.ceil)(it);
   }
 });
-},{"./$.export":133}],225:[function(require,module,exports){
+},{"./$.export":213}],305:[function(require,module,exports){
 'use strict';
 var $           = require('./$')
   , global      = require('./$.global')
@@ -26264,12 +33081,12 @@ if(!$Number(' 0o1') || !$Number('0b1') || $Number('+0x1')){
   proto.constructor = $Number;
   require('./$.redefine')(global, NUMBER, $Number);
 }
-},{"./$":157,"./$.cof":122,"./$.descriptors":130,"./$.fails":135,"./$.global":140,"./$.has":141,"./$.redefine":172,"./$.string-trim":185,"./$.to-primitive":192}],226:[function(require,module,exports){
+},{"./$":237,"./$.cof":202,"./$.descriptors":210,"./$.fails":215,"./$.global":220,"./$.has":221,"./$.redefine":252,"./$.string-trim":265,"./$.to-primitive":272}],306:[function(require,module,exports){
 // 20.1.2.1 Number.EPSILON
 var $export = require('./$.export');
 
 $export($export.S, 'Number', {EPSILON: Math.pow(2, -52)});
-},{"./$.export":133}],227:[function(require,module,exports){
+},{"./$.export":213}],307:[function(require,module,exports){
 // 20.1.2.2 Number.isFinite(number)
 var $export   = require('./$.export')
   , _isFinite = require('./$.global').isFinite;
@@ -26279,12 +33096,12 @@ $export($export.S, 'Number', {
     return typeof it == 'number' && _isFinite(it);
   }
 });
-},{"./$.export":133,"./$.global":140}],228:[function(require,module,exports){
+},{"./$.export":213,"./$.global":220}],308:[function(require,module,exports){
 // 20.1.2.3 Number.isInteger(number)
 var $export = require('./$.export');
 
 $export($export.S, 'Number', {isInteger: require('./$.is-integer')});
-},{"./$.export":133,"./$.is-integer":148}],229:[function(require,module,exports){
+},{"./$.export":213,"./$.is-integer":228}],309:[function(require,module,exports){
 // 20.1.2.4 Number.isNaN(number)
 var $export = require('./$.export');
 
@@ -26293,7 +33110,7 @@ $export($export.S, 'Number', {
     return number != number;
   }
 });
-},{"./$.export":133}],230:[function(require,module,exports){
+},{"./$.export":213}],310:[function(require,module,exports){
 // 20.1.2.5 Number.isSafeInteger(number)
 var $export   = require('./$.export')
   , isInteger = require('./$.is-integer')
@@ -26304,32 +33121,32 @@ $export($export.S, 'Number', {
     return isInteger(number) && abs(number) <= 0x1fffffffffffff;
   }
 });
-},{"./$.export":133,"./$.is-integer":148}],231:[function(require,module,exports){
+},{"./$.export":213,"./$.is-integer":228}],311:[function(require,module,exports){
 // 20.1.2.6 Number.MAX_SAFE_INTEGER
 var $export = require('./$.export');
 
 $export($export.S, 'Number', {MAX_SAFE_INTEGER: 0x1fffffffffffff});
-},{"./$.export":133}],232:[function(require,module,exports){
+},{"./$.export":213}],312:[function(require,module,exports){
 // 20.1.2.10 Number.MIN_SAFE_INTEGER
 var $export = require('./$.export');
 
 $export($export.S, 'Number', {MIN_SAFE_INTEGER: -0x1fffffffffffff});
-},{"./$.export":133}],233:[function(require,module,exports){
+},{"./$.export":213}],313:[function(require,module,exports){
 // 20.1.2.12 Number.parseFloat(string)
 var $export = require('./$.export');
 
 $export($export.S, 'Number', {parseFloat: parseFloat});
-},{"./$.export":133}],234:[function(require,module,exports){
+},{"./$.export":213}],314:[function(require,module,exports){
 // 20.1.2.13 Number.parseInt(string, radix)
 var $export = require('./$.export');
 
 $export($export.S, 'Number', {parseInt: parseInt});
-},{"./$.export":133}],235:[function(require,module,exports){
+},{"./$.export":213}],315:[function(require,module,exports){
 // 19.1.3.1 Object.assign(target, source)
 var $export = require('./$.export');
 
 $export($export.S + $export.F, 'Object', {assign: require('./$.object-assign')});
-},{"./$.export":133,"./$.object-assign":164}],236:[function(require,module,exports){
+},{"./$.export":213,"./$.object-assign":244}],316:[function(require,module,exports){
 // 19.1.2.5 Object.freeze(O)
 var isObject = require('./$.is-object');
 
@@ -26338,14 +33155,14 @@ require('./$.object-sap')('freeze', function($freeze){
     return $freeze && isObject(it) ? $freeze(it) : it;
   };
 });
-},{"./$.is-object":149,"./$.object-sap":165}],237:[function(require,module,exports){
-arguments[4][107][0].apply(exports,arguments)
-},{"./$.object-sap":165,"./$.to-iobject":189,"dup":107}],238:[function(require,module,exports){
+},{"./$.is-object":229,"./$.object-sap":245}],317:[function(require,module,exports){
+arguments[4][187][0].apply(exports,arguments)
+},{"./$.object-sap":245,"./$.to-iobject":269,"dup":187}],318:[function(require,module,exports){
 // 19.1.2.7 Object.getOwnPropertyNames(O)
 require('./$.object-sap')('getOwnPropertyNames', function(){
   return require('./$.get-names').get;
 });
-},{"./$.get-names":139,"./$.object-sap":165}],239:[function(require,module,exports){
+},{"./$.get-names":219,"./$.object-sap":245}],319:[function(require,module,exports){
 // 19.1.2.9 Object.getPrototypeOf(O)
 var toObject = require('./$.to-object');
 
@@ -26354,7 +33171,7 @@ require('./$.object-sap')('getPrototypeOf', function($getPrototypeOf){
     return $getPrototypeOf(toObject(it));
   };
 });
-},{"./$.object-sap":165,"./$.to-object":191}],240:[function(require,module,exports){
+},{"./$.object-sap":245,"./$.to-object":271}],320:[function(require,module,exports){
 // 19.1.2.11 Object.isExtensible(O)
 var isObject = require('./$.is-object');
 
@@ -26363,7 +33180,7 @@ require('./$.object-sap')('isExtensible', function($isExtensible){
     return isObject(it) ? $isExtensible ? $isExtensible(it) : true : false;
   };
 });
-},{"./$.is-object":149,"./$.object-sap":165}],241:[function(require,module,exports){
+},{"./$.is-object":229,"./$.object-sap":245}],321:[function(require,module,exports){
 // 19.1.2.12 Object.isFrozen(O)
 var isObject = require('./$.is-object');
 
@@ -26372,7 +33189,7 @@ require('./$.object-sap')('isFrozen', function($isFrozen){
     return isObject(it) ? $isFrozen ? $isFrozen(it) : false : true;
   };
 });
-},{"./$.is-object":149,"./$.object-sap":165}],242:[function(require,module,exports){
+},{"./$.is-object":229,"./$.object-sap":245}],322:[function(require,module,exports){
 // 19.1.2.13 Object.isSealed(O)
 var isObject = require('./$.is-object');
 
@@ -26381,13 +33198,13 @@ require('./$.object-sap')('isSealed', function($isSealed){
     return isObject(it) ? $isSealed ? $isSealed(it) : false : true;
   };
 });
-},{"./$.is-object":149,"./$.object-sap":165}],243:[function(require,module,exports){
+},{"./$.is-object":229,"./$.object-sap":245}],323:[function(require,module,exports){
 // 19.1.3.10 Object.is(value1, value2)
 var $export = require('./$.export');
 $export($export.S, 'Object', {is: require('./$.same-value')});
-},{"./$.export":133,"./$.same-value":174}],244:[function(require,module,exports){
-arguments[4][108][0].apply(exports,arguments)
-},{"./$.object-sap":165,"./$.to-object":191,"dup":108}],245:[function(require,module,exports){
+},{"./$.export":213,"./$.same-value":254}],324:[function(require,module,exports){
+arguments[4][188][0].apply(exports,arguments)
+},{"./$.object-sap":245,"./$.to-object":271,"dup":188}],325:[function(require,module,exports){
 // 19.1.2.15 Object.preventExtensions(O)
 var isObject = require('./$.is-object');
 
@@ -26396,7 +33213,7 @@ require('./$.object-sap')('preventExtensions', function($preventExtensions){
     return $preventExtensions && isObject(it) ? $preventExtensions(it) : it;
   };
 });
-},{"./$.is-object":149,"./$.object-sap":165}],246:[function(require,module,exports){
+},{"./$.is-object":229,"./$.object-sap":245}],326:[function(require,module,exports){
 // 19.1.2.17 Object.seal(O)
 var isObject = require('./$.is-object');
 
@@ -26405,9 +33222,9 @@ require('./$.object-sap')('seal', function($seal){
     return $seal && isObject(it) ? $seal(it) : it;
   };
 });
-},{"./$.is-object":149,"./$.object-sap":165}],247:[function(require,module,exports){
-arguments[4][109][0].apply(exports,arguments)
-},{"./$.export":133,"./$.set-proto":175,"dup":109}],248:[function(require,module,exports){
+},{"./$.is-object":229,"./$.object-sap":245}],327:[function(require,module,exports){
+arguments[4][189][0].apply(exports,arguments)
+},{"./$.export":213,"./$.set-proto":255,"dup":189}],328:[function(require,module,exports){
 'use strict';
 // 19.1.3.6 Object.prototype.toString()
 var classof = require('./$.classof')
@@ -26418,7 +33235,7 @@ if(test + '' != '[object z]'){
     return '[object ' + classof(this) + ']';
   }, true);
 }
-},{"./$.classof":121,"./$.redefine":172,"./$.wks":194}],249:[function(require,module,exports){
+},{"./$.classof":201,"./$.redefine":252,"./$.wks":274}],329:[function(require,module,exports){
 'use strict';
 var $          = require('./$')
   , LIBRARY    = require('./$.library')
@@ -26708,7 +33525,7 @@ $export($export.S + $export.F * !(USE_NATIVE && require('./$.iter-detect')(funct
     return capability.promise;
   }
 });
-},{"./$":157,"./$.a-function":113,"./$.an-object":115,"./$.classof":121,"./$.core":127,"./$.ctx":128,"./$.descriptors":130,"./$.export":133,"./$.for-of":138,"./$.global":140,"./$.is-object":149,"./$.iter-detect":154,"./$.library":159,"./$.microtask":163,"./$.redefine-all":171,"./$.same-value":174,"./$.set-proto":175,"./$.set-species":176,"./$.set-to-string-tag":177,"./$.species-constructor":179,"./$.strict-new":180,"./$.wks":194}],250:[function(require,module,exports){
+},{"./$":237,"./$.a-function":193,"./$.an-object":195,"./$.classof":201,"./$.core":207,"./$.ctx":208,"./$.descriptors":210,"./$.export":213,"./$.for-of":218,"./$.global":220,"./$.is-object":229,"./$.iter-detect":234,"./$.library":239,"./$.microtask":243,"./$.redefine-all":251,"./$.same-value":254,"./$.set-proto":255,"./$.set-species":256,"./$.set-to-string-tag":257,"./$.species-constructor":259,"./$.strict-new":260,"./$.wks":274}],330:[function(require,module,exports){
 // 26.1.1 Reflect.apply(target, thisArgument, argumentsList)
 var $export = require('./$.export')
   , _apply  = Function.apply;
@@ -26718,7 +33535,7 @@ $export($export.S, 'Reflect', {
     return _apply.call(target, thisArgument, argumentsList);
   }
 });
-},{"./$.export":133}],251:[function(require,module,exports){
+},{"./$.export":213}],331:[function(require,module,exports){
 // 26.1.2 Reflect.construct(target, argumentsList [, newTarget])
 var $         = require('./$')
   , $export   = require('./$.export')
@@ -26757,7 +33574,7 @@ $export($export.S + $export.F * require('./$.fails')(function(){
     return isObject(result) ? result : instance;
   }
 });
-},{"./$":157,"./$.a-function":113,"./$.an-object":115,"./$.core":127,"./$.export":133,"./$.fails":135,"./$.is-object":149}],252:[function(require,module,exports){
+},{"./$":237,"./$.a-function":193,"./$.an-object":195,"./$.core":207,"./$.export":213,"./$.fails":215,"./$.is-object":229}],332:[function(require,module,exports){
 // 26.1.3 Reflect.defineProperty(target, propertyKey, attributes)
 var $        = require('./$')
   , $export  = require('./$.export')
@@ -26777,7 +33594,7 @@ $export($export.S + $export.F * require('./$.fails')(function(){
     }
   }
 });
-},{"./$":157,"./$.an-object":115,"./$.export":133,"./$.fails":135}],253:[function(require,module,exports){
+},{"./$":237,"./$.an-object":195,"./$.export":213,"./$.fails":215}],333:[function(require,module,exports){
 // 26.1.4 Reflect.deleteProperty(target, propertyKey)
 var $export  = require('./$.export')
   , getDesc  = require('./$').getDesc
@@ -26789,7 +33606,7 @@ $export($export.S, 'Reflect', {
     return desc && !desc.configurable ? false : delete target[propertyKey];
   }
 });
-},{"./$":157,"./$.an-object":115,"./$.export":133}],254:[function(require,module,exports){
+},{"./$":237,"./$.an-object":195,"./$.export":213}],334:[function(require,module,exports){
 'use strict';
 // 26.1.5 Reflect.enumerate(target)
 var $export  = require('./$.export')
@@ -26816,7 +33633,7 @@ $export($export.S, 'Reflect', {
     return new Enumerate(target);
   }
 });
-},{"./$.an-object":115,"./$.export":133,"./$.iter-create":152}],255:[function(require,module,exports){
+},{"./$.an-object":195,"./$.export":213,"./$.iter-create":232}],335:[function(require,module,exports){
 // 26.1.7 Reflect.getOwnPropertyDescriptor(target, propertyKey)
 var $        = require('./$')
   , $export  = require('./$.export')
@@ -26827,7 +33644,7 @@ $export($export.S, 'Reflect', {
     return $.getDesc(anObject(target), propertyKey);
   }
 });
-},{"./$":157,"./$.an-object":115,"./$.export":133}],256:[function(require,module,exports){
+},{"./$":237,"./$.an-object":195,"./$.export":213}],336:[function(require,module,exports){
 // 26.1.8 Reflect.getPrototypeOf(target)
 var $export  = require('./$.export')
   , getProto = require('./$').getProto
@@ -26838,7 +33655,7 @@ $export($export.S, 'Reflect', {
     return getProto(anObject(target));
   }
 });
-},{"./$":157,"./$.an-object":115,"./$.export":133}],257:[function(require,module,exports){
+},{"./$":237,"./$.an-object":195,"./$.export":213}],337:[function(require,module,exports){
 // 26.1.6 Reflect.get(target, propertyKey [, receiver])
 var $        = require('./$')
   , has      = require('./$.has')
@@ -26859,7 +33676,7 @@ function get(target, propertyKey/*, receiver*/){
 }
 
 $export($export.S, 'Reflect', {get: get});
-},{"./$":157,"./$.an-object":115,"./$.export":133,"./$.has":141,"./$.is-object":149}],258:[function(require,module,exports){
+},{"./$":237,"./$.an-object":195,"./$.export":213,"./$.has":221,"./$.is-object":229}],338:[function(require,module,exports){
 // 26.1.9 Reflect.has(target, propertyKey)
 var $export = require('./$.export');
 
@@ -26868,7 +33685,7 @@ $export($export.S, 'Reflect', {
     return propertyKey in target;
   }
 });
-},{"./$.export":133}],259:[function(require,module,exports){
+},{"./$.export":213}],339:[function(require,module,exports){
 // 26.1.10 Reflect.isExtensible(target)
 var $export       = require('./$.export')
   , anObject      = require('./$.an-object')
@@ -26880,12 +33697,12 @@ $export($export.S, 'Reflect', {
     return $isExtensible ? $isExtensible(target) : true;
   }
 });
-},{"./$.an-object":115,"./$.export":133}],260:[function(require,module,exports){
+},{"./$.an-object":195,"./$.export":213}],340:[function(require,module,exports){
 // 26.1.11 Reflect.ownKeys(target)
 var $export = require('./$.export');
 
 $export($export.S, 'Reflect', {ownKeys: require('./$.own-keys')});
-},{"./$.export":133,"./$.own-keys":167}],261:[function(require,module,exports){
+},{"./$.export":213,"./$.own-keys":247}],341:[function(require,module,exports){
 // 26.1.12 Reflect.preventExtensions(target)
 var $export            = require('./$.export')
   , anObject           = require('./$.an-object')
@@ -26902,7 +33719,7 @@ $export($export.S, 'Reflect', {
     }
   }
 });
-},{"./$.an-object":115,"./$.export":133}],262:[function(require,module,exports){
+},{"./$.an-object":195,"./$.export":213}],342:[function(require,module,exports){
 // 26.1.14 Reflect.setPrototypeOf(target, proto)
 var $export  = require('./$.export')
   , setProto = require('./$.set-proto');
@@ -26918,7 +33735,7 @@ if(setProto)$export($export.S, 'Reflect', {
     }
   }
 });
-},{"./$.export":133,"./$.set-proto":175}],263:[function(require,module,exports){
+},{"./$.export":213,"./$.set-proto":255}],343:[function(require,module,exports){
 // 26.1.13 Reflect.set(target, propertyKey, V [, receiver])
 var $          = require('./$')
   , has        = require('./$.has')
@@ -26948,7 +33765,7 @@ function set(target, propertyKey, V/*, receiver*/){
 }
 
 $export($export.S, 'Reflect', {set: set});
-},{"./$":157,"./$.an-object":115,"./$.export":133,"./$.has":141,"./$.is-object":149,"./$.property-desc":170}],264:[function(require,module,exports){
+},{"./$":237,"./$.an-object":195,"./$.export":213,"./$.has":221,"./$.is-object":229,"./$.property-desc":250}],344:[function(require,module,exports){
 var $        = require('./$')
   , global   = require('./$.global')
   , isRegExp = require('./$.is-regexp')
@@ -26987,14 +33804,14 @@ if(require('./$.descriptors') && (!CORRECT_NEW || require('./$.fails')(function(
 }
 
 require('./$.set-species')('RegExp');
-},{"./$":157,"./$.descriptors":130,"./$.fails":135,"./$.flags":137,"./$.global":140,"./$.is-regexp":150,"./$.redefine":172,"./$.set-species":176,"./$.wks":194}],265:[function(require,module,exports){
+},{"./$":237,"./$.descriptors":210,"./$.fails":215,"./$.flags":217,"./$.global":220,"./$.is-regexp":230,"./$.redefine":252,"./$.set-species":256,"./$.wks":274}],345:[function(require,module,exports){
 // 21.2.5.3 get RegExp.prototype.flags()
 var $ = require('./$');
 if(require('./$.descriptors') && /./g.flags != 'g')$.setDesc(RegExp.prototype, 'flags', {
   configurable: true,
   get: require('./$.flags')
 });
-},{"./$":157,"./$.descriptors":130,"./$.flags":137}],266:[function(require,module,exports){
+},{"./$":237,"./$.descriptors":210,"./$.flags":217}],346:[function(require,module,exports){
 // @@match logic
 require('./$.fix-re-wks')('match', 1, function(defined, MATCH){
   // 21.1.3.11 String.prototype.match(regexp)
@@ -27005,7 +33822,7 @@ require('./$.fix-re-wks')('match', 1, function(defined, MATCH){
     return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[MATCH](String(O));
   };
 });
-},{"./$.fix-re-wks":136}],267:[function(require,module,exports){
+},{"./$.fix-re-wks":216}],347:[function(require,module,exports){
 // @@replace logic
 require('./$.fix-re-wks')('replace', 2, function(defined, REPLACE, $replace){
   // 21.1.3.14 String.prototype.replace(searchValue, replaceValue)
@@ -27018,7 +33835,7 @@ require('./$.fix-re-wks')('replace', 2, function(defined, REPLACE, $replace){
       : $replace.call(String(O), searchValue, replaceValue);
   };
 });
-},{"./$.fix-re-wks":136}],268:[function(require,module,exports){
+},{"./$.fix-re-wks":216}],348:[function(require,module,exports){
 // @@search logic
 require('./$.fix-re-wks')('search', 1, function(defined, SEARCH){
   // 21.1.3.15 String.prototype.search(regexp)
@@ -27029,7 +33846,7 @@ require('./$.fix-re-wks')('search', 1, function(defined, SEARCH){
     return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[SEARCH](String(O));
   };
 });
-},{"./$.fix-re-wks":136}],269:[function(require,module,exports){
+},{"./$.fix-re-wks":216}],349:[function(require,module,exports){
 // @@split logic
 require('./$.fix-re-wks')('split', 2, function(defined, SPLIT, $split){
   // 21.1.3.17 String.prototype.split(separator, limit)
@@ -27042,7 +33859,7 @@ require('./$.fix-re-wks')('split', 2, function(defined, SPLIT, $split){
       : $split.call(String(O), separator, limit);
   };
 });
-},{"./$.fix-re-wks":136}],270:[function(require,module,exports){
+},{"./$.fix-re-wks":216}],350:[function(require,module,exports){
 'use strict';
 var strong = require('./$.collection-strong');
 
@@ -27055,7 +33872,7 @@ require('./$.collection')('Set', function(get){
     return strong.def(this, value = value === 0 ? 0 : value, value);
   }
 }, strong);
-},{"./$.collection":126,"./$.collection-strong":123}],271:[function(require,module,exports){
+},{"./$.collection":206,"./$.collection-strong":203}],351:[function(require,module,exports){
 'use strict';
 var $export = require('./$.export')
   , $at     = require('./$.string-at')(false);
@@ -27065,7 +33882,7 @@ $export($export.P, 'String', {
     return $at(this, pos);
   }
 });
-},{"./$.export":133,"./$.string-at":181}],272:[function(require,module,exports){
+},{"./$.export":213,"./$.string-at":261}],352:[function(require,module,exports){
 // 21.1.3.6 String.prototype.endsWith(searchString [, endPosition])
 'use strict';
 var $export   = require('./$.export')
@@ -27087,7 +33904,7 @@ $export($export.P + $export.F * require('./$.fails-is-regexp')(ENDS_WITH), 'Stri
       : that.slice(end - search.length, end) === search;
   }
 });
-},{"./$.export":133,"./$.fails-is-regexp":134,"./$.string-context":182,"./$.to-length":190}],273:[function(require,module,exports){
+},{"./$.export":213,"./$.fails-is-regexp":214,"./$.string-context":262,"./$.to-length":270}],353:[function(require,module,exports){
 var $export        = require('./$.export')
   , toIndex        = require('./$.to-index')
   , fromCharCode   = String.fromCharCode
@@ -27112,7 +33929,7 @@ $export($export.S + $export.F * (!!$fromCodePoint && $fromCodePoint.length != 1)
     } return res.join('');
   }
 });
-},{"./$.export":133,"./$.to-index":187}],274:[function(require,module,exports){
+},{"./$.export":213,"./$.to-index":267}],354:[function(require,module,exports){
 // 21.1.3.7 String.prototype.includes(searchString, position = 0)
 'use strict';
 var $export  = require('./$.export')
@@ -27125,9 +33942,9 @@ $export($export.P + $export.F * require('./$.fails-is-regexp')(INCLUDES), 'Strin
       .indexOf(searchString, arguments.length > 1 ? arguments[1] : undefined);
   }
 });
-},{"./$.export":133,"./$.fails-is-regexp":134,"./$.string-context":182}],275:[function(require,module,exports){
-arguments[4][110][0].apply(exports,arguments)
-},{"./$.iter-define":153,"./$.string-at":181,"dup":110}],276:[function(require,module,exports){
+},{"./$.export":213,"./$.fails-is-regexp":214,"./$.string-context":262}],355:[function(require,module,exports){
+arguments[4][190][0].apply(exports,arguments)
+},{"./$.iter-define":233,"./$.string-at":261,"dup":190}],356:[function(require,module,exports){
 var $export   = require('./$.export')
   , toIObject = require('./$.to-iobject')
   , toLength  = require('./$.to-length');
@@ -27147,14 +33964,14 @@ $export($export.S, 'String', {
     } return res.join('');
   }
 });
-},{"./$.export":133,"./$.to-iobject":189,"./$.to-length":190}],277:[function(require,module,exports){
+},{"./$.export":213,"./$.to-iobject":269,"./$.to-length":270}],357:[function(require,module,exports){
 var $export = require('./$.export');
 
 $export($export.P, 'String', {
   // 21.1.3.13 String.prototype.repeat(count)
   repeat: require('./$.string-repeat')
 });
-},{"./$.export":133,"./$.string-repeat":184}],278:[function(require,module,exports){
+},{"./$.export":213,"./$.string-repeat":264}],358:[function(require,module,exports){
 // 21.1.3.18 String.prototype.startsWith(searchString [, position ])
 'use strict';
 var $export     = require('./$.export')
@@ -27174,7 +33991,7 @@ $export($export.P + $export.F * require('./$.fails-is-regexp')(STARTS_WITH), 'St
       : that.slice(index, index + search.length) === search;
   }
 });
-},{"./$.export":133,"./$.fails-is-regexp":134,"./$.string-context":182,"./$.to-length":190}],279:[function(require,module,exports){
+},{"./$.export":213,"./$.fails-is-regexp":214,"./$.string-context":262,"./$.to-length":270}],359:[function(require,module,exports){
 'use strict';
 // 21.1.3.25 String.prototype.trim()
 require('./$.string-trim')('trim', function($trim){
@@ -27182,7 +33999,7 @@ require('./$.string-trim')('trim', function($trim){
     return $trim(this, 3);
   };
 });
-},{"./$.string-trim":185}],280:[function(require,module,exports){
+},{"./$.string-trim":265}],360:[function(require,module,exports){
 'use strict';
 // ECMAScript 6 symbols shim
 var $              = require('./$')
@@ -27410,7 +34227,7 @@ setToStringTag($Symbol, 'Symbol');
 setToStringTag(Math, 'Math', true);
 // 24.3.3 JSON[@@toStringTag]
 setToStringTag(global.JSON, 'JSON', true);
-},{"./$":157,"./$.an-object":115,"./$.descriptors":130,"./$.enum-keys":132,"./$.export":133,"./$.fails":135,"./$.get-names":139,"./$.global":140,"./$.has":141,"./$.is-array":147,"./$.keyof":158,"./$.library":159,"./$.property-desc":170,"./$.redefine":172,"./$.set-to-string-tag":177,"./$.shared":178,"./$.to-iobject":189,"./$.uid":193,"./$.wks":194}],281:[function(require,module,exports){
+},{"./$":237,"./$.an-object":195,"./$.descriptors":210,"./$.enum-keys":212,"./$.export":213,"./$.fails":215,"./$.get-names":219,"./$.global":220,"./$.has":221,"./$.is-array":227,"./$.keyof":238,"./$.library":239,"./$.property-desc":250,"./$.redefine":252,"./$.set-to-string-tag":257,"./$.shared":258,"./$.to-iobject":269,"./$.uid":273,"./$.wks":274}],361:[function(require,module,exports){
 'use strict';
 var $            = require('./$')
   , redefine     = require('./$.redefine')
@@ -27454,7 +34271,7 @@ if(new $WeakMap().set((Object.freeze || Object)(tmp), 7).get(tmp) != 7){
     });
   });
 }
-},{"./$":157,"./$.collection":126,"./$.collection-weak":125,"./$.has":141,"./$.is-object":149,"./$.redefine":172}],282:[function(require,module,exports){
+},{"./$":237,"./$.collection":206,"./$.collection-weak":205,"./$.has":221,"./$.is-object":229,"./$.redefine":252}],362:[function(require,module,exports){
 'use strict';
 var weak = require('./$.collection-weak');
 
@@ -27467,7 +34284,7 @@ require('./$.collection')('WeakSet', function(get){
     return weak.def(this, value, true);
   }
 }, weak, false, true);
-},{"./$.collection":126,"./$.collection-weak":125}],283:[function(require,module,exports){
+},{"./$.collection":206,"./$.collection-weak":205}],363:[function(require,module,exports){
 'use strict';
 var $export   = require('./$.export')
   , $includes = require('./$.array-includes')(true);
@@ -27480,12 +34297,12 @@ $export($export.P, 'Array', {
 });
 
 require('./$.add-to-unscopables')('includes');
-},{"./$.add-to-unscopables":114,"./$.array-includes":118,"./$.export":133}],284:[function(require,module,exports){
+},{"./$.add-to-unscopables":194,"./$.array-includes":198,"./$.export":213}],364:[function(require,module,exports){
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
 var $export  = require('./$.export');
 
 $export($export.P, 'Map', {toJSON: require('./$.collection-to-json')('Map')});
-},{"./$.collection-to-json":124,"./$.export":133}],285:[function(require,module,exports){
+},{"./$.collection-to-json":204,"./$.export":213}],365:[function(require,module,exports){
 // http://goo.gl/XkBrjD
 var $export  = require('./$.export')
   , $entries = require('./$.object-to-array')(true);
@@ -27495,7 +34312,7 @@ $export($export.S, 'Object', {
     return $entries(it);
   }
 });
-},{"./$.export":133,"./$.object-to-array":166}],286:[function(require,module,exports){
+},{"./$.export":213,"./$.object-to-array":246}],366:[function(require,module,exports){
 // https://gist.github.com/WebReflection/9353781
 var $          = require('./$')
   , $export    = require('./$.export')
@@ -27519,7 +34336,7 @@ $export($export.S, 'Object', {
     } return result;
   }
 });
-},{"./$":157,"./$.export":133,"./$.own-keys":167,"./$.property-desc":170,"./$.to-iobject":189}],287:[function(require,module,exports){
+},{"./$":237,"./$.export":213,"./$.own-keys":247,"./$.property-desc":250,"./$.to-iobject":269}],367:[function(require,module,exports){
 // http://goo.gl/XkBrjD
 var $export = require('./$.export')
   , $values = require('./$.object-to-array')(false);
@@ -27529,19 +34346,19 @@ $export($export.S, 'Object', {
     return $values(it);
   }
 });
-},{"./$.export":133,"./$.object-to-array":166}],288:[function(require,module,exports){
+},{"./$.export":213,"./$.object-to-array":246}],368:[function(require,module,exports){
 // https://github.com/benjamingr/RexExp.escape
 var $export = require('./$.export')
   , $re     = require('./$.replacer')(/[\\^$*+?.()|[\]{}]/g, '\\$&');
 
 $export($export.S, 'RegExp', {escape: function escape(it){ return $re(it); }});
 
-},{"./$.export":133,"./$.replacer":173}],289:[function(require,module,exports){
+},{"./$.export":213,"./$.replacer":253}],369:[function(require,module,exports){
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
 var $export  = require('./$.export');
 
 $export($export.P, 'Set', {toJSON: require('./$.collection-to-json')('Set')});
-},{"./$.collection-to-json":124,"./$.export":133}],290:[function(require,module,exports){
+},{"./$.collection-to-json":204,"./$.export":213}],370:[function(require,module,exports){
 'use strict';
 // https://github.com/mathiasbynens/String.prototype.at
 var $export = require('./$.export')
@@ -27552,7 +34369,7 @@ $export($export.P, 'String', {
     return $at(this, pos);
   }
 });
-},{"./$.export":133,"./$.string-at":181}],291:[function(require,module,exports){
+},{"./$.export":213,"./$.string-at":261}],371:[function(require,module,exports){
 'use strict';
 var $export = require('./$.export')
   , $pad    = require('./$.string-pad');
@@ -27562,7 +34379,7 @@ $export($export.P, 'String', {
     return $pad(this, maxLength, arguments.length > 1 ? arguments[1] : undefined, true);
   }
 });
-},{"./$.export":133,"./$.string-pad":183}],292:[function(require,module,exports){
+},{"./$.export":213,"./$.string-pad":263}],372:[function(require,module,exports){
 'use strict';
 var $export = require('./$.export')
   , $pad    = require('./$.string-pad');
@@ -27572,7 +34389,7 @@ $export($export.P, 'String', {
     return $pad(this, maxLength, arguments.length > 1 ? arguments[1] : undefined, false);
   }
 });
-},{"./$.export":133,"./$.string-pad":183}],293:[function(require,module,exports){
+},{"./$.export":213,"./$.string-pad":263}],373:[function(require,module,exports){
 'use strict';
 // https://github.com/sebmarkbage/ecmascript-string-left-right-trim
 require('./$.string-trim')('trimLeft', function($trim){
@@ -27580,7 +34397,7 @@ require('./$.string-trim')('trimLeft', function($trim){
     return $trim(this, 1);
   };
 });
-},{"./$.string-trim":185}],294:[function(require,module,exports){
+},{"./$.string-trim":265}],374:[function(require,module,exports){
 'use strict';
 // https://github.com/sebmarkbage/ecmascript-string-left-right-trim
 require('./$.string-trim')('trimRight', function($trim){
@@ -27588,7 +34405,7 @@ require('./$.string-trim')('trimRight', function($trim){
     return $trim(this, 2);
   };
 });
-},{"./$.string-trim":185}],295:[function(require,module,exports){
+},{"./$.string-trim":265}],375:[function(require,module,exports){
 // JavaScript 1.6 / Strawman array statics shim
 var $       = require('./$')
   , $export = require('./$.export')
@@ -27606,7 +34423,7 @@ setStatics('indexOf,every,some,forEach,map,filter,find,findIndex,includes', 3);
 setStatics('join,slice,concat,push,splice,unshift,sort,lastIndexOf,' +
            'reduce,reduceRight,copyWithin,fill');
 $export($export.S, 'Array', statics);
-},{"./$":157,"./$.core":127,"./$.ctx":128,"./$.export":133}],296:[function(require,module,exports){
+},{"./$":237,"./$.core":207,"./$.ctx":208,"./$.export":213}],376:[function(require,module,exports){
 require('./es6.array.iterator');
 var global      = require('./$.global')
   , hide        = require('./$.hide')
@@ -27619,14 +34436,14 @@ var global      = require('./$.global')
   , ArrayValues = Iterators.NodeList = Iterators.HTMLCollection = Iterators.Array;
 if(NLProto && !NLProto[ITERATOR])hide(NLProto, ITERATOR, ArrayValues);
 if(HTCProto && !HTCProto[ITERATOR])hide(HTCProto, ITERATOR, ArrayValues);
-},{"./$.global":140,"./$.hide":142,"./$.iterators":156,"./$.wks":194,"./es6.array.iterator":202}],297:[function(require,module,exports){
+},{"./$.global":220,"./$.hide":222,"./$.iterators":236,"./$.wks":274,"./es6.array.iterator":282}],377:[function(require,module,exports){
 var $export = require('./$.export')
   , $task   = require('./$.task');
 $export($export.G + $export.B, {
   setImmediate:   $task.set,
   clearImmediate: $task.clear
 });
-},{"./$.export":133,"./$.task":186}],298:[function(require,module,exports){
+},{"./$.export":213,"./$.task":266}],378:[function(require,module,exports){
 // ie9- setTimeout & setInterval additional parameters fix
 var global     = require('./$.global')
   , $export    = require('./$.export')
@@ -27647,7 +34464,7 @@ $export($export.G + $export.B + $export.F * MSIE, {
   setTimeout:  wrap(global.setTimeout),
   setInterval: wrap(global.setInterval)
 });
-},{"./$.export":133,"./$.global":140,"./$.invoke":144,"./$.partial":168}],299:[function(require,module,exports){
+},{"./$.export":213,"./$.global":220,"./$.invoke":224,"./$.partial":248}],379:[function(require,module,exports){
 require('./modules/es5');
 require('./modules/es6.symbol');
 require('./modules/es6.object.assign');
@@ -27752,7 +34569,7 @@ require('./modules/web.timers');
 require('./modules/web.immediate');
 require('./modules/web.dom.iterable');
 module.exports = require('./modules/$.core');
-},{"./modules/$.core":127,"./modules/es5":196,"./modules/es6.array.copy-within":197,"./modules/es6.array.fill":198,"./modules/es6.array.find":200,"./modules/es6.array.find-index":199,"./modules/es6.array.from":201,"./modules/es6.array.iterator":202,"./modules/es6.array.of":203,"./modules/es6.array.species":204,"./modules/es6.function.has-instance":205,"./modules/es6.function.name":206,"./modules/es6.map":207,"./modules/es6.math.acosh":208,"./modules/es6.math.asinh":209,"./modules/es6.math.atanh":210,"./modules/es6.math.cbrt":211,"./modules/es6.math.clz32":212,"./modules/es6.math.cosh":213,"./modules/es6.math.expm1":214,"./modules/es6.math.fround":215,"./modules/es6.math.hypot":216,"./modules/es6.math.imul":217,"./modules/es6.math.log10":218,"./modules/es6.math.log1p":219,"./modules/es6.math.log2":220,"./modules/es6.math.sign":221,"./modules/es6.math.sinh":222,"./modules/es6.math.tanh":223,"./modules/es6.math.trunc":224,"./modules/es6.number.constructor":225,"./modules/es6.number.epsilon":226,"./modules/es6.number.is-finite":227,"./modules/es6.number.is-integer":228,"./modules/es6.number.is-nan":229,"./modules/es6.number.is-safe-integer":230,"./modules/es6.number.max-safe-integer":231,"./modules/es6.number.min-safe-integer":232,"./modules/es6.number.parse-float":233,"./modules/es6.number.parse-int":234,"./modules/es6.object.assign":235,"./modules/es6.object.freeze":236,"./modules/es6.object.get-own-property-descriptor":237,"./modules/es6.object.get-own-property-names":238,"./modules/es6.object.get-prototype-of":239,"./modules/es6.object.is":243,"./modules/es6.object.is-extensible":240,"./modules/es6.object.is-frozen":241,"./modules/es6.object.is-sealed":242,"./modules/es6.object.keys":244,"./modules/es6.object.prevent-extensions":245,"./modules/es6.object.seal":246,"./modules/es6.object.set-prototype-of":247,"./modules/es6.object.to-string":248,"./modules/es6.promise":249,"./modules/es6.reflect.apply":250,"./modules/es6.reflect.construct":251,"./modules/es6.reflect.define-property":252,"./modules/es6.reflect.delete-property":253,"./modules/es6.reflect.enumerate":254,"./modules/es6.reflect.get":257,"./modules/es6.reflect.get-own-property-descriptor":255,"./modules/es6.reflect.get-prototype-of":256,"./modules/es6.reflect.has":258,"./modules/es6.reflect.is-extensible":259,"./modules/es6.reflect.own-keys":260,"./modules/es6.reflect.prevent-extensions":261,"./modules/es6.reflect.set":263,"./modules/es6.reflect.set-prototype-of":262,"./modules/es6.regexp.constructor":264,"./modules/es6.regexp.flags":265,"./modules/es6.regexp.match":266,"./modules/es6.regexp.replace":267,"./modules/es6.regexp.search":268,"./modules/es6.regexp.split":269,"./modules/es6.set":270,"./modules/es6.string.code-point-at":271,"./modules/es6.string.ends-with":272,"./modules/es6.string.from-code-point":273,"./modules/es6.string.includes":274,"./modules/es6.string.iterator":275,"./modules/es6.string.raw":276,"./modules/es6.string.repeat":277,"./modules/es6.string.starts-with":278,"./modules/es6.string.trim":279,"./modules/es6.symbol":280,"./modules/es6.weak-map":281,"./modules/es6.weak-set":282,"./modules/es7.array.includes":283,"./modules/es7.map.to-json":284,"./modules/es7.object.entries":285,"./modules/es7.object.get-own-property-descriptors":286,"./modules/es7.object.values":287,"./modules/es7.regexp.escape":288,"./modules/es7.set.to-json":289,"./modules/es7.string.at":290,"./modules/es7.string.pad-left":291,"./modules/es7.string.pad-right":292,"./modules/es7.string.trim-left":293,"./modules/es7.string.trim-right":294,"./modules/js.array.statics":295,"./modules/web.dom.iterable":296,"./modules/web.immediate":297,"./modules/web.timers":298}],300:[function(require,module,exports){
+},{"./modules/$.core":207,"./modules/es5":276,"./modules/es6.array.copy-within":277,"./modules/es6.array.fill":278,"./modules/es6.array.find":280,"./modules/es6.array.find-index":279,"./modules/es6.array.from":281,"./modules/es6.array.iterator":282,"./modules/es6.array.of":283,"./modules/es6.array.species":284,"./modules/es6.function.has-instance":285,"./modules/es6.function.name":286,"./modules/es6.map":287,"./modules/es6.math.acosh":288,"./modules/es6.math.asinh":289,"./modules/es6.math.atanh":290,"./modules/es6.math.cbrt":291,"./modules/es6.math.clz32":292,"./modules/es6.math.cosh":293,"./modules/es6.math.expm1":294,"./modules/es6.math.fround":295,"./modules/es6.math.hypot":296,"./modules/es6.math.imul":297,"./modules/es6.math.log10":298,"./modules/es6.math.log1p":299,"./modules/es6.math.log2":300,"./modules/es6.math.sign":301,"./modules/es6.math.sinh":302,"./modules/es6.math.tanh":303,"./modules/es6.math.trunc":304,"./modules/es6.number.constructor":305,"./modules/es6.number.epsilon":306,"./modules/es6.number.is-finite":307,"./modules/es6.number.is-integer":308,"./modules/es6.number.is-nan":309,"./modules/es6.number.is-safe-integer":310,"./modules/es6.number.max-safe-integer":311,"./modules/es6.number.min-safe-integer":312,"./modules/es6.number.parse-float":313,"./modules/es6.number.parse-int":314,"./modules/es6.object.assign":315,"./modules/es6.object.freeze":316,"./modules/es6.object.get-own-property-descriptor":317,"./modules/es6.object.get-own-property-names":318,"./modules/es6.object.get-prototype-of":319,"./modules/es6.object.is":323,"./modules/es6.object.is-extensible":320,"./modules/es6.object.is-frozen":321,"./modules/es6.object.is-sealed":322,"./modules/es6.object.keys":324,"./modules/es6.object.prevent-extensions":325,"./modules/es6.object.seal":326,"./modules/es6.object.set-prototype-of":327,"./modules/es6.object.to-string":328,"./modules/es6.promise":329,"./modules/es6.reflect.apply":330,"./modules/es6.reflect.construct":331,"./modules/es6.reflect.define-property":332,"./modules/es6.reflect.delete-property":333,"./modules/es6.reflect.enumerate":334,"./modules/es6.reflect.get":337,"./modules/es6.reflect.get-own-property-descriptor":335,"./modules/es6.reflect.get-prototype-of":336,"./modules/es6.reflect.has":338,"./modules/es6.reflect.is-extensible":339,"./modules/es6.reflect.own-keys":340,"./modules/es6.reflect.prevent-extensions":341,"./modules/es6.reflect.set":343,"./modules/es6.reflect.set-prototype-of":342,"./modules/es6.regexp.constructor":344,"./modules/es6.regexp.flags":345,"./modules/es6.regexp.match":346,"./modules/es6.regexp.replace":347,"./modules/es6.regexp.search":348,"./modules/es6.regexp.split":349,"./modules/es6.set":350,"./modules/es6.string.code-point-at":351,"./modules/es6.string.ends-with":352,"./modules/es6.string.from-code-point":353,"./modules/es6.string.includes":354,"./modules/es6.string.iterator":355,"./modules/es6.string.raw":356,"./modules/es6.string.repeat":357,"./modules/es6.string.starts-with":358,"./modules/es6.string.trim":359,"./modules/es6.symbol":360,"./modules/es6.weak-map":361,"./modules/es6.weak-set":362,"./modules/es7.array.includes":363,"./modules/es7.map.to-json":364,"./modules/es7.object.entries":365,"./modules/es7.object.get-own-property-descriptors":366,"./modules/es7.object.values":367,"./modules/es7.regexp.escape":368,"./modules/es7.set.to-json":369,"./modules/es7.string.at":370,"./modules/es7.string.pad-left":371,"./modules/es7.string.pad-right":372,"./modules/es7.string.trim-left":373,"./modules/es7.string.trim-right":374,"./modules/js.array.statics":375,"./modules/web.dom.iterable":376,"./modules/web.immediate":377,"./modules/web.timers":378}],380:[function(require,module,exports){
 (function (process,global){
 /**
  * Copyright (c) 2014, Facebook, Inc.
@@ -28412,13 +35229,241 @@ module.exports = require('./modules/$.core');
 );
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":303}],301:[function(require,module,exports){
+},{"_process":384}],381:[function(require,module,exports){
 module.exports = require("./lib/polyfill");
 
-},{"./lib/polyfill":112}],302:[function(require,module,exports){
+},{"./lib/polyfill":192}],382:[function(require,module,exports){
 module.exports = require("babel-core/polyfill");
 
-},{"babel-core/polyfill":301}],303:[function(require,module,exports){
+},{"babel-core/polyfill":381}],383:[function(require,module,exports){
+(function (process){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// resolves . and .. elements in a path array with directory names there
+// must be no slashes, empty elements, or device names (c:\) in the array
+// (so also no leading and trailing slashes - it does not distinguish
+// relative and absolute paths)
+function normalizeArray(parts, allowAboveRoot) {
+  // if the path tries to go above the root, `up` ends up > 0
+  var up = 0;
+  for (var i = parts.length - 1; i >= 0; i--) {
+    var last = parts[i];
+    if (last === '.') {
+      parts.splice(i, 1);
+    } else if (last === '..') {
+      parts.splice(i, 1);
+      up++;
+    } else if (up) {
+      parts.splice(i, 1);
+      up--;
+    }
+  }
+
+  // if the path is allowed to go above the root, restore leading ..s
+  if (allowAboveRoot) {
+    for (; up--; up) {
+      parts.unshift('..');
+    }
+  }
+
+  return parts;
+}
+
+// Split a filename into [root, dir, basename, ext], unix version
+// 'root' is just a slash, or nothing.
+var splitPathRe =
+    /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
+var splitPath = function(filename) {
+  return splitPathRe.exec(filename).slice(1);
+};
+
+// path.resolve([from ...], to)
+// posix version
+exports.resolve = function() {
+  var resolvedPath = '',
+      resolvedAbsolute = false;
+
+  for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
+    var path = (i >= 0) ? arguments[i] : process.cwd();
+
+    // Skip empty and invalid entries
+    if (typeof path !== 'string') {
+      throw new TypeError('Arguments to path.resolve must be strings');
+    } else if (!path) {
+      continue;
+    }
+
+    resolvedPath = path + '/' + resolvedPath;
+    resolvedAbsolute = path.charAt(0) === '/';
+  }
+
+  // At this point the path should be resolved to a full absolute path, but
+  // handle relative paths to be safe (might happen when process.cwd() fails)
+
+  // Normalize the path
+  resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function(p) {
+    return !!p;
+  }), !resolvedAbsolute).join('/');
+
+  return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
+};
+
+// path.normalize(path)
+// posix version
+exports.normalize = function(path) {
+  var isAbsolute = exports.isAbsolute(path),
+      trailingSlash = substr(path, -1) === '/';
+
+  // Normalize the path
+  path = normalizeArray(filter(path.split('/'), function(p) {
+    return !!p;
+  }), !isAbsolute).join('/');
+
+  if (!path && !isAbsolute) {
+    path = '.';
+  }
+  if (path && trailingSlash) {
+    path += '/';
+  }
+
+  return (isAbsolute ? '/' : '') + path;
+};
+
+// posix version
+exports.isAbsolute = function(path) {
+  return path.charAt(0) === '/';
+};
+
+// posix version
+exports.join = function() {
+  var paths = Array.prototype.slice.call(arguments, 0);
+  return exports.normalize(filter(paths, function(p, index) {
+    if (typeof p !== 'string') {
+      throw new TypeError('Arguments to path.join must be strings');
+    }
+    return p;
+  }).join('/'));
+};
+
+
+// path.relative(from, to)
+// posix version
+exports.relative = function(from, to) {
+  from = exports.resolve(from).substr(1);
+  to = exports.resolve(to).substr(1);
+
+  function trim(arr) {
+    var start = 0;
+    for (; start < arr.length; start++) {
+      if (arr[start] !== '') break;
+    }
+
+    var end = arr.length - 1;
+    for (; end >= 0; end--) {
+      if (arr[end] !== '') break;
+    }
+
+    if (start > end) return [];
+    return arr.slice(start, end - start + 1);
+  }
+
+  var fromParts = trim(from.split('/'));
+  var toParts = trim(to.split('/'));
+
+  var length = Math.min(fromParts.length, toParts.length);
+  var samePartsLength = length;
+  for (var i = 0; i < length; i++) {
+    if (fromParts[i] !== toParts[i]) {
+      samePartsLength = i;
+      break;
+    }
+  }
+
+  var outputParts = [];
+  for (var i = samePartsLength; i < fromParts.length; i++) {
+    outputParts.push('..');
+  }
+
+  outputParts = outputParts.concat(toParts.slice(samePartsLength));
+
+  return outputParts.join('/');
+};
+
+exports.sep = '/';
+exports.delimiter = ':';
+
+exports.dirname = function(path) {
+  var result = splitPath(path),
+      root = result[0],
+      dir = result[1];
+
+  if (!root && !dir) {
+    // No dirname whatsoever
+    return '.';
+  }
+
+  if (dir) {
+    // It has a dirname, strip trailing slash
+    dir = dir.substr(0, dir.length - 1);
+  }
+
+  return root + dir;
+};
+
+
+exports.basename = function(path, ext) {
+  var f = splitPath(path)[2];
+  // TODO: make this comparison case-insensitive on windows?
+  if (ext && f.substr(-1 * ext.length) === ext) {
+    f = f.substr(0, f.length - ext.length);
+  }
+  return f;
+};
+
+
+exports.extname = function(path) {
+  return splitPath(path)[3];
+};
+
+function filter (xs, f) {
+    if (xs.filter) return xs.filter(f);
+    var res = [];
+    for (var i = 0; i < xs.length; i++) {
+        if (f(xs[i], i, xs)) res.push(xs[i]);
+    }
+    return res;
+}
+
+// String.prototype.substr - negative index don't work in IE8
+var substr = 'ab'.substr(-1) === 'b'
+    ? function (str, start, len) { return str.substr(start, len) }
+    : function (str, start, len) {
+        if (start < 0) start = str.length + start;
+        return str.substr(start, len);
+    }
+;
+
+}).call(this,require('_process'))
+},{"_process":384}],384:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -28511,7 +35556,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],304:[function(require,module,exports){
+},{}],385:[function(require,module,exports){
 (function (global){
 /*! Moment Duration Format v1.3.0
  *  https://github.com/jsmreese/moment-duration-format 
@@ -28997,14 +36042,14 @@ process.umask = function() { return 0; };
 })(this);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],305:[function(require,module,exports){
+},{}],386:[function(require,module,exports){
 module.exports = require('react/lib/ReactCSSTransitionGroup');
-},{"react/lib/ReactCSSTransitionGroup":338}],306:[function(require,module,exports){
+},{"react/lib/ReactCSSTransitionGroup":419}],387:[function(require,module,exports){
 'use strict';
 
 module.exports = require('react/lib/ReactDOM');
 
-},{"react/lib/ReactDOM":348}],307:[function(require,module,exports){
+},{"react/lib/ReactDOM":429}],388:[function(require,module,exports){
 (function (global){
 var React, ga, script, scriptIsAdded, _name,
   __slice = [].slice;
@@ -29070,7 +36115,7 @@ ga.Initializer = React.createClass({
 module.exports = ga;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],308:[function(require,module,exports){
+},{}],389:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -29205,7 +36250,7 @@ var LaconaInput = (function (_React$Component) {
 
 exports['default'] = LaconaInput;
 module.exports = exports['default'];
-},{"react":473,"react-dom":306}],309:[function(require,module,exports){
+},{"react":554,"react-dom":387}],390:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -29437,7 +36482,7 @@ LaconaView.defaultProps = {
 };
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./input":308,"./options":311,"react":473,"react-dom":306}],310:[function(require,module,exports){
+},{"./input":389,"./options":392,"react":554,"react-dom":387}],391:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -29653,7 +36698,7 @@ var LaconaOption = (function (_React$Component2) {
 exports['default'] = LaconaOption;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"react":473,"react-dom":306}],311:[function(require,module,exports){
+},{"react":554,"react-dom":387}],392:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -29751,7 +36796,7 @@ var Options = (function (_React$Component) {
 
 exports['default'] = Options;
 module.exports = exports['default'];
-},{"./option":310,"react":473}],312:[function(require,module,exports){
+},{"./option":391,"react":554}],393:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -29788,7 +36833,7 @@ var AutoFocusUtils = {
 };
 
 module.exports = AutoFocusUtils;
-},{"./ReactMount":378,"./findDOMNode":424,"fbjs/lib/focusNode":455}],313:[function(require,module,exports){
+},{"./ReactMount":459,"./findDOMNode":505,"fbjs/lib/focusNode":536}],394:[function(require,module,exports){
 /**
  * Copyright 2013-2015 Facebook, Inc.
  * All rights reserved.
@@ -30194,7 +37239,7 @@ var BeforeInputEventPlugin = {
 };
 
 module.exports = BeforeInputEventPlugin;
-},{"./EventConstants":325,"./EventPropagators":329,"./FallbackCompositionState":330,"./SyntheticCompositionEvent":406,"./SyntheticInputEvent":410,"fbjs/lib/ExecutionEnvironment":447,"fbjs/lib/keyOf":465}],314:[function(require,module,exports){
+},{"./EventConstants":406,"./EventPropagators":410,"./FallbackCompositionState":411,"./SyntheticCompositionEvent":487,"./SyntheticInputEvent":491,"fbjs/lib/ExecutionEnvironment":528,"fbjs/lib/keyOf":546}],395:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30334,7 +37379,7 @@ var CSSProperty = {
 };
 
 module.exports = CSSProperty;
-},{}],315:[function(require,module,exports){
+},{}],396:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -30512,7 +37557,7 @@ ReactPerf.measureMethods(CSSPropertyOperations, 'CSSPropertyOperations', {
 
 module.exports = CSSPropertyOperations;
 }).call(this,require('_process'))
-},{"./CSSProperty":314,"./ReactPerf":384,"./dangerousStyleValue":421,"_process":303,"fbjs/lib/ExecutionEnvironment":447,"fbjs/lib/camelizeStyleName":449,"fbjs/lib/hyphenateStyleName":460,"fbjs/lib/memoizeStringOnly":467,"fbjs/lib/warning":472}],316:[function(require,module,exports){
+},{"./CSSProperty":395,"./ReactPerf":465,"./dangerousStyleValue":502,"_process":384,"fbjs/lib/ExecutionEnvironment":528,"fbjs/lib/camelizeStyleName":530,"fbjs/lib/hyphenateStyleName":541,"fbjs/lib/memoizeStringOnly":548,"fbjs/lib/warning":553}],397:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -30608,7 +37653,7 @@ PooledClass.addPoolingTo(CallbackQueue);
 
 module.exports = CallbackQueue;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./PooledClass":334,"_process":303,"fbjs/lib/invariant":461}],317:[function(require,module,exports){
+},{"./Object.assign":414,"./PooledClass":415,"_process":384,"fbjs/lib/invariant":542}],398:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30930,7 +37975,7 @@ var ChangeEventPlugin = {
 };
 
 module.exports = ChangeEventPlugin;
-},{"./EventConstants":325,"./EventPluginHub":326,"./EventPropagators":329,"./ReactUpdates":399,"./SyntheticEvent":408,"./getEventTarget":430,"./isEventSupported":435,"./isTextInputElement":436,"fbjs/lib/ExecutionEnvironment":447,"fbjs/lib/keyOf":465}],318:[function(require,module,exports){
+},{"./EventConstants":406,"./EventPluginHub":407,"./EventPropagators":410,"./ReactUpdates":480,"./SyntheticEvent":489,"./getEventTarget":511,"./isEventSupported":516,"./isTextInputElement":517,"fbjs/lib/ExecutionEnvironment":528,"fbjs/lib/keyOf":546}],399:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30954,7 +37999,7 @@ var ClientReactRootIndex = {
 };
 
 module.exports = ClientReactRootIndex;
-},{}],319:[function(require,module,exports){
+},{}],400:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -31086,7 +38131,7 @@ ReactPerf.measureMethods(DOMChildrenOperations, 'DOMChildrenOperations', {
 
 module.exports = DOMChildrenOperations;
 }).call(this,require('_process'))
-},{"./Danger":322,"./ReactMultiChildUpdateTypes":380,"./ReactPerf":384,"./setInnerHTML":440,"./setTextContent":441,"_process":303,"fbjs/lib/invariant":461}],320:[function(require,module,exports){
+},{"./Danger":403,"./ReactMultiChildUpdateTypes":461,"./ReactPerf":465,"./setInnerHTML":521,"./setTextContent":522,"_process":384,"fbjs/lib/invariant":542}],401:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -31323,7 +38368,7 @@ var DOMProperty = {
 
 module.exports = DOMProperty;
 }).call(this,require('_process'))
-},{"_process":303,"fbjs/lib/invariant":461}],321:[function(require,module,exports){
+},{"_process":384,"fbjs/lib/invariant":542}],402:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -31551,7 +38596,7 @@ ReactPerf.measureMethods(DOMPropertyOperations, 'DOMPropertyOperations', {
 
 module.exports = DOMPropertyOperations;
 }).call(this,require('_process'))
-},{"./DOMProperty":320,"./ReactPerf":384,"./quoteAttributeValueForBrowser":438,"_process":303,"fbjs/lib/warning":472}],322:[function(require,module,exports){
+},{"./DOMProperty":401,"./ReactPerf":465,"./quoteAttributeValueForBrowser":519,"_process":384,"fbjs/lib/warning":553}],403:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -31699,7 +38744,7 @@ var Danger = {
 
 module.exports = Danger;
 }).call(this,require('_process'))
-},{"_process":303,"fbjs/lib/ExecutionEnvironment":447,"fbjs/lib/createNodesFromMarkup":452,"fbjs/lib/emptyFunction":453,"fbjs/lib/getMarkupWrap":457,"fbjs/lib/invariant":461}],323:[function(require,module,exports){
+},{"_process":384,"fbjs/lib/ExecutionEnvironment":528,"fbjs/lib/createNodesFromMarkup":533,"fbjs/lib/emptyFunction":534,"fbjs/lib/getMarkupWrap":538,"fbjs/lib/invariant":542}],404:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -31727,7 +38772,7 @@ var keyOf = require('fbjs/lib/keyOf');
 var DefaultEventPluginOrder = [keyOf({ ResponderEventPlugin: null }), keyOf({ SimpleEventPlugin: null }), keyOf({ TapEventPlugin: null }), keyOf({ EnterLeaveEventPlugin: null }), keyOf({ ChangeEventPlugin: null }), keyOf({ SelectEventPlugin: null }), keyOf({ BeforeInputEventPlugin: null })];
 
 module.exports = DefaultEventPluginOrder;
-},{"fbjs/lib/keyOf":465}],324:[function(require,module,exports){
+},{"fbjs/lib/keyOf":546}],405:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -31852,7 +38897,7 @@ var EnterLeaveEventPlugin = {
 };
 
 module.exports = EnterLeaveEventPlugin;
-},{"./EventConstants":325,"./EventPropagators":329,"./ReactMount":378,"./SyntheticMouseEvent":412,"fbjs/lib/keyOf":465}],325:[function(require,module,exports){
+},{"./EventConstants":406,"./EventPropagators":410,"./ReactMount":459,"./SyntheticMouseEvent":493,"fbjs/lib/keyOf":546}],406:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -31945,7 +38990,7 @@ var EventConstants = {
 };
 
 module.exports = EventConstants;
-},{"fbjs/lib/keyMirror":464}],326:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":545}],407:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -32227,7 +39272,7 @@ var EventPluginHub = {
 
 module.exports = EventPluginHub;
 }).call(this,require('_process'))
-},{"./EventPluginRegistry":327,"./EventPluginUtils":328,"./ReactErrorUtils":369,"./accumulateInto":418,"./forEachAccumulated":426,"_process":303,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],327:[function(require,module,exports){
+},{"./EventPluginRegistry":408,"./EventPluginUtils":409,"./ReactErrorUtils":450,"./accumulateInto":499,"./forEachAccumulated":507,"_process":384,"fbjs/lib/invariant":542,"fbjs/lib/warning":553}],408:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -32450,7 +39495,7 @@ var EventPluginRegistry = {
 
 module.exports = EventPluginRegistry;
 }).call(this,require('_process'))
-},{"_process":303,"fbjs/lib/invariant":461}],328:[function(require,module,exports){
+},{"_process":384,"fbjs/lib/invariant":542}],409:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -32655,7 +39700,7 @@ var EventPluginUtils = {
 
 module.exports = EventPluginUtils;
 }).call(this,require('_process'))
-},{"./EventConstants":325,"./ReactErrorUtils":369,"_process":303,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],329:[function(require,module,exports){
+},{"./EventConstants":406,"./ReactErrorUtils":450,"_process":384,"fbjs/lib/invariant":542,"fbjs/lib/warning":553}],410:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -32793,7 +39838,7 @@ var EventPropagators = {
 
 module.exports = EventPropagators;
 }).call(this,require('_process'))
-},{"./EventConstants":325,"./EventPluginHub":326,"./accumulateInto":418,"./forEachAccumulated":426,"_process":303,"fbjs/lib/warning":472}],330:[function(require,module,exports){
+},{"./EventConstants":406,"./EventPluginHub":407,"./accumulateInto":499,"./forEachAccumulated":507,"_process":384,"fbjs/lib/warning":553}],411:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -32889,7 +39934,7 @@ assign(FallbackCompositionState.prototype, {
 PooledClass.addPoolingTo(FallbackCompositionState);
 
 module.exports = FallbackCompositionState;
-},{"./Object.assign":333,"./PooledClass":334,"./getTextContentAccessor":433}],331:[function(require,module,exports){
+},{"./Object.assign":414,"./PooledClass":415,"./getTextContentAccessor":514}],412:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -33122,7 +40167,7 @@ var HTMLDOMPropertyConfig = {
 };
 
 module.exports = HTMLDOMPropertyConfig;
-},{"./DOMProperty":320,"fbjs/lib/ExecutionEnvironment":447}],332:[function(require,module,exports){
+},{"./DOMProperty":401,"fbjs/lib/ExecutionEnvironment":528}],413:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -33259,7 +40304,7 @@ var LinkedValueUtils = {
 
 module.exports = LinkedValueUtils;
 }).call(this,require('_process'))
-},{"./ReactPropTypeLocations":386,"./ReactPropTypes":387,"_process":303,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],333:[function(require,module,exports){
+},{"./ReactPropTypeLocations":467,"./ReactPropTypes":468,"_process":384,"fbjs/lib/invariant":542,"fbjs/lib/warning":553}],414:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -33307,7 +40352,7 @@ function assign(target, sources) {
 }
 
 module.exports = assign;
-},{}],334:[function(require,module,exports){
+},{}],415:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -33429,7 +40474,7 @@ var PooledClass = {
 
 module.exports = PooledClass;
 }).call(this,require('_process'))
-},{"_process":303,"fbjs/lib/invariant":461}],335:[function(require,module,exports){
+},{"_process":384,"fbjs/lib/invariant":542}],416:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -33470,7 +40515,7 @@ React.__SECRET_DOM_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = ReactDOM;
 React.__SECRET_DOM_SERVER_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = ReactDOMServer;
 
 module.exports = React;
-},{"./Object.assign":333,"./ReactDOM":348,"./ReactDOMServer":358,"./ReactIsomorphic":376,"./deprecated":422}],336:[function(require,module,exports){
+},{"./Object.assign":414,"./ReactDOM":429,"./ReactDOMServer":439,"./ReactIsomorphic":457,"./deprecated":503}],417:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -33509,7 +40554,7 @@ var ReactBrowserComponentMixin = {
 
 module.exports = ReactBrowserComponentMixin;
 }).call(this,require('_process'))
-},{"./ReactInstanceMap":375,"./findDOMNode":424,"_process":303,"fbjs/lib/warning":472}],337:[function(require,module,exports){
+},{"./ReactInstanceMap":456,"./findDOMNode":505,"_process":384,"fbjs/lib/warning":553}],418:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -33834,7 +40879,7 @@ ReactPerf.measureMethods(ReactBrowserEventEmitter, 'ReactBrowserEventEmitter', {
 });
 
 module.exports = ReactBrowserEventEmitter;
-},{"./EventConstants":325,"./EventPluginHub":326,"./EventPluginRegistry":327,"./Object.assign":333,"./ReactEventEmitterMixin":370,"./ReactPerf":384,"./ViewportMetrics":417,"./isEventSupported":435}],338:[function(require,module,exports){
+},{"./EventConstants":406,"./EventPluginHub":407,"./EventPluginRegistry":408,"./Object.assign":414,"./ReactEventEmitterMixin":451,"./ReactPerf":465,"./ViewportMetrics":498,"./isEventSupported":516}],419:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -33918,7 +40963,7 @@ var ReactCSSTransitionGroup = React.createClass({
 });
 
 module.exports = ReactCSSTransitionGroup;
-},{"./Object.assign":333,"./React":335,"./ReactCSSTransitionGroupChild":339,"./ReactTransitionGroup":397}],339:[function(require,module,exports){
+},{"./Object.assign":414,"./React":416,"./ReactCSSTransitionGroupChild":420,"./ReactTransitionGroup":478}],420:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -34084,7 +41129,7 @@ var ReactCSSTransitionGroupChild = React.createClass({
 });
 
 module.exports = ReactCSSTransitionGroupChild;
-},{"./React":335,"./ReactDOM":348,"./ReactTransitionEvents":396,"./onlyChild":437,"fbjs/lib/CSSCore":445}],340:[function(require,module,exports){
+},{"./React":416,"./ReactDOM":429,"./ReactTransitionEvents":477,"./onlyChild":518,"fbjs/lib/CSSCore":526}],421:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -34209,7 +41254,7 @@ var ReactChildReconciler = {
 
 module.exports = ReactChildReconciler;
 }).call(this,require('_process'))
-},{"./ReactReconciler":389,"./instantiateReactComponent":434,"./shouldUpdateReactComponent":442,"./traverseAllChildren":443,"_process":303,"fbjs/lib/warning":472}],341:[function(require,module,exports){
+},{"./ReactReconciler":470,"./instantiateReactComponent":515,"./shouldUpdateReactComponent":523,"./traverseAllChildren":524,"_process":384,"fbjs/lib/warning":553}],422:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -34392,7 +41437,7 @@ var ReactChildren = {
 };
 
 module.exports = ReactChildren;
-},{"./PooledClass":334,"./ReactElement":365,"./traverseAllChildren":443,"fbjs/lib/emptyFunction":453}],342:[function(require,module,exports){
+},{"./PooledClass":415,"./ReactElement":446,"./traverseAllChildren":524,"fbjs/lib/emptyFunction":534}],423:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -35166,7 +42211,7 @@ var ReactClass = {
 
 module.exports = ReactClass;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./ReactComponent":343,"./ReactElement":365,"./ReactNoopUpdateQueue":382,"./ReactPropTypeLocationNames":385,"./ReactPropTypeLocations":386,"_process":303,"fbjs/lib/emptyObject":454,"fbjs/lib/invariant":461,"fbjs/lib/keyMirror":464,"fbjs/lib/keyOf":465,"fbjs/lib/warning":472}],343:[function(require,module,exports){
+},{"./Object.assign":414,"./ReactComponent":424,"./ReactElement":446,"./ReactNoopUpdateQueue":463,"./ReactPropTypeLocationNames":466,"./ReactPropTypeLocations":467,"_process":384,"fbjs/lib/emptyObject":535,"fbjs/lib/invariant":542,"fbjs/lib/keyMirror":545,"fbjs/lib/keyOf":546,"fbjs/lib/warning":553}],424:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -35291,7 +42336,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactComponent;
 }).call(this,require('_process'))
-},{"./ReactNoopUpdateQueue":382,"./canDefineProperty":420,"_process":303,"fbjs/lib/emptyObject":454,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],344:[function(require,module,exports){
+},{"./ReactNoopUpdateQueue":463,"./canDefineProperty":501,"_process":384,"fbjs/lib/emptyObject":535,"fbjs/lib/invariant":542,"fbjs/lib/warning":553}],425:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -35333,7 +42378,7 @@ var ReactComponentBrowserEnvironment = {
 };
 
 module.exports = ReactComponentBrowserEnvironment;
-},{"./ReactDOMIDOperations":353,"./ReactMount":378}],345:[function(require,module,exports){
+},{"./ReactDOMIDOperations":434,"./ReactMount":459}],426:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -35387,7 +42432,7 @@ var ReactComponentEnvironment = {
 
 module.exports = ReactComponentEnvironment;
 }).call(this,require('_process'))
-},{"_process":303,"fbjs/lib/invariant":461}],346:[function(require,module,exports){
+},{"_process":384,"fbjs/lib/invariant":542}],427:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -36084,7 +43129,7 @@ var ReactCompositeComponent = {
 
 module.exports = ReactCompositeComponent;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./ReactComponentEnvironment":345,"./ReactCurrentOwner":347,"./ReactElement":365,"./ReactInstanceMap":375,"./ReactPerf":384,"./ReactPropTypeLocationNames":385,"./ReactPropTypeLocations":386,"./ReactReconciler":389,"./ReactUpdateQueue":398,"./shouldUpdateReactComponent":442,"_process":303,"fbjs/lib/emptyObject":454,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],347:[function(require,module,exports){
+},{"./Object.assign":414,"./ReactComponentEnvironment":426,"./ReactCurrentOwner":428,"./ReactElement":446,"./ReactInstanceMap":456,"./ReactPerf":465,"./ReactPropTypeLocationNames":466,"./ReactPropTypeLocations":467,"./ReactReconciler":470,"./ReactUpdateQueue":479,"./shouldUpdateReactComponent":523,"_process":384,"fbjs/lib/emptyObject":535,"fbjs/lib/invariant":542,"fbjs/lib/warning":553}],428:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -36115,7 +43160,7 @@ var ReactCurrentOwner = {
 };
 
 module.exports = ReactCurrentOwner;
-},{}],348:[function(require,module,exports){
+},{}],429:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -36210,7 +43255,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = React;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":347,"./ReactDOMTextComponent":359,"./ReactDefaultInjection":362,"./ReactInstanceHandles":374,"./ReactMount":378,"./ReactPerf":384,"./ReactReconciler":389,"./ReactUpdates":399,"./ReactVersion":400,"./findDOMNode":424,"./renderSubtreeIntoContainer":439,"_process":303,"fbjs/lib/ExecutionEnvironment":447,"fbjs/lib/warning":472}],349:[function(require,module,exports){
+},{"./ReactCurrentOwner":428,"./ReactDOMTextComponent":440,"./ReactDefaultInjection":443,"./ReactInstanceHandles":455,"./ReactMount":459,"./ReactPerf":465,"./ReactReconciler":470,"./ReactUpdates":480,"./ReactVersion":481,"./findDOMNode":505,"./renderSubtreeIntoContainer":520,"_process":384,"fbjs/lib/ExecutionEnvironment":528,"fbjs/lib/warning":553}],430:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -36261,7 +43306,7 @@ var ReactDOMButton = {
 };
 
 module.exports = ReactDOMButton;
-},{}],350:[function(require,module,exports){
+},{}],431:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -37226,7 +44271,7 @@ assign(ReactDOMComponent.prototype, ReactDOMComponent.Mixin, ReactMultiChild.Mix
 
 module.exports = ReactDOMComponent;
 }).call(this,require('_process'))
-},{"./AutoFocusUtils":312,"./CSSPropertyOperations":315,"./DOMProperty":320,"./DOMPropertyOperations":321,"./EventConstants":325,"./Object.assign":333,"./ReactBrowserEventEmitter":337,"./ReactComponentBrowserEnvironment":344,"./ReactDOMButton":349,"./ReactDOMInput":354,"./ReactDOMOption":355,"./ReactDOMSelect":356,"./ReactDOMTextarea":360,"./ReactMount":378,"./ReactMultiChild":379,"./ReactPerf":384,"./ReactUpdateQueue":398,"./canDefineProperty":420,"./escapeTextContentForBrowser":423,"./isEventSupported":435,"./setInnerHTML":440,"./setTextContent":441,"./validateDOMNesting":444,"_process":303,"fbjs/lib/invariant":461,"fbjs/lib/keyOf":465,"fbjs/lib/shallowEqual":470,"fbjs/lib/warning":472}],351:[function(require,module,exports){
+},{"./AutoFocusUtils":393,"./CSSPropertyOperations":396,"./DOMProperty":401,"./DOMPropertyOperations":402,"./EventConstants":406,"./Object.assign":414,"./ReactBrowserEventEmitter":418,"./ReactComponentBrowserEnvironment":425,"./ReactDOMButton":430,"./ReactDOMInput":435,"./ReactDOMOption":436,"./ReactDOMSelect":437,"./ReactDOMTextarea":441,"./ReactMount":459,"./ReactMultiChild":460,"./ReactPerf":465,"./ReactUpdateQueue":479,"./canDefineProperty":501,"./escapeTextContentForBrowser":504,"./isEventSupported":516,"./setInnerHTML":521,"./setTextContent":522,"./validateDOMNesting":525,"_process":384,"fbjs/lib/invariant":542,"fbjs/lib/keyOf":546,"fbjs/lib/shallowEqual":551,"fbjs/lib/warning":553}],432:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -37406,7 +44451,7 @@ var ReactDOMFactories = mapObject({
 
 module.exports = ReactDOMFactories;
 }).call(this,require('_process'))
-},{"./ReactElement":365,"./ReactElementValidator":366,"_process":303,"fbjs/lib/mapObject":466}],352:[function(require,module,exports){
+},{"./ReactElement":446,"./ReactElementValidator":447,"_process":384,"fbjs/lib/mapObject":547}],433:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -37425,7 +44470,7 @@ var ReactDOMFeatureFlags = {
 };
 
 module.exports = ReactDOMFeatureFlags;
-},{}],353:[function(require,module,exports){
+},{}],434:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -37522,7 +44567,7 @@ ReactPerf.measureMethods(ReactDOMIDOperations, 'ReactDOMIDOperations', {
 
 module.exports = ReactDOMIDOperations;
 }).call(this,require('_process'))
-},{"./DOMChildrenOperations":319,"./DOMPropertyOperations":321,"./ReactMount":378,"./ReactPerf":384,"_process":303,"fbjs/lib/invariant":461}],354:[function(require,module,exports){
+},{"./DOMChildrenOperations":400,"./DOMPropertyOperations":402,"./ReactMount":459,"./ReactPerf":465,"_process":384,"fbjs/lib/invariant":542}],435:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -37678,7 +44723,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMInput;
 }).call(this,require('_process'))
-},{"./LinkedValueUtils":332,"./Object.assign":333,"./ReactDOMIDOperations":353,"./ReactMount":378,"./ReactUpdates":399,"_process":303,"fbjs/lib/invariant":461}],355:[function(require,module,exports){
+},{"./LinkedValueUtils":413,"./Object.assign":414,"./ReactDOMIDOperations":434,"./ReactMount":459,"./ReactUpdates":480,"_process":384,"fbjs/lib/invariant":542}],436:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -37767,7 +44812,7 @@ var ReactDOMOption = {
 
 module.exports = ReactDOMOption;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./ReactChildren":341,"./ReactDOMSelect":356,"_process":303,"fbjs/lib/warning":472}],356:[function(require,module,exports){
+},{"./Object.assign":414,"./ReactChildren":422,"./ReactDOMSelect":437,"_process":384,"fbjs/lib/warning":553}],437:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -37958,7 +45003,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMSelect;
 }).call(this,require('_process'))
-},{"./LinkedValueUtils":332,"./Object.assign":333,"./ReactMount":378,"./ReactUpdates":399,"_process":303,"fbjs/lib/warning":472}],357:[function(require,module,exports){
+},{"./LinkedValueUtils":413,"./Object.assign":414,"./ReactMount":459,"./ReactUpdates":480,"_process":384,"fbjs/lib/warning":553}],438:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -38171,7 +45216,7 @@ var ReactDOMSelection = {
 };
 
 module.exports = ReactDOMSelection;
-},{"./getNodeForCharacterOffset":432,"./getTextContentAccessor":433,"fbjs/lib/ExecutionEnvironment":447}],358:[function(require,module,exports){
+},{"./getNodeForCharacterOffset":513,"./getTextContentAccessor":514,"fbjs/lib/ExecutionEnvironment":528}],439:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -38198,7 +45243,7 @@ var ReactDOMServer = {
 };
 
 module.exports = ReactDOMServer;
-},{"./ReactDefaultInjection":362,"./ReactServerRendering":393,"./ReactVersion":400}],359:[function(require,module,exports){
+},{"./ReactDefaultInjection":443,"./ReactServerRendering":474,"./ReactVersion":481}],440:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -38328,7 +45373,7 @@ assign(ReactDOMTextComponent.prototype, {
 
 module.exports = ReactDOMTextComponent;
 }).call(this,require('_process'))
-},{"./DOMChildrenOperations":319,"./DOMPropertyOperations":321,"./Object.assign":333,"./ReactComponentBrowserEnvironment":344,"./ReactMount":378,"./escapeTextContentForBrowser":423,"./setTextContent":441,"./validateDOMNesting":444,"_process":303}],360:[function(require,module,exports){
+},{"./DOMChildrenOperations":400,"./DOMPropertyOperations":402,"./Object.assign":414,"./ReactComponentBrowserEnvironment":425,"./ReactMount":459,"./escapeTextContentForBrowser":504,"./setTextContent":522,"./validateDOMNesting":525,"_process":384}],441:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -38444,7 +45489,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMTextarea;
 }).call(this,require('_process'))
-},{"./LinkedValueUtils":332,"./Object.assign":333,"./ReactDOMIDOperations":353,"./ReactUpdates":399,"_process":303,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],361:[function(require,module,exports){
+},{"./LinkedValueUtils":413,"./Object.assign":414,"./ReactDOMIDOperations":434,"./ReactUpdates":480,"_process":384,"fbjs/lib/invariant":542,"fbjs/lib/warning":553}],442:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -38512,7 +45557,7 @@ var ReactDefaultBatchingStrategy = {
 };
 
 module.exports = ReactDefaultBatchingStrategy;
-},{"./Object.assign":333,"./ReactUpdates":399,"./Transaction":416,"fbjs/lib/emptyFunction":453}],362:[function(require,module,exports){
+},{"./Object.assign":414,"./ReactUpdates":480,"./Transaction":497,"fbjs/lib/emptyFunction":534}],443:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -38612,7 +45657,7 @@ module.exports = {
   inject: inject
 };
 }).call(this,require('_process'))
-},{"./BeforeInputEventPlugin":313,"./ChangeEventPlugin":317,"./ClientReactRootIndex":318,"./DefaultEventPluginOrder":323,"./EnterLeaveEventPlugin":324,"./HTMLDOMPropertyConfig":331,"./ReactBrowserComponentMixin":336,"./ReactComponentBrowserEnvironment":344,"./ReactDOMComponent":350,"./ReactDOMTextComponent":359,"./ReactDefaultBatchingStrategy":361,"./ReactDefaultPerf":363,"./ReactEventListener":371,"./ReactInjection":372,"./ReactInstanceHandles":374,"./ReactMount":378,"./ReactReconcileTransaction":388,"./SVGDOMPropertyConfig":401,"./SelectEventPlugin":402,"./ServerReactRootIndex":403,"./SimpleEventPlugin":404,"_process":303,"fbjs/lib/ExecutionEnvironment":447}],363:[function(require,module,exports){
+},{"./BeforeInputEventPlugin":394,"./ChangeEventPlugin":398,"./ClientReactRootIndex":399,"./DefaultEventPluginOrder":404,"./EnterLeaveEventPlugin":405,"./HTMLDOMPropertyConfig":412,"./ReactBrowserComponentMixin":417,"./ReactComponentBrowserEnvironment":425,"./ReactDOMComponent":431,"./ReactDOMTextComponent":440,"./ReactDefaultBatchingStrategy":442,"./ReactDefaultPerf":444,"./ReactEventListener":452,"./ReactInjection":453,"./ReactInstanceHandles":455,"./ReactMount":459,"./ReactReconcileTransaction":469,"./SVGDOMPropertyConfig":482,"./SelectEventPlugin":483,"./ServerReactRootIndex":484,"./SimpleEventPlugin":485,"_process":384,"fbjs/lib/ExecutionEnvironment":528}],444:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -38850,7 +45895,7 @@ var ReactDefaultPerf = {
 };
 
 module.exports = ReactDefaultPerf;
-},{"./DOMProperty":320,"./ReactDefaultPerfAnalysis":364,"./ReactMount":378,"./ReactPerf":384,"fbjs/lib/performanceNow":469}],364:[function(require,module,exports){
+},{"./DOMProperty":401,"./ReactDefaultPerfAnalysis":445,"./ReactMount":459,"./ReactPerf":465,"fbjs/lib/performanceNow":550}],445:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -39050,7 +46095,7 @@ var ReactDefaultPerfAnalysis = {
 };
 
 module.exports = ReactDefaultPerfAnalysis;
-},{"./Object.assign":333}],365:[function(require,module,exports){
+},{"./Object.assign":414}],446:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -39300,7 +46345,7 @@ ReactElement.isValidElement = function (object) {
 
 module.exports = ReactElement;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./ReactCurrentOwner":347,"./canDefineProperty":420,"_process":303}],366:[function(require,module,exports){
+},{"./Object.assign":414,"./ReactCurrentOwner":428,"./canDefineProperty":501,"_process":384}],447:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -39584,7 +46629,7 @@ var ReactElementValidator = {
 
 module.exports = ReactElementValidator;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":347,"./ReactElement":365,"./ReactPropTypeLocationNames":385,"./ReactPropTypeLocations":386,"./canDefineProperty":420,"./getIteratorFn":431,"_process":303,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],367:[function(require,module,exports){
+},{"./ReactCurrentOwner":428,"./ReactElement":446,"./ReactPropTypeLocationNames":466,"./ReactPropTypeLocations":467,"./canDefineProperty":501,"./getIteratorFn":512,"_process":384,"fbjs/lib/invariant":542,"fbjs/lib/warning":553}],448:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -39636,7 +46681,7 @@ assign(ReactEmptyComponent.prototype, {
 ReactEmptyComponent.injection = ReactEmptyComponentInjection;
 
 module.exports = ReactEmptyComponent;
-},{"./Object.assign":333,"./ReactElement":365,"./ReactEmptyComponentRegistry":368,"./ReactReconciler":389}],368:[function(require,module,exports){
+},{"./Object.assign":414,"./ReactElement":446,"./ReactEmptyComponentRegistry":449,"./ReactReconciler":470}],449:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -39685,7 +46730,7 @@ var ReactEmptyComponentRegistry = {
 };
 
 module.exports = ReactEmptyComponentRegistry;
-},{}],369:[function(require,module,exports){
+},{}],450:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -39765,7 +46810,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactErrorUtils;
 }).call(this,require('_process'))
-},{"_process":303}],370:[function(require,module,exports){
+},{"_process":384}],451:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -39804,7 +46849,7 @@ var ReactEventEmitterMixin = {
 };
 
 module.exports = ReactEventEmitterMixin;
-},{"./EventPluginHub":326}],371:[function(require,module,exports){
+},{"./EventPluginHub":407}],452:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40016,7 +47061,7 @@ var ReactEventListener = {
 };
 
 module.exports = ReactEventListener;
-},{"./Object.assign":333,"./PooledClass":334,"./ReactInstanceHandles":374,"./ReactMount":378,"./ReactUpdates":399,"./getEventTarget":430,"fbjs/lib/EventListener":446,"fbjs/lib/ExecutionEnvironment":447,"fbjs/lib/getUnboundedScrollPosition":458}],372:[function(require,module,exports){
+},{"./Object.assign":414,"./PooledClass":415,"./ReactInstanceHandles":455,"./ReactMount":459,"./ReactUpdates":480,"./getEventTarget":511,"fbjs/lib/EventListener":527,"fbjs/lib/ExecutionEnvironment":528,"fbjs/lib/getUnboundedScrollPosition":539}],453:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40055,7 +47100,7 @@ var ReactInjection = {
 };
 
 module.exports = ReactInjection;
-},{"./DOMProperty":320,"./EventPluginHub":326,"./ReactBrowserEventEmitter":337,"./ReactClass":342,"./ReactComponentEnvironment":345,"./ReactEmptyComponent":367,"./ReactNativeComponent":381,"./ReactPerf":384,"./ReactRootIndex":391,"./ReactUpdates":399}],373:[function(require,module,exports){
+},{"./DOMProperty":401,"./EventPluginHub":407,"./ReactBrowserEventEmitter":418,"./ReactClass":423,"./ReactComponentEnvironment":426,"./ReactEmptyComponent":448,"./ReactNativeComponent":462,"./ReactPerf":465,"./ReactRootIndex":472,"./ReactUpdates":480}],454:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40180,7 +47225,7 @@ var ReactInputSelection = {
 };
 
 module.exports = ReactInputSelection;
-},{"./ReactDOMSelection":357,"fbjs/lib/containsNode":450,"fbjs/lib/focusNode":455,"fbjs/lib/getActiveElement":456}],374:[function(require,module,exports){
+},{"./ReactDOMSelection":438,"fbjs/lib/containsNode":531,"fbjs/lib/focusNode":536,"fbjs/lib/getActiveElement":537}],455:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -40485,7 +47530,7 @@ var ReactInstanceHandles = {
 
 module.exports = ReactInstanceHandles;
 }).call(this,require('_process'))
-},{"./ReactRootIndex":391,"_process":303,"fbjs/lib/invariant":461}],375:[function(require,module,exports){
+},{"./ReactRootIndex":472,"_process":384,"fbjs/lib/invariant":542}],456:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40533,7 +47578,7 @@ var ReactInstanceMap = {
 };
 
 module.exports = ReactInstanceMap;
-},{}],376:[function(require,module,exports){
+},{}],457:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -40610,7 +47655,7 @@ var React = {
 
 module.exports = React;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./ReactChildren":341,"./ReactClass":342,"./ReactComponent":343,"./ReactDOMFactories":351,"./ReactElement":365,"./ReactElementValidator":366,"./ReactPropTypes":387,"./ReactVersion":400,"./onlyChild":437,"_process":303}],377:[function(require,module,exports){
+},{"./Object.assign":414,"./ReactChildren":422,"./ReactClass":423,"./ReactComponent":424,"./ReactDOMFactories":432,"./ReactElement":446,"./ReactElementValidator":447,"./ReactPropTypes":468,"./ReactVersion":481,"./onlyChild":518,"_process":384}],458:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40656,7 +47701,7 @@ var ReactMarkupChecksum = {
 };
 
 module.exports = ReactMarkupChecksum;
-},{"./adler32":419}],378:[function(require,module,exports){
+},{"./adler32":500}],459:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -41509,7 +48554,7 @@ ReactPerf.measureMethods(ReactMount, 'ReactMount', {
 
 module.exports = ReactMount;
 }).call(this,require('_process'))
-},{"./DOMProperty":320,"./Object.assign":333,"./ReactBrowserEventEmitter":337,"./ReactCurrentOwner":347,"./ReactDOMFeatureFlags":352,"./ReactElement":365,"./ReactEmptyComponentRegistry":368,"./ReactInstanceHandles":374,"./ReactInstanceMap":375,"./ReactMarkupChecksum":377,"./ReactPerf":384,"./ReactReconciler":389,"./ReactUpdateQueue":398,"./ReactUpdates":399,"./instantiateReactComponent":434,"./setInnerHTML":440,"./shouldUpdateReactComponent":442,"./validateDOMNesting":444,"_process":303,"fbjs/lib/containsNode":450,"fbjs/lib/emptyObject":454,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],379:[function(require,module,exports){
+},{"./DOMProperty":401,"./Object.assign":414,"./ReactBrowserEventEmitter":418,"./ReactCurrentOwner":428,"./ReactDOMFeatureFlags":433,"./ReactElement":446,"./ReactEmptyComponentRegistry":449,"./ReactInstanceHandles":455,"./ReactInstanceMap":456,"./ReactMarkupChecksum":458,"./ReactPerf":465,"./ReactReconciler":470,"./ReactUpdateQueue":479,"./ReactUpdates":480,"./instantiateReactComponent":515,"./setInnerHTML":521,"./shouldUpdateReactComponent":523,"./validateDOMNesting":525,"_process":384,"fbjs/lib/containsNode":531,"fbjs/lib/emptyObject":535,"fbjs/lib/invariant":542,"fbjs/lib/warning":553}],460:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -42008,7 +49053,7 @@ var ReactMultiChild = {
 
 module.exports = ReactMultiChild;
 }).call(this,require('_process'))
-},{"./ReactChildReconciler":340,"./ReactComponentEnvironment":345,"./ReactCurrentOwner":347,"./ReactMultiChildUpdateTypes":380,"./ReactReconciler":389,"./flattenChildren":425,"_process":303}],380:[function(require,module,exports){
+},{"./ReactChildReconciler":421,"./ReactComponentEnvironment":426,"./ReactCurrentOwner":428,"./ReactMultiChildUpdateTypes":461,"./ReactReconciler":470,"./flattenChildren":506,"_process":384}],461:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -42041,7 +49086,7 @@ var ReactMultiChildUpdateTypes = keyMirror({
 });
 
 module.exports = ReactMultiChildUpdateTypes;
-},{"fbjs/lib/keyMirror":464}],381:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":545}],462:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -42138,7 +49183,7 @@ var ReactNativeComponent = {
 
 module.exports = ReactNativeComponent;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"_process":303,"fbjs/lib/invariant":461}],382:[function(require,module,exports){
+},{"./Object.assign":414,"_process":384,"fbjs/lib/invariant":542}],463:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015, Facebook, Inc.
@@ -42259,7 +49304,7 @@ var ReactNoopUpdateQueue = {
 
 module.exports = ReactNoopUpdateQueue;
 }).call(this,require('_process'))
-},{"_process":303,"fbjs/lib/warning":472}],383:[function(require,module,exports){
+},{"_process":384,"fbjs/lib/warning":553}],464:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -42353,7 +49398,7 @@ var ReactOwner = {
 
 module.exports = ReactOwner;
 }).call(this,require('_process'))
-},{"_process":303,"fbjs/lib/invariant":461}],384:[function(require,module,exports){
+},{"_process":384,"fbjs/lib/invariant":542}],465:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -42452,7 +49497,7 @@ function _noMeasure(objName, fnName, func) {
 
 module.exports = ReactPerf;
 }).call(this,require('_process'))
-},{"_process":303}],385:[function(require,module,exports){
+},{"_process":384}],466:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -42479,7 +49524,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactPropTypeLocationNames;
 }).call(this,require('_process'))
-},{"_process":303}],386:[function(require,module,exports){
+},{"_process":384}],467:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -42502,7 +49547,7 @@ var ReactPropTypeLocations = keyMirror({
 });
 
 module.exports = ReactPropTypeLocations;
-},{"fbjs/lib/keyMirror":464}],387:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":545}],468:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -42859,7 +49904,7 @@ function getClassName(propValue) {
 }
 
 module.exports = ReactPropTypes;
-},{"./ReactElement":365,"./ReactPropTypeLocationNames":385,"./getIteratorFn":431,"fbjs/lib/emptyFunction":453}],388:[function(require,module,exports){
+},{"./ReactElement":446,"./ReactPropTypeLocationNames":466,"./getIteratorFn":512,"fbjs/lib/emptyFunction":534}],469:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -43011,7 +50056,7 @@ assign(ReactReconcileTransaction.prototype, Transaction.Mixin, Mixin);
 PooledClass.addPoolingTo(ReactReconcileTransaction);
 
 module.exports = ReactReconcileTransaction;
-},{"./CallbackQueue":316,"./Object.assign":333,"./PooledClass":334,"./ReactBrowserEventEmitter":337,"./ReactDOMFeatureFlags":352,"./ReactInputSelection":373,"./Transaction":416}],389:[function(require,module,exports){
+},{"./CallbackQueue":397,"./Object.assign":414,"./PooledClass":415,"./ReactBrowserEventEmitter":418,"./ReactDOMFeatureFlags":433,"./ReactInputSelection":454,"./Transaction":497}],470:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -43119,7 +50164,7 @@ var ReactReconciler = {
 };
 
 module.exports = ReactReconciler;
-},{"./ReactRef":390}],390:[function(require,module,exports){
+},{"./ReactRef":471}],471:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -43198,7 +50243,7 @@ ReactRef.detachRefs = function (instance, element) {
 };
 
 module.exports = ReactRef;
-},{"./ReactOwner":383}],391:[function(require,module,exports){
+},{"./ReactOwner":464}],472:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -43228,7 +50273,7 @@ var ReactRootIndex = {
 };
 
 module.exports = ReactRootIndex;
-},{}],392:[function(require,module,exports){
+},{}],473:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -43252,7 +50297,7 @@ var ReactServerBatchingStrategy = {
 };
 
 module.exports = ReactServerBatchingStrategy;
-},{}],393:[function(require,module,exports){
+},{}],474:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -43338,7 +50383,7 @@ module.exports = {
   renderToStaticMarkup: renderToStaticMarkup
 };
 }).call(this,require('_process'))
-},{"./ReactDefaultBatchingStrategy":361,"./ReactElement":365,"./ReactInstanceHandles":374,"./ReactMarkupChecksum":377,"./ReactServerBatchingStrategy":392,"./ReactServerRenderingTransaction":394,"./ReactUpdates":399,"./instantiateReactComponent":434,"_process":303,"fbjs/lib/emptyObject":454,"fbjs/lib/invariant":461}],394:[function(require,module,exports){
+},{"./ReactDefaultBatchingStrategy":442,"./ReactElement":446,"./ReactInstanceHandles":455,"./ReactMarkupChecksum":458,"./ReactServerBatchingStrategy":473,"./ReactServerRenderingTransaction":475,"./ReactUpdates":480,"./instantiateReactComponent":515,"_process":384,"fbjs/lib/emptyObject":535,"fbjs/lib/invariant":542}],475:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -43426,7 +50471,7 @@ assign(ReactServerRenderingTransaction.prototype, Transaction.Mixin, Mixin);
 PooledClass.addPoolingTo(ReactServerRenderingTransaction);
 
 module.exports = ReactServerRenderingTransaction;
-},{"./CallbackQueue":316,"./Object.assign":333,"./PooledClass":334,"./Transaction":416,"fbjs/lib/emptyFunction":453}],395:[function(require,module,exports){
+},{"./CallbackQueue":397,"./Object.assign":414,"./PooledClass":415,"./Transaction":497,"fbjs/lib/emptyFunction":534}],476:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -43525,7 +50570,7 @@ var ReactTransitionChildMapping = {
 };
 
 module.exports = ReactTransitionChildMapping;
-},{"./flattenChildren":425}],396:[function(require,module,exports){
+},{"./flattenChildren":506}],477:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -43635,7 +50680,7 @@ var ReactTransitionEvents = {
 };
 
 module.exports = ReactTransitionEvents;
-},{"fbjs/lib/ExecutionEnvironment":447}],397:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":528}],478:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -43841,7 +50886,7 @@ var ReactTransitionGroup = React.createClass({
 });
 
 module.exports = ReactTransitionGroup;
-},{"./Object.assign":333,"./React":335,"./ReactTransitionChildMapping":395,"fbjs/lib/emptyFunction":453}],398:[function(require,module,exports){
+},{"./Object.assign":414,"./React":416,"./ReactTransitionChildMapping":476,"fbjs/lib/emptyFunction":534}],479:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015, Facebook, Inc.
@@ -44101,7 +51146,7 @@ var ReactUpdateQueue = {
 
 module.exports = ReactUpdateQueue;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./ReactCurrentOwner":347,"./ReactElement":365,"./ReactInstanceMap":375,"./ReactUpdates":399,"_process":303,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],399:[function(require,module,exports){
+},{"./Object.assign":414,"./ReactCurrentOwner":428,"./ReactElement":446,"./ReactInstanceMap":456,"./ReactUpdates":480,"_process":384,"fbjs/lib/invariant":542,"fbjs/lib/warning":553}],480:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -44327,7 +51372,7 @@ var ReactUpdates = {
 
 module.exports = ReactUpdates;
 }).call(this,require('_process'))
-},{"./CallbackQueue":316,"./Object.assign":333,"./PooledClass":334,"./ReactPerf":384,"./ReactReconciler":389,"./Transaction":416,"_process":303,"fbjs/lib/invariant":461}],400:[function(require,module,exports){
+},{"./CallbackQueue":397,"./Object.assign":414,"./PooledClass":415,"./ReactPerf":465,"./ReactReconciler":470,"./Transaction":497,"_process":384,"fbjs/lib/invariant":542}],481:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -44342,7 +51387,7 @@ module.exports = ReactUpdates;
 'use strict';
 
 module.exports = '0.14.3';
-},{}],401:[function(require,module,exports){
+},{}],482:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -44470,7 +51515,7 @@ var SVGDOMPropertyConfig = {
 };
 
 module.exports = SVGDOMPropertyConfig;
-},{"./DOMProperty":320}],402:[function(require,module,exports){
+},{"./DOMProperty":401}],483:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -44672,7 +51717,7 @@ var SelectEventPlugin = {
 };
 
 module.exports = SelectEventPlugin;
-},{"./EventConstants":325,"./EventPropagators":329,"./ReactInputSelection":373,"./SyntheticEvent":408,"./isTextInputElement":436,"fbjs/lib/ExecutionEnvironment":447,"fbjs/lib/getActiveElement":456,"fbjs/lib/keyOf":465,"fbjs/lib/shallowEqual":470}],403:[function(require,module,exports){
+},{"./EventConstants":406,"./EventPropagators":410,"./ReactInputSelection":454,"./SyntheticEvent":489,"./isTextInputElement":517,"fbjs/lib/ExecutionEnvironment":528,"fbjs/lib/getActiveElement":537,"fbjs/lib/keyOf":546,"fbjs/lib/shallowEqual":551}],484:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -44702,7 +51747,7 @@ var ServerReactRootIndex = {
 };
 
 module.exports = ServerReactRootIndex;
-},{}],404:[function(require,module,exports){
+},{}],485:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -45292,7 +52337,7 @@ var SimpleEventPlugin = {
 
 module.exports = SimpleEventPlugin;
 }).call(this,require('_process'))
-},{"./EventConstants":325,"./EventPropagators":329,"./ReactMount":378,"./SyntheticClipboardEvent":405,"./SyntheticDragEvent":407,"./SyntheticEvent":408,"./SyntheticFocusEvent":409,"./SyntheticKeyboardEvent":411,"./SyntheticMouseEvent":412,"./SyntheticTouchEvent":413,"./SyntheticUIEvent":414,"./SyntheticWheelEvent":415,"./getEventCharCode":427,"_process":303,"fbjs/lib/EventListener":446,"fbjs/lib/emptyFunction":453,"fbjs/lib/invariant":461,"fbjs/lib/keyOf":465}],405:[function(require,module,exports){
+},{"./EventConstants":406,"./EventPropagators":410,"./ReactMount":459,"./SyntheticClipboardEvent":486,"./SyntheticDragEvent":488,"./SyntheticEvent":489,"./SyntheticFocusEvent":490,"./SyntheticKeyboardEvent":492,"./SyntheticMouseEvent":493,"./SyntheticTouchEvent":494,"./SyntheticUIEvent":495,"./SyntheticWheelEvent":496,"./getEventCharCode":508,"_process":384,"fbjs/lib/EventListener":527,"fbjs/lib/emptyFunction":534,"fbjs/lib/invariant":542,"fbjs/lib/keyOf":546}],486:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -45332,7 +52377,7 @@ function SyntheticClipboardEvent(dispatchConfig, dispatchMarker, nativeEvent, na
 SyntheticEvent.augmentClass(SyntheticClipboardEvent, ClipboardEventInterface);
 
 module.exports = SyntheticClipboardEvent;
-},{"./SyntheticEvent":408}],406:[function(require,module,exports){
+},{"./SyntheticEvent":489}],487:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -45370,7 +52415,7 @@ function SyntheticCompositionEvent(dispatchConfig, dispatchMarker, nativeEvent, 
 SyntheticEvent.augmentClass(SyntheticCompositionEvent, CompositionEventInterface);
 
 module.exports = SyntheticCompositionEvent;
-},{"./SyntheticEvent":408}],407:[function(require,module,exports){
+},{"./SyntheticEvent":489}],488:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -45408,7 +52453,7 @@ function SyntheticDragEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeE
 SyntheticMouseEvent.augmentClass(SyntheticDragEvent, DragEventInterface);
 
 module.exports = SyntheticDragEvent;
-},{"./SyntheticMouseEvent":412}],408:[function(require,module,exports){
+},{"./SyntheticMouseEvent":493}],489:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -45588,7 +52633,7 @@ PooledClass.addPoolingTo(SyntheticEvent, PooledClass.fourArgumentPooler);
 
 module.exports = SyntheticEvent;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./PooledClass":334,"_process":303,"fbjs/lib/emptyFunction":453,"fbjs/lib/warning":472}],409:[function(require,module,exports){
+},{"./Object.assign":414,"./PooledClass":415,"_process":384,"fbjs/lib/emptyFunction":534,"fbjs/lib/warning":553}],490:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -45626,7 +52671,7 @@ function SyntheticFocusEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticFocusEvent, FocusEventInterface);
 
 module.exports = SyntheticFocusEvent;
-},{"./SyntheticUIEvent":414}],410:[function(require,module,exports){
+},{"./SyntheticUIEvent":495}],491:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -45665,7 +52710,7 @@ function SyntheticInputEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticEvent.augmentClass(SyntheticInputEvent, InputEventInterface);
 
 module.exports = SyntheticInputEvent;
-},{"./SyntheticEvent":408}],411:[function(require,module,exports){
+},{"./SyntheticEvent":489}],492:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -45751,7 +52796,7 @@ function SyntheticKeyboardEvent(dispatchConfig, dispatchMarker, nativeEvent, nat
 SyntheticUIEvent.augmentClass(SyntheticKeyboardEvent, KeyboardEventInterface);
 
 module.exports = SyntheticKeyboardEvent;
-},{"./SyntheticUIEvent":414,"./getEventCharCode":427,"./getEventKey":428,"./getEventModifierState":429}],412:[function(require,module,exports){
+},{"./SyntheticUIEvent":495,"./getEventCharCode":508,"./getEventKey":509,"./getEventModifierState":510}],493:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -45825,7 +52870,7 @@ function SyntheticMouseEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticMouseEvent, MouseEventInterface);
 
 module.exports = SyntheticMouseEvent;
-},{"./SyntheticUIEvent":414,"./ViewportMetrics":417,"./getEventModifierState":429}],413:[function(require,module,exports){
+},{"./SyntheticUIEvent":495,"./ViewportMetrics":498,"./getEventModifierState":510}],494:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -45872,7 +52917,7 @@ function SyntheticTouchEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticTouchEvent, TouchEventInterface);
 
 module.exports = SyntheticTouchEvent;
-},{"./SyntheticUIEvent":414,"./getEventModifierState":429}],414:[function(require,module,exports){
+},{"./SyntheticUIEvent":495,"./getEventModifierState":510}],495:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -45933,7 +52978,7 @@ function SyntheticUIEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeEve
 SyntheticEvent.augmentClass(SyntheticUIEvent, UIEventInterface);
 
 module.exports = SyntheticUIEvent;
-},{"./SyntheticEvent":408,"./getEventTarget":430}],415:[function(require,module,exports){
+},{"./SyntheticEvent":489,"./getEventTarget":511}],496:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -45989,7 +53034,7 @@ function SyntheticWheelEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticMouseEvent.augmentClass(SyntheticWheelEvent, WheelEventInterface);
 
 module.exports = SyntheticWheelEvent;
-},{"./SyntheticMouseEvent":412}],416:[function(require,module,exports){
+},{"./SyntheticMouseEvent":493}],497:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -46223,7 +53268,7 @@ var Transaction = {
 
 module.exports = Transaction;
 }).call(this,require('_process'))
-},{"_process":303,"fbjs/lib/invariant":461}],417:[function(require,module,exports){
+},{"_process":384,"fbjs/lib/invariant":542}],498:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -46251,7 +53296,7 @@ var ViewportMetrics = {
 };
 
 module.exports = ViewportMetrics;
-},{}],418:[function(require,module,exports){
+},{}],499:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -46313,7 +53358,7 @@ function accumulateInto(current, next) {
 
 module.exports = accumulateInto;
 }).call(this,require('_process'))
-},{"_process":303,"fbjs/lib/invariant":461}],419:[function(require,module,exports){
+},{"_process":384,"fbjs/lib/invariant":542}],500:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -46356,7 +53401,7 @@ function adler32(data) {
 }
 
 module.exports = adler32;
-},{}],420:[function(require,module,exports){
+},{}],501:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -46383,7 +53428,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = canDefineProperty;
 }).call(this,require('_process'))
-},{"_process":303}],421:[function(require,module,exports){
+},{"_process":384}],502:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -46439,7 +53484,7 @@ function dangerousStyleValue(name, value) {
 }
 
 module.exports = dangerousStyleValue;
-},{"./CSSProperty":314}],422:[function(require,module,exports){
+},{"./CSSProperty":395}],503:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -46490,7 +53535,7 @@ function deprecated(fnName, newModule, newPackage, ctx, fn) {
 
 module.exports = deprecated;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"_process":303,"fbjs/lib/warning":472}],423:[function(require,module,exports){
+},{"./Object.assign":414,"_process":384,"fbjs/lib/warning":553}],504:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -46529,7 +53574,7 @@ function escapeTextContentForBrowser(text) {
 }
 
 module.exports = escapeTextContentForBrowser;
-},{}],424:[function(require,module,exports){
+},{}],505:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -46581,7 +53626,7 @@ function findDOMNode(componentOrElement) {
 
 module.exports = findDOMNode;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":347,"./ReactInstanceMap":375,"./ReactMount":378,"_process":303,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],425:[function(require,module,exports){
+},{"./ReactCurrentOwner":428,"./ReactInstanceMap":456,"./ReactMount":459,"_process":384,"fbjs/lib/invariant":542,"fbjs/lib/warning":553}],506:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -46632,7 +53677,7 @@ function flattenChildren(children) {
 
 module.exports = flattenChildren;
 }).call(this,require('_process'))
-},{"./traverseAllChildren":443,"_process":303,"fbjs/lib/warning":472}],426:[function(require,module,exports){
+},{"./traverseAllChildren":524,"_process":384,"fbjs/lib/warning":553}],507:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -46662,7 +53707,7 @@ var forEachAccumulated = function (arr, cb, scope) {
 };
 
 module.exports = forEachAccumulated;
-},{}],427:[function(require,module,exports){
+},{}],508:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -46713,7 +53758,7 @@ function getEventCharCode(nativeEvent) {
 }
 
 module.exports = getEventCharCode;
-},{}],428:[function(require,module,exports){
+},{}],509:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -46817,7 +53862,7 @@ function getEventKey(nativeEvent) {
 }
 
 module.exports = getEventKey;
-},{"./getEventCharCode":427}],429:[function(require,module,exports){
+},{"./getEventCharCode":508}],510:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -46862,7 +53907,7 @@ function getEventModifierState(nativeEvent) {
 }
 
 module.exports = getEventModifierState;
-},{}],430:[function(require,module,exports){
+},{}],511:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -46892,7 +53937,7 @@ function getEventTarget(nativeEvent) {
 }
 
 module.exports = getEventTarget;
-},{}],431:[function(require,module,exports){
+},{}],512:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -46933,7 +53978,7 @@ function getIteratorFn(maybeIterable) {
 }
 
 module.exports = getIteratorFn;
-},{}],432:[function(require,module,exports){
+},{}],513:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -47007,7 +54052,7 @@ function getNodeForCharacterOffset(root, offset) {
 }
 
 module.exports = getNodeForCharacterOffset;
-},{}],433:[function(require,module,exports){
+},{}],514:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -47041,7 +54086,7 @@ function getTextContentAccessor() {
 }
 
 module.exports = getTextContentAccessor;
-},{"fbjs/lib/ExecutionEnvironment":447}],434:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":528}],515:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -47156,7 +54201,7 @@ function instantiateReactComponent(node) {
 
 module.exports = instantiateReactComponent;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./ReactCompositeComponent":346,"./ReactEmptyComponent":367,"./ReactNativeComponent":381,"_process":303,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],435:[function(require,module,exports){
+},{"./Object.assign":414,"./ReactCompositeComponent":427,"./ReactEmptyComponent":448,"./ReactNativeComponent":462,"_process":384,"fbjs/lib/invariant":542,"fbjs/lib/warning":553}],516:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -47217,7 +54262,7 @@ function isEventSupported(eventNameSuffix, capture) {
 }
 
 module.exports = isEventSupported;
-},{"fbjs/lib/ExecutionEnvironment":447}],436:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":528}],517:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -47258,7 +54303,7 @@ function isTextInputElement(elem) {
 }
 
 module.exports = isTextInputElement;
-},{}],437:[function(require,module,exports){
+},{}],518:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -47294,7 +54339,7 @@ function onlyChild(children) {
 
 module.exports = onlyChild;
 }).call(this,require('_process'))
-},{"./ReactElement":365,"_process":303,"fbjs/lib/invariant":461}],438:[function(require,module,exports){
+},{"./ReactElement":446,"_process":384,"fbjs/lib/invariant":542}],519:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -47321,7 +54366,7 @@ function quoteAttributeValueForBrowser(value) {
 }
 
 module.exports = quoteAttributeValueForBrowser;
-},{"./escapeTextContentForBrowser":423}],439:[function(require,module,exports){
+},{"./escapeTextContentForBrowser":504}],520:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -47338,7 +54383,7 @@ module.exports = quoteAttributeValueForBrowser;
 var ReactMount = require('./ReactMount');
 
 module.exports = ReactMount.renderSubtreeIntoContainer;
-},{"./ReactMount":378}],440:[function(require,module,exports){
+},{"./ReactMount":459}],521:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -47429,7 +54474,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = setInnerHTML;
-},{"fbjs/lib/ExecutionEnvironment":447}],441:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":528}],522:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -47470,7 +54515,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = setTextContent;
-},{"./escapeTextContentForBrowser":423,"./setInnerHTML":440,"fbjs/lib/ExecutionEnvironment":447}],442:[function(require,module,exports){
+},{"./escapeTextContentForBrowser":504,"./setInnerHTML":521,"fbjs/lib/ExecutionEnvironment":528}],523:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -47514,7 +54559,7 @@ function shouldUpdateReactComponent(prevElement, nextElement) {
 }
 
 module.exports = shouldUpdateReactComponent;
-},{}],443:[function(require,module,exports){
+},{}],524:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -47706,7 +54751,7 @@ function traverseAllChildren(children, callback, traverseContext) {
 
 module.exports = traverseAllChildren;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":347,"./ReactElement":365,"./ReactInstanceHandles":374,"./getIteratorFn":431,"_process":303,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],444:[function(require,module,exports){
+},{"./ReactCurrentOwner":428,"./ReactElement":446,"./ReactInstanceHandles":455,"./getIteratorFn":512,"_process":384,"fbjs/lib/invariant":542,"fbjs/lib/warning":553}],525:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015, Facebook, Inc.
@@ -48072,7 +55117,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = validateDOMNesting;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"_process":303,"fbjs/lib/emptyFunction":453,"fbjs/lib/warning":472}],445:[function(require,module,exports){
+},{"./Object.assign":414,"_process":384,"fbjs/lib/emptyFunction":534,"fbjs/lib/warning":553}],526:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -48172,7 +55217,7 @@ var CSSCore = {
 
 module.exports = CSSCore;
 }).call(this,require('_process'))
-},{"./invariant":461,"_process":303}],446:[function(require,module,exports){
+},{"./invariant":542,"_process":384}],527:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -48259,7 +55304,7 @@ var EventListener = {
 
 module.exports = EventListener;
 }).call(this,require('_process'))
-},{"./emptyFunction":453,"_process":303}],447:[function(require,module,exports){
+},{"./emptyFunction":534,"_process":384}],528:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -48296,7 +55341,7 @@ var ExecutionEnvironment = {
 };
 
 module.exports = ExecutionEnvironment;
-},{}],448:[function(require,module,exports){
+},{}],529:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -48329,7 +55374,7 @@ function camelize(string) {
 }
 
 module.exports = camelize;
-},{}],449:[function(require,module,exports){
+},{}],530:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -48370,7 +55415,7 @@ function camelizeStyleName(string) {
 }
 
 module.exports = camelizeStyleName;
-},{"./camelize":448}],450:[function(require,module,exports){
+},{"./camelize":529}],531:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -48426,7 +55471,7 @@ function containsNode(_x, _x2) {
 }
 
 module.exports = containsNode;
-},{"./isTextNode":463}],451:[function(require,module,exports){
+},{"./isTextNode":544}],532:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -48512,7 +55557,7 @@ function createArrayFromMixed(obj) {
 }
 
 module.exports = createArrayFromMixed;
-},{"./toArray":471}],452:[function(require,module,exports){
+},{"./toArray":552}],533:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -48599,7 +55644,7 @@ function createNodesFromMarkup(markup, handleScript) {
 
 module.exports = createNodesFromMarkup;
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":447,"./createArrayFromMixed":451,"./getMarkupWrap":457,"./invariant":461,"_process":303}],453:[function(require,module,exports){
+},{"./ExecutionEnvironment":528,"./createArrayFromMixed":532,"./getMarkupWrap":538,"./invariant":542,"_process":384}],534:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -48638,7 +55683,7 @@ emptyFunction.thatReturnsArgument = function (arg) {
 };
 
 module.exports = emptyFunction;
-},{}],454:[function(require,module,exports){
+},{}],535:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -48661,7 +55706,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = emptyObject;
 }).call(this,require('_process'))
-},{"_process":303}],455:[function(require,module,exports){
+},{"_process":384}],536:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -48688,7 +55733,7 @@ function focusNode(node) {
 }
 
 module.exports = focusNode;
-},{}],456:[function(require,module,exports){
+},{}],537:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -48722,7 +55767,7 @@ function getActiveElement() /*?DOMElement*/{
 }
 
 module.exports = getActiveElement;
-},{}],457:[function(require,module,exports){
+},{}],538:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -48820,7 +55865,7 @@ function getMarkupWrap(nodeName) {
 
 module.exports = getMarkupWrap;
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":447,"./invariant":461,"_process":303}],458:[function(require,module,exports){
+},{"./ExecutionEnvironment":528,"./invariant":542,"_process":384}],539:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -48859,7 +55904,7 @@ function getUnboundedScrollPosition(scrollable) {
 }
 
 module.exports = getUnboundedScrollPosition;
-},{}],459:[function(require,module,exports){
+},{}],540:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -48893,7 +55938,7 @@ function hyphenate(string) {
 }
 
 module.exports = hyphenate;
-},{}],460:[function(require,module,exports){
+},{}],541:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -48933,7 +55978,7 @@ function hyphenateStyleName(string) {
 }
 
 module.exports = hyphenateStyleName;
-},{"./hyphenate":459}],461:[function(require,module,exports){
+},{"./hyphenate":540}],542:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -48985,7 +56030,7 @@ var invariant = function (condition, format, a, b, c, d, e, f) {
 
 module.exports = invariant;
 }).call(this,require('_process'))
-},{"_process":303}],462:[function(require,module,exports){
+},{"_process":384}],543:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -49009,7 +56054,7 @@ function isNode(object) {
 }
 
 module.exports = isNode;
-},{}],463:[function(require,module,exports){
+},{}],544:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -49035,7 +56080,7 @@ function isTextNode(object) {
 }
 
 module.exports = isTextNode;
-},{"./isNode":462}],464:[function(require,module,exports){
+},{"./isNode":543}],545:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -49086,7 +56131,7 @@ var keyMirror = function (obj) {
 
 module.exports = keyMirror;
 }).call(this,require('_process'))
-},{"./invariant":461,"_process":303}],465:[function(require,module,exports){
+},{"./invariant":542,"_process":384}],546:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -49122,7 +56167,7 @@ var keyOf = function (oneKeyObj) {
 };
 
 module.exports = keyOf;
-},{}],466:[function(require,module,exports){
+},{}],547:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -49174,7 +56219,7 @@ function mapObject(object, callback, context) {
 }
 
 module.exports = mapObject;
-},{}],467:[function(require,module,exports){
+},{}],548:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -49206,7 +56251,7 @@ function memoizeStringOnly(callback) {
 }
 
 module.exports = memoizeStringOnly;
-},{}],468:[function(require,module,exports){
+},{}],549:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -49230,7 +56275,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = performance || {};
-},{"./ExecutionEnvironment":447}],469:[function(require,module,exports){
+},{"./ExecutionEnvironment":528}],550:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -49260,7 +56305,7 @@ if (!curPerformance || !curPerformance.now) {
 var performanceNow = curPerformance.now.bind(curPerformance);
 
 module.exports = performanceNow;
-},{"./performance":468}],470:[function(require,module,exports){
+},{"./performance":549}],551:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -49311,7 +56356,7 @@ function shallowEqual(objA, objB) {
 }
 
 module.exports = shallowEqual;
-},{}],471:[function(require,module,exports){
+},{}],552:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -49371,7 +56416,7 @@ function toArray(obj) {
 
 module.exports = toArray;
 }).call(this,require('_process'))
-},{"./invariant":461,"_process":303}],472:[function(require,module,exports){
+},{"./invariant":542,"_process":384}],553:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -49431,28 +56476,65 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = warning;
 }).call(this,require('_process'))
-},{"./emptyFunction":453,"_process":303}],473:[function(require,module,exports){
+},{"./emptyFunction":534,"_process":384}],554:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/React');
 
-},{"./lib/React":335}],474:[function(require,module,exports){
+},{"./lib/React":416}],555:[function(require,module,exports){
 'use strict';
 
 var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
 
+var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
+
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
+exports.getConstructor = getConstructor;
 exports.getRealProps = getRealProps;
 
 var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-function getRealProps(_ref) {
-  var descriptor = _ref.descriptor;
+var _elements = require('./elements');
+
+var builtinPhrases = _interopRequireWildcard(_elements);
+
+var _sources = require('./sources');
+
+var builtinSources = _interopRequireWildcard(_sources);
+
+function getConstructor(_ref) {
   var Constructor = _ref.Constructor;
+  var type = _ref.type;
+
+  if (_lodash2['default'].isString(Constructor)) {
+    var builtins = getBuiltinsForType(type);
+
+    if (_lodash2['default'].has(builtins, Constructor)) {
+      return builtins[Constructor];
+    } else {
+      throw new Error(Constructor + ' is an invalid phrase. Note: non-builtin phrases must be uppercase');
+    }
+  }
+  return Constructor;
+}
+
+function getBuiltinsForType(type) {
+  if (type === 'phrase') {
+    return builtinPhrases;
+  } else if (type === 'source') {
+    return builtinSources;
+  } else {
+    throw new Error(type + ' is an invalid constructor type.');
+  }
+}
+
+function getRealProps(_ref2) {
+  var descriptor = _ref2.descriptor;
+  var Constructor = _ref2.Constructor;
 
   var realProps = _lodash2['default'].defaults(descriptor.props || {}, Constructor.defaultProps || {});
   if (descriptor.children && descriptor.children.length > 0) {
@@ -49461,7 +56543,7 @@ function getRealProps(_ref) {
   return realProps;
 }
 
-},{"babel-runtime/helpers/interop-require-default":511,"lodash":598}],475:[function(require,module,exports){
+},{"./elements":562,"./sources":575,"babel-runtime/helpers/interop-require-default":596,"babel-runtime/helpers/interop-require-wildcard":597,"lodash":683}],556:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -49503,7 +56585,7 @@ var Placeholder = (function (_Phrase) {
 exports['default'] = Placeholder;
 module.exports = exports['default'];
 
-},{"babel-runtime/helpers/class-call-check":505,"babel-runtime/helpers/create-class":506,"babel-runtime/helpers/extends":508,"babel-runtime/helpers/get":509,"babel-runtime/helpers/inherits":510,"lacona-phrase":596}],476:[function(require,module,exports){
+},{"babel-runtime/helpers/class-call-check":590,"babel-runtime/helpers/create-class":591,"babel-runtime/helpers/extends":593,"babel-runtime/helpers/get":594,"babel-runtime/helpers/inherits":595,"lacona-phrase":681}],557:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -49710,7 +56792,7 @@ var Choice = (function (_Phrase) {
 exports['default'] = Choice;
 module.exports = exports['default'];
 
-},{"../parse":489,"../reconcile":491,"babel-runtime/core-js/get-iterator":494,"babel-runtime/helpers/class-call-check":505,"babel-runtime/helpers/create-class":506,"babel-runtime/helpers/define-property":507,"babel-runtime/helpers/get":509,"babel-runtime/helpers/inherits":510,"babel-runtime/helpers/interop-require-default":511,"babel-runtime/regenerator":515,"lacona-phrase":596,"lodash":598}],477:[function(require,module,exports){
+},{"../parse":571,"../reconcile":573,"babel-runtime/core-js/get-iterator":579,"babel-runtime/helpers/class-call-check":590,"babel-runtime/helpers/create-class":591,"babel-runtime/helpers/define-property":592,"babel-runtime/helpers/get":594,"babel-runtime/helpers/inherits":595,"babel-runtime/helpers/interop-require-default":596,"babel-runtime/regenerator":600,"lacona-phrase":681,"lodash":683}],558:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -49778,7 +56860,7 @@ Decorator.defaultProps = {
 };
 module.exports = exports['default'];
 
-},{"babel-runtime/helpers/class-call-check":505,"babel-runtime/helpers/create-class":506,"babel-runtime/helpers/get":509,"babel-runtime/helpers/inherits":510,"lacona-phrase":596}],478:[function(require,module,exports){
+},{"babel-runtime/helpers/class-call-check":590,"babel-runtime/helpers/create-class":591,"babel-runtime/helpers/get":594,"babel-runtime/helpers/inherits":595,"lacona-phrase":681}],559:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -50052,7 +57134,52 @@ Descriptor.defaultProps = {
 };
 module.exports = exports['default'];
 
-},{"../parse":489,"../reconcile":491,"../stackfind":493,"babel-runtime/core-js/get-iterator":494,"babel-runtime/helpers/class-call-check":505,"babel-runtime/helpers/create-class":506,"babel-runtime/helpers/get":509,"babel-runtime/helpers/inherits":510,"babel-runtime/helpers/interop-require-default":511,"babel-runtime/regenerator":515,"lacona-phrase":596,"lodash":598}],479:[function(require,module,exports){
+},{"../parse":571,"../reconcile":573,"../stackfind":578,"babel-runtime/core-js/get-iterator":579,"babel-runtime/helpers/class-call-check":590,"babel-runtime/helpers/create-class":591,"babel-runtime/helpers/get":594,"babel-runtime/helpers/inherits":595,"babel-runtime/helpers/interop-require-default":596,"babel-runtime/regenerator":600,"lacona-phrase":681,"lodash":683}],560:[function(require,module,exports){
+/** @jsx createElement */
+'use strict';
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _laconaPhrase = require('lacona-phrase');
+
+var Filter = (function (_Phrase) {
+  _inherits(Filter, _Phrase);
+
+  function Filter() {
+    _classCallCheck(this, Filter);
+
+    _get(Object.getPrototypeOf(Filter.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Filter, [{
+    key: 'validate',
+    value: function validate(result) {
+      return this.props['function'](result);
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return this.props.children[0];
+    }
+  }]);
+
+  return Filter;
+})(_laconaPhrase.Phrase);
+
+exports['default'] = Filter;
+module.exports = exports['default'];
+
+},{"babel-runtime/helpers/class-call-check":590,"babel-runtime/helpers/create-class":591,"babel-runtime/helpers/get":594,"babel-runtime/helpers/inherits":595,"lacona-phrase":681}],561:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -50234,7 +57361,7 @@ Freetext.defaultProps = {
 };
 module.exports = exports['default'];
 
-},{"babel-runtime/core-js/get-iterator":494,"babel-runtime/helpers/class-call-check":505,"babel-runtime/helpers/create-class":506,"babel-runtime/helpers/get":509,"babel-runtime/helpers/inherits":510,"babel-runtime/helpers/interop-require-default":511,"babel-runtime/regenerator":515,"lacona-phrase":596,"smart-split":599}],480:[function(require,module,exports){
+},{"babel-runtime/core-js/get-iterator":579,"babel-runtime/helpers/class-call-check":590,"babel-runtime/helpers/create-class":591,"babel-runtime/helpers/get":594,"babel-runtime/helpers/inherits":595,"babel-runtime/helpers/interop-require-default":596,"babel-runtime/regenerator":600,"lacona-phrase":681,"smart-split":684}],562:[function(require,module,exports){
 'use strict';
 
 var _interopRequire = require('babel-runtime/helpers/interop-require')['default'];
@@ -50258,6 +57385,10 @@ exports.decorator = _interopRequire(_decorator);
 var _descriptor = require('./descriptor');
 
 exports.descriptor = _interopRequire(_descriptor);
+
+var _filter = require('./filter');
+
+exports.filter = _interopRequire(_filter);
 
 var _freetext = require('./freetext');
 
@@ -50287,7 +57418,7 @@ var _value = require('./value');
 
 exports.value = _interopRequire(_value);
 
-},{"./argument":475,"./choice":476,"./decorator":477,"./descriptor":478,"./freetext":479,"./list":481,"./literal":482,"./placeholder":483,"./repeat":484,"./sequence":485,"./value":486,"babel-runtime/helpers/interop-require":513}],481:[function(require,module,exports){
+},{"./argument":556,"./choice":557,"./decorator":558,"./descriptor":559,"./filter":560,"./freetext":561,"./list":563,"./literal":564,"./placeholder":565,"./repeat":566,"./sequence":567,"./value":568,"babel-runtime/helpers/interop-require":598}],563:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -50575,7 +57706,7 @@ module.exports = exports['default'];
 
 // first check for exact matches
 
-},{"../fuzzy":487,"babel-runtime/core-js/get-iterator":494,"babel-runtime/helpers/class-call-check":505,"babel-runtime/helpers/create-class":506,"babel-runtime/helpers/get":509,"babel-runtime/helpers/inherits":510,"babel-runtime/helpers/interop-require-default":511,"babel-runtime/regenerator":515,"lacona-phrase":596,"lodash":598}],482:[function(require,module,exports){
+},{"../fuzzy":569,"babel-runtime/core-js/get-iterator":579,"babel-runtime/helpers/class-call-check":590,"babel-runtime/helpers/create-class":591,"babel-runtime/helpers/get":594,"babel-runtime/helpers/inherits":595,"babel-runtime/helpers/interop-require-default":596,"babel-runtime/regenerator":600,"lacona-phrase":681,"lodash":683}],564:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -50671,7 +57802,7 @@ var Literal = (function (_Phrase) {
 exports['default'] = Literal;
 module.exports = exports['default'];
 
-},{"../fuzzy":487,"babel-runtime/helpers/class-call-check":505,"babel-runtime/helpers/create-class":506,"babel-runtime/helpers/get":509,"babel-runtime/helpers/inherits":510,"babel-runtime/helpers/interop-require-default":511,"lacona-phrase":596,"lodash":598}],483:[function(require,module,exports){
+},{"../fuzzy":569,"babel-runtime/helpers/class-call-check":590,"babel-runtime/helpers/create-class":591,"babel-runtime/helpers/get":594,"babel-runtime/helpers/inherits":595,"babel-runtime/helpers/interop-require-default":596,"lacona-phrase":681,"lodash":683}],565:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -50713,7 +57844,7 @@ var Placeholder = (function (_Phrase) {
 exports['default'] = Placeholder;
 module.exports = exports['default'];
 
-},{"babel-runtime/helpers/class-call-check":505,"babel-runtime/helpers/create-class":506,"babel-runtime/helpers/extends":508,"babel-runtime/helpers/get":509,"babel-runtime/helpers/inherits":510,"lacona-phrase":596}],484:[function(require,module,exports){
+},{"babel-runtime/helpers/class-call-check":590,"babel-runtime/helpers/create-class":591,"babel-runtime/helpers/extends":593,"babel-runtime/helpers/get":594,"babel-runtime/helpers/inherits":595,"lacona-phrase":681}],566:[function(require,module,exports){
 'use strict';
 
 var _get = require('babel-runtime/helpers/get')['default'];
@@ -50977,7 +58108,7 @@ Repeat.defaultProps = {
 };
 module.exports = exports['default'];
 
-},{"../parse":489,"../reconcile":491,"babel-runtime/core-js/get-iterator":494,"babel-runtime/core-js/number/max-safe-integer":496,"babel-runtime/helpers/class-call-check":505,"babel-runtime/helpers/create-class":506,"babel-runtime/helpers/get":509,"babel-runtime/helpers/inherits":510,"babel-runtime/helpers/interop-require-default":511,"babel-runtime/regenerator":515,"lacona-phrase":596,"lodash":598}],485:[function(require,module,exports){
+},{"../parse":571,"../reconcile":573,"babel-runtime/core-js/get-iterator":579,"babel-runtime/core-js/number/max-safe-integer":581,"babel-runtime/helpers/class-call-check":590,"babel-runtime/helpers/create-class":591,"babel-runtime/helpers/get":594,"babel-runtime/helpers/inherits":595,"babel-runtime/helpers/interop-require-default":596,"babel-runtime/regenerator":600,"lacona-phrase":681,"lodash":683}],567:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -51201,7 +58332,7 @@ function getAccumulatedResult(inputResult, child, childResult) {
 }
 module.exports = exports['default'];
 
-},{"../parse":489,"../reconcile":491,"babel-runtime/core-js/get-iterator":494,"babel-runtime/helpers/class-call-check":505,"babel-runtime/helpers/create-class":506,"babel-runtime/helpers/define-property":507,"babel-runtime/helpers/extends":508,"babel-runtime/helpers/get":509,"babel-runtime/helpers/inherits":510,"babel-runtime/helpers/interop-require-default":511,"babel-runtime/regenerator":515,"lacona-phrase":596,"lodash":598}],486:[function(require,module,exports){
+},{"../parse":571,"../reconcile":573,"babel-runtime/core-js/get-iterator":579,"babel-runtime/helpers/class-call-check":590,"babel-runtime/helpers/create-class":591,"babel-runtime/helpers/define-property":592,"babel-runtime/helpers/extends":593,"babel-runtime/helpers/get":594,"babel-runtime/helpers/inherits":595,"babel-runtime/helpers/interop-require-default":596,"babel-runtime/regenerator":600,"lacona-phrase":681,"lodash":683}],568:[function(require,module,exports){
 'use strict';
 
 var _get = require('babel-runtime/helpers/get')['default'];
@@ -51482,7 +58613,7 @@ module.exports = exports['default'];
 
 // TODO this is **super** WET
 
-},{"../stackfind.js":493,"babel-runtime/core-js/get-iterator":494,"babel-runtime/helpers/class-call-check":505,"babel-runtime/helpers/create-class":506,"babel-runtime/helpers/get":509,"babel-runtime/helpers/inherits":510,"babel-runtime/helpers/interop-require-default":511,"babel-runtime/regenerator":515,"lacona-phrase":596,"lodash":598}],487:[function(require,module,exports){
+},{"../stackfind.js":578,"babel-runtime/core-js/get-iterator":579,"babel-runtime/helpers/class-call-check":590,"babel-runtime/helpers/create-class":591,"babel-runtime/helpers/get":594,"babel-runtime/helpers/inherits":595,"babel-runtime/helpers/interop-require-default":596,"babel-runtime/regenerator":600,"lacona-phrase":681,"lodash":683}],569:[function(require,module,exports){
 'use strict';
 
 var _slicedToArray = require('babel-runtime/helpers/sliced-to-array')['default'];
@@ -51728,7 +58859,7 @@ function anywhereMatch(_ref3) {
 //   return null
 // }
 
-},{"babel-runtime/core-js/get-iterator":494,"babel-runtime/helpers/interop-require-default":511,"babel-runtime/helpers/sliced-to-array":514,"babel-runtime/regenerator":515,"lodash":598}],488:[function(require,module,exports){
+},{"babel-runtime/core-js/get-iterator":579,"babel-runtime/helpers/interop-require-default":596,"babel-runtime/helpers/sliced-to-array":599,"babel-runtime/regenerator":600,"lodash":683}],570:[function(require,module,exports){
 'use strict';
 
 var _interopRequire = require('babel-runtime/helpers/interop-require')['default'];
@@ -51740,7 +58871,7 @@ Object.defineProperty(exports, '__esModule', {
 var _parser = require('./parser');
 
 exports.Parser = _interopRequire(_parser);
-},{"./parser":490,"babel-runtime/helpers/interop-require":513}],489:[function(require,module,exports){
+},{"./parser":572,"babel-runtime/helpers/interop-require":598}],571:[function(require,module,exports){
 'use strict';
 
 var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
@@ -51802,12 +58933,13 @@ function parse(_ref) {
           }
         }
 
-        if (!(!phrase.filter || phrase.filter(result))) {
+        trueResult = getValue ? getValue(result) : result;
+
+        if (!(!phrase.validate || phrase.validate(trueResult))) {
           context$1$0.next = 16;
           break;
         }
 
-        trueResult = getValue ? getValue(result) : result;
         newOutput = _lodash2['default'].assign({}, output, { result: trueResult });
         context$1$0.next = 16;
         return newOutput;
@@ -51881,7 +59013,7 @@ function parse(_ref) {
 
 module.exports = exports['default'];
 
-},{"babel-runtime/core-js/get-iterator":494,"babel-runtime/helpers/interop-require-default":511,"babel-runtime/regenerator":515,"lodash":598}],490:[function(require,module,exports){
+},{"babel-runtime/core-js/get-iterator":579,"babel-runtime/helpers/interop-require-default":596,"babel-runtime/regenerator":600,"lodash":683}],572:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -51910,9 +59042,9 @@ var _parse3 = _interopRequireDefault(_parse2);
 
 var _reconcile2 = require('./reconcile');
 
-var _sources = require('./sources');
+var _sourceManager = require('./source-manager');
 
-var _sources2 = _interopRequireDefault(_sources);
+var _sourceManager2 = _interopRequireDefault(_sourceManager);
 
 function from(i) {
   var a = [];var _iteratorNormalCompletion = true;
@@ -51976,7 +59108,7 @@ var Parser = (function () {
     this.extensions = extensions;
     this.onReparse = onReparse;
     this._currentlyParsing = false;
-    this._sourceManager = new _sources2['default']({
+    this._sourceManager = new _sourceManager2['default']({
       update: this._maybeReparse.bind(this)
     });
   }
@@ -52157,7 +59289,7 @@ var Parser = (function () {
 
 exports['default'] = Parser;
 
-},{"./parse":489,"./reconcile":491,"./sources":492,"babel-runtime/core-js/get-iterator":494,"babel-runtime/helpers/class-call-check":505,"babel-runtime/helpers/create-class":506,"babel-runtime/helpers/interop-require-default":511,"babel-runtime/regenerator":515,"lodash":598}],491:[function(require,module,exports){
+},{"./parse":571,"./reconcile":573,"./source-manager":574,"babel-runtime/core-js/get-iterator":579,"babel-runtime/helpers/class-call-check":590,"babel-runtime/helpers/create-class":591,"babel-runtime/helpers/interop-require-default":596,"babel-runtime/regenerator":600,"lodash":683}],573:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -52217,7 +59349,7 @@ function reconcileOne(_ref4) {
 
   if (descriptor == null && phrase) return destroy({ phrase: phrase, sourceManager: options.sourceManager });
 
-  var Constructor = getConstructor({ Constructor: descriptor.Constructor });
+  var Constructor = (0, _descriptor.getConstructor)({ Constructor: descriptor.Constructor, type: 'phrase' });
   var props = (0, _descriptor.getRealProps)({ descriptor: descriptor, Constructor: Constructor });
   var extensions = options.getExtensions(Constructor);
 
@@ -52327,22 +59459,9 @@ function getDescription(_ref8) {
   }
 }
 
-function getConstructor(_ref9) {
-  var Constructor = _ref9.Constructor;
-
-  if (_lodash2['default'].isString(Constructor)) {
-    if (_lodash2['default'].has(builtins, Constructor)) {
-      return builtins[Constructor];
-    } else {
-      throw new Error(Constructor + ' is an invalid phrase. Note: non-builtin phrases must be uppercase');
-    }
-  }
-  return Constructor;
-}
-
-function destroy(_ref10) {
-  var phrase = _ref10.phrase;
-  var sourceManager = _ref10.sourceManager;
+function destroy(_ref9) {
+  var phrase = _ref9.phrase;
+  var sourceManager = _ref9.sourceManager;
 
   if ((phrase.constructor === builtins.choice || phrase.constructor === builtins.sequence) && phrase.childPhrases) {
     phrase.childPhrases.forEach(function (phrase) {
@@ -52355,8 +59474,8 @@ function destroy(_ref10) {
   if (phrase.destroy) phrase.destroy();
 }
 
-function create(_ref11) {
-  var phrase = _ref11.phrase;
+function create(_ref10) {
+  var phrase = _ref10.phrase;
 
   if (phrase.create) phrase.create();
 }
@@ -52376,7 +59495,7 @@ function create(_ref11) {
 //   return true
 // }
 
-},{"./descriptor":474,"./elements":480,"babel-runtime/helpers/extends":508,"babel-runtime/helpers/interop-require-default":511,"babel-runtime/helpers/interop-require-wildcard":512,"babel-runtime/helpers/sliced-to-array":514,"lacona-phrase":596,"lodash":598}],492:[function(require,module,exports){
+},{"./descriptor":555,"./elements":562,"babel-runtime/helpers/extends":593,"babel-runtime/helpers/interop-require-default":596,"babel-runtime/helpers/interop-require-wildcard":597,"babel-runtime/helpers/sliced-to-array":599,"lacona-phrase":681,"lodash":683}],574:[function(require,module,exports){
 'use strict';
 
 var _createClass = require('babel-runtime/helpers/create-class')['default'];
@@ -52422,7 +59541,8 @@ var SourceManager = (function () {
     value: function _createSource(descriptor) {
       var _this = this;
 
-      var instance = new descriptor.Constructor();
+      var Constructor = (0, _descriptor.getConstructor)({ Constructor: descriptor.Constructor, type: 'source' });
+      var instance = new Constructor();
       var props = (0, _descriptor.getRealProps)({ descriptor: descriptor, Constructor: descriptor.Constructor });
       instance.props = props;
 
@@ -52547,7 +59667,150 @@ var SourceManager = (function () {
 exports['default'] = SourceManager;
 module.exports = exports['default'];
 
-},{"./descriptor":474,"babel-runtime/helpers/class-call-check":505,"babel-runtime/helpers/create-class":506,"babel-runtime/helpers/interop-require-default":511,"lodash":598}],493:[function(require,module,exports){
+},{"./descriptor":555,"babel-runtime/helpers/class-call-check":590,"babel-runtime/helpers/create-class":591,"babel-runtime/helpers/interop-require-default":596,"lodash":683}],575:[function(require,module,exports){
+'use strict';
+
+var _interopRequire = require('babel-runtime/helpers/interop-require')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _map = require('./map');
+
+exports.map = _interopRequire(_map);
+
+var _thru = require('./thru');
+
+exports.thru = _interopRequire(_thru);
+
+},{"./map":576,"./thru":577,"babel-runtime/helpers/interop-require":598}],576:[function(require,module,exports){
+'use strict';
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var Map = (function (_Source) {
+  _inherits(Map, _Source);
+
+  function Map() {
+    _classCallCheck(this, Map);
+
+    _get(Object.getPrototypeOf(Map.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Map, [{
+    key: 'source',
+    value: function source() {
+      return { data: this.props.children[0] };
+    }
+  }, {
+    key: 'onCreate',
+    value: function onCreate() {
+      this.onUpdate();
+    }
+  }, {
+    key: 'trigger',
+    value: function trigger() {
+      var _sources$data;
+
+      (_sources$data = this.sources.data).trigger.apply(_sources$data, arguments);
+    }
+  }, {
+    key: 'onUpdate',
+    value: function onUpdate() {
+      var data = _lodash2['default'].map(this.sources.data.data, this.props['function']);
+      this.replaceData(data);
+    }
+  }]);
+
+  return Map;
+})(_laconaPhrase.Source);
+
+exports['default'] = Map;
+module.exports = exports['default'];
+
+},{"babel-runtime/helpers/class-call-check":590,"babel-runtime/helpers/create-class":591,"babel-runtime/helpers/get":594,"babel-runtime/helpers/inherits":595,"babel-runtime/helpers/interop-require-default":596,"lacona-phrase":681,"lodash":683}],577:[function(require,module,exports){
+'use strict';
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var Map = (function (_Source) {
+  _inherits(Map, _Source);
+
+  function Map() {
+    _classCallCheck(this, Map);
+
+    _get(Object.getPrototypeOf(Map.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Map, [{
+    key: 'source',
+    value: function source() {
+      return { data: this.props.children[0] };
+    }
+  }, {
+    key: 'onCreate',
+    value: function onCreate() {
+      this.onUpdate();
+    }
+  }, {
+    key: 'trigger',
+    value: function trigger() {
+      var _sources$data;
+
+      (_sources$data = this.sources.data).trigger.apply(_sources$data, arguments);
+    }
+  }, {
+    key: 'onUpdate',
+    value: function onUpdate() {
+      var data = this.props['function'](this.sources.data.data);
+      this.replaceData(data);
+    }
+  }]);
+
+  return Map;
+})(_laconaPhrase.Source);
+
+exports['default'] = Map;
+module.exports = exports['default'];
+
+},{"babel-runtime/helpers/class-call-check":590,"babel-runtime/helpers/create-class":591,"babel-runtime/helpers/get":594,"babel-runtime/helpers/inherits":595,"babel-runtime/helpers/interop-require-default":596,"lacona-phrase":681,"lodash":683}],578:[function(require,module,exports){
 'use strict';
 
 var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
@@ -52572,33 +59835,33 @@ function stackFind(stack, property, override, otherwise) {
 
 module.exports = exports['default'];
 
-},{"babel-runtime/helpers/interop-require-default":511,"lodash":598}],494:[function(require,module,exports){
-arguments[4][46][0].apply(exports,arguments)
-},{"core-js/library/fn/get-iterator":517,"dup":46}],495:[function(require,module,exports){
+},{"babel-runtime/helpers/interop-require-default":596,"lodash":683}],579:[function(require,module,exports){
+arguments[4][126][0].apply(exports,arguments)
+},{"core-js/library/fn/get-iterator":602,"dup":126}],580:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/is-iterable"), __esModule: true };
-},{"core-js/library/fn/is-iterable":518}],496:[function(require,module,exports){
+},{"core-js/library/fn/is-iterable":603}],581:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/number/max-safe-integer"), __esModule: true };
-},{"core-js/library/fn/number/max-safe-integer":519}],497:[function(require,module,exports){
+},{"core-js/library/fn/number/max-safe-integer":604}],582:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/object/assign"), __esModule: true };
-},{"core-js/library/fn/object/assign":520}],498:[function(require,module,exports){
-arguments[4][47][0].apply(exports,arguments)
-},{"core-js/library/fn/object/create":521,"dup":47}],499:[function(require,module,exports){
-arguments[4][48][0].apply(exports,arguments)
-},{"core-js/library/fn/object/define-property":522,"dup":48}],500:[function(require,module,exports){
-arguments[4][49][0].apply(exports,arguments)
-},{"core-js/library/fn/object/get-own-property-descriptor":523,"dup":49}],501:[function(require,module,exports){
-arguments[4][51][0].apply(exports,arguments)
-},{"core-js/library/fn/object/set-prototype-of":524,"dup":51}],502:[function(require,module,exports){
+},{"core-js/library/fn/object/assign":605}],583:[function(require,module,exports){
+arguments[4][127][0].apply(exports,arguments)
+},{"core-js/library/fn/object/create":606,"dup":127}],584:[function(require,module,exports){
+arguments[4][128][0].apply(exports,arguments)
+},{"core-js/library/fn/object/define-property":607,"dup":128}],585:[function(require,module,exports){
+arguments[4][129][0].apply(exports,arguments)
+},{"core-js/library/fn/object/get-own-property-descriptor":608,"dup":129}],586:[function(require,module,exports){
+arguments[4][131][0].apply(exports,arguments)
+},{"core-js/library/fn/object/set-prototype-of":609,"dup":131}],587:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/promise"), __esModule: true };
-},{"core-js/library/fn/promise":525}],503:[function(require,module,exports){
+},{"core-js/library/fn/promise":610}],588:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/symbol"), __esModule: true };
-},{"core-js/library/fn/symbol":526}],504:[function(require,module,exports){
+},{"core-js/library/fn/symbol":611}],589:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/symbol/iterator"), __esModule: true };
-},{"core-js/library/fn/symbol/iterator":527}],505:[function(require,module,exports){
-arguments[4][52][0].apply(exports,arguments)
-},{"dup":52}],506:[function(require,module,exports){
-arguments[4][53][0].apply(exports,arguments)
-},{"babel-runtime/core-js/object/define-property":499,"dup":53}],507:[function(require,module,exports){
+},{"core-js/library/fn/symbol/iterator":612}],590:[function(require,module,exports){
+arguments[4][132][0].apply(exports,arguments)
+},{"dup":132}],591:[function(require,module,exports){
+arguments[4][133][0].apply(exports,arguments)
+},{"babel-runtime/core-js/object/define-property":584,"dup":133}],592:[function(require,module,exports){
 "use strict";
 
 var _Object$defineProperty = require("babel-runtime/core-js/object/define-property")["default"];
@@ -52619,7 +59882,7 @@ exports["default"] = function (obj, key, value) {
 };
 
 exports.__esModule = true;
-},{"babel-runtime/core-js/object/define-property":499}],508:[function(require,module,exports){
+},{"babel-runtime/core-js/object/define-property":584}],593:[function(require,module,exports){
 "use strict";
 
 var _Object$assign = require("babel-runtime/core-js/object/assign")["default"];
@@ -52639,13 +59902,13 @@ exports["default"] = _Object$assign || function (target) {
 };
 
 exports.__esModule = true;
-},{"babel-runtime/core-js/object/assign":497}],509:[function(require,module,exports){
-arguments[4][54][0].apply(exports,arguments)
-},{"babel-runtime/core-js/object/get-own-property-descriptor":500,"dup":54}],510:[function(require,module,exports){
-arguments[4][55][0].apply(exports,arguments)
-},{"babel-runtime/core-js/object/create":498,"babel-runtime/core-js/object/set-prototype-of":501,"dup":55}],511:[function(require,module,exports){
-arguments[4][56][0].apply(exports,arguments)
-},{"dup":56}],512:[function(require,module,exports){
+},{"babel-runtime/core-js/object/assign":582}],594:[function(require,module,exports){
+arguments[4][134][0].apply(exports,arguments)
+},{"babel-runtime/core-js/object/get-own-property-descriptor":585,"dup":134}],595:[function(require,module,exports){
+arguments[4][135][0].apply(exports,arguments)
+},{"babel-runtime/core-js/object/create":583,"babel-runtime/core-js/object/set-prototype-of":586,"dup":135}],596:[function(require,module,exports){
+arguments[4][136][0].apply(exports,arguments)
+},{"dup":136}],597:[function(require,module,exports){
 "use strict";
 
 exports["default"] = function (obj) {
@@ -52666,7 +59929,7 @@ exports["default"] = function (obj) {
 };
 
 exports.__esModule = true;
-},{}],513:[function(require,module,exports){
+},{}],598:[function(require,module,exports){
 "use strict";
 
 exports["default"] = function (obj) {
@@ -52674,7 +59937,7 @@ exports["default"] = function (obj) {
 };
 
 exports.__esModule = true;
-},{}],514:[function(require,module,exports){
+},{}],599:[function(require,module,exports){
 "use strict";
 
 var _getIterator = require("babel-runtime/core-js/get-iterator")["default"];
@@ -52720,7 +59983,7 @@ exports["default"] = (function () {
 })();
 
 exports.__esModule = true;
-},{"babel-runtime/core-js/get-iterator":494,"babel-runtime/core-js/is-iterable":495}],515:[function(require,module,exports){
+},{"babel-runtime/core-js/get-iterator":579,"babel-runtime/core-js/is-iterable":580}],600:[function(require,module,exports){
 (function (global){
 // This method of obtaining a reference to the global object needs to be
 // kept identical to the way it is obtained in runtime.js
@@ -52757,7 +60020,7 @@ if (hadRuntime) {
 module.exports = { "default": module.exports, __esModule: true };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./runtime":516}],516:[function(require,module,exports){
+},{"./runtime":601}],601:[function(require,module,exports){
 (function (process,global){
 /**
  * Copyright (c) 2014, Facebook, Inc.
@@ -53386,56 +60649,56 @@ var _Promise = require("babel-runtime/core-js/promise")["default"];
 // use indirect eval (which violates Content Security Policy).
 typeof global === "object" ? global : typeof window === "object" ? window : typeof self === "object" ? self : undefined);
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":303,"babel-runtime/core-js/object/create":498,"babel-runtime/core-js/promise":502,"babel-runtime/core-js/symbol":503,"babel-runtime/core-js/symbol/iterator":504}],517:[function(require,module,exports){
-arguments[4][59][0].apply(exports,arguments)
-},{"../modules/core.get-iterator":583,"../modules/es6.string.iterator":592,"../modules/web.dom.iterable":594,"dup":59}],518:[function(require,module,exports){
+},{"_process":384,"babel-runtime/core-js/object/create":583,"babel-runtime/core-js/promise":587,"babel-runtime/core-js/symbol":588,"babel-runtime/core-js/symbol/iterator":589}],602:[function(require,module,exports){
+arguments[4][139][0].apply(exports,arguments)
+},{"../modules/core.get-iterator":668,"../modules/es6.string.iterator":677,"../modules/web.dom.iterable":679,"dup":139}],603:[function(require,module,exports){
 require('../modules/web.dom.iterable');
 require('../modules/es6.string.iterator');
 module.exports = require('../modules/core.is-iterable');
-},{"../modules/core.is-iterable":584,"../modules/es6.string.iterator":592,"../modules/web.dom.iterable":594}],519:[function(require,module,exports){
+},{"../modules/core.is-iterable":669,"../modules/es6.string.iterator":677,"../modules/web.dom.iterable":679}],604:[function(require,module,exports){
 require('../../modules/es6.number.max-safe-integer');
 module.exports = 0x1fffffffffffff;
-},{"../../modules/es6.number.max-safe-integer":586}],520:[function(require,module,exports){
+},{"../../modules/es6.number.max-safe-integer":671}],605:[function(require,module,exports){
 require('../../modules/es6.object.assign');
 module.exports = require('../../modules/$.core').Object.assign;
-},{"../../modules/$.core":533,"../../modules/es6.object.assign":587}],521:[function(require,module,exports){
-arguments[4][60][0].apply(exports,arguments)
-},{"../../modules/$":557,"dup":60}],522:[function(require,module,exports){
-arguments[4][61][0].apply(exports,arguments)
-},{"../../modules/$":557,"dup":61}],523:[function(require,module,exports){
-arguments[4][62][0].apply(exports,arguments)
-},{"../../modules/$":557,"../../modules/es6.object.get-own-property-descriptor":588,"dup":62}],524:[function(require,module,exports){
-arguments[4][64][0].apply(exports,arguments)
-},{"../../modules/$.core":533,"../../modules/es6.object.set-prototype-of":589,"dup":64}],525:[function(require,module,exports){
+},{"../../modules/$.core":618,"../../modules/es6.object.assign":672}],606:[function(require,module,exports){
+arguments[4][140][0].apply(exports,arguments)
+},{"../../modules/$":642,"dup":140}],607:[function(require,module,exports){
+arguments[4][141][0].apply(exports,arguments)
+},{"../../modules/$":642,"dup":141}],608:[function(require,module,exports){
+arguments[4][142][0].apply(exports,arguments)
+},{"../../modules/$":642,"../../modules/es6.object.get-own-property-descriptor":673,"dup":142}],609:[function(require,module,exports){
+arguments[4][144][0].apply(exports,arguments)
+},{"../../modules/$.core":618,"../../modules/es6.object.set-prototype-of":674,"dup":144}],610:[function(require,module,exports){
 require('../modules/es6.object.to-string');
 require('../modules/es6.string.iterator');
 require('../modules/web.dom.iterable');
 require('../modules/es6.promise');
 module.exports = require('../modules/$.core').Promise;
-},{"../modules/$.core":533,"../modules/es6.object.to-string":590,"../modules/es6.promise":591,"../modules/es6.string.iterator":592,"../modules/web.dom.iterable":594}],526:[function(require,module,exports){
+},{"../modules/$.core":618,"../modules/es6.object.to-string":675,"../modules/es6.promise":676,"../modules/es6.string.iterator":677,"../modules/web.dom.iterable":679}],611:[function(require,module,exports){
 require('../../modules/es6.symbol');
 require('../../modules/es6.object.to-string');
 module.exports = require('../../modules/$.core').Symbol;
-},{"../../modules/$.core":533,"../../modules/es6.object.to-string":590,"../../modules/es6.symbol":593}],527:[function(require,module,exports){
+},{"../../modules/$.core":618,"../../modules/es6.object.to-string":675,"../../modules/es6.symbol":678}],612:[function(require,module,exports){
 require('../../modules/es6.string.iterator');
 require('../../modules/web.dom.iterable');
 module.exports = require('../../modules/$.wks')('iterator');
-},{"../../modules/$.wks":581,"../../modules/es6.string.iterator":592,"../../modules/web.dom.iterable":594}],528:[function(require,module,exports){
-arguments[4][65][0].apply(exports,arguments)
-},{"dup":65}],529:[function(require,module,exports){
-arguments[4][67][0].apply(exports,arguments)
-},{"./$.is-object":550,"dup":67}],530:[function(require,module,exports){
-arguments[4][164][0].apply(exports,arguments)
-},{"./$":557,"./$.fails":539,"./$.iobject":547,"./$.to-object":578,"dup":164}],531:[function(require,module,exports){
-arguments[4][68][0].apply(exports,arguments)
-},{"./$.cof":532,"./$.wks":581,"dup":68}],532:[function(require,module,exports){
-arguments[4][69][0].apply(exports,arguments)
-},{"dup":69}],533:[function(require,module,exports){
+},{"../../modules/$.wks":666,"../../modules/es6.string.iterator":677,"../../modules/web.dom.iterable":679}],613:[function(require,module,exports){
+arguments[4][145][0].apply(exports,arguments)
+},{"dup":145}],614:[function(require,module,exports){
+arguments[4][147][0].apply(exports,arguments)
+},{"./$.is-object":635,"dup":147}],615:[function(require,module,exports){
+arguments[4][244][0].apply(exports,arguments)
+},{"./$":642,"./$.fails":624,"./$.iobject":632,"./$.to-object":663,"dup":244}],616:[function(require,module,exports){
+arguments[4][148][0].apply(exports,arguments)
+},{"./$.cof":617,"./$.wks":666,"dup":148}],617:[function(require,module,exports){
+arguments[4][149][0].apply(exports,arguments)
+},{"dup":149}],618:[function(require,module,exports){
 var core = module.exports = {version: '1.2.4'};
 if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
-},{}],534:[function(require,module,exports){
-arguments[4][71][0].apply(exports,arguments)
-},{"./$.a-function":528,"dup":71}],535:[function(require,module,exports){
+},{}],619:[function(require,module,exports){
+arguments[4][151][0].apply(exports,arguments)
+},{"./$.a-function":613,"dup":151}],620:[function(require,module,exports){
 var global    = require('./$.global')
   , core      = require('./$.core')
   , PROTOTYPE = 'prototype';
@@ -53483,17 +60746,17 @@ $def.P = 8;  // proto
 $def.B = 16; // bind
 $def.W = 32; // wrap
 module.exports = $def;
-},{"./$.core":533,"./$.global":542}],536:[function(require,module,exports){
-arguments[4][72][0].apply(exports,arguments)
-},{"dup":72}],537:[function(require,module,exports){
-arguments[4][131][0].apply(exports,arguments)
-},{"./$.global":542,"./$.is-object":550,"dup":131}],538:[function(require,module,exports){
-arguments[4][132][0].apply(exports,arguments)
-},{"./$":557,"dup":132}],539:[function(require,module,exports){
-arguments[4][75][0].apply(exports,arguments)
-},{"dup":75}],540:[function(require,module,exports){
-arguments[4][138][0].apply(exports,arguments)
-},{"./$.an-object":529,"./$.ctx":534,"./$.is-array-iter":548,"./$.iter-call":551,"./$.to-length":577,"./core.get-iterator-method":582,"dup":138}],541:[function(require,module,exports){
+},{"./$.core":618,"./$.global":627}],621:[function(require,module,exports){
+arguments[4][152][0].apply(exports,arguments)
+},{"dup":152}],622:[function(require,module,exports){
+arguments[4][211][0].apply(exports,arguments)
+},{"./$.global":627,"./$.is-object":635,"dup":211}],623:[function(require,module,exports){
+arguments[4][212][0].apply(exports,arguments)
+},{"./$":642,"dup":212}],624:[function(require,module,exports){
+arguments[4][155][0].apply(exports,arguments)
+},{"dup":155}],625:[function(require,module,exports){
+arguments[4][218][0].apply(exports,arguments)
+},{"./$.an-object":614,"./$.ctx":619,"./$.is-array-iter":633,"./$.iter-call":636,"./$.to-length":662,"./core.get-iterator-method":667,"dup":218}],626:[function(require,module,exports){
 // fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
 var toString  = {}.toString
   , toIObject = require('./$.to-iobject')
@@ -53514,11 +60777,11 @@ module.exports.get = function getOwnPropertyNames(it){
   if(windowNames && toString.call(it) == '[object Window]')return getWindowNames(it);
   return getNames(toIObject(it));
 };
-},{"./$":557,"./$.to-iobject":576}],542:[function(require,module,exports){
-arguments[4][76][0].apply(exports,arguments)
-},{"dup":76}],543:[function(require,module,exports){
-arguments[4][77][0].apply(exports,arguments)
-},{"dup":77}],544:[function(require,module,exports){
+},{"./$":642,"./$.to-iobject":661}],627:[function(require,module,exports){
+arguments[4][156][0].apply(exports,arguments)
+},{"dup":156}],628:[function(require,module,exports){
+arguments[4][157][0].apply(exports,arguments)
+},{"dup":157}],629:[function(require,module,exports){
 var $          = require('./$')
   , createDesc = require('./$.property-desc');
 module.exports = require('./$.support-desc') ? function(object, key, value){
@@ -53527,26 +60790,26 @@ module.exports = require('./$.support-desc') ? function(object, key, value){
   object[key] = value;
   return object;
 };
-},{"./$":557,"./$.property-desc":563,"./$.support-desc":572}],545:[function(require,module,exports){
-arguments[4][143][0].apply(exports,arguments)
-},{"./$.global":542,"dup":143}],546:[function(require,module,exports){
-arguments[4][144][0].apply(exports,arguments)
-},{"dup":144}],547:[function(require,module,exports){
-arguments[4][79][0].apply(exports,arguments)
-},{"./$.cof":532,"dup":79}],548:[function(require,module,exports){
+},{"./$":642,"./$.property-desc":648,"./$.support-desc":657}],630:[function(require,module,exports){
+arguments[4][223][0].apply(exports,arguments)
+},{"./$.global":627,"dup":223}],631:[function(require,module,exports){
+arguments[4][224][0].apply(exports,arguments)
+},{"dup":224}],632:[function(require,module,exports){
+arguments[4][159][0].apply(exports,arguments)
+},{"./$.cof":617,"dup":159}],633:[function(require,module,exports){
 // check on default Array iterator
 var Iterators = require('./$.iterators')
   , ITERATOR  = require('./$.wks')('iterator');
 module.exports = function(it){
   return (Iterators.Array || Array.prototype[ITERATOR]) === it;
 };
-},{"./$.iterators":556,"./$.wks":581}],549:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./$.cof":532,"dup":147}],550:[function(require,module,exports){
-arguments[4][81][0].apply(exports,arguments)
-},{"dup":81}],551:[function(require,module,exports){
-arguments[4][82][0].apply(exports,arguments)
-},{"./$.an-object":529,"dup":82}],552:[function(require,module,exports){
+},{"./$.iterators":641,"./$.wks":666}],634:[function(require,module,exports){
+arguments[4][227][0].apply(exports,arguments)
+},{"./$.cof":617,"dup":227}],635:[function(require,module,exports){
+arguments[4][161][0].apply(exports,arguments)
+},{"dup":161}],636:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./$.an-object":614,"dup":162}],637:[function(require,module,exports){
 'use strict';
 var $          = require('./$')
   , descriptor = require('./$.property-desc')
@@ -53560,7 +60823,7 @@ module.exports = function(Constructor, NAME, next){
   Constructor.prototype = $.create(IteratorPrototype, {next: descriptor(1, next)});
   setTag(Constructor, NAME + ' Iterator');
 };
-},{"./$":557,"./$.hide":544,"./$.property-desc":563,"./$.tag":573,"./$.wks":581}],553:[function(require,module,exports){
+},{"./$":642,"./$.hide":629,"./$.property-desc":648,"./$.tag":658,"./$.wks":666}],638:[function(require,module,exports){
 'use strict';
 var LIBRARY         = require('./$.library')
   , $def            = require('./$.def')
@@ -53618,7 +60881,7 @@ module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCE)
   }
   return methods;
 };
-},{"./$":557,"./$.def":535,"./$.has":543,"./$.hide":544,"./$.iter-create":552,"./$.iterators":556,"./$.library":559,"./$.redef":564,"./$.tag":573,"./$.wks":581}],554:[function(require,module,exports){
+},{"./$":642,"./$.def":620,"./$.has":628,"./$.hide":629,"./$.iter-create":637,"./$.iterators":641,"./$.library":644,"./$.redef":649,"./$.tag":658,"./$.wks":666}],639:[function(require,module,exports){
 var SYMBOL_ITERATOR = require('./$.wks')('iterator')
   , SAFE_CLOSING    = false;
 try {
@@ -53638,17 +60901,17 @@ module.exports = function(exec, skipClosing){
   } catch(e){ /* empty */ }
   return safe;
 };
-},{"./$.wks":581}],555:[function(require,module,exports){
-arguments[4][86][0].apply(exports,arguments)
-},{"dup":86}],556:[function(require,module,exports){
-arguments[4][87][0].apply(exports,arguments)
-},{"dup":87}],557:[function(require,module,exports){
-arguments[4][88][0].apply(exports,arguments)
-},{"dup":88}],558:[function(require,module,exports){
-arguments[4][158][0].apply(exports,arguments)
-},{"./$":557,"./$.to-iobject":576,"dup":158}],559:[function(require,module,exports){
-arguments[4][89][0].apply(exports,arguments)
-},{"dup":89}],560:[function(require,module,exports){
+},{"./$.wks":666}],640:[function(require,module,exports){
+arguments[4][166][0].apply(exports,arguments)
+},{"dup":166}],641:[function(require,module,exports){
+arguments[4][167][0].apply(exports,arguments)
+},{"dup":167}],642:[function(require,module,exports){
+arguments[4][168][0].apply(exports,arguments)
+},{"dup":168}],643:[function(require,module,exports){
+arguments[4][238][0].apply(exports,arguments)
+},{"./$":642,"./$.to-iobject":661,"dup":238}],644:[function(require,module,exports){
+arguments[4][169][0].apply(exports,arguments)
+},{"dup":169}],645:[function(require,module,exports){
 var global    = require('./$.global')
   , macrotask = require('./$.task').set
   , Observer  = global.MutationObserver || global.WebKitMutationObserver
@@ -53706,13 +60969,13 @@ module.exports = function asap(fn){
     notify();
   } last = task;
 };
-},{"./$.cof":532,"./$.global":542,"./$.task":574}],561:[function(require,module,exports){
+},{"./$.cof":617,"./$.global":627,"./$.task":659}],646:[function(require,module,exports){
 var $redef = require('./$.redef');
 module.exports = function(target, src){
   for(var key in src)$redef(target, key, src[key]);
   return target;
 };
-},{"./$.redef":564}],562:[function(require,module,exports){
+},{"./$.redef":649}],647:[function(require,module,exports){
 // most Object methods by ES6 should accept primitives
 var $def  = require('./$.def')
   , core  = require('./$.core')
@@ -53724,19 +60987,19 @@ module.exports = function(KEY, exec){
   exp[KEY] = exec(fn);
   $def($def.S + $def.F * fails(function(){ fn(1); }), 'Object', exp);
 };
-},{"./$.core":533,"./$.def":535,"./$.fails":539}],563:[function(require,module,exports){
-arguments[4][91][0].apply(exports,arguments)
-},{"dup":91}],564:[function(require,module,exports){
-arguments[4][92][0].apply(exports,arguments)
-},{"./$.hide":544,"dup":92}],565:[function(require,module,exports){
+},{"./$.core":618,"./$.def":620,"./$.fails":624}],648:[function(require,module,exports){
+arguments[4][171][0].apply(exports,arguments)
+},{"dup":171}],649:[function(require,module,exports){
+arguments[4][172][0].apply(exports,arguments)
+},{"./$.hide":629,"dup":172}],650:[function(require,module,exports){
 module.exports = Object.is || function is(x, y){
   return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
 };
-},{}],566:[function(require,module,exports){
-arguments[4][93][0].apply(exports,arguments)
-},{"./$":557,"./$.an-object":529,"./$.ctx":534,"./$.is-object":550,"dup":93}],567:[function(require,module,exports){
-arguments[4][95][0].apply(exports,arguments)
-},{"./$.global":542,"dup":95}],568:[function(require,module,exports){
+},{}],651:[function(require,module,exports){
+arguments[4][173][0].apply(exports,arguments)
+},{"./$":642,"./$.an-object":614,"./$.ctx":619,"./$.is-object":635,"dup":173}],652:[function(require,module,exports){
+arguments[4][175][0].apply(exports,arguments)
+},{"./$.global":627,"dup":175}],653:[function(require,module,exports){
 // 7.3.20 SpeciesConstructor(O, defaultConstructor)
 var anObject  = require('./$.an-object')
   , aFunction = require('./$.a-function')
@@ -53745,7 +61008,7 @@ module.exports = function(O, D){
   var C = anObject(O).constructor, S;
   return C === undefined || (S = anObject(C)[SPECIES]) == undefined ? D : aFunction(S);
 };
-},{"./$.a-function":528,"./$.an-object":529,"./$.wks":581}],569:[function(require,module,exports){
+},{"./$.a-function":613,"./$.an-object":614,"./$.wks":666}],654:[function(require,module,exports){
 'use strict';
 var core    = require('./$.core')
   , $       = require('./$')
@@ -53759,9 +61022,9 @@ module.exports = function(KEY){
     get: function(){ return this; }
   });
 };
-},{"./$":557,"./$.core":533,"./$.support-desc":572,"./$.wks":581}],570:[function(require,module,exports){
-arguments[4][180][0].apply(exports,arguments)
-},{"dup":180}],571:[function(require,module,exports){
+},{"./$":642,"./$.core":618,"./$.support-desc":657,"./$.wks":666}],655:[function(require,module,exports){
+arguments[4][260][0].apply(exports,arguments)
+},{"dup":260}],656:[function(require,module,exports){
 // true  -> String#at
 // false -> String#codePointAt
 var toInteger = require('./$.to-integer')
@@ -53780,11 +61043,11 @@ module.exports = function(TO_STRING){
         : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
   };
 };
-},{"./$.defined":536,"./$.to-integer":575}],572:[function(require,module,exports){
-arguments[4][73][0].apply(exports,arguments)
-},{"./$.fails":539,"dup":73}],573:[function(require,module,exports){
-arguments[4][94][0].apply(exports,arguments)
-},{"./$":557,"./$.has":543,"./$.wks":581,"dup":94}],574:[function(require,module,exports){
+},{"./$.defined":621,"./$.to-integer":660}],657:[function(require,module,exports){
+arguments[4][153][0].apply(exports,arguments)
+},{"./$.fails":624,"dup":153}],658:[function(require,module,exports){
+arguments[4][174][0].apply(exports,arguments)
+},{"./$":642,"./$.has":628,"./$.wks":666,"dup":174}],659:[function(require,module,exports){
 'use strict';
 var ctx                = require('./$.ctx')
   , invoke             = require('./$.invoke')
@@ -53861,25 +61124,25 @@ module.exports = {
   set:   setTask,
   clear: clearTask
 };
-},{"./$.cof":532,"./$.ctx":534,"./$.dom-create":537,"./$.global":542,"./$.html":545,"./$.invoke":546}],575:[function(require,module,exports){
-arguments[4][97][0].apply(exports,arguments)
-},{"dup":97}],576:[function(require,module,exports){
-arguments[4][98][0].apply(exports,arguments)
-},{"./$.defined":536,"./$.iobject":547,"dup":98}],577:[function(require,module,exports){
-arguments[4][99][0].apply(exports,arguments)
-},{"./$.to-integer":575,"dup":99}],578:[function(require,module,exports){
-arguments[4][100][0].apply(exports,arguments)
-},{"./$.defined":536,"dup":100}],579:[function(require,module,exports){
-arguments[4][101][0].apply(exports,arguments)
-},{"dup":101}],580:[function(require,module,exports){
-arguments[4][66][0].apply(exports,arguments)
-},{"dup":66}],581:[function(require,module,exports){
-arguments[4][102][0].apply(exports,arguments)
-},{"./$.global":542,"./$.shared":567,"./$.uid":579,"dup":102}],582:[function(require,module,exports){
-arguments[4][103][0].apply(exports,arguments)
-},{"./$.classof":531,"./$.core":533,"./$.iterators":556,"./$.wks":581,"dup":103}],583:[function(require,module,exports){
-arguments[4][104][0].apply(exports,arguments)
-},{"./$.an-object":529,"./$.core":533,"./core.get-iterator-method":582,"dup":104}],584:[function(require,module,exports){
+},{"./$.cof":617,"./$.ctx":619,"./$.dom-create":622,"./$.global":627,"./$.html":630,"./$.invoke":631}],660:[function(require,module,exports){
+arguments[4][177][0].apply(exports,arguments)
+},{"dup":177}],661:[function(require,module,exports){
+arguments[4][178][0].apply(exports,arguments)
+},{"./$.defined":621,"./$.iobject":632,"dup":178}],662:[function(require,module,exports){
+arguments[4][179][0].apply(exports,arguments)
+},{"./$.to-integer":660,"dup":179}],663:[function(require,module,exports){
+arguments[4][180][0].apply(exports,arguments)
+},{"./$.defined":621,"dup":180}],664:[function(require,module,exports){
+arguments[4][181][0].apply(exports,arguments)
+},{"dup":181}],665:[function(require,module,exports){
+arguments[4][146][0].apply(exports,arguments)
+},{"dup":146}],666:[function(require,module,exports){
+arguments[4][182][0].apply(exports,arguments)
+},{"./$.global":627,"./$.shared":652,"./$.uid":664,"dup":182}],667:[function(require,module,exports){
+arguments[4][183][0].apply(exports,arguments)
+},{"./$.classof":616,"./$.core":618,"./$.iterators":641,"./$.wks":666,"dup":183}],668:[function(require,module,exports){
+arguments[4][184][0].apply(exports,arguments)
+},{"./$.an-object":614,"./$.core":618,"./core.get-iterator-method":667,"dup":184}],669:[function(require,module,exports){
 var classof   = require('./$.classof')
   , ITERATOR  = require('./$.wks')('iterator')
   , Iterators = require('./$.iterators');
@@ -53889,7 +61152,7 @@ module.exports = require('./$.core').isIterable = function(it){
     || '@@iterator' in O
     || Iterators.hasOwnProperty(classof(O));
 };
-},{"./$.classof":531,"./$.core":533,"./$.iterators":556,"./$.wks":581}],585:[function(require,module,exports){
+},{"./$.classof":616,"./$.core":618,"./$.iterators":641,"./$.wks":666}],670:[function(require,module,exports){
 'use strict';
 var setUnscope = require('./$.unscope')
   , step       = require('./$.iter-step')
@@ -53924,25 +61187,25 @@ Iterators.Arguments = Iterators.Array;
 setUnscope('keys');
 setUnscope('values');
 setUnscope('entries');
-},{"./$.iter-define":553,"./$.iter-step":555,"./$.iterators":556,"./$.to-iobject":576,"./$.unscope":580}],586:[function(require,module,exports){
+},{"./$.iter-define":638,"./$.iter-step":640,"./$.iterators":641,"./$.to-iobject":661,"./$.unscope":665}],671:[function(require,module,exports){
 // 20.1.2.6 Number.MAX_SAFE_INTEGER
 var $def = require('./$.def');
 
 $def($def.S, 'Number', {MAX_SAFE_INTEGER: 0x1fffffffffffff});
-},{"./$.def":535}],587:[function(require,module,exports){
+},{"./$.def":620}],672:[function(require,module,exports){
 // 19.1.3.1 Object.assign(target, source)
 var $def = require('./$.def');
 
 $def($def.S + $def.F, 'Object', {assign: require('./$.assign')});
-},{"./$.assign":530,"./$.def":535}],588:[function(require,module,exports){
-arguments[4][107][0].apply(exports,arguments)
-},{"./$.object-sap":562,"./$.to-iobject":576,"dup":107}],589:[function(require,module,exports){
+},{"./$.assign":615,"./$.def":620}],673:[function(require,module,exports){
+arguments[4][187][0].apply(exports,arguments)
+},{"./$.object-sap":647,"./$.to-iobject":661,"dup":187}],674:[function(require,module,exports){
 // 19.1.3.19 Object.setPrototypeOf(O, proto)
 var $def = require('./$.def');
 $def($def.S, 'Object', {setPrototypeOf: require('./$.set-proto').set});
-},{"./$.def":535,"./$.set-proto":566}],590:[function(require,module,exports){
+},{"./$.def":620,"./$.set-proto":651}],675:[function(require,module,exports){
 
-},{}],591:[function(require,module,exports){
+},{}],676:[function(require,module,exports){
 'use strict';
 var $          = require('./$')
   , LIBRARY    = require('./$.library')
@@ -54205,9 +61468,9 @@ $def($def.S + $def.F * !(useNative && require('./$.iter-detect')(function(iter){
     });
   }
 });
-},{"./$":557,"./$.a-function":528,"./$.an-object":529,"./$.classof":531,"./$.core":533,"./$.ctx":534,"./$.def":535,"./$.for-of":540,"./$.global":542,"./$.is-object":550,"./$.iter-detect":554,"./$.library":559,"./$.microtask":560,"./$.mix":561,"./$.same":565,"./$.set-proto":566,"./$.species":569,"./$.species-constructor":568,"./$.strict-new":570,"./$.support-desc":572,"./$.tag":573,"./$.uid":579,"./$.wks":581}],592:[function(require,module,exports){
-arguments[4][110][0].apply(exports,arguments)
-},{"./$.iter-define":553,"./$.string-at":571,"dup":110}],593:[function(require,module,exports){
+},{"./$":642,"./$.a-function":613,"./$.an-object":614,"./$.classof":616,"./$.core":618,"./$.ctx":619,"./$.def":620,"./$.for-of":625,"./$.global":627,"./$.is-object":635,"./$.iter-detect":639,"./$.library":644,"./$.microtask":645,"./$.mix":646,"./$.same":650,"./$.set-proto":651,"./$.species":654,"./$.species-constructor":653,"./$.strict-new":655,"./$.support-desc":657,"./$.tag":658,"./$.uid":664,"./$.wks":666}],677:[function(require,module,exports){
+arguments[4][190][0].apply(exports,arguments)
+},{"./$.iter-define":638,"./$.string-at":656,"dup":190}],678:[function(require,module,exports){
 'use strict';
 // ECMAScript 6 symbols shim
 var $              = require('./$')
@@ -54435,13 +61698,13 @@ setTag($Symbol, 'Symbol');
 setTag(Math, 'Math', true);
 // 24.3.3 JSON[@@toStringTag]
 setTag(global.JSON, 'JSON', true);
-},{"./$":557,"./$.an-object":529,"./$.def":535,"./$.enum-keys":538,"./$.fails":539,"./$.get-names":541,"./$.global":542,"./$.has":543,"./$.is-array":549,"./$.keyof":558,"./$.library":559,"./$.property-desc":563,"./$.redef":564,"./$.shared":567,"./$.support-desc":572,"./$.tag":573,"./$.to-iobject":576,"./$.uid":579,"./$.wks":581}],594:[function(require,module,exports){
-arguments[4][111][0].apply(exports,arguments)
-},{"./$.iterators":556,"./es6.array.iterator":585,"dup":111}],595:[function(require,module,exports){
-arguments[4][11][0].apply(exports,arguments)
-},{"dup":11}],596:[function(require,module,exports){
-arguments[4][10][0].apply(exports,arguments)
-},{"../package":597,"dup":10,"inherits":595}],597:[function(require,module,exports){
+},{"./$":642,"./$.an-object":614,"./$.def":620,"./$.enum-keys":623,"./$.fails":624,"./$.get-names":626,"./$.global":627,"./$.has":628,"./$.is-array":634,"./$.keyof":643,"./$.library":644,"./$.property-desc":648,"./$.redef":649,"./$.shared":652,"./$.support-desc":657,"./$.tag":658,"./$.to-iobject":661,"./$.uid":664,"./$.wks":666}],679:[function(require,module,exports){
+arguments[4][191][0].apply(exports,arguments)
+},{"./$.iterators":641,"./es6.array.iterator":670,"dup":191}],680:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],681:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"../package":682,"dup":2,"inherits":680}],682:[function(require,module,exports){
 module.exports={
   "_args": [
     [
@@ -54535,9 +61798,9 @@ module.exports={
   "version": "0.7.0"
 }
 
-},{}],598:[function(require,module,exports){
-arguments[4][13][0].apply(exports,arguments)
-},{"dup":13}],599:[function(require,module,exports){
+},{}],683:[function(require,module,exports){
+arguments[4][9][0].apply(exports,arguments)
+},{"dup":9}],684:[function(require,module,exports){
 module.exports = function split (input, strOrRegex) {
   var results = []
 
@@ -54565,54 +61828,134 @@ module.exports = function split (input, strOrRegex) {
   return results
 }
 
-},{}],600:[function(require,module,exports){
-arguments[4][47][0].apply(exports,arguments)
-},{"core-js/library/fn/object/create":604,"dup":47}],601:[function(require,module,exports){
-arguments[4][48][0].apply(exports,arguments)
-},{"core-js/library/fn/object/define-property":605,"dup":48}],602:[function(require,module,exports){
-arguments[4][49][0].apply(exports,arguments)
-},{"core-js/library/fn/object/get-own-property-descriptor":606,"dup":49}],603:[function(require,module,exports){
-arguments[4][51][0].apply(exports,arguments)
-},{"core-js/library/fn/object/set-prototype-of":607,"dup":51}],604:[function(require,module,exports){
-arguments[4][60][0].apply(exports,arguments)
-},{"../../modules/$":619,"dup":60}],605:[function(require,module,exports){
-arguments[4][61][0].apply(exports,arguments)
-},{"../../modules/$":619,"dup":61}],606:[function(require,module,exports){
-arguments[4][62][0].apply(exports,arguments)
-},{"../../modules/$":619,"../../modules/es6.object.get-own-property-descriptor":623,"dup":62}],607:[function(require,module,exports){
-arguments[4][64][0].apply(exports,arguments)
-},{"../../modules/$.core":611,"../../modules/es6.object.set-prototype-of":624,"dup":64}],608:[function(require,module,exports){
-arguments[4][65][0].apply(exports,arguments)
-},{"dup":65}],609:[function(require,module,exports){
-arguments[4][67][0].apply(exports,arguments)
-},{"./$.is-object":618,"dup":67}],610:[function(require,module,exports){
-arguments[4][69][0].apply(exports,arguments)
-},{"dup":69}],611:[function(require,module,exports){
-arguments[4][70][0].apply(exports,arguments)
-},{"dup":70}],612:[function(require,module,exports){
-arguments[4][71][0].apply(exports,arguments)
-},{"./$.a-function":608,"dup":71}],613:[function(require,module,exports){
-arguments[4][72][0].apply(exports,arguments)
-},{"dup":72}],614:[function(require,module,exports){
-arguments[4][74][0].apply(exports,arguments)
-},{"./$.core":611,"./$.ctx":612,"./$.global":616,"dup":74}],615:[function(require,module,exports){
-arguments[4][75][0].apply(exports,arguments)
-},{"dup":75}],616:[function(require,module,exports){
-arguments[4][76][0].apply(exports,arguments)
-},{"dup":76}],617:[function(require,module,exports){
-arguments[4][79][0].apply(exports,arguments)
-},{"./$.cof":610,"dup":79}],618:[function(require,module,exports){
-arguments[4][81][0].apply(exports,arguments)
-},{"dup":81}],619:[function(require,module,exports){
-arguments[4][88][0].apply(exports,arguments)
-},{"dup":88}],620:[function(require,module,exports){
-arguments[4][90][0].apply(exports,arguments)
-},{"./$.core":611,"./$.export":614,"./$.fails":615,"dup":90}],621:[function(require,module,exports){
-arguments[4][93][0].apply(exports,arguments)
-},{"./$":619,"./$.an-object":609,"./$.ctx":612,"./$.is-object":618,"dup":93}],622:[function(require,module,exports){
-arguments[4][98][0].apply(exports,arguments)
-},{"./$.defined":613,"./$.iobject":617,"dup":98}],623:[function(require,module,exports){
-arguments[4][107][0].apply(exports,arguments)
-},{"./$.object-sap":620,"./$.to-iobject":622,"dup":107}],624:[function(require,module,exports){
-arguments[4][109][0].apply(exports,arguments)
-},{"./$.export":614,"./$.set-proto":621,"dup":109}]},{},[42]);
+},{}],685:[function(require,module,exports){
+arguments[4][125][0].apply(exports,arguments)
+},{"core-js/library/fn/array/from":692,"dup":125}],686:[function(require,module,exports){
+arguments[4][126][0].apply(exports,arguments)
+},{"core-js/library/fn/get-iterator":693,"dup":126}],687:[function(require,module,exports){
+arguments[4][580][0].apply(exports,arguments)
+},{"core-js/library/fn/is-iterable":694,"dup":580}],688:[function(require,module,exports){
+arguments[4][127][0].apply(exports,arguments)
+},{"core-js/library/fn/object/create":695,"dup":127}],689:[function(require,module,exports){
+arguments[4][128][0].apply(exports,arguments)
+},{"core-js/library/fn/object/define-property":696,"dup":128}],690:[function(require,module,exports){
+arguments[4][129][0].apply(exports,arguments)
+},{"core-js/library/fn/object/get-own-property-descriptor":697,"dup":129}],691:[function(require,module,exports){
+arguments[4][131][0].apply(exports,arguments)
+},{"core-js/library/fn/object/set-prototype-of":698,"dup":131}],692:[function(require,module,exports){
+arguments[4][138][0].apply(exports,arguments)
+},{"../../modules/$.core":704,"../../modules/es6.array.from":740,"../../modules/es6.string.iterator":744,"dup":138}],693:[function(require,module,exports){
+arguments[4][139][0].apply(exports,arguments)
+},{"../modules/core.get-iterator":738,"../modules/es6.string.iterator":744,"../modules/web.dom.iterable":745,"dup":139}],694:[function(require,module,exports){
+arguments[4][603][0].apply(exports,arguments)
+},{"../modules/core.is-iterable":739,"../modules/es6.string.iterator":744,"../modules/web.dom.iterable":745,"dup":603}],695:[function(require,module,exports){
+arguments[4][140][0].apply(exports,arguments)
+},{"../../modules/$":722,"dup":140}],696:[function(require,module,exports){
+arguments[4][141][0].apply(exports,arguments)
+},{"../../modules/$":722,"dup":141}],697:[function(require,module,exports){
+arguments[4][142][0].apply(exports,arguments)
+},{"../../modules/$":722,"../../modules/es6.object.get-own-property-descriptor":742,"dup":142}],698:[function(require,module,exports){
+arguments[4][144][0].apply(exports,arguments)
+},{"../../modules/$.core":704,"../../modules/es6.object.set-prototype-of":743,"dup":144}],699:[function(require,module,exports){
+arguments[4][145][0].apply(exports,arguments)
+},{"dup":145}],700:[function(require,module,exports){
+arguments[4][146][0].apply(exports,arguments)
+},{"dup":146}],701:[function(require,module,exports){
+arguments[4][147][0].apply(exports,arguments)
+},{"./$.is-object":715,"dup":147}],702:[function(require,module,exports){
+arguments[4][148][0].apply(exports,arguments)
+},{"./$.cof":703,"./$.wks":736,"dup":148}],703:[function(require,module,exports){
+arguments[4][149][0].apply(exports,arguments)
+},{"dup":149}],704:[function(require,module,exports){
+arguments[4][150][0].apply(exports,arguments)
+},{"dup":150}],705:[function(require,module,exports){
+arguments[4][151][0].apply(exports,arguments)
+},{"./$.a-function":699,"dup":151}],706:[function(require,module,exports){
+arguments[4][152][0].apply(exports,arguments)
+},{"dup":152}],707:[function(require,module,exports){
+arguments[4][153][0].apply(exports,arguments)
+},{"./$.fails":709,"dup":153}],708:[function(require,module,exports){
+arguments[4][154][0].apply(exports,arguments)
+},{"./$.core":704,"./$.ctx":705,"./$.global":710,"dup":154}],709:[function(require,module,exports){
+arguments[4][155][0].apply(exports,arguments)
+},{"dup":155}],710:[function(require,module,exports){
+arguments[4][156][0].apply(exports,arguments)
+},{"dup":156}],711:[function(require,module,exports){
+arguments[4][157][0].apply(exports,arguments)
+},{"dup":157}],712:[function(require,module,exports){
+arguments[4][158][0].apply(exports,arguments)
+},{"./$":722,"./$.descriptors":707,"./$.property-desc":725,"dup":158}],713:[function(require,module,exports){
+arguments[4][159][0].apply(exports,arguments)
+},{"./$.cof":703,"dup":159}],714:[function(require,module,exports){
+arguments[4][160][0].apply(exports,arguments)
+},{"./$.iterators":721,"./$.wks":736,"dup":160}],715:[function(require,module,exports){
+arguments[4][161][0].apply(exports,arguments)
+},{"dup":161}],716:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./$.an-object":701,"dup":162}],717:[function(require,module,exports){
+arguments[4][163][0].apply(exports,arguments)
+},{"./$":722,"./$.hide":712,"./$.property-desc":725,"./$.set-to-string-tag":728,"./$.wks":736,"dup":163}],718:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./$":722,"./$.export":708,"./$.has":711,"./$.hide":712,"./$.iter-create":717,"./$.iterators":721,"./$.library":723,"./$.redefine":726,"./$.set-to-string-tag":728,"./$.wks":736,"dup":164}],719:[function(require,module,exports){
+arguments[4][165][0].apply(exports,arguments)
+},{"./$.wks":736,"dup":165}],720:[function(require,module,exports){
+arguments[4][166][0].apply(exports,arguments)
+},{"dup":166}],721:[function(require,module,exports){
+arguments[4][167][0].apply(exports,arguments)
+},{"dup":167}],722:[function(require,module,exports){
+arguments[4][168][0].apply(exports,arguments)
+},{"dup":168}],723:[function(require,module,exports){
+arguments[4][169][0].apply(exports,arguments)
+},{"dup":169}],724:[function(require,module,exports){
+arguments[4][170][0].apply(exports,arguments)
+},{"./$.core":704,"./$.export":708,"./$.fails":709,"dup":170}],725:[function(require,module,exports){
+arguments[4][171][0].apply(exports,arguments)
+},{"dup":171}],726:[function(require,module,exports){
+arguments[4][172][0].apply(exports,arguments)
+},{"./$.hide":712,"dup":172}],727:[function(require,module,exports){
+arguments[4][173][0].apply(exports,arguments)
+},{"./$":722,"./$.an-object":701,"./$.ctx":705,"./$.is-object":715,"dup":173}],728:[function(require,module,exports){
+arguments[4][174][0].apply(exports,arguments)
+},{"./$":722,"./$.has":711,"./$.wks":736,"dup":174}],729:[function(require,module,exports){
+arguments[4][175][0].apply(exports,arguments)
+},{"./$.global":710,"dup":175}],730:[function(require,module,exports){
+arguments[4][176][0].apply(exports,arguments)
+},{"./$.defined":706,"./$.to-integer":731,"dup":176}],731:[function(require,module,exports){
+arguments[4][177][0].apply(exports,arguments)
+},{"dup":177}],732:[function(require,module,exports){
+arguments[4][178][0].apply(exports,arguments)
+},{"./$.defined":706,"./$.iobject":713,"dup":178}],733:[function(require,module,exports){
+arguments[4][179][0].apply(exports,arguments)
+},{"./$.to-integer":731,"dup":179}],734:[function(require,module,exports){
+arguments[4][180][0].apply(exports,arguments)
+},{"./$.defined":706,"dup":180}],735:[function(require,module,exports){
+arguments[4][181][0].apply(exports,arguments)
+},{"dup":181}],736:[function(require,module,exports){
+arguments[4][182][0].apply(exports,arguments)
+},{"./$.global":710,"./$.shared":729,"./$.uid":735,"dup":182}],737:[function(require,module,exports){
+arguments[4][183][0].apply(exports,arguments)
+},{"./$.classof":702,"./$.core":704,"./$.iterators":721,"./$.wks":736,"dup":183}],738:[function(require,module,exports){
+arguments[4][184][0].apply(exports,arguments)
+},{"./$.an-object":701,"./$.core":704,"./core.get-iterator-method":737,"dup":184}],739:[function(require,module,exports){
+var classof   = require('./$.classof')
+  , ITERATOR  = require('./$.wks')('iterator')
+  , Iterators = require('./$.iterators');
+module.exports = require('./$.core').isIterable = function(it){
+  var O = Object(it);
+  return O[ITERATOR] !== undefined
+    || '@@iterator' in O
+    || Iterators.hasOwnProperty(classof(O));
+};
+},{"./$.classof":702,"./$.core":704,"./$.iterators":721,"./$.wks":736}],740:[function(require,module,exports){
+arguments[4][185][0].apply(exports,arguments)
+},{"./$.ctx":705,"./$.export":708,"./$.is-array-iter":714,"./$.iter-call":716,"./$.iter-detect":719,"./$.to-length":733,"./$.to-object":734,"./core.get-iterator-method":737,"dup":185}],741:[function(require,module,exports){
+arguments[4][186][0].apply(exports,arguments)
+},{"./$.add-to-unscopables":700,"./$.iter-define":718,"./$.iter-step":720,"./$.iterators":721,"./$.to-iobject":732,"dup":186}],742:[function(require,module,exports){
+arguments[4][187][0].apply(exports,arguments)
+},{"./$.object-sap":724,"./$.to-iobject":732,"dup":187}],743:[function(require,module,exports){
+arguments[4][189][0].apply(exports,arguments)
+},{"./$.export":708,"./$.set-proto":727,"dup":189}],744:[function(require,module,exports){
+arguments[4][190][0].apply(exports,arguments)
+},{"./$.iter-define":718,"./$.string-at":730,"dup":190}],745:[function(require,module,exports){
+arguments[4][191][0].apply(exports,arguments)
+},{"./$.iterators":721,"./es6.array.iterator":741,"dup":191}]},{},[122]);

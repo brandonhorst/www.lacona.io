@@ -6,7 +6,7 @@
   "scripts": {
     "build:html": "babel-node render.jsx",
     "build:style": "node-sass front/style.scss public/style.css --output-style compressed",
-    "build:script": "mkdir -p tmp && browserify front/script.jsx -t [ babelify --optional runtime ] -g browserify-shim -o public/script.js && uglifyjs public/script.js -o public/script.min.js",
+    "build:script": "mkdir -p tmp && browserify front/script.jsx -t [ babelify --optional runtime ] -g browserify-shim -o public/script.js; # && uglifyjs public/script.js -o public/script.min.js",
     "build:vendor": "cp node_modules/moment/min/moment.min.js public & cp node_modules/react/dist/react.min.js public",
     "build": "npm run build:html & npm run build:vendor & npm run build:style & npm run build:script & wait",
     "open": "open public/index.html"

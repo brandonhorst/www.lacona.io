@@ -1,11 +1,79 @@
 /** @jsx createElement */
 
+process.env.LACONA_ENV = 'demo'
+
+global.config = require('./demo-config')
 import _ from 'lodash'
 import {createElement, Phrase} from 'lacona-phrase'
-import {Date as DatePhrase, DateTime, Time, TimePeriod, TimeDuration} from 'lacona-phrase-datetime'
-import URL from 'lacona-phrase-url'
-import Email from 'lacona-phrase-email'
-import PhoneNumber from 'lacona-phrase-phonenumber'
+
+import communicate from 'lacona-command-communicate'
+import events from 'lacona-command-events'
+import itunes from 'lacona-command-itunes'
+import searchInternet from 'lacona-command-search-internet'
+import openCommand from 'lacona-command-open'
+import osx from 'lacona-command-osx'
+import settingsCommand from 'lacona-command-settings'
+import translateCommand from 'lacona-command-translate'
+// import {Date as DatePhrase, DateTime, Time, TimePeriod, TimeDuration} from 'lacona-phrase-datetime'
+// import URL from 'lacona-phrase-url'
+// import Email from 'lacona-phrase-email'
+// import PhoneNumber from 'lacona-phrase-phonenumber'
+
+function toGrammar (name, command) {
+  return (
+    <choice id={name}>
+      {_.map(command.sentences, ({Sentence}) => <Sentence />)}
+    </choice>
+  )
+}
+
+export const search = {
+  grammar: toGrammar('search', searchInternet)
+}
+
+export const date = {
+  grammar: toGrammar('date', events),
+  extensions: osx.extensions
+}
+export const open = {
+  grammar: toGrammar('open', openCommand),
+  extensions: osx.extensions
+}
+
+export const play = {
+  grammar: toGrammar('play', itunes)
+}
+
+export const contact = {
+  grammar: toGrammar('contact', communicate),
+  extensions: osx.extensions
+}
+
+export const translate = {
+  grammar: toGrammar('translate', translateCommand)
+}
+
+export const settings = {
+  grammar: toGrammar('settings', settingsCommand),
+  extensions: osx.extensions
+}
+
+export const all = {
+  grammar: (
+    <choice>
+      {open.grammar}
+      {date.grammar}
+      {search.grammar}
+      {play.grammar}
+      {contact.grammar}
+      {translate.grammar}
+      {settings.grammar}
+    </choice>
+  ),
+  extensions: osx.extensions
+}
+
+/*
 
 const userFiles = [
   {
@@ -1558,69 +1626,69 @@ export const search = {
   )
 }
 
-/*
-if (global.location && global.location.hash === '#videodemo') {
-  search.grammar = (
-    <choice>
-      <sequence>
-        <literal text='ابحث ' category='action' />
-        <literal text='في ' category='conjunction' />
-        <argument text='محرك البحث'>
-          <choice>
-            <literal text='جوجل' />
-            <literal text='يملي' />
-          </choice>
-        </argument>
-        <literal text=' ' />
-        <argument text='بحث'>
-          <freetext />
-        </argument>
-      </sequence>
 
-      <sequence>
-        <literal text='найти ' category='action' />
-        <literal text='в ' category='conjunction' />
-        <argument text='поисковик'>
-          <choice>
-            <literal text='Яндексе' />
-            <literal text='Гугле' />
-          </choice>
-        </argument>
-        <literal text=' ' />
-        <argument text='запрос'>
-          <freetext />
-        </argument>
-      </sequence>
-
-      <sequence>
-        <literal text='buscar ' category='action' />
-        <literal text='en ' category='conjunction' />
-        <argument text='buscador'>
-          <literal text='Google' />
-        </argument>
-        <literal text=' ' category='conjunction' />
-        <argument text='consulta'>
-          <freetext />
-        </argument>
-      </sequence>
-
-      <sequence>
-        <literal text='在' category='conjunction' />
-        <argument text='搜寻引擎'>
-          <choice>
-            <literal text='百度' />
-            <literal text='Google' />
-          </choice>
-        </argument>
-        <literal text='上' category='conjunction' />
-        <literal text='搜索' category='action' />
-        <argument text='查询'>
-          <freetext />
-        </argument>
-      </sequence>
-    </choice>
-  )
-}*/
+// if (global.location && global.location.hash === '#videodemo') {
+//   search.grammar = (
+//     <choice>
+//       <sequence>
+//         <literal text='ابحث ' category='action' />
+//         <literal text='في ' category='conjunction' />
+//         <argument text='محرك البحث'>
+//           <choice>
+//             <literal text='جوجل' />
+//             <literal text='يملي' />
+//           </choice>
+//         </argument>
+//         <literal text=' ' />
+//         <argument text='بحث'>
+//           <freetext />
+//         </argument>
+//       </sequence>
+//
+//       <sequence>
+//         <literal text='найти ' category='action' />
+//         <literal text='в ' category='conjunction' />
+//         <argument text='поисковик'>
+//           <choice>
+//             <literal text='Яндексе' />
+//             <literal text='Гугле' />
+//           </choice>
+//         </argument>
+//         <literal text=' ' />
+//         <argument text='запрос'>
+//           <freetext />
+//         </argument>
+//       </sequence>
+//
+//       <sequence>
+//         <literal text='buscar ' category='action' />
+//         <literal text='en ' category='conjunction' />
+//         <argument text='buscador'>
+//           <literal text='Google' />
+//         </argument>
+//         <literal text=' ' category='conjunction' />
+//         <argument text='consulta'>
+//           <freetext />
+//         </argument>
+//       </sequence>
+//
+//       <sequence>
+//         <literal text='在' category='conjunction' />
+//         <argument text='搜寻引擎'>
+//           <choice>
+//             <literal text='百度' />
+//             <literal text='Google' />
+//           </choice>
+//         </argument>
+//         <literal text='上' category='conjunction' />
+//         <literal text='搜索' category='action' />
+//         <argument text='查询'>
+//           <freetext />
+//         </argument>
+//       </sequence>
+//     </choice>
+//   )
+// }
 
 function itemify (x) {
   return {text: x, value: x}
@@ -2198,3 +2266,4 @@ export const all = {
 //     )
 //   }
 // }
+*/
