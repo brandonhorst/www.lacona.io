@@ -1,3 +1,3 @@
-The Lacona demo website, hosted at www.lacona.io on Divshot. Any bugs reported will be fixed both on the demo website and in the full version of Lacona, when it is released.
+The Lacona demo website, hosted at www.lacona.io on Github Pages. Any bugs reported will be fixed both on the demo website and in the full version of Lacona, when it is released.
 
-Back Lacona on Kickstarter to help make it a reality.
+Lacona is scheduled for release in January, 2016.
