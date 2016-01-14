@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "async-each-series": "^1.1.0",
-    "babel-runtime": "^5.8.20",
     "lacona": "^0.31.0",
     "lacona-phrase": "^0.7.0",
     "lacona-phrase-datetime": "^0.3.2",
@@ -37,14 +36,12 @@
     "url": "https://github.com/heroku/node-js-getting-started"
   },
   "keywords": [
-    "node",
-    "heroku",
-    "express"
+    "lacona"
   ],
   "license": "MIT",
   "devDependencies": {
-    "babel": "^5.8.23",
-    "babelify": "^6.3.0",
+    "babel": "^5.8.34",
+    "babelify": "^6.4.0",
     "browserify": "^12.0.1",
     "browserify-shim": "^3.8.11",
     "node-sass": "^3.4.2",

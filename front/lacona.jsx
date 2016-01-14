@@ -1,8 +1,10 @@
 import _ from 'lodash'
-import {Parser} from 'lacona'
+import { Parser } from 'lacona'
 import React from 'react'
 import CSSTransitionGroup from 'react-addons-css-transition-group'
-import ReactLacona from 'react-lacona'
+import { LaconaView } from 'react-lacona'
+
+import { grammar, extensions } from './sentence.jsx'
 
 function groupPlaceholders (result) {
   return _.chain(result.words)
@@ -21,8 +23,8 @@ function mapPlaceholderGroups (resultGroup) {
         .value()
     })
     .thru(descriptorLists => _.zip(...descriptorLists))
-    .map(x => _.unique(x))
     .map(x => _.filter(x))
+    .map(x => _.unique(x))
     .value()
 
   const result = _.clone(_.first(resultGroup))
@@ -31,7 +33,7 @@ function mapPlaceholderGroups (resultGroup) {
     .filter('placeholder')
     .forEach((item, index) => {
       item.placeholderTexts = placeholders[index]
-      // item.descriptors = [placeholders[index]]
+      delete item.argument
     })
     .value()
 
@@ -80,8 +82,8 @@ export default class Lacona extends React.Component {
     }
 
     this.parser = new Parser()
-    this.parser.grammar = props.grammar
-    this.parser.extensions = props.extensions
+    this.parser.grammar = grammar
+    this.parser.extensions = extensions
   }
 
   componentDidMount () {
@@ -179,7 +181,7 @@ export default class Lacona extends React.Component {
     return (
       <CSSTransitionGroup component='div' className='lacona' transitionName='lacona' transitionAppear={true} transitionAppearTimeout={0} transitionEnterTimeout={1000} transitionLeaveTimeout={1500}>
         <Keys visible={this.state.focused} key='keys' />
-        <ReactLacona
+        <LaconaView
           ref='lacona'
           key='lacona'
           onFocus={this.focus.bind(this)}
@@ -200,6 +202,5 @@ export default class Lacona extends React.Component {
 }
 Lacona.defaultProps = {
   tryMe: false,
-  placeholder: 'Try me!',
-  extensions: []
+  placeholder: 'Try me!'
 }

@@ -2,76 +2,25 @@
 
 process.env.LACONA_ENV = 'demo'
 
-global.config = require('./demo-config')
-import _ from 'lodash'
-import {createElement, Phrase} from 'lacona-phrase'
+import { demoConfig, demoData } from './demo-config'
+global.demoConfig = demoConfig
+global.demoData = demoData
 
-import communicate from 'lacona-command-communicate'
-import events from 'lacona-command-events'
-import itunes from 'lacona-command-itunes'
-import searchInternet from 'lacona-command-search-internet'
-import openCommand from 'lacona-command-open'
-import osx from 'lacona-command-osx'
-import settingsCommand from 'lacona-command-settings'
-import translateCommand from 'lacona-command-translate'
-// import {Date as DatePhrase, DateTime, Time, TimePeriod, TimeDuration} from 'lacona-phrase-datetime'
-// import URL from 'lacona-phrase-url'
-// import Email from 'lacona-phrase-email'
-// import PhoneNumber from 'lacona-phrase-phonenumber'
+import { createElement } from 'lacona-phrase'
 
-function toGrammar (name, command) {
-  return (
-    <choice id={name}>
-      {_.map(command.sentences, ({Sentence}) => <Sentence />)}
-    </choice>
-  )
-}
+import { extensions as communicate } from 'lacona-command-communicate'
+import { extensions as events } from 'lacona-command-events'
+import { extensions as itunes } from 'lacona-command-itunes'
+import { extensions as searchInternet } from 'lacona-command-search-internet'
+import { extensions as open } from 'lacona-command-open'
+import { extensions as osx } from 'lacona-command-osx'
+import { extensions as settings } from 'lacona-command-settings'
+import { extensions as translate } from 'lacona-command-translate'
+import { extensions as command, Command } from 'lacona-command'
 
-export const search = {
-  grammar: toGrammar('search', searchInternet)
-}
+export const grammar = <Command />
 
-export const date = {
-  grammar: toGrammar('date', events),
-  extensions: osx.extensions
-}
-export const open = {
-  grammar: toGrammar('open', openCommand),
-  extensions: osx.extensions
-}
-
-export const play = {
-  grammar: toGrammar('play', itunes)
-}
-
-export const contact = {
-  grammar: toGrammar('contact', communicate),
-  extensions: osx.extensions
-}
-
-export const translate = {
-  grammar: toGrammar('translate', translateCommand)
-}
-
-export const settings = {
-  grammar: toGrammar('settings', settingsCommand),
-  extensions: osx.extensions
-}
-
-export const all = {
-  grammar: (
-    <choice>
-      {open.grammar}
-      {date.grammar}
-      {search.grammar}
-      {play.grammar}
-      {contact.grammar}
-      {translate.grammar}
-      {settings.grammar}
-    </choice>
-  ),
-  extensions: osx.extensions
-}
+export const extensions = [].concat(communicate, events, itunes, searchInternet, open, osx, settings, translate, command)
 
 /*
 

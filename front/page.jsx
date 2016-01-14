@@ -5,6 +5,7 @@ import ga, {Initializer} from 'react-google-analytics'
 import getExecute from './execute.jsx'
 import Lacona from './lacona.jsx'
 import React from 'react'
+import { hashArgument } from 'react-lacona'
 import CSSTransitionGroup from 'react-addons-css-transition-group'
 
 const MS_PER_INPUT = 10
@@ -17,7 +18,6 @@ const examples = [
   'open todo.txt',
   'open my-document.docx with Pages',
   'open lacona.io in Safari',
-  "schedule Dinner with Vicky at Sacco's Flatbread for 7pm tomorrow",
   'schedule Vacation 10a Monday to 6:30p Thursday',
   'remind me to Pick up the car September 12 at 11:30am',
   'remind me to Buy a gift 7 days before 12/1',
@@ -35,7 +35,9 @@ const examples = [
   'email Dinner Plans to Peter Parker',
   'facetime Bruce Banner',
   'email app@lacona.io',
-  'call +1 617 867 5309'
+  'call +1 617 867 5309',
+  'turn on do not disturb for 25 minutes',
+  'translate 我爱你 to English'
 ]
 
 class Lightbox extends React.Component {
@@ -263,8 +265,6 @@ export default class Page extends React.Component {
           <section className='full'>
             <Lacona
               userInteracted={this.stopDemo.bind(this)}
-              grammar={all.grammar}
-              extensions={all.extensions}
               execute={this.execute}
               ref='big'
               tryMe={true}
@@ -277,50 +277,50 @@ export default class Page extends React.Component {
               <p>With Lacona, your Apps, Bookmarks, Files, System Preferences, and more are only a few keystrokes away. You can also manage your open Mission Control Desktops, apps, windows, and browser tabs.</p>
               <ul className='examples'>
                 <li onClick={this.type.bind(this, '0', () => false, 'open Calendar')}>
-                  <span className='category-action'>open</span> <span className='descriptor-application'>Calendar</span>
+                  <span className='category-action'>open</span> <span className={`category-argument${hashArgument('application')}`}>Calendar</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'open Parental Controls')}>
-                  <span className='category-action'>open</span> <span className='descriptor-preference-pane'>Parental Controls</span>
+                  <span className='category-action'>open</span> <span className={`category-argument${hashArgument('preference pane')}`}>Parental Controls</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'open Facebook and Twitter')}>
-                  <span className='category-action'>open</span> <span className='descriptor-bookmark'>Facebook</span> <span className='category-conjunction'>and</span> <span className='descriptor-bookmark'>Twitter</span>
+                  <span className='category-action'>open</span> <span className={`category-argument${hashArgument('bookmark')}`}>Facebook</span> <span className='category-conjunction'>and</span> <span className={`category-argument${hashArgument('bookmark')}`}>Twitter</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'iTunes')}>
-                  <span className='descriptor-application'>iTunes</span>
+                  <span className={`category-argument${hashArgument('application')}`}>iTunes</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'quit Safari')}>
-                  <span className='category-action'>quit</span> <span className='descriptor-application'>Safari</span>
+                  <span className='category-action'>quit</span> <span className={`category-argument${hashArgument('application')}`}>Safari</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'open lacona.io in Safari and Firefox')}>
-                  <span className='category-action'>open</span> <span className='descriptor-url'>lacona.io</span> <span className='category-conjunction'>in</span> <span className='descriptor-application'>Safari</span> <span className='category-conjunction'>and</span> <span className='descriptor-application'>Firefox</span>
+                  <span className='category-action'>open</span> <span className={`category-argument${hashArgument('URL')}`}>lacona.io</span> <span className='category-conjunction'>in</span> <span className={`category-argument${hashArgument('application')}`}>Safari</span> <span className='category-conjunction'>and</span> <span className={`category-argument${hashArgument('application')}`}>Firefox</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'switch to Messages')}>
-                  <span className='category-action'>switch to</span> <span className='descriptor-application'>Messages</span>
+                  <span className='category-action'>switch to</span> <span className={`category-argument${hashArgument('application')}`}>Messages</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'open kickstarter.com')}>
-                  <span className='category-action'>open</span> <span className='descriptor-url'>kickstarter.com</span>
+                  <span className='category-action'>open</span> <span className={`category-argument${hashArgument('URL')}`}>kickstarter.com</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'open ~/Downloads/Lacona.dmg')}>
-                  <span className='category-action'>open</span> <span className='descriptor-path'>~/Downloads/Lacona.dmg</span>
+                  <span className='category-action'>open</span> <span className={`category-argument${hashArgument('path')}`}>~/Downloads/Lacona.dmg</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'open Gmail and Reminders and calendar.google.com')}>
-                  <span className='category-action'>open</span> <span className='descriptor-bookmark'>Gmail</span><span className='category-conjunction'> and </span><span className='descriptor-application'>Reminders</span><span className='category-conjunction'> and </span><span className='descriptor-url'>calendar.google.com</span>
+                  <span className='category-action'>open</span> <span className={`category-argument${hashArgument('bookmark')}`}>Gmail</span><span className='category-conjunction'> and </span><span className={`category-argument${hashArgument('application')}`}>Reminders</span><span className='category-conjunction'> and </span><span className={`category-argument${hashArgument('URL')}`}>calendar.google.com</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'lifehacker.com')}>
-                  <span className='descriptor-url'>lifehacker.com</span>
+                  <span className={`category-argument${hashArgument('URL')}`}>lifehacker.com</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'close Reminders')}>
-                  <span className='category-action'>close</span> <span className='descriptor-application'>Reminders</span>
+                  <span className='category-action'>close</span> <span className={`category-argument${hashArgument('application')}`}>Reminders</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'open todo.txt')}>
-                  <span className='category-action'>open</span> <span className='descriptor-file'>todo.txt</span>
+                  <span className='category-action'>open</span> <span className={`category-argument${hashArgument('file')}`}>todo.txt</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'open my-document.docx with Pages')}>
-                  <span className='category-action'>open</span> <span className='descriptor-file'>my-document.docx</span> <span className='category-conjunction'>with</span> <span className='descriptor-application'>Pages</span>
+                  <span className='category-action'>open</span> <span className={`category-argument${hashArgument('file')}`}>my-document.docx</span> <span className='category-conjunction'>with</span> <span className={`category-argument${hashArgument('application')}`}>Pages</span>
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='0' grammar={open.grammar} extensions={open.extensions} execute={open => this.execute({open})} />
+            <Lacona userInteracted={this.stopDemo.bind(this)} ref='0' execute={this.execute} />
           </section>
           <section className='textRight'>
             <div className='text'>
@@ -331,33 +331,33 @@ export default class Page extends React.Component {
                 <li>This demo US assumes date formats.</li>
               </ul>
               <ul className='examples'>
-                <li onClick={this.type.bind(this, '1', () => false, "schedule Dinner with Vicky at Sacco's Flatbread for 7pm tomorrow")}>
-                  <span className='category-action'>schedule</span> <span className='descriptor-calendar-event'>Dinner with Vicky</span> <span className='category-conjunction'>at</span> <span className='descriptor-location'>Sacco's Flatbread</span> <span className='category-conjunction'>for</span> <span className='descriptor-time'>7pm</span> <span className='descriptor-date'>tomorrow</span>
+                <li onClick={this.type.bind(this, '1', () => false, "schedule Dinner with Vicky for 7pm tomorrow")}>
+                  <span className='category-action'>schedule</span> <span className={`category-argument${hashArgument('calendar event')}`}>Dinner with Vicky</span>{/* <span className='category-conjunction'>at</span> <span className='descriptor-location'>Sacco's Flatbread</span>*/} <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('time')}`}>7pm</span> <span className={`category-argument${hashArgument('date')}`}>tomorrow</span>
                 </li>
                 <li onClick={this.type.bind(this, '1', () => false, 'remind me to Pick up the car September 12 at 11:30am')}>
-                  <span className='category-action'>remind me to</span> <span className='descriptor-reminder-title'>Pick up the car</span> <span className='descriptor-date'>September 12</span> <span className='category-conjunction'>at</span> <span className='descriptor-time'>11:30am</span>
+                  <span className='category-action'>remind me to</span> <span className={`category-argument${hashArgument('reminder title')}`}>Pick up the car</span> <span className={`category-argument${hashArgument('date')}`}>September 12</span> <span className='category-conjunction'>at</span> <span className={`category-argument${hashArgument('time')}`}>11:30am</span>
                 </li>
                 <li onClick={this.type.bind(this, '1', () => false, "remind me to Buy a gift 2 weeks before my wife's birthday")}>
-                  <span className='category-action'>remind me to</span> <span className='descriptor-reminder-title'>Buy a gift</span> <span className='descriptor-offset'>2 weeks before</span> <span className='descriptor-birthday'>my Wife's birthday</span>
+                  <span className='category-action'>remind me to</span> <span className={`category-argument${hashArgument('reminder title')}`}>Buy a gift</span> <span className={`category-argument${hashArgument('date')}`}>2 weeks before my wife's birthday</span>
                 </li>
                 <li onClick={this.type.bind(this, '1', () => false, 'schedule Vacation 10a Monday to 6:30p Thursday')}>
-                  <span className='category-action'>schedule</span> <span className='descriptor-calendar-event'>Vacation</span> <span className='descriptor-time'>10a</span> <span className='descriptor-date'>Monday</span> <span className='category-conjunction'>to</span> <span className='descriptor-time'>6:30p</span> <span className='descriptor-date'>Thursday</span>
+                  <span className='category-action'>schedule</span> <span className={`category-argument${hashArgument('calendar event')}`}>Vacation</span> <span className={`category-argument${hashArgument('time')}`}>10a</span> <span className={`category-argument${hashArgument('date')}`}>Monday</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('time')}`}>6:30p</span> <span className={`category-argument${hashArgument('date')}`}>Thursday</span>
                 </li>
                 <li onClick={this.type.bind(this, '1', () => false, 'schedule China trip from Native American Day to Veterans Day')}>
-                  <span className='category-action'>schedule</span> <span className='descriptor-calendar-event'>China trip</span> <span className='category-conjunction'>from</span> <span className='descriptor-holiday'>Native American Day</span> <span className='category-conjunction'>to</span> <span className='descriptor-holiday'>Veterans Day</span>
+                  <span className='category-action'>schedule</span> <span className={`category-argument${hashArgument('calendar event')}`}>China trip</span> <span className='category-conjunction'>from</span> <span className={`category-argument${hashArgument('holiday')}`}>Native American Day</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('holiday')}`}>Veterans Day</span>
                 </li>
                 <li onClick={this.type.bind(this, '1', () => false, 'remind me to Buy a gift 7 days before 12/1')}>
-                  <span className='category-action'>remind me to</span> <span className='descriptor-reminder-title'>Buy a gift</span> <span className='descriptor-offset'>7 days before</span> <span className='descriptor-date'>12/1</span>
+                  <span className='category-action'>remind me to</span> <span className={`category-argument${hashArgument('reminder title')}`}>Buy a gift</span> <span className={`category-argument${hashArgument('date')}`}>7 days before 12/1</span>
                 </li>
                 <li onClick={this.type.bind(this, '1', () => false, 'remind me to Call Jenny')}>
-                  <span className='category-action'>remind me to</span> <span className='descriptor-reminder-title'>Call Jenny</span>
+                  <span className='category-action'>remind me to</span> <span className={`category-argument${hashArgument('reminder title')}`}>Call Jenny</span>
                 </li>
                 <li onClick={this.type.bind(this, '1', () => false, 'remind me to Charge my phone at 9pm')}>
-                  <span className='category-action'>remind me to</span> <span className='descriptor-reminder-title'>Charge my phone</span> <span className='category-conjunction'>at</span> <span className='descriptor-time'>9pm</span>
+                  <span className='category-action'>remind me to</span> <span className={`category-argument${hashArgument('reminder title')}`}>Charge my phone</span> <span className='category-conjunction'>at</span> <span className={`category-argument${hashArgument('time')}`}>9pm</span>
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='1' grammar={date.grammar} extensions={date.extensions} execute={this.executeDate.bind(this)} />
+            <Lacona userInteracted={this.stopDemo.bind(this)} ref='1' execute={this.execute} />
           </section>
           <section className='textLeft'>
             <div className='text'>
@@ -365,16 +365,16 @@ export default class Page extends React.Component {
               <p>With Lacona, there is no need to fiddle with menus and forms to change your basic settings. Turn off your Wifi, turn on Do Not Disturb, or eject drives with just a few keystrokes. Set time limits on settings, so you don't forget to change them back.</p>
               <ul className='examples'>
                 <li onClick={this.type.bind(this, '2', () => false, 'turn on wifi')}>
-                  <span className='category-action'>turn on</span> <span className='descriptor-setting'>wifi</span>
+                  <span className='category-action'>turn on</span> <span className={`category-argument${hashArgument('setting')}`}>wifi</span>
                 </li>
                 <li onClick={this.type.bind(this, '2', () => false, 'toggle Do Not Disturb')}>
-                  <span className='category-action'>toggle</span> <span className='descriptor-setting'>Do Not Disturb</span>
+                  <span className='category-action'>toggle</span> <span className={`category-argument${hashArgument('setting')}`}>Do Not Disturb</span>
                 </li>
                 <li onClick={this.type.bind(this, '2', () => false, 'shutdown')}>
                   <span className='category-action'>shutdown</span>
                 </li>
                 <li onClick={this.type.bind(this, '2', () => false, 'eject Lacona.dmg')}>
-                  <span className='category-action'>eject</span> <span className='descriptor-volume'>Lacona.dmg</span>
+                  <span className='category-action'>eject</span> <span className={`category-argument${hashArgument('volume')}`}>Lacona.dmg</span>
                 </li>
                 <li onClick={this.type.bind(this, '2', () => false, 'turn off display')}>
                   <span className='category-action'>turn off display</span>
@@ -383,17 +383,17 @@ export default class Page extends React.Component {
                   <span className='category-action'>empty Trash</span>
                 </li>
                 <li onClick={this.type.bind(this, '2', () => false, 'enable bluetooth')}>
-                  <span className='category-action'>enable</span> <span className='descriptor-setting'>bluetooth</span>
+                  <span className='category-action'>enable</span> <span className={`category-argument${hashArgument('setting')}`}>bluetooth</span>
                 </li>
-                <li onClick={this.type.bind(this, '2', () => false, 'do not disturb for 25 minutes')}>
-                  <span className='category-action'>do not disturb</span> <span className='category-conjunction'>for</span> <span className='descriptor-amount-of-time'>25 minutes</span>
+                <li onClick={this.type.bind(this, '2', () => false, 'turn on do not disturb for 25 minutes')}>
+                  <span className='category-action'>turn on</span> <span className={`category-argument${hashArgument('setting')}`}>do not disturb</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('time duration')}`}>25 minutes</span>
                 </li>
                 <li onClick={this.type.bind(this, '2', () => false, 'turn on the screensaver')}>
                   <span className='category-action'>turn on the screensaver</span>
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='2' grammar={settings.grammar} extensions={settings.extensions} execute={settings => this.execute({settings})} />
+            <Lacona userInteracted={this.stopDemo.bind(this)} ref='2' execute={this.execute} />
           </section>
           <section className='textRight'>
             <div className='text'>
@@ -401,23 +401,23 @@ export default class Page extends React.Component {
               <p>Search the web like a boss. Utilize powerful fallthrough functionality to save even more keystrokes.</p>
               <ul className='examples'>
                 <li onClick={this.type.bind(this, '3', () => false, 'search Google for pictures of cats')}>
-                  <span className='category-action'>search</span> <span className='descriptor-search-engine'>Google</span> <span className='category-conjunction'>for</span> <span className='descriptor-query'>pictures of cats</span>
+                  <span className='category-action'>search</span> <span className={`category-argument${hashArgument('search engine')}`}>Google</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('query')}`}>pictures of cats</span>
                 </li>
                 <li onClick={this.type.bind(this, '3', () => false, 'Google stormtroopers')}>
-                  <span className='descriptor-search-engine'>Google</span> <span className='descriptor-query'>stormtroopers</span>
+                  <span className={`category-argument${hashArgument('search engine')}`}>Google</span> <span className={`category-argument${hashArgument('query')}`}>stormtroopers</span>
                 </li>
                 <li onClick={this.type.bind(this, '3', () => false, 'Amazon Avengers')}>
-                  <span className='descriptor-search-engine'>Amazon</span> <span className='descriptor-query'>Avengers</span>
+                  <span className={`category-argument${hashArgument('search engine')}`}>Amazon</span> <span className={`category-argument${hashArgument('query')}`}>Avengers</span>
                 </li>
                 <li onClick={this.type.bind(this, '3', () => false, 'search Wikipedia for Pluto')}>
-                  <span className='category-action'>search</span> <span className='descriptor-search-engine'>Wikipedia</span> <span className='category-conjunction'>for</span> <span className='descriptor-query'>Pluto</span>
+                  <span className='category-action'>search</span> <span className={`category-argument${hashArgument('search engine')}`}>Wikipedia</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('query')}`}>Pluto</span>
                 </li>
                 <li onClick={this.type.bind(this, '3', () => false, 'search eBay and Amazon for iPhone 6')}>
-                  <span className='category-action'>search</span> <span className='descriptor-search-engine'>eBay</span> <span className='category-conjunction'>and</span> <span className='descriptor-search-engine'>Amazon</span> <span className='category-conjunction'>for</span> <span className='descriptor-query'>iPhone 6</span>
+                  <span className='category-action'>search</span> <span className={`category-argument${hashArgument('search engine')}`}>eBay</span> <span className='category-conjunction'>and</span> <span className={`category-argument${hashArgument('search engine')}`}>Amazon</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('query')}`}>iPhone 6</span>
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='3' grammar={search.grammar} execute={search => this.execute({search})} />
+            <Lacona userInteracted={this.stopDemo.bind(this)} ref='3' execute={this.execute} />
           </section>
           <section className='textLeft'>
             <div className='text'>
@@ -425,24 +425,24 @@ export default class Page extends React.Component {
               <p>Instantly play anything in your iTunes library, without ever touching the mouse.</p>
               <ul className='examples'>
                 <li onClick={this.type.bind(this, '4', () => false, 'play Robot Love')}>
-                  <span className='category-action'>play</span> <span className='descriptor-song'>Robot Love</span>
+                  <span className='category-action'>play</span> <span className={`category-argument${hashArgument('song')}`}>Robot Love</span>
                 </li>
                 <li onClick={this.type.bind(this, '4', () => false, 'play Walk the Moon')}>
-                  <span className='category-action'>play</span> <span className='descriptor-artist'>Walk the Moon</span>
+                  <span className='category-action'>play</span> <span className={`category-argument${hashArgument('artist')}`}>Walk the Moon</span>
                 </li>
                 <li onClick={this.type.bind(this, '4', () => false, 'play Jason Derulo, Flyte, and Elle King')}>
-                  <span className='category-action'>play</span> <span className='descriptor-artist'>Jason Derulo</span><span className='category-conjunction'>, </span><span className='descriptor-artist'>Flyte</span><span className='category-conjunction'>, and </span><span className='descriptor-artist'>Elle King</span>
+                  <span className='category-action'>play</span> <span className={`category-argument${hashArgument('artist')}`}>Jason Derulo</span><span className='category-conjunction'>, </span><span className={`category-argument${hashArgument('artist')}`}>Flyte</span><span className='category-conjunction'>, and </span><span className={`category-argument${hashArgument('artist')}`}>Elle King</span>
                 </li>
 
                 <li onClick={this.type.bind(this, '4', () => false, 'play next song')}>
-                  <span className='category-action'>play</span> <span className='descriptor-next-song'>next song</span>
+                  <span className='category-action'>play next song</span>
                 </li>
                 <li onClick={this.type.bind(this, '4', () => false, 'pause')}>
                   <span className='category-action'>pause</span>
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='4' grammar={play.grammar} execute={play => this.execute({play})} />
+            <Lacona userInteracted={this.stopDemo.bind(this)} ref='4' execute={this.execute} />
           </section>
           <section className='textRight'>
             <div className='text'>
@@ -450,56 +450,59 @@ export default class Page extends React.Component {
               <p>Easily communicate with all of your contacts over Email, FaceTime, iMessage. Make calls and send texts through your iPhone. Smoke signals not yet supported.</p>
               <ul className='examples'>
                 <li onClick={this.type.bind(this, '5', () => false, 'call Mom')}>
-                  <span className='category-action'>call</span> <span className='descriptor-relationship'>Mom</span>
+                  <span className='category-action'>call</span> <span className={`category-argument${hashArgument('relationship')}`}>Mom</span>
                 </li>
                 <li onClick={this.type.bind(this, '5', () => false, 'email Tony Stark')}>
-                  <span className='category-action'>email</span> <span className='descriptor-contact'>Tony Stark</span>
+                  <span className='category-action'>email</span> <span className={`category-argument${hashArgument('contact')}`}>Tony Stark</span>
                 </li>
                 <li onClick={this.type.bind(this, '5', () => false, 'email Dinner Plans to Clinton and Natalia')}>
-                  <span className='category-action'>email</span> <span className='descriptor-subject'>Dinner Plans</span> <span className='category-conjunction'>to</span> <span className='descriptor-contact'>Clinton</span> <span className='category-conjunction'>and</span> <span className='descriptor-contact'>Natalia</span>
+                  <span className='category-action'>email</span> <span className={`category-argument${hashArgument('subject')}`}>Dinner Plans</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('contact')}`}>Clinton</span> <span className='category-conjunction'>and</span> <span className={`category-argument${hashArgument('contact')}`}>Natalia</span>
                 </li>
                 <li onClick={this.type.bind(this, '5', () => false, 'facetime my boss')}>
-                  <span className='category-action'>facetime</span> <span className='descriptor-relationship'>my boss</span>
+                  <span className='category-action'>facetime</span> <span className={`category-argument${hashArgument('relationship')}`}>my boss</span>
                 </li>
                 <li onClick={this.type.bind(this, '5', () => false, 'facetime Bruce Banner')}>
-                  <span className='category-action'>facetime</span> <span className='descriptor-contact'>Bruce Banner</span>
+                  <span className='category-action'>facetime</span> <span className={`category-argument${hashArgument('contact')}`}>Bruce Banner</span>
                 </li>
                 <li onClick={this.type.bind(this, '5', () => false, 'call my Husband')}>
-                  <span className='category-action'>call</span> <span className='descriptor-relationship'>my Husband</span>
+                  <span className='category-action'>call</span> <span className={`category-argument${hashArgument('relationship')}`}>my Husband</span>
                 </li>
                 <li onClick={this.type.bind(this, '5', () => false, 'email app@lacona.io')}>
-                  <span className='category-action'>email</span> <span className='descriptor-email-address'>app@lacona.io</span>
+                  <span className='category-action'>email</span> <span className={`category-argument${hashArgument('email address')}`}>app@lacona.io</span>
                 </li>
                 <li onClick={this.type.bind(this, '5', () => false, 'call +1 617 867 5309')}>
-                  <span className='category-action'>call</span> <span className='descriptor-phone-number'>+1 617 867 5309</span>
+                  <span className='category-action'>call</span> <span className={`category-argument${hashArgument('phone number')}`}>+1 617 867 5309</span>
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='5' grammar={contact.grammar} extensions={contact.extensions} execute={contact => this.execute({contact})} />
+            <Lacona userInteracted={this.stopDemo.bind(this)} ref='5' execute={this.execute} />
           </section>
           <section className='textLeft'>
             <div className='text'>
               <a name='translate' className='anchor'><h3>Become a Global Citizen</h3></a>
-              <p>Quickly translate words and phrases between languages. A more natural interface for Google Translate.</p>
+              <p>Quickly translate words, phrases, and websites between languages. A more natural interface for Google Translate.</p>
               <ul className='examples'>
                 <li onClick={this.type.bind(this, '6', () => false, 'translate мороженное')}>
-                  <span className='category-action'>translate</span> <span className='descriptor-phrase'>мороженное</span>
+                  <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>мороженное</span>
                 </li>
+                <li onClick={this.type.bind(this, '6', () => false, 'translate univision.com/')}>
+                  <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('URL')}`}>univision.com</span>
+                  </li>
                 <li onClick={this.type.bind(this, '6', () => false, 'translate 我爱你 to Korean')}>
-                  <span className='category-action'>translate</span> <span className='descriptor-phrase'>我爱你</span> <span className='category-conjunction'>to</span> <span className='descriptor-language'>Korean</span>
+                  <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>我爱你</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('language')}`}>Korean</span>
                 </li>
                 <li onClick={this.type.bind(this, '6', () => false, 'translate ¿cómo estás? from Spanish to Japanese')}>
-                  <span className='category-action'>translate</span> <span className='descriptor-phrase'>como estas?</span> <span className='category-conjunction'>from</span> <span className='descriptor-language'>Spanish</span> <span className='category-conjunction'>to</span> <span className='descriptor-language'>Japanese</span>
+                  <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>como estas?</span> <span className='category-conjunction'>from</span> <span className={`category-argument${hashArgument('language')}`}>Spanish</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('language')}`}>Japanese</span>
                 </li>
                 <li onClick={this.type.bind(this, '6', () => false, 'translate hujambo from Swahili')}>
-                  <span className='category-action'>translate</span> <span className='descriptor-phrase'>hujambo</span> <span className='category-conjunction'>from</span> <span className='descriptor-language'>Swahili</span>
+                  <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>hujambo</span> <span className='category-conjunction'>from</span> <span className={`category-argument${hashArgument('language')}`}>Swahili</span>
                 </li>
                 <li onClick={this.type.bind(this, '6', () => false, "translate I don't know to Arabic, Chinese, French, Russian, and Spanish")}>
-                  <span className='category-action'>translate</span> <span className='descriptor-phrase'>I don't know</span> <span className='category-conjunction'>to</span> <span className='descriptor-language'>Arabic</span> <span className='category-conjunction'>,</span> <span className='descriptor-language'>Chinese</span> <span className='category-conjunction'>,</span> <span className='descriptor-language'>French</span> <span className='category-conjunction'>,</span> <span className='descriptor-language'>Russian</span> <span className='category-conjunction'>, and</span> <span className='descriptor-language'>Spanish</span>
+                  <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>I don't know</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('language')}`}>Arabic</span> <span className='category-conjunction'>,</span> <span className={`category-argument${hashArgument('language')}`}>Chinese</span> <span className='category-conjunction'>,</span> <span className={`category-argument${hashArgument('language')}`}>French</span> <span className='category-conjunction'>,</span> <span className={`category-argument${hashArgument('language')}`}>Russian</span> <span className='category-conjunction'>, and</span> <span className={`category-argument${hashArgument('language')}`}>Spanish</span>
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='6' grammar={translate.grammar} execute={translate => this.execute({translate})} />
+            <Lacona userInteracted={this.stopDemo.bind(this)} execute={this.execute} ref='6' />
           </section>
           <section className='full'>
             <div className='text'>
@@ -507,25 +510,25 @@ export default class Page extends React.Component {
               <p>Lacona is built to be extended. An open Developer API gives it the power it do anything you need it to do, quickly and easily.</p>
               <ul className='examples inactive'>
                 <li><span className='category-action'>tweet</span> <span className='category-argument2'>just setting up my twttr #blessed</span></li>
-                <li><span className='category-action'>skype</span> <span className='descriptor-contact'>Aaron</span></li>
-                <li><span className='category-action'>email</span> <span className='category-argument0'>my last instagram picture</span> <span className='category-conjunction'>to</span> <span className='descriptor-relationship'>Mom</span></li>
+                <li><span className='category-action'>skype</span> <span className={`category-argument${hashArgument('contact')}`}>Aaron</span></li>
+                <li><span className='category-action'>email</span> <span className='category-argument0'>my last instagram picture</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('relationship')}`}>Mom</span></li>
                 <li><span className='category-action'>calculate</span> <span className='category-argument3'>sqrt(5)</span></li>
                 <li><span className='category-action'>turn off</span> <span className='category-argument5'>the kitchen lights</span></li>
                 <li><span className='category-action'>pronounce</span> <span className='category-argument4'>indefatigable</span></li>
                 <li><span className='category-action'>check</span> <span className='category-argument6'>APPL</span></li>
-                <li><span className='category-action'>set</span> <span className='category-argument0'>default browser</span> <span className='category-conjunction'>to</span> <span className='category-application'>Firefox</span></li>
+                <li><span className='category-action'>set</span> <span className='category-argument0'>default browser</span> <span className='category-conjunction'>to</span> <span className={`category-application${hashArgument('application')}`}>Firefox</span></li>
                 <li><span className='category-action'>set a timer</span> <span className='category-conjunction'>for</span> <span className='category-argument2'>25 minutes</span></li>
                 <li><span className='category-action'>execute</span> <span className='category-argument5'>ps -ef | grep -i lacona</span></li>
-                <li><span className='category-action'>email walking directions</span> <span className='category-conjunction'>from</span> <span className='category-argument6'>Penn Station NY</span> <span className='category-conjunction'>to</span> <span className='category-argument6'>my house</span> <span className='category-conjunction'>to</span> <span className='descriptor-contact'>Pepper Potts</span></li>
-                <li><span className='category-action'>block</span> <span className='descriptor-url'>reddit.com</span></li>
+                <li><span className='category-action'>email walking directions</span> <span className='category-conjunction'>from</span> <span className='category-argument6'>Penn Station NY</span> <span className='category-conjunction'>to</span> <span className='category-argument6'>my house</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('contact')}`}>Pepper Potts</span></li>
+                <li><span className='category-action'>block</span> <span className={`category-argument${hashArgument('URL')}`}>reddit.com</span></li>
                 <li><span className='category-action'>subscribe</span> <span className='category-conjunction'>to</span> <span className='category-argument0'>lifehacker</span></li>
                 <li><span className='category-action'>paste</span> <span className='category-argument2'>my last tweet</span></li>
                 <li><span className='category-action'>fork</span> <span className='category-argument1'>lacona/lacona</span></li>
                 <li><span className='category-action'>define</span> <span className='category-argument4'>antediluvian</span></li>
                 <li><span className='category-action'>roll</span> <span className='category-argument0'>d12</span></li>
-                <li><span className='category-action'>find flights</span> <span className='category-conjunction'>from</span> <span className='category-argument6'>SFO</span> <span className='category-conjunction'>to</span> <span className='category-argument6'>BOS</span> <span className='category-conjunction'>on</span> <span className='descriptor-date'>8/6/2015</span></li>
-                <li><span className='category-action'>yo</span> <span className='descriptor-contact'>THEDUDE</span></li>
-                <li><span className='category-action'>set an alarm</span> <span className='category-conjunction'>for</span> <span className='descriptor-time'>6am</span> <span className='category-conjunction'>on</span> <span className='descriptor-date'>Christmas</span></li>
+                <li><span className='category-action'>find flights</span> <span className='category-conjunction'>from</span> <span className='category-argument6'>SFO</span> <span className='category-conjunction'>to</span> <span className='category-argument6'>BOS</span> <span className='category-conjunction'>on</span> <span className={`category-argument${hashArgument('date')}`}>8/6/2015</span></li>
+                <li><span className='category-action'>yo</span> <span className={`category-argument${hashArgument('contact')}`}>THEDUDE</span></li>
+                <li><span className='category-action'>set an alarm</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('time')}`}>6am</span> <span className='category-conjunction'>on</span> <span className={`category-argument${hashArgument('date')}`}>Christmas</span></li>
                 <li><span className='category-action'>check the weather</span> <span className='category-conjunction'>in</span> <span className='category-argument2'>Boston</span></li>
               </ul>
             </div>

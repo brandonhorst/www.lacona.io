@@ -133,7 +133,7 @@
 }
 
 @mixin category($name, $color) {
-  .category-#{$name}:not(.highlighted) {
+  .category-#{$name} .word-component:not(.highlighted) {
     color: transparentize($color, 0.25);
   }
   .category-#{$name}, .examples .category-#{$name} {
@@ -145,14 +145,18 @@
   .descriptor-#{$name} .word-component:not(.highlighted) {
     color: transparentize($color, 0.25);
   }
-  .descriptor-#{$name}, .examples .category-#{$name} {
+  .descriptor-#{$name} {
     color: $color;
   }
 }
 
+
+
+
 @mixin theme($class, $theme) {
   .#{$class} {
     @include category(action, map-get($theme, action));
+    @include category(conjunction, map-get($theme, conjunction));
 
     @include category(argument0, map-get($theme, argument0));
     @include category(argument1, map-get($theme, argument1));
@@ -161,61 +165,67 @@
     @include category(argument4, map-get($theme, argument4));
     @include category(argument5, map-get($theme, argument5));
     @include category(argument6, map-get($theme, argument6));
-    @include category(conjunction, map-get($theme, conjunction));
 
-    @include descriptor(file, map-get($theme, argument0));
-    @include descriptor(artist, map-get($theme, argument0));
-    @include descriptor(location, map-get($theme, argument0));
-    @include descriptor(amount-of-time, map-get($theme, argument0));
+      /*
+      @include descriptor(file, map-get($theme, argument0));
+      @include descriptor(artist, map-get($theme, argument0));
+      @include descriptor(location, map-get($theme, argument0));
+      @include descriptor(period-of-time, map-get($theme, argument0));
+      @include descriptor(selection, map-get($theme, argument0));
 
-    @include descriptor(time, map-get($theme, argument1));
-    @include descriptor(song, map-get($theme, argument1));
-    @include descriptor(email-address, map-get($theme, argument1));
-    @include descriptor(path, map-get($theme, argument1));
-    @include descriptor(volume, map-get($theme, argument1));
+      @include descriptor(time, map-get($theme, argument1));
+      @include descriptor(song, map-get($theme, argument1));
+      @include descriptor(email-address, map-get($theme, argument1));
+      @include descriptor(path, map-get($theme, argument1));
+      @include descriptor(volume, map-get($theme, argument1));
+      @include descriptor(window, map-get($theme, argument1));
+      @include descriptor(clipboard, map-get($theme, argument1));
 
-    @include descriptor(message, map-get($theme, argument2));
-    @include descriptor(phrase, map-get($theme, argument2));
-    @include descriptor(query, map-get($theme, argument2));
-    @include descriptor(reminder-title, map-get($theme, argument2));
-    @include descriptor(calendar-event, map-get($theme, argument2));
-    @include descriptor(query, map-get($theme, argument2));
-    @include descriptor(playlist, map-get($theme, argument2));
-    @include descriptor(查询, map-get($theme, argument2));
-    @include descriptor(بحث, map-get($theme, argument2));
-    @include descriptor(запрос, map-get($theme, argument2));
-    @include descriptor(consulta, map-get($theme, argument2));
+      @include descriptor(message, map-get($theme, argument2));
+      @include descriptor(subject, map-get($theme, argument2));
+      @include descriptor(phrase, map-get($theme, argument2));
+      @include descriptor(query, map-get($theme, argument2));
+      @include descriptor(reminder-title, map-get($theme, argument2));
+      @include descriptor(calendar-event, map-get($theme, argument2));
+      @include descriptor(query, map-get($theme, argument2));
+      @include descriptor(playlist, map-get($theme, argument2));
+      @include descriptor(查询, map-get($theme, argument2));
+      @include descriptor(بحث, map-get($theme, argument2));
+      @include descriptor(запрос, map-get($theme, argument2));
+      @include descriptor(consulta, map-get($theme, argument2));
 
-    @include descriptor(contact, map-get($theme, argument3));
-    @include descriptor(language, map-get($theme, argument3));
-    @include descriptor(birthday, map-get($theme, argument3));
-    @include descriptor(url, map-get($theme, argument3));
-    @include descriptor(search-engine, map-get($theme, argument3));
-    @include descriptor(搜寻引擎, map-get($theme, argument3));
-    @include descriptor(محرك-البحث, map-get($theme, argument3));
-    @include descriptor(поисковик, map-get($theme, argument3));
-    @include descriptor(buscador, map-get($theme, argument3));
-    @include descriptor(composer, map-get($theme, argument3));
-    @include descriptor(setting, map-get($theme, argument3));
+      @include descriptor(contact, map-get($theme, argument3));
+      @include descriptor(language, map-get($theme, argument3));
+      @include descriptor(special-date, map-get($theme, argument3));
+      @include descriptor(url, map-get($theme, argument3));
+      @include descriptor(search-engine, map-get($theme, argument3));
+      @include descriptor(搜寻引擎, map-get($theme, argument3));
+      @include descriptor(محرك-البحث, map-get($theme, argument3));
+      @include descriptor(поисковик, map-get($theme, argument3));
+      @include descriptor(buscador, map-get($theme, argument3));
+      @include descriptor(composer, map-get($theme, argument3));
+      @include descriptor(setting, map-get($theme, argument3));
 
-    @include descriptor(phone-number, map-get($theme, argument4));
-    @include descriptor(album, map-get($theme, argument4));
-    @include descriptor(application, map-get($theme, argument4));
-    @include descriptor(date, map-get($theme, argument4));
+      @include descriptor(phone-number, map-get($theme, argument4));
+      @include descriptor(album, map-get($theme, argument4));
+      @include descriptor(application, map-get($theme, argument4));
+      @include descriptor(date, map-get($theme, argument4));
 
-    @include descriptor(relationship, map-get($theme, argument5));
-    @include descriptor(holiday, map-get($theme, argument5));
-    @include descriptor(preference-pane, map-get($theme, argument5));
-    @include descriptor(current-song, map-get($theme, argument5));
-    @include descriptor(next-song, map-get($theme, argument5));
-    @include descriptor(previous-song, map-get($theme, argument5));
-    @include descriptor(duration, map-get($theme, argument5));
-    @include descriptor(shuffled, map-get($theme, argument5));
+      @include descriptor(relationship, map-get($theme, argument5));
+      @include descriptor(holiday, map-get($theme, argument5));
+      @include descriptor(preference-pane, map-get($theme, argument5));
+      @include descriptor(current-song, map-get($theme, argument5));
+      @include descriptor(next-song, map-get($theme, argument5));
+      @include descriptor(previous-song, map-get($theme, argument5));
+      @include descriptor(duration, map-get($theme, argument5));
+      @include descriptor(shuffled, map-get($theme, argument5));
+      @include descriptor(tab, map-get($theme, argument5));
 
-    @include descriptor(bookmark, map-get($theme, argument6));
-    @include descriptor(genre, map-get($theme, argument6));
-    @include descriptor(offset, map-get($theme, argument6));
-
+      @include descriptor(bookmark, map-get($theme, argument6));
+      @include descriptor(date-and-time, map-get($theme, argument6));
+      @include descriptor(genre, map-get($theme, argument6));
+      @include descriptor(offset, map-get($theme, argument6));
+      */
     .placeholder {
       border: 2px solid lighten(map-get($theme, input-bg), 10%);
     }
