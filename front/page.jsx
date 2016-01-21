@@ -248,9 +248,9 @@ export default class Page extends React.Component {
         <header>
           <h1><a href='#' tabIndex='-1'>Lacona</a></h1>
           <h2 className='category-action highlighted'>Natural Language Commands for your Mac</h2>
-          <p>Call up Lacona with a keypress, and type whatever you want to do. It gives intelligent suggestions as you type and then follows your orders.</p>
-          <p>This page is just a demo of Lacona's power. The App is scheduled to launch in January, 2016.</p>
-          <p>This demo still has some bugs. If you find one, report it on <a href='https://github.com/lacona/www.lacona.io' target='_blank'>GitHub</a> or <a href='https://twitter.com/lacona' target='_blank'>Twitter</a>. It will be fixed before Lacona launches.</p>
+          <h3><a href='http://us10.campaign-archive1.com/?u=f923be23d36f00f457ea3b2c6&id=12a018e9df&e=[UNIQID]'>Launching January 29</a></h3>
+          <p>Call up Lacona with a keyboard shortcut, and type whatever you want to do. It gives intelligent suggestions as you type and then follows your orders.</p>
+          <p>This page is just a demo of Lacona's power. The App itself will be available for download on January 29.</p>
         </header>
 
         <content>
@@ -274,7 +274,7 @@ export default class Page extends React.Component {
           <section className='textLeft'>
             <div className='text'>
               <a name='open' className='anchor'><h3>Ditch the Dock</h3></a>
-              <p>With Lacona, your Apps, Bookmarks, Files, System Preferences, and more are only a few keystrokes away. You can also manage your open Mission Control Desktops, apps, windows, and browser tabs.</p>
+              <p>With Lacona, your Apps, Bookmarks, Files, System Preferences, and more are only a few keystrokes away. You can also manage your open apps right from your keyboard.</p>
               <ul className='examples'>
                 <li onClick={this.type.bind(this, '0', () => false, 'open Calendar')}>
                   <span className='category-action'>open</span> <span className={`category-argument${hashArgument('application')}`}>Calendar</span>
@@ -293,6 +293,7 @@ export default class Page extends React.Component {
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'open lacona.io in Safari and Firefox')}>
                   <span className='category-action'>open</span> <span className={`category-argument${hashArgument('URL')}`}>lacona.io</span> <span className='category-conjunction'>in</span> <span className={`category-argument${hashArgument('application')}`}>Safari</span> <span className='category-conjunction'>and</span> <span className={`category-argument${hashArgument('application')}`}>Firefox</span>
+
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'switch to Messages')}>
                   <span className='category-action'>switch to</span> <span className={`category-argument${hashArgument('application')}`}>Messages</span>
@@ -498,7 +499,7 @@ export default class Page extends React.Component {
                   <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>hujambo</span> <span className='category-conjunction'>from</span> <span className={`category-argument${hashArgument('language')}`}>Swahili</span>
                 </li>
                 <li onClick={this.type.bind(this, '6', () => false, "translate I don't know to Arabic, Chinese, French, Russian, and Spanish")}>
-                  <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>I don't know</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('language')}`}>Arabic</span> <span className='category-conjunction'>,</span> <span className={`category-argument${hashArgument('language')}`}>Chinese</span> <span className='category-conjunction'>,</span> <span className={`category-argument${hashArgument('language')}`}>French</span> <span className='category-conjunction'>,</span> <span className={`category-argument${hashArgument('language')}`}>Russian</span> <span className='category-conjunction'>, and</span> <span className={`category-argument${hashArgument('language')}`}>Spanish</span>
+                  <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>I don't know</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('language')}`}>Arabic</span><span className='category-conjunction'>,</span> <span className={`category-argument${hashArgument('language')}`}>Chinese</span><span className='category-conjunction'>,</span> <span className={`category-argument${hashArgument('language')}`}>French</span><span className='category-conjunction'>,</span> <span className={`category-argument${hashArgument('language')}`}>Russian</span><span className='category-conjunction'>, and</span> <span className={`category-argument${hashArgument('language')}`}>Spanish</span>
                 </li>
               </ul>
             </div>
@@ -516,7 +517,7 @@ export default class Page extends React.Component {
                 <li><span className='category-action'>turn off</span> <span className='category-argument5'>the kitchen lights</span></li>
                 <li><span className='category-action'>pronounce</span> <span className='category-argument4'>indefatigable</span></li>
                 <li><span className='category-action'>check</span> <span className='category-argument6'>APPL</span></li>
-                <li><span className='category-action'>set</span> <span className='category-argument0'>default browser</span> <span className='category-conjunction'>to</span> <span className={`category-application${hashArgument('application')}`}>Firefox</span></li>
+                <li><span className='category-action'>set</span> <span className='category-argument0'>default browser</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('application')}`}>Firefox</span></li>
                 <li><span className='category-action'>set a timer</span> <span className='category-conjunction'>for</span> <span className='category-argument2'>25 minutes</span></li>
                 <li><span className='category-action'>execute</span> <span className='category-argument5'>ps -ef | grep -i lacona</span></li>
                 <li><span className='category-action'>email walking directions</span> <span className='category-conjunction'>from</span> <span className='category-argument6'>Penn Station NY</span> <span className='category-conjunction'>to</span> <span className='category-argument6'>my house</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('contact')}`}>Pepper Potts</span></li>
