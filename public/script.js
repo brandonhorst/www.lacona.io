@@ -27364,7 +27364,7 @@ var Page = (function (_React$Component4) {
           ),
           _react2['default'].createElement(
             'a',
-            { href: 'http://lacona-download.firebaseapp.com/packages/0.3.zip', className: 'noline download-well' },
+            { href: 'http://lacona-download.firebaseapp.com/packages/0.3/LaconaBeta.zip', className: 'noline download-well' },
             _react2['default'].createElement(
               'h3',
               null,

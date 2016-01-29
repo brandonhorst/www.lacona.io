@@ -247,7 +247,7 @@ export default class Page extends React.Component {
         <header>
           <h1><a href='#' tabIndex='-1'>Lacona</a></h1>
           <h2 className='category-action highlighted'>Natural Language Commands for your Mac</h2>
-          <a href='http://lacona-download.firebaseapp.com/packages/0.3.zip' className='noline download-well'>
+          <a href='http://lacona-download.firebaseapp.com/packages/0.3/LaconaBeta.zip' className='noline download-well'>
             <h3>Download Lacona (Beta) Now</h3>
             <p>Requires Mac OS 10.11 El Capitan</p>
           </a>
