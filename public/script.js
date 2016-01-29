@@ -27373,7 +27373,7 @@ var Page = (function (_React$Component4) {
             _react2['default'].createElement(
               'p',
               null,
-              'Requires Mac OS 10.11 El Capitan'
+              'Requires OSX 10.11 El Capitan'
             )
           ),
           _react2['default'].createElement(

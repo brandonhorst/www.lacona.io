@@ -249,7 +249,7 @@ export default class Page extends React.Component {
           <h2 className='category-action highlighted'>Natural Language Commands for your Mac</h2>
           <a href='http://lacona-download.firebaseapp.com/packages/0.3/LaconaBeta.zip' className='noline download-well'>
             <h3>Download Lacona (Beta) Now</h3>
-            <p>Requires Mac OS 10.11 El Capitan</p>
+            <p>Requires OSX 10.11 El Capitan</p>
           </a>
           <p>Call up Lacona with a keyboard shortcut, and type whatever you want to do. It gives intelligent suggestions as you type and then follows your orders.</p>
           <p>Lacona Beta is <strong>available for download</strong>. It's awesome, but it's still quite buggy. Report problems <a href="https://github.com/lacona/LaconaApp/issues">here</a>. This page is an in-browser demo.</p>
