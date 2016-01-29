@@ -117,14 +117,13 @@ function openFile(_ref2) {
 
 function createEvent(_ref3) {
   var title = _ref3.title;
-  var location = _ref3.location;
   var start = _ref3.start;
   var end = _ref3.end;
   var allDay = _ref3.allDay;
   var done = arguments.length <= 1 || arguments[1] === undefined ? function () {} : arguments[1];
 
   if (isOSX()) {
-    global.createEvent(title, location, start, end, allDay, done);
+    global.createEvent(title, start, end, allDay, done);
   }
 }
 
@@ -475,8 +474,8 @@ function fetchPreferencePanes() {
 
   if (isOSX()) {
     querySpotlight({
-      query: "kMDItemContentTypeTree == 'com.apple.systempreference.prefpane'",
-      attributes: ['kMDItemDisplayName']
+      query: "kMDItemContentType == 'com.apple.systempreference.prefpane'",
+      attributes: ['kMDItemDisplayName', 'kMDItemPath']
     }).on('data', function (data) {
       var trueData = _lodash2['default'].map(data, function (_ref21) {
         var kMDItemDisplayName = _ref21.kMDItemDisplayName;
@@ -552,11 +551,17 @@ function setDoNotDisturb(_ref24) {
   var done = arguments.length <= 1 || arguments[1] === undefined ? function () {} : arguments[1];
 
   if (isOSX()) {
-    checkDoNotDisturb(function (err, current) {
-      if (enabled !== current.enabled) {
-        toggleDoNotDisturbEnabled(done);
-      }
-    });
+    if (enabled) {
+      callSystem({
+        command: '/bin/bash',
+        args: ['-c', 'defaults -currentHost write ~/Library/Preferences/ByHost/com.apple.notificationcenterui doNotDisturb -boolean true; defaults -currentHost write ~/Library/Preferences/ByHost/com.apple.notificationcenterui doNotDisturbDate -date "`date -u +\\"%Y-%m-%d %H:%M:%S +000\\"`"; killall NotificationCenter']
+      }, done);
+    } else {
+      callSystem({
+        command: '/bin/bash',
+        args: ['-c', 'defaults -currentHost write ~/Library/Preferences/ByHost/com.apple.notificationcenterui doNotDisturb -boolean false; killall NotificationCenter']
+      }, done);
+    }
   }
 }
 
@@ -564,18 +569,16 @@ function checkDoNotDisturb() {
   var done = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
 
   if (isOSX()) {
-    global.getSystemUUID(function (err, uuid) {
-      callSystem({
-        command: '/usr/bin/defaults',
-        args: ['read', userHome() + '/Library/Preferences/ByHost/com.apple.notificationcenterui.' + uuid + '.plist', 'doNotDisturb']
-      }, function (err, results) {
-        if (err) {
-          done(err);
-        } else {
-          var enabled = _lodash2['default'].contains(results, '1');
-          done(null, { enabled: enabled });
-        }
-      });
+    callSystem({
+      command: '/usr/bin/defaults',
+      args: ['-currentHost', 'read', userHome() + '/Library/Preferences/ByHost/com.apple.notificationcenterui', 'doNotDisturb']
+    }, function (err, results) {
+      if (err) {
+        done(err);
+      } else {
+        var enabled = _lodash2['default'].contains(results, '1');
+        done(null, { enabled: enabled });
+      }
     });
   }
 }
@@ -782,7 +785,7 @@ function musicStop() {
   }
 }
 
-var webSearches = [{ name: 'Google', url: 'https://www.google.com/search?q=${query}' }, { name: 'Google Images', url: 'https://www.google.com/search?q=${query}&tbm=isch' }, { name: 'Google Maps', url: 'https://www.google.com/maps?q=${query}' }, { name: 'Gmail', url: 'https://www.google.com/search?q=mail%20test' }, { name: 'Google Mail', url: 'http://mail.google.com/mail/u/0/#search/${query}' }, { name: 'Google Inbox', url: 'https://inbox.google.com/search/${query}' }, { name: 'Google Drive', url: 'https://drive.google.com/drive/u/0/#search?q=${test}' }, { name: 'Maps', url: 'http://maps.apple.com/?q=${query}' }, { name: 'Twitter', url: 'https://twitter.com/search?q=${query}' }, { name: 'Facebook', url: 'https://www.facebook.com/search/results.php?q=${query}' }, { name: 'LinkedIn', url: 'https://www.linkedin.com/vsearch/p?keywords=${query}' }, { name: 'Youtube', url: 'https://www.youtube.com/results?search_query=${query}' }, { name: 'Wikipedia', url: 'https://wikipedia.org/wiki/Special:Search/${query}' }, { name: 'Amazon', url: 'http://www.amazon.com/s?url=search-alias=aps&field-keywords=${query}&tag=lacona-20' }, { name: 'eBay', url: 'http://shop.ebay.com/?_nkw=${query}' }, { name: 'IMDb', url: 'http://www.imdb.com/find?s=all&q=${query}' }, { name: 'Rotten Tomatoes', url: 'http://www.rottentomatoes.com/search/?search=${query}' }, { name: 'Bing', url: 'http://www.bing.com/search?q=${query}' }, { name: 'Yahoo', url: 'https://search.yahoo.com/search?p=${query}' }, { name: 'Ask', url: 'http://www.ask.com/web?q=${query}' }, { name: 'Flickr', url: 'https://www.flickr.com/search/?q=${query}&w=all' }, { name: 'Wolfram|Alpha', url: 'http://www.wolframalpha.com/input/?i=${query}' }, { name: 'Yubnub', url: 'http://www.yubnub.org/parser/parse?command=${query}' }, { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=${query}' }];
+var webSearches = [{ name: 'Google', url: 'https://www.google.com/search?q=${query}' }, { name: 'Google Images', url: 'https://www.google.com/search?q=${query}&tbm=isch' }, { name: 'Google Maps', url: 'https://www.google.com/maps?q=${query}' }, { name: 'Gmail', url: 'https://www.google.com/search?q=${query}' }, { name: 'Google Mail', url: 'http://mail.google.com/mail/u/0/#search/${query}' }, { name: 'Google Inbox', url: 'https://inbox.google.com/search/${query}' }, { name: 'Google Drive', url: 'https://drive.google.com/drive/u/0/#search?q=${query}' }, { name: 'Maps', url: 'http://maps.apple.com/?q=${query}' }, { name: 'Twitter', url: 'https://twitter.com/search?q=${query}' }, { name: 'Facebook', url: 'https://www.facebook.com/search/results.php?q=${query}' }, { name: 'LinkedIn', url: 'https://www.linkedin.com/vsearch/p?keywords=${query}' }, { name: 'Youtube', url: 'https://www.youtube.com/results?search_query=${query}' }, { name: 'Wikipedia', url: 'https://wikipedia.org/wiki/Special:Search/${query}' }, { name: 'Amazon', url: 'http://www.amazon.com/s?url=search-alias=aps&field-keywords=${query}&tag=lacona-20' }, { name: 'eBay', url: 'http://shop.ebay.com/?_nkw=${query}' }, { name: 'IMDb', url: 'http://www.imdb.com/find?s=all&q=${query}' }, { name: 'Rotten Tomatoes', url: 'http://www.rottentomatoes.com/search/?search=${query}' }, { name: 'Bing', url: 'http://www.bing.com/search?q=${query}' }, { name: 'Yahoo', url: 'https://search.yahoo.com/search?p=${query}' }, { name: 'Ask', url: 'http://www.ask.com/web?q=${query}' }, { name: 'Flickr', url: 'https://www.flickr.com/search/?q=${query}&w=all' }, { name: 'Wolfram|Alpha', url: 'http://www.wolframalpha.com/input/?i=${query}' }, { name: 'Yubnub', url: 'http://www.yubnub.org/parser/parse?command=${query}' }, { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=${query}' }];
 
 function fetchSearchEngines(done) {
   done(null, webSearches);
@@ -931,7 +934,7 @@ exports.Context = Context;
 
 Context.eventName = 'context';
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":306,"babel-runtime/helpers/class-call-check":614,"babel-runtime/helpers/create-class":615,"babel-runtime/helpers/get":617,"babel-runtime/helpers/inherits":618,"babel-runtime/helpers/interop-require-default":619,"babel-runtime/helpers/sliced-to-array":620,"events":304,"lacona-phrase":2,"lodash":5}],2:[function(require,module,exports){
+},{"_process":306,"babel-runtime/helpers/class-call-check":617,"babel-runtime/helpers/create-class":618,"babel-runtime/helpers/get":620,"babel-runtime/helpers/inherits":621,"babel-runtime/helpers/interop-require-default":622,"babel-runtime/helpers/sliced-to-array":623,"events":304,"lacona-phrase":2,"lodash":5}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -13496,7 +13499,7 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x2, _x3, _x4) { var _again = true; _function: while (_again) { var object = _x2, property = _x3, receiver = _x4; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x2 = parent; _x3 = property; _x4 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -13682,21 +13685,22 @@ var CommandObject = (function () {
     key: 'execute',
     value: function execute() {
       var url = undefined;
-      var to = _lodash2['default'].chain(this.to).map('value').map(encodeURIComponent).join(',').value();
 
       if (this.verb === 'email') {
         if (this.subject) {
           var subject = encodeURIComponent(this.subject);
-          url = 'mailto:' + to + '?subject=' + subject;
+          url = 'mailto:' + urlify(this.to) + '?subject=' + subject;
         } else {
-          url = 'mailto:' + to;
+          url = 'mailto:' + urlify(this.to);
         }
       } else if (this.verb === 'call') {
-        url = 'tel://' + to;
+        url = 'tel://' + urlify(this.to);
       } else if (this.verb === 'facetime') {
-        url = 'facetime://' + to;
+        url = 'facetime://' + urlify(this.to);
       } else if (this.verb === 'text') {
-        url = 'imessage://' + to;
+        url = 'imessage://' + urlify(this.to, function (item) {
+          return item.replace(/[\(\)\s-]/g, '');
+        });
       }
 
       (0, _laconaApi.openURL)({ url: url });
@@ -13705,6 +13709,14 @@ var CommandObject = (function () {
 
   return CommandObject;
 })();
+
+function urlify(to) {
+  var fn = arguments.length <= 1 || arguments[1] === undefined ? _lodash2['default'].identity : arguments[1];
+
+  return _lodash2['default'].chain(to).map('value').map(fn).map(encodeURIComponent).map(function (item) {
+    return item.replace(/%2B/g, '+');
+  }).join(',').value();
+}
 
 var Communicate = (function (_Phrase4) {
   _inherits(Communicate, _Phrase4);
@@ -13964,7 +13976,7 @@ var _laconaApi = require('lacona-api');
 
 var _laconaPhraseString = require('lacona-phrase-string');
 
-var _laconaPhraseDatetime = require('lacona-phrase-datetime');
+var _laconaPhraseDatetime = require( /*, Range */'lacona-phrase-datetime');
 
 var _laconaCommand = require('lacona-command');
 
@@ -14034,7 +14046,7 @@ var ScheduleEventObject = (function () {
 
       (0, _laconaApi.createEvent)({
         title: this.title,
-        location: this.location,
+        // location: this.location,
         start: this.range.start,
         end: this.range.end,
         allDay: this.range.allDay
@@ -14102,7 +14114,7 @@ var ScheduleEvent = (function (_Phrase2) {
           (0, _laconaPhrase.createElement)(_laconaPhraseString.String, { limit: 1, splitOn: ' ', argument: 'calendar event', id: 'title' }),
           (0, _laconaPhrase.createElement)('literal', { text: ' ', category: 'conjunction' }),
           (0, _laconaPhrase.createElement)('literal', { text: 'for ', category: 'conjunction', optional: true, preferred: true, limited: true }),
-          (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.Range, { id: 'range', prepositions: true, past: false })
+          (0, _laconaPhrase.createElement)(Range, { id: 'range', prepositions: true, past: false, seconds: false })
         )
       );
     }
@@ -14192,7 +14204,7 @@ var CreateReminder = (function (_Phrase3) {
               null,
               (0, _laconaPhrase.createElement)(_laconaPhraseString.String, { limit: 1, argument: 'reminder title', id: 'title', splitOn: ' ' }),
               (0, _laconaPhrase.createElement)('literal', { text: ' ', category: 'conjunction' }),
-              (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.DateTime, { id: 'datetime', past: false, prepositions: true })
+              (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.DateTime, { id: 'datetime', past: false, prepositions: true, seconds: false })
             )
           )
         )
@@ -14208,7 +14220,7 @@ var CreateReminder = (function (_Phrase3) {
 })(_laconaPhrase.Phrase);
 
 exports.CreateReminder = CreateReminder;
-var extensions = [CreateReminder, ScheduleEvent];
+var extensions = [CreateReminder];
 exports.extensions = extensions;
 /*<LocationWithAt optional id='location' preferred={false} />*/ /*<LocationWithAt optional id='location' preferred={false} />*/
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -15789,7 +15801,7 @@ var ContactDate = (function (_Phrase2) {
                 (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
                 (0, _laconaPhrase.createElement)(
                   'label',
-                  { text: 'special day' },
+                  { text: 'special day', suppressEmpty: false },
                   (0, _laconaPhrase.createElement)('literal', { text: dateName })
                 )
               );
@@ -15804,7 +15816,7 @@ var ContactDate = (function (_Phrase2) {
         this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'on ', category: 'conjunction', optional: true, limited: true, preferred: true }) : null,
         (0, _laconaPhrase.createElement)(
           'label',
-          { text: 'special day' },
+          { text: 'special day', merge: true },
           (0, _laconaPhrase.createElement)(
             'choice',
             { limit: 10 },
@@ -16068,7 +16080,7 @@ var _command = require('./command');
 
 var _volume = require('./volume');
 
-var extensions = [_app.App, _bookmark.Bookmark, /*BrowserTab,*/_contact.ContactDate, _contact.ContactEmail, _contact.ContactPhoneNumber, _file.File, _event.Holiday, /*OpenWindow,*/_path.Path, _me.PersonalDate, _preferencePane.Pane, _relationship.RelationshipDate, _relationship.RelationshipEmail, _relationship.RelationshipPhoneNumber, _runningApp.RunningApp, _command.SystemCommand, _volume.Volume];
+var extensions = [_app.App, _bookmark.Bookmark, /*BrowserTab,*/_contact.ContactDate, _contact.ContactEmail, _contact.ContactPhoneNumber, _file.File, _event.Holiday, /*OpenWindow, Path,*/_me.PersonalDate, _preferencePane.Pane, _relationship.RelationshipDate, _relationship.RelationshipEmail, _relationship.RelationshipPhoneNumber, _runningApp.RunningApp, _command.SystemCommand, _volume.Volume];
 
 exports.extensions = extensions;
 // export default {
@@ -16311,7 +16323,7 @@ var TrueFile = (function (_Phrase) {
           null,
           (0, _laconaPhrase.createElement)(
             'label',
-            { text: 'directory' },
+            { text: 'directory', suppressEmpty: false },
             (0, _laconaPhrase.createElement)(
               'choice',
               null,
@@ -16321,7 +16333,7 @@ var TrueFile = (function (_Phrase) {
           ),
           fileItems.length > 0 ? (0, _laconaPhrase.createElement)(
             'label',
-            { text: 'file' },
+            { text: 'file', suppressEmpty: false },
             (0, _laconaPhrase.createElement)('list', { items: fileItems })
           ) : null
         )
@@ -16759,10 +16771,10 @@ var RelationshipDate = (function (_Phrase2) {
         this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'on ', category: 'conjunction', optional: true, limited: true, preferred: true }) : null,
         (0, _laconaPhrase.createElement)(
           'label',
-          { text: 'special day' },
+          { text: 'special day', merge: true },
           (0, _laconaPhrase.createElement)(
             'choice',
-            { merge: true },
+            null,
             items
           )
         )
@@ -17177,8 +17189,8 @@ var SearchEngine = (function (_Phrase) {
         { unique: true, separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1, category: 'conjunction' }) },
         (0, _laconaPhrase.createElement)(
           'label',
-          { text: 'search engine' },
-          (0, _laconaPhrase.createElement)('list', { items: engineItems, limit: 10 })
+          { text: 'search engine', suppressEmpty: false },
+          (0, _laconaPhrase.createElement)('list', { items: engineItems, limit: 10, fuzzy: true })
         )
       );
     }
@@ -17263,7 +17275,7 @@ var SearchInternet = (function (_Phrase3) {
             null,
             (0, _laconaPhrase.createElement)('literal', { text: 'search ', category: 'action' }),
             (0, _laconaPhrase.createElement)(SearchEngine, { id: 'engines' }),
-            (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
+            (0, _laconaPhrase.createElement)('literal', { text: ' ', score: 100 }),
             (0, _laconaPhrase.createElement)('literal', { text: 'for ', decorate: true }),
             (0, _laconaPhrase.createElement)(Query, { id: 'query' })
           ),
@@ -18255,7 +18267,7 @@ DateRange.defaultProps = {
   _duration: true,
   _allDay: false
 };
-},{"./date":58,"./duration":60,"./helpers":61,"babel-runtime/helpers/class-call-check":614,"babel-runtime/helpers/create-class":615,"babel-runtime/helpers/get":617,"babel-runtime/helpers/inherits":618,"babel-runtime/helpers/interop-require-default":619,"lacona-phrase":68,"lodash":71,"moment":72}],58:[function(require,module,exports){
+},{"./date":58,"./duration":60,"./helpers":61,"babel-runtime/helpers/class-call-check":617,"babel-runtime/helpers/create-class":618,"babel-runtime/helpers/get":620,"babel-runtime/helpers/inherits":621,"babel-runtime/helpers/interop-require-default":622,"lacona-phrase":68,"lodash":71,"moment":72}],58:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -18357,19 +18369,19 @@ var Date = (function (_Phrase2) {
   }
 
   _createClass(Date, [{
-    key: 'validate',
-    value: function validate(result) {
-      if (!this.props.past && (0, _moment2['default'])({}).isAfter(result)) {
-        return false;
-      }
-      if (!this.props.future && (0, _moment2['default'])({}).isBefore(result)) {
-        return false;
-      }
-
-      return true;
-    }
-  }, {
     key: 'describe',
+
+    // validate (result) {
+    //   if (!this.props.past && moment({}).isAfter(result)) {
+    //     return false
+    //   }
+    //   if (!this.props.future && moment({}).isBefore(result)) {
+    //     return false
+    //   }
+
+    //   return true
+    // }
+
     value: function describe() {
       if (this.props.nullify) return;
 
@@ -18378,7 +18390,7 @@ var Date = (function (_Phrase2) {
         null,
         (0, _laconaPhrase.createElement)(
           'label',
-          { text: 'date', suppressEmpty: false },
+          { text: 'date' },
           (0, _laconaPhrase.createElement)(
             'choice',
             null,
@@ -18395,7 +18407,7 @@ var Date = (function (_Phrase2) {
           this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'on ', optional: true, preferred: true, limited: true, category: 'conjunction' }) : null,
           (0, _laconaPhrase.createElement)(
             'label',
-            { text: 'date', merge: true, suppressEmpty: false },
+            { text: 'date', merge: true },
             (0, _laconaPhrase.createElement)(
               'choice',
               null,
@@ -18421,104 +18433,88 @@ Date.defaultProps = {
   future: true
 };
 
-var DateWithTimeOfDay = (function (_Phrase3) {
-  _inherits(DateWithTimeOfDay, _Phrase3);
+// export class DateWithTimeOfDay extends Phrase {
+//   describe () {
+//     return (
+//       <choice>
+//         <sequence>
+//           {this.props.prepositions ? <literal text='on ' optional preferred limited /> : null}
+//           <label text='date and time' merge>
+//             <sequence>
+//               <literal text='the ' />
+//               <TimeOfDay id='impliedTime' />
+//               <literal text=' of ' />
+//               <choice id='date'>
+//                 <Date nullify />
+//                 <RelativeWeekday />
+//                 <RelativeAdjacent />
+//                 <RelativeNumbered />
+//                 <AbsoluteDay />
+//                 <DayWithYear />
+//                 {this.props.recurse ? <RecursiveDate /> : null}
+//               </choice>
+//             </sequence>
+//           </label>
+//         </sequence>
 
-  function DateWithTimeOfDay() {
-    _classCallCheck(this, DateWithTimeOfDay);
+//         <label text='date and time'>
+//           <sequence>
+//             <choice id='date'>
+//               <Date nullify prepositions={this.props.prepositions} />
+//               <TimeOfDayModifier />
+//               <RelativeWeekday />
+//             </choice>
+//             <literal text=' ' />
+//             <TimeOfDay id='impliedTime' />
+//           </sequence>
+//         </label>
 
-    _get(Object.getPrototypeOf(DateWithTimeOfDay.prototype), 'constructor', this).apply(this, arguments);
-  }
+//         <label text='date and time'>
+//           <NamedDateWithTimeOfDay />
+//         </label>
 
-  _createClass(DateWithTimeOfDay, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'choice',
-        null,
-        (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'on ', optional: true, preferred: true, limited: true }) : null,
-          (0, _laconaPhrase.createElement)(
-            'label',
-            { argument: false, text: 'date', merge: true },
-            (0, _laconaPhrase.createElement)(
-              'sequence',
-              null,
-              (0, _laconaPhrase.createElement)('literal', { text: 'the ' }),
-              (0, _laconaPhrase.createElement)(_time.TimeOfDay, { id: 'impliedTime' }),
-              (0, _laconaPhrase.createElement)('literal', { text: ' of ' }),
-              (0, _laconaPhrase.createElement)(
-                'choice',
-                { id: 'date' },
-                (0, _laconaPhrase.createElement)(Date, { nullify: true }),
-                (0, _laconaPhrase.createElement)(RelativeWeekday, null),
-                (0, _laconaPhrase.createElement)(RelativeAdjacent, null),
-                (0, _laconaPhrase.createElement)(RelativeNumbered, null),
-                (0, _laconaPhrase.createElement)(AbsoluteDay, null),
-                (0, _laconaPhrase.createElement)(DayWithYear, null),
-                this.props.recurse ? (0, _laconaPhrase.createElement)(RecursiveDate, null) : null
-              )
-            )
-          )
-        ),
-        (0, _laconaPhrase.createElement)(
-          'label',
-          { argument: false, text: 'date' },
-          (0, _laconaPhrase.createElement)(
-            'sequence',
-            null,
-            (0, _laconaPhrase.createElement)(
-              'choice',
-              { id: 'date' },
-              (0, _laconaPhrase.createElement)(Date, { nullify: true, prepositions: this.props.prepositions }),
-              (0, _laconaPhrase.createElement)(TimeOfDayModifier, null),
-              (0, _laconaPhrase.createElement)(RelativeWeekday, { prepositions: this.props.prepositions })
-            ),
-            (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
-            (0, _laconaPhrase.createElement)(_time.TimeOfDay, { id: 'impliedTime' })
-          )
-        ),
-        (0, _laconaPhrase.createElement)(
-          'label',
-          { argument: false, text: 'date' },
-          (0, _laconaPhrase.createElement)(DayWithYearAndTimeOfDay, null)
-        ),
-        (0, _laconaPhrase.createElement)(
-          'label',
-          { argument: false, text: 'date' },
-          (0, _laconaPhrase.createElement)(
-            'sequence',
-            null,
-            (0, _laconaPhrase.createElement)(
-              'choice',
-              { id: 'date' },
-              (0, _laconaPhrase.createElement)(Date, { nullify: true, prepositions: this.props.prepositions }),
-              (0, _laconaPhrase.createElement)(DayWithYear, { prepositions: this.props.prepositions }),
-              (0, _laconaPhrase.createElement)(RelativeNumbered, { prepositions: this.props.prepositions }),
-              this.props.recurse ? (0, _laconaPhrase.createElement)(RecursiveDate, { prepositions: this.props.prepositions }) : null
-            ),
-            (0, _laconaPhrase.createElement)('literal', { text: ' in the ' }),
-            (0, _laconaPhrase.createElement)(_time.TimeOfDay, { id: 'impliedTime' })
-          )
-        )
-      );
-    }
-  }]);
+//         <label text='date and time'>
+//           <DayWithYearAndTimeOfDay />
+//         </label>
 
-  return DateWithTimeOfDay;
-})(_laconaPhrase.Phrase);
+//         <label text='date and time'>
+//           <sequence>
+//             <choice id='date'>
+//               <Date nullify prepositions={this.props.prepositions} />
+//               <DayWithYear prepositions={this.props.prepositions} />
+//               <RelativeNumbered prepositions={this.props.prepositions} />
+//               {this.props.recurse ? <RecursiveDate prepositions={this.props.prepositions} /> : null}
+//             </choice>
+//             <literal text=' in the ' />
+//             <TimeOfDay id='impliedTime' />
+//           </sequence>
+//         </label>
+//       </choice>
+//     )
+//   }
+// }
 
-exports.DateWithTimeOfDay = DateWithTimeOfDay;
+// DateWithTimeOfDay.defaultProps = {
+//   recurse: true,
+//   prepositions: false
+// }
 
-DateWithTimeOfDay.defaultProps = {
-  recurse: true,
-  prepositions: false
-};
+// class NamedDateWithTimeOfDay extends Phrase {
+//   getValue () {
+//     return {date: relativeDate({hour: 0}), impliedTime: {default: 20, range: [12, 24]}}
+//   }
 
-var DayWithYear = (function (_Phrase4) {
-  _inherits(DayWithYear, _Phrase4);
+//   describe () {
+//     return (
+//       <map function={this.getValue}>
+//         <literal text='tonight' />
+//       </map>
+//     )
+//   }
+// }
+
+var DayWithYear = (function (_Phrase3) {
+  _inherits(DayWithYear, _Phrase3);
 
   function DayWithYear() {
     _classCallCheck(this, DayWithYear);
@@ -18526,13 +18522,41 @@ var DayWithYear = (function (_Phrase4) {
     _get(Object.getPrototypeOf(DayWithYear.prototype), 'constructor', this).apply(this, arguments);
   }
 
+  // class DayWithYearAndTimeOfDay extends Phrase {
+  //   getValue (result) {
+  //     const absolute = _.assign({year: result.year}, result.day)
+  //     return {date: absoluteDate(absolute), impliedTime: result.impliedTime}
+  //   }
+
+  //   describe () {
+  //     return (
+  //       <map function={this.getValue.bind(this)}>
+  //         <sequence>
+  //           <Day id='day' prepositions={this.props.prepositions} />
+  //           <literal text=' ' />
+  //           <TimeOfDay id='impliedTime' />
+  //           <sequence optional merge>
+  //             <list items={[', ', ' in ', ' ']} category='conjunction' limit={1} />
+  //             <Year id='year' />
+  //           </sequence>
+  //         </sequence>
+  //       </map>
+  //     )
+  //   }
+  // }
+  //
+  // DayWithYearAndTimeOfDay.defaultProps = {
+  //   prepositions: false
+  // }
+
   _createClass(DayWithYear, [{
     key: 'getValue',
     value: function getValue(result) {
-      if (result.duration) {
-        return (0, _helpers.relativeDate)(result.duration, result.day);
+      if (result.year) {
+        var date = (0, _helpers.absoluteDate)(_lodash2['default'].assign({ year: result.year.year }, result.day));
+        return { date: date, _ambiguousCentury: result.year._ambiguousCentury };
       } else {
-        return (0, _helpers.absoluteDate)(_lodash2['default'].assign({ year: result.year }, result.day));
+        return { date: (0, _helpers.absoluteDate)(result.day), _ambiguousYear: true };
       }
     }
   }, {
@@ -18540,21 +18564,16 @@ var DayWithYear = (function (_Phrase4) {
     value: function describe() {
       return (0, _laconaPhrase.createElement)(
         'map',
-        { 'function': this.getValue.bind(this) },
+        { 'function': this.getValue },
         (0, _laconaPhrase.createElement)(
           'sequence',
           null,
-          (0, _laconaPhrase.createElement)(Day, { prepositions: this.props.prepositions, id: 'day', recurse: false }),
+          (0, _laconaPhrase.createElement)(Day, { prepositions: this.props.prepositions, id: 'day', recurse: false, ellipsis: true }),
           (0, _laconaPhrase.createElement)(
-            'choice',
+            'sequence',
             { merge: true },
-            (0, _laconaPhrase.createElement)('list', { id: 'duration', limit: 1, items: [{ text: '', value: {} }, { text: '', value: { years: 1 } }, { text: '', value: { years: -1 } }] }),
-            (0, _laconaPhrase.createElement)(
-              'sequence',
-              null,
-              (0, _laconaPhrase.createElement)('list', { items: [', ', ' in ', ' '], category: 'conjunction', limit: 1 }),
-              (0, _laconaPhrase.createElement)(Year, { id: 'year' })
-            )
+            (0, _laconaPhrase.createElement)('list', { items: [', ', ' in ', ' '], category: 'conjunction', limit: 1 }),
+            (0, _laconaPhrase.createElement)(Year, { id: 'year' })
           )
         )
       );
@@ -18564,53 +18583,8 @@ var DayWithYear = (function (_Phrase4) {
   return DayWithYear;
 })(_laconaPhrase.Phrase);
 
-var DayWithYearAndTimeOfDay = (function (_Phrase5) {
-  _inherits(DayWithYearAndTimeOfDay, _Phrase5);
-
-  function DayWithYearAndTimeOfDay() {
-    _classCallCheck(this, DayWithYearAndTimeOfDay);
-
-    _get(Object.getPrototypeOf(DayWithYearAndTimeOfDay.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(DayWithYearAndTimeOfDay, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      var absolute = _lodash2['default'].assign({ year: result.year }, result.day);
-      return { date: (0, _helpers.absoluteDate)(absolute), impliedTime: result.impliedTime };
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'map',
-        { 'function': this.getValue.bind(this) },
-        (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          (0, _laconaPhrase.createElement)(Day, { id: 'day', prepositions: this.props.prepositions }),
-          (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
-          (0, _laconaPhrase.createElement)(_time.TimeOfDay, { id: 'impliedTime' }),
-          (0, _laconaPhrase.createElement)(
-            'sequence',
-            { optional: true, merge: true },
-            (0, _laconaPhrase.createElement)('list', { items: [', ', ' in ', ' '], category: 'conjunction', limit: 1 }),
-            (0, _laconaPhrase.createElement)(Year, { id: 'year' })
-          )
-        )
-      );
-    }
-  }]);
-
-  return DayWithYearAndTimeOfDay;
-})(_laconaPhrase.Phrase);
-
-DayWithYearAndTimeOfDay.defaultProps = {
-  prepositions: false
-};
-
-var ExtraDateDuration = (function (_Phrase6) {
-  _inherits(ExtraDateDuration, _Phrase6);
+var ExtraDateDuration = (function (_Phrase4) {
+  _inherits(ExtraDateDuration, _Phrase4);
 
   function ExtraDateDuration() {
     _classCallCheck(this, ExtraDateDuration);
@@ -18654,8 +18628,8 @@ var ExtraDateDuration = (function (_Phrase6) {
   return ExtraDateDuration;
 })(_laconaPhrase.Phrase);
 
-var RecursiveDay = (function (_Phrase7) {
-  _inherits(RecursiveDay, _Phrase7);
+var RecursiveDay = (function (_Phrase5) {
+  _inherits(RecursiveDay, _Phrase5);
 
   function RecursiveDay() {
     _classCallCheck(this, RecursiveDay);
@@ -18708,8 +18682,8 @@ var RecursiveDay = (function (_Phrase7) {
   return RecursiveDay;
 })(_laconaPhrase.Phrase);
 
-var RecursiveDate = (function (_Phrase8) {
-  _inherits(RecursiveDate, _Phrase8);
+var RecursiveDate = (function (_Phrase6) {
+  _inherits(RecursiveDate, _Phrase6);
 
   function RecursiveDate() {
     _classCallCheck(this, RecursiveDate);
@@ -18722,7 +18696,7 @@ var RecursiveDate = (function (_Phrase8) {
     value: function getValue(result) {
       var duration = result.direction === -1 ? (0, _helpers.negateDuration)(result.duration) : result.duration;
 
-      return (0, _helpers.relativeDate)(duration, result.date);
+      return { date: (0, _helpers.relativeDate)(duration, result.date.date) };
     }
   }, {
     key: 'describe',
@@ -18758,8 +18732,8 @@ var RecursiveDate = (function (_Phrase8) {
   return RecursiveDate;
 })(_laconaPhrase.Phrase);
 
-var RelativeNamed = (function (_Phrase9) {
-  _inherits(RelativeNamed, _Phrase9);
+var RelativeNamed = (function (_Phrase7) {
+  _inherits(RelativeNamed, _Phrase7);
 
   function RelativeNamed() {
     _classCallCheck(this, RelativeNamed);
@@ -18767,10 +18741,28 @@ var RelativeNamed = (function (_Phrase9) {
     _get(Object.getPrototypeOf(RelativeNamed.prototype), 'constructor', this).apply(this, arguments);
   }
 
+  // class TimeOfDayModifier extends Phrase {
+  //   getValue (result) {
+  //     return relativeDate(result)
+  //   }
+
+  //   describe () {
+  //     return (
+  //       <map function={this.getValue.bind(this)}>
+  //         <list items={[
+  //           {text: 'this', value: {days: 0}},
+  //           {text: 'tomorrow', value: {days: 1}},
+  //           {text: 'yesterday', value: {days: -1}}
+  //         ]} />
+  //       </map>
+  //     )
+  //   }
+  // }
+
   _createClass(RelativeNamed, [{
     key: 'getValue',
     value: function getValue(result) {
-      return (0, _helpers.relativeDate)(result);
+      return { date: (0, _helpers.relativeDate)(result) };
     }
   }, {
     key: 'describe',
@@ -18786,36 +18778,8 @@ var RelativeNamed = (function (_Phrase9) {
   return RelativeNamed;
 })(_laconaPhrase.Phrase);
 
-var TimeOfDayModifier = (function (_Phrase10) {
-  _inherits(TimeOfDayModifier, _Phrase10);
-
-  function TimeOfDayModifier() {
-    _classCallCheck(this, TimeOfDayModifier);
-
-    _get(Object.getPrototypeOf(TimeOfDayModifier.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(TimeOfDayModifier, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      return (0, _helpers.relativeDate)(result);
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'map',
-        { 'function': this.getValue.bind(this) },
-        (0, _laconaPhrase.createElement)('list', { items: [{ text: 'this', value: { days: 0 } }, { text: 'tomorrow', value: { days: 1 } }, { text: 'yesterday', value: { days: -1 } }] })
-      );
-    }
-  }]);
-
-  return TimeOfDayModifier;
-})(_laconaPhrase.Phrase);
-
-var RelativeNumbered = (function (_Phrase11) {
-  _inherits(RelativeNumbered, _Phrase11);
+var RelativeNumbered = (function (_Phrase8) {
+  _inherits(RelativeNumbered, _Phrase8);
 
   function RelativeNumbered() {
     _classCallCheck(this, RelativeNumbered);
@@ -18828,7 +18792,7 @@ var RelativeNumbered = (function (_Phrase11) {
     value: function getValue(result) {
       var duration = result.direction === -1 ? (0, _helpers.negateDuration)(result.duration) : result.duration;
 
-      return (0, _helpers.relativeDate)(duration);
+      return { date: (0, _helpers.relativeDate)(duration) };
     }
   }, {
     key: 'describe',
@@ -18859,8 +18823,8 @@ var RelativeNumbered = (function (_Phrase11) {
   return RelativeNumbered;
 })(_laconaPhrase.Phrase);
 
-var RelativeAdjacent = (function (_Phrase12) {
-  _inherits(RelativeAdjacent, _Phrase12);
+var RelativeAdjacent = (function (_Phrase9) {
+  _inherits(RelativeAdjacent, _Phrase9);
 
   function RelativeAdjacent() {
     _classCallCheck(this, RelativeAdjacent);
@@ -18873,7 +18837,7 @@ var RelativeAdjacent = (function (_Phrase12) {
     value: function getValue(result) {
       var duration = _defineProperty({}, result.type, result.num * (result.multiplier || 1));
 
-      return (0, _helpers.relativeDate)(duration);
+      return { date: (0, _helpers.relativeDate)(duration) };
     }
   }, {
     key: 'describe',
@@ -18902,8 +18866,14 @@ var RelativeAdjacent = (function (_Phrase12) {
   return RelativeAdjacent;
 })(_laconaPhrase.Phrase);
 
-var RelativeWeekday = (function (_Phrase13) {
-  _inherits(RelativeWeekday, _Phrase13);
+function dateFromRelative(distance, weekday) {
+  var day = distance * 7 + weekday;
+
+  return (0, _moment2['default'])().day(day).toDate();
+}
+
+var RelativeWeekday = (function (_Phrase10) {
+  _inherits(RelativeWeekday, _Phrase10);
 
   function RelativeWeekday() {
     _classCallCheck(this, RelativeWeekday);
@@ -18914,35 +18884,28 @@ var RelativeWeekday = (function (_Phrase13) {
   _createClass(RelativeWeekday, [{
     key: 'getValue',
     value: function getValue(result) {
-      var day = result.distance * 7 + result.weekday;
+      var date = dateFromRelative(result.distance || 0, result.weekday);
 
-      return (0, _moment2['default'])().day(day).toDate();
+      if (result.distance == null) {
+        return { date: date, _ambiguousWeek: true };
+      } else {
+        return { date: date };
+      }
     }
   }, {
     key: 'describe',
     value: function describe() {
       return (0, _laconaPhrase.createElement)(
         'map',
-        { 'function': this.getValue.bind(this) },
+        { 'function': this.getValue },
         (0, _laconaPhrase.createElement)(
           'choice',
           null,
           (0, _laconaPhrase.createElement)(
             'sequence',
             null,
-            (0, _laconaPhrase.createElement)(
-              'choice',
-              { id: 'distance' },
-              (0, _laconaPhrase.createElement)('list', { items: [{ text: '', value: 0 }, { text: '', value: 1 }, { text: '', value: -1 }], limit: 1 }),
-              ' ',
-              (0, _laconaPhrase.createElement)('list', { items: [{ text: 'last ', value: -1 }, { text: 'this ', value: 0 }] }),
-              (0, _laconaPhrase.createElement)('list', { items: ['next ', 'this upcoming '], limit: 1, value: 1 })
-            ),
-            (0, _laconaPhrase.createElement)(
-              'label',
-              { argument: false, text: 'weekday', id: 'weekday' },
-              (0, _laconaPhrase.createElement)(_weekday.Weekday, null)
-            )
+            (0, _laconaPhrase.createElement)('list', { optional: true, id: 'distance', items: [{ text: 'last ', value: -1 }, { text: 'this ', value: 0 }, { text: 'next ', value: 1 }, { text: 'this upcoming ', value: 1 }], limit: 1 }),
+            (0, _laconaPhrase.createElement)(_weekday.Weekday, { id: 'weekday' })
           ),
           (0, _laconaPhrase.createElement)(
             'sequence',
@@ -18954,11 +18917,7 @@ var RelativeWeekday = (function (_Phrase13) {
               (0, _laconaPhrase.createElement)(
                 'sequence',
                 null,
-                (0, _laconaPhrase.createElement)(
-                  'label',
-                  { argument: false, text: 'weekday', id: 'weekday' },
-                  (0, _laconaPhrase.createElement)(_weekday.Weekday, null)
-                ),
+                (0, _laconaPhrase.createElement)(_weekday.Weekday, { id: 'weekday' }),
                 (0, _laconaPhrase.createElement)('list', { id: 'distance', items: [{ text: ' after next', value: 2 }, { text: ' after this', value: 1 }, { text: ' before this', value: -1 }, { text: ' before last', value: -2 }] })
               )
             )
@@ -18975,8 +18934,8 @@ function leapYear(year) {
   return year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
 }
 
-var MonthNumber = (function (_Phrase14) {
-  _inherits(MonthNumber, _Phrase14);
+var MonthNumber = (function (_Phrase11) {
+  _inherits(MonthNumber, _Phrase11);
 
   function MonthNumber() {
     _classCallCheck(this, MonthNumber);
@@ -19003,8 +18962,8 @@ var MonthNumber = (function (_Phrase14) {
   return MonthNumber;
 })(_laconaPhrase.Phrase);
 
-var DayNumber = (function (_Phrase15) {
-  _inherits(DayNumber, _Phrase15);
+var DayNumber = (function (_Phrase12) {
+  _inherits(DayNumber, _Phrase12);
 
   function DayNumber() {
     _classCallCheck(this, DayNumber);
@@ -19031,8 +18990,8 @@ var DayNumber = (function (_Phrase15) {
   return DayNumber;
 })(_laconaPhrase.Phrase);
 
-var AbsoluteDay = (function (_Phrase16) {
-  _inherits(AbsoluteDay, _Phrase16);
+var AbsoluteDay = (function (_Phrase13) {
+  _inherits(AbsoluteDay, _Phrase13);
 
   function AbsoluteDay() {
     _classCallCheck(this, AbsoluteDay);
@@ -19041,14 +19000,29 @@ var AbsoluteDay = (function (_Phrase16) {
   }
 
   _createClass(AbsoluteDay, [{
+    key: 'getValue',
+    value: function getValue(result) {
+      var date = (0, _helpers.absoluteDate)(_lodash2['default'].assign({}, result, { year: result.year.year }));
+      return { date: date, _ambiguousCentury: result.year._ambiguousCentury };
+    }
+  }, {
+    key: 'filter',
+    value: function filter(result) {
+      var years = result.year._ambiguousCentury ? [0, 100, -100] : [0];
+      return _lodash2['default'].some(years, function (year) {
+        var date = _lodash2['default'].assign({}, result, { year: result.year.year + year });
+        return (0, _helpers.validateDay)(date);
+      });
+    }
+  }, {
     key: 'describe',
     value: function describe() {
       return (0, _laconaPhrase.createElement)(
         'map',
-        { 'function': _helpers.absoluteDate },
+        { 'function': this.getValue },
         (0, _laconaPhrase.createElement)(
           'filter',
-          { 'function': _helpers.validateDay },
+          { 'function': this.filter },
           (0, _laconaPhrase.createElement)(
             'sequence',
             null,
@@ -19064,8 +19038,8 @@ var AbsoluteDay = (function (_Phrase16) {
   return AbsoluteDay;
 })(_laconaPhrase.Phrase);
 
-var AmbiguousAbsoluteDay = (function (_Phrase17) {
-  _inherits(AmbiguousAbsoluteDay, _Phrase17);
+var AmbiguousAbsoluteDay = (function (_Phrase14) {
+  _inherits(AmbiguousAbsoluteDay, _Phrase14);
 
   function AmbiguousAbsoluteDay() {
     _classCallCheck(this, AmbiguousAbsoluteDay);
@@ -19093,8 +19067,8 @@ var AmbiguousAbsoluteDay = (function (_Phrase17) {
   return AmbiguousAbsoluteDay;
 })(_laconaPhrase.Phrase);
 
-var Year = (function (_Phrase18) {
-  _inherits(Year, _Phrase18);
+var Year = (function (_Phrase15) {
+  _inherits(Year, _Phrase15);
 
   function Year() {
     _classCallCheck(this, Year);
@@ -19105,12 +19079,12 @@ var Year = (function (_Phrase18) {
   _createClass(Year, [{
     key: 'getValue',
     value: function getValue(result) {
-      if (result.year20 != null) {
-        return 2000 + parseInt(result.year20, 10);
-      } else if (result.year19 != null) {
-        return 1900 + parseInt(result.year19, 10);
-      } else {
-        return parseInt(result.year, 10);
+      if (result.twoDigitYear) {
+        var decade = parseInt(result.twoDigitYear, 10);
+        var year = decade > 29 ? 2000 + decade : 1900 + decade;
+        return { year: year, _ambiguousCentury: true };
+      } else if (result.fourDigitYear) {
+        return { year: parseInt(result.fourDigitYear, 10) };
       }
     }
   }, {
@@ -19127,40 +19101,17 @@ var Year = (function (_Phrase18) {
         { suppressWhen: this.suppressWhen, text: 'year' },
         (0, _laconaPhrase.createElement)(
           'map',
-          { 'function': this.getValue.bind(this) },
+          { 'function': this.getValue },
           (0, _laconaPhrase.createElement)(
             'choice',
             { limit: 1 },
             (0, _laconaPhrase.createElement)(
               'sequence',
               null,
-              (0, _laconaPhrase.createElement)('literal', { text: '\'' }),
-              (0, _laconaPhrase.createElement)(
-                'choice',
-                { merge: true, limit: 1 },
-                (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { minLength: 2, maxLength: 2, min: 0, max: 29, id: 'year20' }),
-                (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { minLength: 2, maxLength: 2, min: 30, max: 99, id: 'year19' })
-              )
+              (0, _laconaPhrase.createElement)('literal', { text: '\'', optional: true, limited: true }),
+              (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { minLength: 2, maxLength: 2, id: 'twoDigitYear' })
             ),
-            (0, _laconaPhrase.createElement)(
-              'sequence',
-              null,
-              (0, _laconaPhrase.createElement)('literal', { text: '20', decorate: true, allowInput: false }),
-              (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { minLength: 2, maxLength: 2, min: 0, max: 29, id: 'year20' })
-            ),
-            (0, _laconaPhrase.createElement)(
-              'sequence',
-              null,
-              (0, _laconaPhrase.createElement)('literal', { text: '19', decorate: true, allowInput: false }),
-              (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { minLength: 2, maxLength: 2, min: 0, max: 99, id: 'year19' })
-            ),
-            (0, _laconaPhrase.createElement)(
-              'sequence',
-              null,
-              (0, _laconaPhrase.createElement)('literal', { text: '20', decorate: true, allowInput: false }),
-              (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { minLength: 2, maxLength: 2, min: 0, max: 99, id: 'year20' })
-            ),
-            (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { minLength: 4, maxLength: 4, id: 'year' })
+            (0, _laconaPhrase.createElement)(_laconaPhraseNumber.DigitString, { minLength: 4, maxLength: 4, id: 'fourDigitYear' })
           )
         )
       );
@@ -19170,8 +19121,8 @@ var Year = (function (_Phrase18) {
   return Year;
 })(_laconaPhrase.Phrase);
 
-var AmbiguousAbsoluteNamedMonth = (function (_Phrase19) {
-  _inherits(AmbiguousAbsoluteNamedMonth, _Phrase19);
+var AmbiguousAbsoluteNamedMonth = (function (_Phrase16) {
+  _inherits(AmbiguousAbsoluteNamedMonth, _Phrase16);
 
   function AmbiguousAbsoluteNamedMonth() {
     _classCallCheck(this, AmbiguousAbsoluteNamedMonth);
@@ -19220,9 +19171,7 @@ var AmbiguousAbsoluteNamedMonth = (function (_Phrase19) {
 
   return AmbiguousAbsoluteNamedMonth;
 })(_laconaPhrase.Phrase);
-
-/* automatically handle past/present/future */
-},{"./duration":60,"./helpers":61,"./month":63,"./time":66,"./weekday":67,"babel-runtime/helpers/class-call-check":614,"babel-runtime/helpers/create-class":615,"babel-runtime/helpers/define-property":616,"babel-runtime/helpers/get":617,"babel-runtime/helpers/inherits":618,"babel-runtime/helpers/interop-require-default":619,"lacona-phrase":68,"lacona-phrase-number":82,"lodash":71,"moment":72}],59:[function(require,module,exports){
+},{"./duration":60,"./helpers":61,"./month":63,"./time":66,"./weekday":67,"babel-runtime/helpers/class-call-check":617,"babel-runtime/helpers/create-class":618,"babel-runtime/helpers/define-property":619,"babel-runtime/helpers/get":620,"babel-runtime/helpers/inherits":621,"babel-runtime/helpers/interop-require-default":622,"lacona-phrase":68,"lacona-phrase-number":82,"lodash":71,"moment":72}],59:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -19234,7 +19183,9 @@ var _createClass = require('babel-runtime/helpers/create-class')['default'];
 
 var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
 
-var _toConsumableArray = require('babel-runtime/helpers/to-consumable-array')['default'];
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
 
 var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
 
@@ -19258,6 +19209,18 @@ var _helpers = require('./helpers');
 
 var _date = require('./date');
 
+function isNoonOrMidnight(time) {
+  return (time.hour === 12 || time.hour === 0) && !time.minute && !time.second;
+}
+
+function timeIsInAMPM(time, ampm) {
+  if (ampm === 'am') {
+    return time.hour >= 0 && time.hour < 12;
+  } else if (ampm === 'pm') {
+    return time.hour >= 12 && time.hour < 24;
+  }
+}
+
 var DateTime = (function (_Phrase) {
   _inherits(DateTime, _Phrase);
 
@@ -19273,10 +19236,212 @@ var DateTime = (function (_Phrase) {
       if (!this.props.past && (0, _moment2['default'])().isAfter(result)) {
         return false;
       }
+
       if (!this.props.future && (0, _moment2['default'])().isBefore(result)) {
         return false;
       }
 
+      return true;
+    }
+
+    /*
+     RelativeNamed []
+       # DATE ALONE
+      date nullify
+      relative named (tomorrow)
+      relative numbered (in 3 days, 3 days ago)
+      absolute named month (january 23rd)
+      absolute numbered (1/23)
+      relative adjacent (next week)
+      relative weekday (next tuesday)
+       # TIME ALONE
+      time nullify
+      absolute named (midnight)
+      absolute numeric (3:34pm)
+      absolute relative hour (quarter to 3pm)
+      absolute time of day with absolute numeric (3:34 in the morning)
+      absolute time of day with relative hour (quarter to 3 in the morning)
+      relative named (now, right now)
+      relative time (in 4 minutes)
+      recursive time (3 hours before 4:00pm)
+       # DATE AND TIME
+      date nullify time nullify
+      time nullify date nullify
+       # DATE AND TIME OF DAY
+        # DATE AND TIME AND TIME OF DAY
+    */
+
+  }, {
+    key: 'getValues',
+    value: _regeneratorRuntime.mark(function getValues(result) {
+      var time, dates, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, date, _arr, _i, i;
+
+      return _regeneratorRuntime.wrap(function getValues$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            time = result.time;
+
+            if (result.timeOfDay && result.time && result.time._ambiguousAMPM) {
+              time = (0, _helpers.ambiguousTime)(result.time, result.timeOfDay.impliedAMPM);
+            } else if (result.timeOfDay && !result.time) {
+              time = { hour: result.timeOfDay['default'] };
+            }
+
+            dates = undefined;
+
+            if (result.date && result.date.date) {
+              if (result.date._ambiguousWeek) {
+                dates = _lodash2['default'].map([0, 1, -1], function (weeks) {
+                  return (0, _moment2['default'])(result.date.date).add(weeks, 'weeks').toDate();
+                });
+              } else if (result.date._ambiguousCentury) {
+                dates = _lodash2['default'].map([0, 100, -100], function (years) {
+                  return (0, _moment2['default'])(result.date.date).add(years, 'years').toDate();
+                });
+              } else if (result.date._ambiguousYear) {
+                dates = _lodash2['default'].map([0, 1, -1], function (years) {
+                  return (0, _moment2['default'])(result.date.date).add(years, 'years').toDate();
+                });
+              } else {
+                dates = [result.date.date];
+              }
+            } else {
+              dates = [undefined];
+            }
+
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 7;
+            _iterator = _getIterator(dates);
+
+          case 9:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 39;
+              break;
+            }
+
+            date = _step.value;
+
+            if (!(date && time)) {
+              context$2$0.next = 16;
+              break;
+            }
+
+            context$2$0.next = 14;
+            return (0, _helpers.join)(date, time);
+
+          case 14:
+            context$2$0.next = 36;
+            break;
+
+          case 16:
+            if (!date) {
+              context$2$0.next = 21;
+              break;
+            }
+
+            context$2$0.next = 19;
+            return (0, _helpers.join)(date, this.props.defaultTime);
+
+          case 19:
+            context$2$0.next = 36;
+            break;
+
+          case 21:
+            if (!(time && result.impliedDate)) {
+              context$2$0.next = 26;
+              break;
+            }
+
+            context$2$0.next = 24;
+            return (0, _helpers.join)((0, _helpers.relativeDate)(result.impliedDate), time);
+
+          case 24:
+            context$2$0.next = 36;
+            break;
+
+          case 26:
+            if (!time) {
+              context$2$0.next = 36;
+              break;
+            }
+
+            _arr = [0, 1, -1];
+            _i = 0;
+
+          case 29:
+            if (!(_i < _arr.length)) {
+              context$2$0.next = 36;
+              break;
+            }
+
+            i = _arr[_i];
+            context$2$0.next = 33;
+            return (0, _helpers.join)((0, _helpers.relativeDate)({ days: i }), time);
+
+          case 33:
+            _i++;
+            context$2$0.next = 29;
+            break;
+
+          case 36:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 9;
+            break;
+
+          case 39:
+            context$2$0.next = 45;
+            break;
+
+          case 41:
+            context$2$0.prev = 41;
+            context$2$0.t0 = context$2$0['catch'](7);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t0;
+
+          case 45:
+            context$2$0.prev = 45;
+            context$2$0.prev = 46;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 48:
+            context$2$0.prev = 48;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 51;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 51:
+            return context$2$0.finish(48);
+
+          case 52:
+            return context$2$0.finish(45);
+
+          case 53:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, getValues, this, [[7, 41, 45, 53], [46,, 48, 52]]);
+    })
+  }, {
+    key: 'filter',
+    value: function filter(result) {
+      if (result.time && result.time._ambiguousAMPM && !result.timeOfDay) {
+        return false;
+      } else if (result.time && result.timeOfDay && isNoonOrMidnight(result.time)) {
+        return false;
+      } else if (result.time && result.timeOfDay && !result.time._ambiguousAMPM && !timeIsInAMPM(result.time, result.timeOfDay.impliedAMPM)) {
+        return false;
+      } else if ((!result.time || !result.timeOfDay) && !this.props._impliedTime) {
+        return false;
+      }
       return true;
     }
   }, {
@@ -19284,14 +19449,91 @@ var DateTime = (function (_Phrase) {
     value: function describe() {
       return (0, _laconaPhrase.createElement)(
         'label',
-        { argument: false, text: 'date and time', suppressEmpty: false },
+        { argument: false, text: 'date and time' },
         (0, _laconaPhrase.createElement)(
-          'choice',
-          null,
-          this.props._impliedDate ? (0, _laconaPhrase.createElement)(TimeAlone, { prepositions: this.props.prepositions, seconds: this.props.seconds }) : null,
-          (0, _laconaPhrase.createElement)(DateAlone, { prepositions: this.props.prepositions, time: this.props.defaultTime, _impliedTime: this.props._impliedTime }),
-          (0, _laconaPhrase.createElement)(DateAndTime, { prepositions: this.props.prepositions, seconds: this.props.seconds }),
-          (0, _laconaPhrase.createElement)(DateWithTimeOfDayAndTime, { prepositions: this.props.prepositions, seconds: this.props.seconds })
+          'map',
+          { iteratorFunction: this.getValues.bind(this), limit: 1 },
+          (0, _laconaPhrase.createElement)(
+            'filter',
+            { 'function': this.filter.bind(this) },
+            (0, _laconaPhrase.createElement)(
+              'choice',
+              null,
+              (0, _laconaPhrase.createElement)(
+                'sequence',
+                { unique: true },
+                (0, _laconaPhrase.createElement)(
+                  'sequence',
+                  { merge: true },
+                  (0, _laconaPhrase.createElement)(_time.Time, { id: 'time', ellipsis: true, prepositions: this.props.prepositions, seconds: false }),
+                  (0, _laconaPhrase.createElement)(
+                    'sequence',
+                    { optional: true, limited: true, ellipsis: true, merge: true },
+                    (0, _laconaPhrase.createElement)(
+                      'sequence',
+                      { id: 'timeOfDay', optional: true, limited: true },
+                      (0, _laconaPhrase.createElement)('literal', { text: ' the ' }),
+                      (0, _laconaPhrase.createElement)(_time.TimeOfDay, { merge: true }),
+                      (0, _laconaPhrase.createElement)('literal', { text: ' of' })
+                    ),
+                    (0, _laconaPhrase.createElement)(
+                      'sequence',
+                      { id: 'date' },
+                      (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
+                      (0, _laconaPhrase.createElement)(_date.Date, { merge: true, prepositions: true })
+                    )
+                  ),
+                  (0, _laconaPhrase.createElement)(
+                    'sequence',
+                    { id: 'timeOfDay' },
+                    (0, _laconaPhrase.createElement)('list', { items: [' ', ' in the '], limit: 1 }),
+                    (0, _laconaPhrase.createElement)(_time.TimeOfDay, { merge: true })
+                  )
+                )
+              ),
+              (0, _laconaPhrase.createElement)(
+                'sequence',
+                { unique: true },
+                (0, _laconaPhrase.createElement)(
+                  'sequence',
+                  { id: 'timeOfDay', optional: true, limited: true },
+                  (0, _laconaPhrase.createElement)('literal', { text: 'the ' }),
+                  (0, _laconaPhrase.createElement)(_time.TimeOfDay, { merge: true }),
+                  (0, _laconaPhrase.createElement)('literal', { text: ' of ' })
+                ),
+                (0, _laconaPhrase.createElement)(
+                  'choice',
+                  { merge: true, ellipsis: true },
+                  (0, _laconaPhrase.createElement)(_date.Date, { id: 'date', prepositions: this.props.prepositions }),
+                  (0, _laconaPhrase.createElement)(
+                    'sequence',
+                    null,
+                    (0, _laconaPhrase.createElement)('literal', { id: 'impliedDate', text: 'this ', value: { day: 0 } }),
+                    (0, _laconaPhrase.createElement)(_time.TimeOfDay, { id: 'timeOfDay' })
+                  ),
+                  (0, _laconaPhrase.createElement)('literal', { text: 'tonight', value: { impliedDate: { day: 0 }, time: { hour: 20 } } })
+                ),
+                (0, _laconaPhrase.createElement)(
+                  'sequence',
+                  { id: 'timeOfDay', optional: true, limited: true, ellipsis: true },
+                  (0, _laconaPhrase.createElement)('list', { items: [' ', ' in the '], limit: 1 }),
+                  (0, _laconaPhrase.createElement)(_time.TimeOfDay, { merge: true })
+                ),
+                (0, _laconaPhrase.createElement)(
+                  'sequence',
+                  { id: 'time', ellipsis: true },
+                  (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
+                  (0, _laconaPhrase.createElement)(_time.Time, { merge: true, prepositions: true, seconds: false })
+                ),
+                (0, _laconaPhrase.createElement)(
+                  'sequence',
+                  { id: 'timeOfDay' },
+                  (0, _laconaPhrase.createElement)('literal', { text: ' in the ' }),
+                  (0, _laconaPhrase.createElement)(_time.TimeOfDay, { merge: true })
+                )
+              )
+            )
+          )
         )
       );
     }
@@ -19303,7 +19545,7 @@ var DateTime = (function (_Phrase) {
 exports.DateTime = DateTime;
 
 DateTime.defaultProps = {
-  defaultTime: { hour: 8 },
+  defaultTime: { hour: 8, minute: 0, second: 0 },
   seconds: true,
   prepositions: false,
   _impliedTime: true,
@@ -19312,196 +19554,114 @@ DateTime.defaultProps = {
   future: true
 };
 
-var DateAndTime = (function (_Phrase2) {
-  _inherits(DateAndTime, _Phrase2);
-
-  function DateAndTime() {
-    _classCallCheck(this, DateAndTime);
-
-    _get(Object.getPrototypeOf(DateAndTime.prototype), 'constructor', this).apply(this, arguments);
+{/*class DateAndTime extends Phrase {
+   getValue (result) {
+     return join(result.date, result.time)
+   }
+    describe () {
+     return (
+       <map function={this.getValue.bind(this)}>
+         <choice>
+           <sequence>
+             <Time id='time' seconds={this.props.seconds} relative={false} recurse={false} prepositions={this.props.prepositions} />
+             <literal text=' ' />
+             <Date id='date' recurse={false} prepositions />
+           </sequence>
+            <sequence>
+             <Date id='date' recurse={false} prepositions={this.props.prepositions} />
+             <literal text=' ' />
+             <Time id='time' seconds={this.props.seconds} relative={false} recurse={false} prepositions />
+           </sequence>
+         </choice>
+       </map>
+     )
+    }
   }
-
-  _createClass(DateAndTime, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      return (0, _helpers.join)(result.date, result.time);
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'map',
-        { 'function': this.getValue.bind(this) },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          null,
-          (0, _laconaPhrase.createElement)(
-            'sequence',
-            null,
-            (0, _laconaPhrase.createElement)(_time.Time, { id: 'time', seconds: this.props.seconds, relative: false, recurse: false, prepositions: this.props.prepositions }),
-            (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
-            (0, _laconaPhrase.createElement)(_date.Date, { id: 'date', recurse: false, prepositions: true })
-          ),
-          (0, _laconaPhrase.createElement)(
-            'sequence',
-            null,
-            (0, _laconaPhrase.createElement)(_date.Date, { id: 'date', recurse: false, prepositions: this.props.prepositions }),
-            (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
-            (0, _laconaPhrase.createElement)(_time.Time, { id: 'time', seconds: this.props.seconds, relative: false, recurse: false, prepositions: true })
-          )
-        )
-      );
-    }
-  }]);
-
-  return DateAndTime;
-})(_laconaPhrase.Phrase);
-
-var DateWithTimeOfDayAndTime = (function (_Phrase3) {
-  _inherits(DateWithTimeOfDayAndTime, _Phrase3);
-
-  function DateWithTimeOfDayAndTime() {
-    _classCallCheck(this, DateWithTimeOfDayAndTime);
-
-    _get(Object.getPrototypeOf(DateWithTimeOfDayAndTime.prototype), 'constructor', this).apply(this, arguments);
+  class DateWithTimeOfDayAndTime extends Phrase {
+   getValue (result) {
+     if (result.ambiguousTime) {
+       const time = coerceAmbiguousTime(result.ambiguousTime, result.impliedTime.range)
+       return join(result.date, time)
+     } else {
+       const time = result.time || {hour: result.impliedTime.default}
+       return join(result.date, time)
+     }
+   }
+    filter (result) {
+     if (result.time && result.impliedTime) {
+       return _.inRange(result.time.hour, ...result.impliedTime.range)
+     } else {
+       return true
+     }
+   }
+    describe () {
+     return (
+       <map function={this.getValue.bind(this)}>
+         <filter function={this.filter.bind(this)}>
+           <choice>
+             <sequence>
+               <choice merge>
+                 <AmbiguousTime id='ambiguousTime' prepositions={this.props.prepositions} seconds={this.props.seconds} />
+                 <Time id='time' seconds={this.props.seconds} relative={false} recurse={false} prepositions={this.props.prepositions} seconds={this.props.seconds} />
+               </choice>
+               <literal text=' ' />
+               <DateWithTimeOfDay merge />
+             </sequence>
+              <sequence>
+               <DateWithTimeOfDay merge />
+               <literal text=' ' />
+               <choice limit={1} merge>
+                 <AmbiguousTime id='ambiguousTime' seconds={this.props.seconds} prepositions seconds={this.props.seconds} />
+                 <Time id='time' seconds={this.props.seconds} relative={false} recurse={false} prepositions seconds={this.props.seconds} />
+               </choice>
+             </sequence>
+           </choice>
+         </filter>
+       </map>
+     )
+   }
   }
-
-  _createClass(DateWithTimeOfDayAndTime, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      if (result.ambiguousTime) {
-        var time = (0, _helpers.coerceAmbiguousTime)(result.ambiguousTime, result.impliedTime.range);
-        return (0, _helpers.join)(result.date, time);
-      } else {
-        var time = result.time || { hour: result.impliedTime['default'] };
-        return (0, _helpers.join)(result.date, time);
-      }
-    }
-  }, {
-    key: 'filter',
-    value: function filter(result) {
-      if (result.time && result.impliedTime) {
-        return _lodash2['default'].inRange.apply(_lodash2['default'], [result.time.hour].concat(_toConsumableArray(result.impliedTime.range)));
-      } else {
-        return true;
-      }
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'map',
-        { 'function': this.getValue.bind(this) },
-        (0, _laconaPhrase.createElement)(
-          'filter',
-          { 'function': this.filter.bind(this) },
-          (0, _laconaPhrase.createElement)(
-            'choice',
-            null,
-            (0, _laconaPhrase.createElement)(
-              'sequence',
-              null,
-              (0, _laconaPhrase.createElement)(
-                'choice',
-                { merge: true },
-                (0, _laconaPhrase.createElement)(_time.AmbiguousTime, { id: 'ambiguousTime', prepositions: this.props.prepositions, seconds: this.props.seconds }),
-                (0, _laconaPhrase.createElement)(_time.Time, { id: 'time', seconds: this.props.seconds, relative: false, recurse: false, prepositions: this.props.prepositions, seconds: this.props.seconds })
-              ),
-              (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
-              (0, _laconaPhrase.createElement)(_date.DateWithTimeOfDay, { merge: true })
-            ),
-            (0, _laconaPhrase.createElement)(
-              'sequence',
-              null,
-              (0, _laconaPhrase.createElement)(_date.DateWithTimeOfDay, { merge: true }),
-              (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
-              (0, _laconaPhrase.createElement)(
-                'choice',
-                { limit: 1, merge: true },
-                (0, _laconaPhrase.createElement)(_time.AmbiguousTime, { id: 'ambiguousTime', seconds: this.props.seconds, prepositions: true, seconds: this.props.seconds }),
-                (0, _laconaPhrase.createElement)(_time.Time, { id: 'time', seconds: this.props.seconds, relative: false, recurse: false, prepositions: true, seconds: this.props.seconds })
-              )
-            )
-          )
-        )
-      );
-    }
-  }]);
-
-  return DateWithTimeOfDayAndTime;
-})(_laconaPhrase.Phrase);
-
-var DateAlone = (function (_Phrase4) {
-  _inherits(DateAlone, _Phrase4);
-
-  function DateAlone() {
-    _classCallCheck(this, DateAlone);
-
-    _get(Object.getPrototypeOf(DateAlone.prototype), 'constructor', this).apply(this, arguments);
+  class DateAlone extends Phrase {
+   getValue (result) {
+     if (result.impliedTime) {
+       return join(result.date, {hour: result.impliedTime.default, minute: 0, second: 0})
+     } else {
+       return join(result.date, this.props.time)
+     }
+   }
+    describe () {
+     return (
+       <map function={this.getValue.bind(this)}>
+         <choice limit={1}>
+           {this.props._impliedTime ? <Date id='date' prepositions={this.props.prepositions} /> : null}
+           <DateWithTimeOfDay prepositions={this.props.prepositions} />
+         </choice>
+       </map>
+     )
+   }
   }
-
-  _createClass(DateAlone, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      if (result.impliedTime) {
-        return (0, _helpers.join)(result.date, { hour: result.impliedTime['default'] });
-      } else {
-        return (0, _helpers.join)(result.date, this.props.time);
-      }
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'map',
-        { 'function': this.getValue.bind(this) },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          { limit: 1 },
-          this.props._impliedTime ? (0, _laconaPhrase.createElement)(_date.Date, { id: 'date', prepositions: this.props.prepositions }) : null,
-          (0, _laconaPhrase.createElement)(_date.DateWithTimeOfDay, { prepositions: this.props.prepositions })
-        )
-      );
-    }
-  }]);
-
-  return DateAlone;
-})(_laconaPhrase.Phrase);
-
-var TimeAlone = (function (_Phrase5) {
-  _inherits(TimeAlone, _Phrase5);
-
-  function TimeAlone() {
-    _classCallCheck(this, TimeAlone);
-
-    _get(Object.getPrototypeOf(TimeAlone.prototype), 'constructor', this).apply(this, arguments);
+  class TimeAlone extends Phrase {
+   getValue (result) {
+     const date = relativeDate(result.relativeDate)
+     return join(date, result.time)
+   }
+    describe () {
+     return (
+       <map function={this.getValue.bind(this)}>
+         <sequence>
+           <Time id='time' prepositions={this.props.prepositions} seconds={this.props.seconds} />
+           <list id='relativeDate' limit={1} items={[
+             {text:'', value: {}},
+             {text:'', value: {days: 1}},
+             {text:'', value: {days: -1}}
+           ]} />
+         </sequence>
+       </map>
+     )
+   }
   }
-
-  _createClass(TimeAlone, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      var date = (0, _helpers.relativeDate)(result.relativeDate);
-      return (0, _helpers.join)(date, result.time);
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'map',
-        { 'function': this.getValue.bind(this) },
-        (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          (0, _laconaPhrase.createElement)(_time.Time, { id: 'time', prepositions: this.props.prepositions, seconds: this.props.seconds }),
-          (0, _laconaPhrase.createElement)('list', { id: 'relativeDate', limit: 1, items: [{ text: '', value: {} }, { text: '', value: { days: 1 } }, { text: '', value: { days: -1 } }] })
-        )
-      );
-    }
-  }]);
-
-  return TimeAlone;
-})(_laconaPhrase.Phrase);
-},{"./date":58,"./helpers":61,"./time":66,"babel-runtime/helpers/class-call-check":614,"babel-runtime/helpers/create-class":615,"babel-runtime/helpers/get":617,"babel-runtime/helpers/inherits":618,"babel-runtime/helpers/interop-require-default":619,"babel-runtime/helpers/to-consumable-array":621,"lacona-phrase":68,"lodash":71,"moment":72}],60:[function(require,module,exports){
+  */}
+},{"./date":58,"./helpers":61,"./time":66,"babel-runtime/core-js/get-iterator":608,"babel-runtime/helpers/class-call-check":617,"babel-runtime/helpers/create-class":618,"babel-runtime/helpers/get":620,"babel-runtime/helpers/inherits":621,"babel-runtime/helpers/interop-require-default":622,"babel-runtime/regenerator":700,"lacona-phrase":68,"lodash":71,"moment":72}],60:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -19735,10 +19895,8 @@ var Duration = (function (_BaseDuration3) {
 })(BaseDuration);
 
 exports.Duration = Duration;
-},{"babel-runtime/helpers/class-call-check":614,"babel-runtime/helpers/create-class":615,"babel-runtime/helpers/get":617,"babel-runtime/helpers/inherits":618,"babel-runtime/helpers/interop-require-default":619,"lacona-phrase":68,"lacona-phrase-number":82,"lodash":71}],61:[function(require,module,exports){
+},{"babel-runtime/helpers/class-call-check":617,"babel-runtime/helpers/create-class":618,"babel-runtime/helpers/get":620,"babel-runtime/helpers/inherits":621,"babel-runtime/helpers/interop-require-default":622,"lacona-phrase":68,"lacona-phrase-number":82,"lodash":71}],61:[function(require,module,exports){
 'use strict';
-
-var _toConsumableArray = require('babel-runtime/helpers/to-consumable-array')['default'];
 
 var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
 
@@ -19750,7 +19908,6 @@ exports.negateDuration = negateDuration;
 exports.relativeTime = relativeTime;
 exports.absoluteTime = absoluteTime;
 exports.ambiguousTime = ambiguousTime;
-exports.coerceAmbiguousTime = coerceAmbiguousTime;
 exports.absoluteDate = absoluteDate;
 exports.relativeDate = relativeDate;
 exports.relativeDay = relativeDay;
@@ -19802,13 +19959,13 @@ function ampmHourToHour(hour, ampm) {
   }
 }
 
-function coerceAmbiguousTime(ambiguousTime, range) {
-  if (_lodash2['default'].inRange.apply(_lodash2['default'], [ambiguousTime.hour].concat(_toConsumableArray(range)))) {
-    return ambiguousTime;
-  } else {
-    return { hour: ambiguousTime.hour < 12 ? ambiguousTime.hour + 12 : ambiguousTime.hour - 12, minute: ambiguousTime.minute, second: ambiguousTime.second };
-  }
-}
+// export function coerceAmbiguousTime (ambiguousTime, range) {
+//   if (_.inRange(ambiguousTime.hour, ...range)) {
+//     return ambiguousTime
+//   } else {
+//     return {hour: ambiguousTime.hour < 12 ? ambiguousTime.hour + 12 : ambiguousTime.hour - 12, minute: ambiguousTime.minute, second: ambiguousTime.second}
+//   }
+// }
 
 function absoluteDate(absolute) {
   return (0, _moment2['default'])(absolute).toDate();
@@ -19840,7 +19997,7 @@ function validateDay() {
   var dateMoment = (0, _moment2['default'])({ year: year, month: month, day: day });
   return dateMoment.month() === month;
 }
-},{"babel-runtime/helpers/interop-require-default":619,"babel-runtime/helpers/to-consumable-array":621,"lodash":71,"moment":72}],62:[function(require,module,exports){
+},{"babel-runtime/helpers/interop-require-default":622,"lodash":71,"moment":72}],62:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19976,7 +20133,7 @@ var Month = (function (_Phrase) {
 })(_laconaPhrase.Phrase);
 
 exports.Month = Month;
-},{"babel-runtime/helpers/class-call-check":614,"babel-runtime/helpers/create-class":615,"babel-runtime/helpers/get":617,"babel-runtime/helpers/inherits":618,"lacona-phrase":68}],64:[function(require,module,exports){
+},{"babel-runtime/helpers/class-call-check":617,"babel-runtime/helpers/create-class":618,"babel-runtime/helpers/get":620,"babel-runtime/helpers/inherits":621,"lacona-phrase":68}],64:[function(require,module,exports){
 /** @jsx createElement */
 
 'use strict';
@@ -20414,7 +20571,7 @@ var StartDateAndTimeRange = (function (_Phrase8) {
 StartDateAndTimeRange.defaultProps = {
   prepositions: false
 };
-},{"./date":58,"./date-range":57,"./datetime":59,"./duration":60,"./helpers":61,"./time":66,"./time-range":65,"babel-runtime/helpers/class-call-check":614,"babel-runtime/helpers/create-class":615,"babel-runtime/helpers/get":617,"babel-runtime/helpers/inherits":618,"babel-runtime/helpers/interop-require-default":619,"lacona-phrase":68,"lodash":71,"moment":72}],65:[function(require,module,exports){
+},{"./date":58,"./date-range":57,"./datetime":59,"./duration":60,"./helpers":61,"./time":66,"./time-range":65,"babel-runtime/helpers/class-call-check":617,"babel-runtime/helpers/create-class":618,"babel-runtime/helpers/get":620,"babel-runtime/helpers/inherits":621,"babel-runtime/helpers/interop-require-default":622,"lacona-phrase":68,"lodash":71,"moment":72}],65:[function(require,module,exports){
 /** @jsx createElement */
 
 'use strict';
@@ -20520,7 +20677,7 @@ TimeRange.defaultProps = {
   prepositions: false,
   _duration: true
 };
-},{"./duration":60,"./time":66,"babel-runtime/helpers/class-call-check":614,"babel-runtime/helpers/create-class":615,"babel-runtime/helpers/get":617,"babel-runtime/helpers/inherits":618,"babel-runtime/helpers/interop-require-default":619,"lacona-phrase":68,"lodash":71,"moment":72}],66:[function(require,module,exports){
+},{"./duration":60,"./time":66,"babel-runtime/helpers/class-call-check":617,"babel-runtime/helpers/create-class":618,"babel-runtime/helpers/get":620,"babel-runtime/helpers/inherits":621,"babel-runtime/helpers/interop-require-default":622,"lacona-phrase":68,"lodash":71,"moment":72}],66:[function(require,module,exports){
 /** @jsx createElement */
 
 'use strict';
@@ -20564,13 +20721,29 @@ var TimeOfDay = (function (_Phrase) {
     _get(Object.getPrototypeOf(TimeOfDay.prototype), 'constructor', this).apply(this, arguments);
   }
 
+  // export class AmbiguousTime extends Phrase {
+  //   describe () {
+  //     return (
+  //       <sequence>
+  //         {this.props.prepositions ? <literal text='at ' category='conjunction' optional limited preferred /> : null}
+  //         <label text='time' merge>
+  //           <choice>
+  //             <AmbiguousAbsoluteNumeric seconds={this.props.seconds} />
+  //             <AmbiguousAbsoluteRelativeHour />
+  //           </choice>
+  //         </label>
+  //       </sequence>
+  //     )
+  //   }
+  // }
+
   _createClass(TimeOfDay, [{
     key: 'describe',
     value: function describe() {
       return (0, _laconaPhrase.createElement)(
         'label',
         { text: 'time of day' },
-        (0, _laconaPhrase.createElement)('list', { items: [{ text: 'morning', value: { 'default': 8, range: [0, 12] } }, { text: 'afternoon', value: { 'default': 12, range: [12, 24] } }, { text: 'evening', value: { 'default': 17, range: [12, 24] } }, { text: 'night', value: { 'default': 20, range: [12, 24] } }] })
+        (0, _laconaPhrase.createElement)('list', { items: [{ text: 'early morning', value: { 'default': 6, impliedAMPM: 'am' } }, { text: 'morning', value: { 'default': 8, impliedAMPM: 'am' } }, { text: 'late morning', value: { 'default': 10, impliedAMPM: 'am' } }, { text: 'afternoon', value: { 'default': 12, impliedAMPM: 'pm' } }, { text: 'late afternoon', value: { 'default': 15, impliedAMPM: 'pm' } }, { text: 'evening', value: { 'default': 17, impliedAMPM: 'pm' } }, { text: 'night', value: { 'default': 20, impliedAMPM: 'pm' } }] })
       );
     }
   }]);
@@ -20580,43 +20753,8 @@ var TimeOfDay = (function (_Phrase) {
 
 exports.TimeOfDay = TimeOfDay;
 
-var AmbiguousTime = (function (_Phrase2) {
-  _inherits(AmbiguousTime, _Phrase2);
-
-  function AmbiguousTime() {
-    _classCallCheck(this, AmbiguousTime);
-
-    _get(Object.getPrototypeOf(AmbiguousTime.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(AmbiguousTime, [{
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'sequence',
-        null,
-        this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'at ', category: 'conjunction', optional: true, limited: true, preferred: true }) : null,
-        (0, _laconaPhrase.createElement)(
-          'label',
-          { text: 'time', merge: true },
-          (0, _laconaPhrase.createElement)(
-            'choice',
-            null,
-            (0, _laconaPhrase.createElement)(AmbiguousAbsoluteNumeric, { seconds: this.props.seconds }),
-            (0, _laconaPhrase.createElement)(AmbiguousAbsoluteRelativeHour, null)
-          )
-        )
-      );
-    }
-  }]);
-
-  return AmbiguousTime;
-})(_laconaPhrase.Phrase);
-
-exports.AmbiguousTime = AmbiguousTime;
-
-var Time = (function (_Phrase3) {
-  _inherits(Time, _Phrase3);
+var Time = (function (_Phrase2) {
+  _inherits(Time, _Phrase2);
 
   function Time() {
     _classCallCheck(this, Time);
@@ -20628,27 +20766,34 @@ var Time = (function (_Phrase3) {
     key: 'describe',
     value: function describe() {
       return (0, _laconaPhrase.createElement)(
-        'label',
-        { text: this.props.argument, suppressEmpty: false },
+        'choice',
+        null,
         (0, _laconaPhrase.createElement)(
-          'choice',
+          'sequence',
           null,
+          this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'at ', category: 'conjunction', optional: true, preferred: true, limited: true }) : null,
           (0, _laconaPhrase.createElement)(
-            'sequence',
-            null,
-            this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'at ', category: 'conjunction', optional: true, preferred: true, limited: true }) : null,
+            'label',
+            { text: this.props.argument, merge: true },
             (0, _laconaPhrase.createElement)(
               'choice',
-              { merge: true },
-              (0, _laconaPhrase.createElement)(AbsoluteNumeric, { seconds: this.props.seconds }),
+              null,
+              (0, _laconaPhrase.createElement)(AbsoluteNumeric, null),
               (0, _laconaPhrase.createElement)(AbsoluteRelativeHour, null),
-              (0, _laconaPhrase.createElement)(AbsoluteNamed, null),
-              (0, _laconaPhrase.createElement)(AbsoluteTimeOfDay, { seconds: this.props.seconds })
+              (0, _laconaPhrase.createElement)(AbsoluteNamed, null)
             )
-          ),
-          this.props.named ? (0, _laconaPhrase.createElement)(RelativeNamed, null) : null,
-          this.props.relative ? (0, _laconaPhrase.createElement)(RelativeTime, null) : null,
-          this.props.recurse ? (0, _laconaPhrase.createElement)(RecursiveTime, null) : null
+          )
+        ),
+        (0, _laconaPhrase.createElement)(
+          'label',
+          { text: this.props.argument },
+          (0, _laconaPhrase.createElement)(
+            'choice',
+            null,
+            this.props.named ? (0, _laconaPhrase.createElement)(RelativeNamed, null) : null,
+            this.props.relative ? (0, _laconaPhrase.createElement)(RelativeTime, null) : null,
+            this.props.recurse ? (0, _laconaPhrase.createElement)(RecursiveTime, null) : null
+          )
         )
       );
     }
@@ -20670,8 +20815,8 @@ var Time = (function (_Phrase3) {
 
 exports.Time = Time;
 
-var RelativeTime = (function (_Phrase4) {
-  _inherits(RelativeTime, _Phrase4);
+var RelativeTime = (function (_Phrase3) {
+  _inherits(RelativeTime, _Phrase3);
 
   function RelativeTime() {
     _classCallCheck(this, RelativeTime);
@@ -20721,8 +20866,8 @@ var RelativeTime = (function (_Phrase4) {
   return RelativeTime;
 })(_laconaPhrase.Phrase);
 
-var RelativeNamed = (function (_Phrase5) {
-  _inherits(RelativeNamed, _Phrase5);
+var RelativeNamed = (function (_Phrase4) {
+  _inherits(RelativeNamed, _Phrase4);
 
   function RelativeNamed() {
     _classCallCheck(this, RelativeNamed);
@@ -20744,8 +20889,8 @@ var RelativeNamed = (function (_Phrase5) {
   return RelativeNamed;
 })(_laconaPhrase.Phrase);
 
-var AbsoluteTimeOfDay = (function (_Phrase6) {
-  _inherits(AbsoluteTimeOfDay, _Phrase6);
+var AbsoluteTimeOfDay = (function (_Phrase5) {
+  _inherits(AbsoluteTimeOfDay, _Phrase5);
 
   function AbsoluteTimeOfDay() {
     _classCallCheck(this, AbsoluteTimeOfDay);
@@ -20783,14 +20928,33 @@ var AbsoluteTimeOfDay = (function (_Phrase6) {
   return AbsoluteTimeOfDay;
 })(_laconaPhrase.Phrase);
 
-var AbsoluteNamed = (function (_Phrase7) {
-  _inherits(AbsoluteNamed, _Phrase7);
+var AbsoluteNamed = (function (_Phrase6) {
+  _inherits(AbsoluteNamed, _Phrase6);
 
   function AbsoluteNamed() {
     _classCallCheck(this, AbsoluteNamed);
 
     _get(Object.getPrototypeOf(AbsoluteNamed.prototype), 'constructor', this).apply(this, arguments);
   }
+
+  // class AmbiguousAbsoluteNumeric extends Phrase {
+  //   getValue (result) {
+  //     return ambiguousTime(result)
+  //   }
+
+  //   describe () {
+  //     return (
+  //       <map function={this.getValue.bind(this)}>
+
+  //       </map>
+  //     )
+  //   }
+  // }
+
+  // AmbiguousAbsoluteNumeric.defaultProps = {
+  //   minutes: true,
+  //   seconds: false
+  // }
 
   _createClass(AbsoluteNamed, [{
     key: 'describe',
@@ -20806,63 +20970,8 @@ var AbsoluteNamed = (function (_Phrase7) {
   return AbsoluteNamed;
 })(_laconaPhrase.Phrase);
 
-var AmbiguousAbsoluteNumeric = (function (_Phrase8) {
-  _inherits(AmbiguousAbsoluteNumeric, _Phrase8);
-
-  function AmbiguousAbsoluteNumeric() {
-    _classCallCheck(this, AmbiguousAbsoluteNumeric);
-
-    _get(Object.getPrototypeOf(AmbiguousAbsoluteNumeric.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(AmbiguousAbsoluteNumeric, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      return (0, _helpers.ambiguousTime)(result);
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'map',
-        { 'function': this.getValue.bind(this) },
-        (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          (0, _laconaPhrase.createElement)(Hour, { id: 'hour' }),
-          (0, _laconaPhrase.createElement)(
-            'choice',
-            { optional: true, limit: 1, merge: true },
-            this.props.minutes ? (0, _laconaPhrase.createElement)(
-              'sequence',
-              null,
-              (0, _laconaPhrase.createElement)('literal', { text: ':' }),
-              (0, _laconaPhrase.createElement)(MinutesOrSeconds, { id: 'minute' })
-            ) : null,
-            this.props.minutes && this.props.seconds ? (0, _laconaPhrase.createElement)(
-              'sequence',
-              null,
-              (0, _laconaPhrase.createElement)('literal', { text: ':' }),
-              (0, _laconaPhrase.createElement)(MinutesOrSeconds, { id: 'minute' }),
-              (0, _laconaPhrase.createElement)('literal', { text: ':' }),
-              (0, _laconaPhrase.createElement)(MinutesOrSeconds, { id: 'second' })
-            ) : null
-          )
-        )
-      );
-    }
-  }]);
-
-  return AmbiguousAbsoluteNumeric;
-})(_laconaPhrase.Phrase);
-
-AmbiguousAbsoluteNumeric.defaultProps = {
-  minutes: true,
-  seconds: false
-};
-
-var AbsoluteNumeric = (function (_Phrase9) {
-  _inherits(AbsoluteNumeric, _Phrase9);
+var AbsoluteNumeric = (function (_Phrase7) {
+  _inherits(AbsoluteNumeric, _Phrase7);
 
   function AbsoluteNumeric() {
     _classCallCheck(this, AbsoluteNumeric);
@@ -20873,7 +20982,14 @@ var AbsoluteNumeric = (function (_Phrase9) {
   _createClass(AbsoluteNumeric, [{
     key: 'getValue',
     value: function getValue(result) {
-      return (0, _helpers.ambiguousTime)(result.ambiguousTime, result.ampm);
+      if (result.ampm) {
+        return (0, _helpers.ambiguousTime)(result, result.ampm);
+      } else {
+        return _lodash2['default'].assign({}, result, { _ambiguousAMPM: true });
+        // const returnValue = _.clone(result)
+        // Object.defineProperty(returnValue, 'ambiguousAMPM', {value: true})
+        // return returnValue
+      }
     }
   }, {
     key: 'describe',
@@ -20884,7 +21000,13 @@ var AbsoluteNumeric = (function (_Phrase9) {
         (0, _laconaPhrase.createElement)(
           'sequence',
           null,
-          (0, _laconaPhrase.createElement)(AmbiguousAbsoluteNumeric, { id: 'ambiguousTime', minutes: this.props.minutes, seconds: this.props.seconds }),
+          (0, _laconaPhrase.createElement)(Hour, { id: 'hour', ellipsis: true }),
+          (0, _laconaPhrase.createElement)(
+            'sequence',
+            { ellipsis: true, optional: true, limited: true, merge: true },
+            (0, _laconaPhrase.createElement)('literal', { text: ':' }),
+            (0, _laconaPhrase.createElement)(MinutesOrSeconds, { id: 'minute' })
+          ),
           (0, _laconaPhrase.createElement)(
             'choice',
             { id: 'ampm' },
@@ -20904,8 +21026,8 @@ AbsoluteNumeric.defaultProps = {
   seconds: false
 };
 
-var AmbiguousAbsoluteRelativeHour = (function (_Phrase10) {
-  _inherits(AmbiguousAbsoluteRelativeHour, _Phrase10);
+var AmbiguousAbsoluteRelativeHour = (function (_Phrase8) {
+  _inherits(AmbiguousAbsoluteRelativeHour, _Phrase8);
 
   function AmbiguousAbsoluteRelativeHour() {
     _classCallCheck(this, AmbiguousAbsoluteRelativeHour);
@@ -20923,8 +21045,8 @@ var AmbiguousAbsoluteRelativeHour = (function (_Phrase10) {
   return AmbiguousAbsoluteRelativeHour;
 })(_laconaPhrase.Phrase);
 
-var AbsoluteRelativeHour = (function (_Phrase11) {
-  _inherits(AbsoluteRelativeHour, _Phrase11);
+var AbsoluteRelativeHour = (function (_Phrase9) {
+  _inherits(AbsoluteRelativeHour, _Phrase9);
 
   function AbsoluteRelativeHour() {
     _classCallCheck(this, AbsoluteRelativeHour);
@@ -20942,8 +21064,8 @@ var AbsoluteRelativeHour = (function (_Phrase11) {
   return AbsoluteRelativeHour;
 })(_laconaPhrase.Phrase);
 
-var BaseAbsoluteRelativeHour = (function (_Phrase12) {
-  _inherits(BaseAbsoluteRelativeHour, _Phrase12);
+var BaseAbsoluteRelativeHour = (function (_Phrase10) {
+  _inherits(BaseAbsoluteRelativeHour, _Phrase10);
 
   function BaseAbsoluteRelativeHour() {
     _classCallCheck(this, BaseAbsoluteRelativeHour);
@@ -20984,7 +21106,7 @@ var BaseAbsoluteRelativeHour = (function (_Phrase12) {
             (0, _laconaPhrase.createElement)(
               'choice',
               null,
-              this.props.ambiguous ? (0, _laconaPhrase.createElement)(AmbiguousAbsoluteNumeric, { minutes: false, seconds: false }) : (0, _laconaPhrase.createElement)(AbsoluteNumeric, { minutes: false, seconds: false }),
+              (0, _laconaPhrase.createElement)(AbsoluteNumeric, { minutes: false }),
               (0, _laconaPhrase.createElement)(AbsoluteNamed, null)
             )
           )
@@ -21002,8 +21124,8 @@ var BaseAbsoluteRelativeHour = (function (_Phrase12) {
   return BaseAbsoluteRelativeHour;
 })(_laconaPhrase.Phrase);
 
-var RecursiveTime = (function (_Phrase13) {
-  _inherits(RecursiveTime, _Phrase13);
+var RecursiveTime = (function (_Phrase11) {
+  _inherits(RecursiveTime, _Phrase11);
 
   function RecursiveTime() {
     _classCallCheck(this, RecursiveTime);
@@ -21042,8 +21164,8 @@ var RecursiveTime = (function (_Phrase13) {
   return RecursiveTime;
 })(_laconaPhrase.Phrase);
 
-var MinutesOrSeconds = (function (_Phrase14) {
-  _inherits(MinutesOrSeconds, _Phrase14);
+var MinutesOrSeconds = (function (_Phrase12) {
+  _inherits(MinutesOrSeconds, _Phrase12);
 
   function MinutesOrSeconds() {
     _classCallCheck(this, MinutesOrSeconds);
@@ -21070,8 +21192,8 @@ var MinutesOrSeconds = (function (_Phrase14) {
   return MinutesOrSeconds;
 })(_laconaPhrase.Phrase);
 
-var Hour = (function (_Phrase15) {
-  _inherits(Hour, _Phrase15);
+var Hour = (function (_Phrase13) {
+  _inherits(Hour, _Phrase13);
 
   function Hour() {
     _classCallCheck(this, Hour);
@@ -21097,7 +21219,9 @@ var Hour = (function (_Phrase15) {
 
   return Hour;
 })(_laconaPhrase.Phrase);
-},{"./duration":60,"./helpers":61,"babel-runtime/helpers/class-call-check":614,"babel-runtime/helpers/create-class":615,"babel-runtime/helpers/get":617,"babel-runtime/helpers/inherits":618,"babel-runtime/helpers/interop-require-default":619,"lacona-phrase":68,"lacona-phrase-number":82,"lodash":71,"moment":72}],67:[function(require,module,exports){
+
+/*<AbsoluteTimeOfDay seconds={this.props.seconds} />*/
+},{"./duration":60,"./helpers":61,"babel-runtime/helpers/class-call-check":617,"babel-runtime/helpers/create-class":618,"babel-runtime/helpers/get":620,"babel-runtime/helpers/inherits":621,"babel-runtime/helpers/interop-require-default":622,"lacona-phrase":68,"lacona-phrase-number":82,"lodash":71,"moment":72}],67:[function(require,module,exports){
 /** @jsx createElement */
 
 'use strict';
@@ -21146,7 +21270,7 @@ var Weekday = (function (_Phrase) {
 })(_laconaPhrase.Phrase);
 
 exports.Weekday = Weekday;
-},{"babel-runtime/helpers/class-call-check":614,"babel-runtime/helpers/create-class":615,"babel-runtime/helpers/get":617,"babel-runtime/helpers/inherits":618,"lacona-phrase":68}],68:[function(require,module,exports){
+},{"babel-runtime/helpers/class-call-check":617,"babel-runtime/helpers/create-class":618,"babel-runtime/helpers/get":620,"babel-runtime/helpers/inherits":621,"lacona-phrase":68}],68:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
 },{"../package":70,"dup":2,"inherits":69}],69:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
@@ -25053,7 +25177,7 @@ var DigitString = (function (_Phrase) {
       return (0, _laconaPhrase.createElement)(
         'label',
         { text: this.props.argument, suppressWhen: this.suppressWhen.bind(this) },
-        (0, _laconaPhrase.createElement)('freetext', { filter: isNumeric, splitOn: /\D/, score: 1 })
+        (0, _laconaPhrase.createElement)('freetext', { regex: '\\d{' + this.props.minLength + ',' + this.props.maxLength + '}', filter: isNumeric, splitOn: /\D/, score: 1 })
       );
     }
   }], [{
@@ -25177,7 +25301,7 @@ var Integer = (function (_Phrase) {
         (0, _laconaPhrase.createElement)(
           'map',
           { 'function': this.getValue.bind(this) },
-          (0, _laconaPhrase.createElement)('freetext', { filter: isSignedNumeric, limit: this.props.limit, splitOn: /\D/, score: 1 })
+          (0, _laconaPhrase.createElement)('freetext', { filter: isSignedNumeric, regex: '[\\-\\+]?\\d+', limit: this.props.limit, splitOn: /\D/, score: 1 })
         )
       );
     }
@@ -25235,7 +25359,7 @@ function incompleteOrdinal(input) {
 
 function completeOrdinal(input) {
   if (_lodash2['default'].startsWith(input, '0')) return false;
-  return (/^(?:\d+th|\d+t|\d*1st|\d*2nd|\d*3rd)$/.test(input)
+  return (/^(?:[1-9]\d*th|(?:[1-9]\d*)?1st|(?:[1-9]\d*)?2nd|(?:[1-9]\d*)?3rd)$/.test(input)
   );
 }
 
@@ -25285,7 +25409,7 @@ var Ordinal = (function (_Phrase) {
         (0, _laconaPhrase.createElement)(
           'map',
           { 'function': this.getValue.bind(this) },
-          (0, _laconaPhrase.createElement)('freetext', { filter: completeOrdinal, limit: this.props.limit, splitOn: /[^0-9stndhr]/, score: 1 })
+          (0, _laconaPhrase.createElement)('freetext', { regex: '[1-9]\\d*th|(?:[1-9]\\d*)?1st|(?:[1-9]\\d*)?2nd|(?:[1-9]\\d*)?3rd', filter: completeOrdinal, limit: this.props.limit, splitOn: /[^0-9stndhr]/, score: 1 })
         )
       );
     }
@@ -25649,7 +25773,7 @@ var ImpliedURL = (function (_Phrase2) {
   }, {
     key: 'filter',
     value: function filter(input) {
-      return (/^(\w+\.)+\w{2,63}\S*$/i.test(input)
+      return (/^([\w-]+\.)+\w{2,63}\S*$/i.test(input)
       );
     }
   }, {
@@ -26438,7 +26562,7 @@ function getExecute(showNotification) {
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/helpers/interop-require-default":619,"react":478,"react-lacona":314}],108:[function(require,module,exports){
+},{"babel-runtime/helpers/interop-require-default":622,"react":478,"react-lacona":314}],108:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -26783,7 +26907,7 @@ Lacona.defaultProps = {
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./sentence.jsx":111,"babel-runtime/core-js/get-iterator":608,"babel-runtime/helpers/class-call-check":614,"babel-runtime/helpers/create-class":615,"babel-runtime/helpers/get":617,"babel-runtime/helpers/inherits":618,"babel-runtime/helpers/interop-require-default":619,"babel-runtime/helpers/to-consumable-array":621,"lacona":493,"react":478,"react-addons-css-transition-group":310,"react-lacona":314}],109:[function(require,module,exports){
+},{"./sentence.jsx":111,"babel-runtime/core-js/get-iterator":608,"babel-runtime/helpers/class-call-check":617,"babel-runtime/helpers/create-class":618,"babel-runtime/helpers/get":620,"babel-runtime/helpers/inherits":621,"babel-runtime/helpers/interop-require-default":622,"babel-runtime/helpers/to-consumable-array":624,"lacona":493,"react":478,"react-addons-css-transition-group":310,"react-lacona":314}],109:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -26835,7 +26959,9 @@ var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTran
 
 var MS_PER_INPUT = 10;
 
-var examples = ['open Calendar', 'open Facebook', 'open kickstarter.com', 'open ~/Downloads/Lacona.dmg', 'open todo.txt', 'open my-document.docx with Pages', 'open lacona.io in Safari', 'schedule Vacation 10a Monday to 6:30p Thursday', 'remind me to Pick up the car September 12 at 11:30am', 'remind me to Buy a gift 7 days before 12/1', 'search Google for pictures of cats', 'search Wikipedia for Pluto', 'Google stormtroopers', 'Amazon Avengers', 'play Robot Love', 'play Walk the Moon', 'play Jason Derulo, Flyte, and Elle King', 'play next song', 'pause', 'call Mom', 'email Tony Stark', 'email Dinner Plans to Peter Parker', 'facetime Bruce Banner', 'email app@lacona.io', 'call +1 617 867 5309', 'turn on do not disturb for 25 minutes', 'translate 我爱你 to English'];
+var examples = ['open Calendar', 'open Facebook', 'open kickstarter.com',
+// 'open ~/Downloads/Lacona.dmg',
+'open todo.txt', 'open my-document.docx with Pages', 'open lacona.io in Safari', 'remind me to Pick up the car September 12 at 11:30am', 'remind me to Buy a gift 7 days before 12/1', 'search Google for pictures of cats', 'search Wikipedia for Pluto', 'Google stormtroopers', 'Amazon Avengers', 'play Robot Love', 'play Walk the Moon', 'play Jason Derulo, Flyte, and Elle King', 'play next song', 'pause', 'call Mom', 'email Tony Stark', 'email Dinner Plans to Peter Parker', 'facetime Bruce Banner', 'email app@lacona.io', 'call +1 617 867 5309', 'turn on do not disturb for 25 minutes', 'translate 我爱你 to English'];
 
 var Lightbox = (function (_React$Component) {
   _inherits(Lightbox, _React$Component);
@@ -27237,12 +27363,17 @@ var Page = (function (_React$Component4) {
             'Natural Language Commands for your Mac'
           ),
           _react2['default'].createElement(
-            'h3',
-            null,
+            'a',
+            { href: 'http://lacona-download.firebaseapp.com/packages/0.3.zip', className: 'noline download-well' },
             _react2['default'].createElement(
-              'a',
-              { href: 'http://us10.campaign-archive1.com/?u=f923be23d36f00f457ea3b2c6&id=12a018e9df&e=[UNIQID]' },
-              'Launching January 29'
+              'h3',
+              null,
+              'Download Lacona (Beta) Now'
+            ),
+            _react2['default'].createElement(
+              'p',
+              null,
+              'Requires Mac OS 10.11 El Capitan'
             )
           ),
           _react2['default'].createElement(
@@ -27253,7 +27384,19 @@ var Page = (function (_React$Component4) {
           _react2['default'].createElement(
             'p',
             null,
-            'This page is just a demo of Lacona\'s power. The App itself will be available for download on January 29.'
+            'Lacona Beta is ',
+            _react2['default'].createElement(
+              'strong',
+              null,
+              'available for download'
+            ),
+            '. It\'s awesome, but it\'s still quite buggy. Report problems ',
+            _react2['default'].createElement(
+              'a',
+              { href: 'https://github.com/lacona/LaconaApp/issues' },
+              'here'
+            ),
+            '. This page is an in-browser demo.'
           )
         ),
         _react2['default'].createElement(
@@ -27472,23 +27615,7 @@ var Page = (function (_React$Component4) {
                     'kickstarter.com'
                   )
                 ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '0', function () {
-                      return false;
-                    }, 'open ~/Downloads/Lacona.dmg') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'open'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('path') },
-                    '~/Downloads/Lacona.dmg'
-                  )
-                ),
+                '                ',
                 _react2['default'].createElement(
                   'li',
                   { onClick: this.type.bind(this, '0', function () {
@@ -27622,7 +27749,7 @@ var Page = (function (_React$Component4) {
               _react2['default'].createElement(
                 'p',
                 null,
-                'Create events and reminders as though you were talking to a person. Lacona understands.'
+                'Create reminders as though you were talking to a person. Lacona understands. Event scheduling is coming soon.'
               ),
               _react2['default'].createElement(
                 'ul',
@@ -27641,41 +27768,7 @@ var Page = (function (_React$Component4) {
               _react2['default'].createElement(
                 'ul',
                 { className: 'examples' },
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '1', function () {
-                      return false;
-                    }, "schedule Dinner with Vicky for 7pm tomorrow") },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'schedule'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('calendar event') },
-                    'Dinner with Vicky'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'for'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('time') },
-                    '7pm'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('date') },
-                    'tomorrow'
-                  )
-                ),
+                '                ',
                 _react2['default'].createElement(
                   'li',
                   { onClick: this.type.bind(this, '1', function () {
@@ -27734,94 +27827,7 @@ var Page = (function (_React$Component4) {
                     '2 weeks before my wife\'s birthday'
                   )
                 ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '1', function () {
-                      return false;
-                    }, 'schedule Vacation 10a Monday to 6:30p Thursday') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'schedule'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('calendar event') },
-                    'Vacation'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('time') },
-                    '10a'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('date') },
-                    'Monday'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'to'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('time') },
-                    '6:30p'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('date') },
-                    'Thursday'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '1', function () {
-                      return false;
-                    }, 'schedule China trip from Native American Day to Veterans Day') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'schedule'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('calendar event') },
-                    'China trip'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'from'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('holiday') },
-                    'Native American Day'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'to'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('holiday') },
-                    'Veterans Day'
-                  )
-                ),
+                '                ',
                 _react2['default'].createElement(
                   'li',
                   { onClick: this.type.bind(this, '1', function () {
@@ -29266,10 +29272,22 @@ var Page = (function (_React$Component4) {
 
 exports['default'] = Page;
 module.exports = exports['default'];
-/* <span className='category-conjunction'>at</span> <span className='descriptor-location'>Sacco's Flatbread</span>*/
+/*                <li onClick={this.type.bind(this, '0', () => false, 'open ~/Downloads/Lacona.dmg')}>
+                 <span className='category-action'>open</span> <span className={`category-argument${hashArgument('path')}`}>~/Downloads/Lacona.dmg</span>
+               </li>
+*/ /*                <li onClick={this.type.bind(this, '1', () => false, "schedule Dinner with Vicky for 7pm tomorrow")}>
+                    <span className='category-action'>schedule</span> <span className={`category-argument${hashArgument('calendar event')}`}>Dinner with Vicky</span>{/* <span className='category-conjunction'>at</span> <span className='descriptor-location'>Sacco's Flatbread</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('time')}`}>7pm</span> <span className={`category-argument${hashArgument('date')}`}>tomorrow</span>
+                  </li>
+   */ /*                <li onClick={this.type.bind(this, '1', () => false, 'schedule Vacation 10a Monday to 6:30p Thursday')}>
+                       <span className='category-action'>schedule</span> <span className={`category-argument${hashArgument('calendar event')}`}>Vacation</span> <span className={`category-argument${hashArgument('time')}`}>10a</span> <span className={`category-argument${hashArgument('date')}`}>Monday</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('time')}`}>6:30p</span> <span className={`category-argument${hashArgument('date')}`}>Thursday</span>
+                     </li>
+                     <li onClick={this.type.bind(this, '1', () => false, 'schedule China trip from Native American Day to Veterans Day')}>
+                       <span className='category-action'>schedule</span> <span className={`category-argument${hashArgument('calendar event')}`}>China trip</span> <span className='category-conjunction'>from</span> <span className={`category-argument${hashArgument('holiday')}`}>Native American Day</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('holiday')}`}>Veterans Day</span>
+                     </li>
+      */
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./execute.jsx":107,"./lacona.jsx":108,"./sentence.jsx":111,"async-each-series":112,"babel-runtime/helpers/class-call-check":614,"babel-runtime/helpers/create-class":615,"babel-runtime/helpers/get":617,"babel-runtime/helpers/inherits":618,"babel-runtime/helpers/interop-require-default":619,"react":478,"react-addons-css-transition-group":310,"react-google-analytics":312,"react-lacona":314}],110:[function(require,module,exports){
+},{"./execute.jsx":107,"./lacona.jsx":108,"./sentence.jsx":111,"async-each-series":112,"babel-runtime/helpers/class-call-check":617,"babel-runtime/helpers/create-class":618,"babel-runtime/helpers/get":620,"babel-runtime/helpers/inherits":621,"babel-runtime/helpers/interop-require-default":622,"react":478,"react-addons-css-transition-group":310,"react-google-analytics":312,"react-lacona":314}],110:[function(require,module,exports){
 'use strict';
 
 var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
@@ -29292,7 +29310,7 @@ require('babel/polyfill');
 
 (0, _reactDom.render)(_react2['default'].createElement(_pageJsx2['default'], { isMobile: _detect2['default'] }), document.getElementById('page'));
 
-},{"./detect":106,"./page.jsx":109,"babel-runtime/helpers/interop-require-default":619,"babel/polyfill":303,"react":478,"react-dom":311}],111:[function(require,module,exports){
+},{"./detect":106,"./page.jsx":109,"babel-runtime/helpers/interop-require-default":622,"babel/polyfill":303,"react":478,"react-dom":311}],111:[function(require,module,exports){
 (function (process,global){
 /** @jsx createElement */
 
@@ -37346,6 +37364,7 @@ var Option = (function (_React$Component2) {
         desc.style.left = rect.left - wordsRect.left + 'px';
         // // RTL
         // desc.style.right = `${wordsRect.right - rect.right}px`
+        // 9 for Lacona, 6 for Lacona.io
         desc.style.top = rect.top - wordsRect.top + 6 + 'px';
       });
     }
@@ -37440,6 +37459,7 @@ var Option = (function (_React$Component2) {
 })(_react2['default'].Component);
 
 exports.Option = Option;
+/*<div className='ellipsis'>{this.props.option.ellipsis ? '…' : ''}</div>*/
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"react":478,"react-dom":311}],316:[function(require,module,exports){
 (function (global){
@@ -57926,22 +57946,17 @@ var Label = (function (_Phrase) {
   _createClass(Label, [{
     key: 'parseChild',
     value: _regeneratorRuntime.mark(function parseChild(input, options) {
-      var didSetCurrentArgument, didSetSuppressIncomplete, modification, inputWithArgument, didOutputSelf, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, output;
+      var didSetCurrentArgument, modification, inputWithArgument, didOutputSelf, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, output;
 
       return _regeneratorRuntime.wrap(function parseChild$(context$2$0) {
         while (1) switch (context$2$0.prev = context$2$0.next) {
           case 0:
             didSetCurrentArgument = false;
-            didSetSuppressIncomplete = false;
             modification = {};
 
             if (this.props.argument && !input.currentArgument) {
               modification.currentArgument = this.props.text;
               didSetCurrentArgument = true;
-            }
-            if (this.props.suppressIncomplete) {
-              modification.suppressIncomplete = true;
-              didSetSuppressIncomplete = true;
             }
 
             inputWithArgument = _lodash2['default'].assign({}, input, modification);
@@ -57949,104 +57964,81 @@ var Label = (function (_Phrase) {
             _iteratorNormalCompletion = true;
             _didIteratorError = false;
             _iteratorError = undefined;
-            context$2$0.prev = 10;
+            context$2$0.prev = 8;
             _iterator = _getIterator((0, _parse.parse)({ phrase: this.childPhrase, input: inputWithArgument, options: options }));
 
-          case 12:
+          case 10:
             if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              context$2$0.next = 31;
+              context$2$0.next = 22;
               break;
             }
 
             output = _step.value;
 
-            if (!(this.props.suppressIncomplete && _lodash2['default'].some(output.words, 'placeholder'))) {
-              context$2$0.next = 21;
-              break;
-            }
-
-            if (didOutputSelf) {
-              context$2$0.next = 19;
-              break;
-            }
-
-            context$2$0.next = 18;
-            return this.outputSelf(input, options, didSetSuppressIncomplete);
-
-          case 18:
-            didOutputSelf = true;
-
-          case 19:
-            context$2$0.next = 28;
-            break;
-
-          case 21:
             if (!didSetCurrentArgument) {
-              context$2$0.next = 26;
+              context$2$0.next = 17;
               break;
             }
 
-            context$2$0.next = 24;
+            context$2$0.next = 15;
             return _lodash2['default'].assign({}, output, { currentArgument: undefined });
 
-          case 24:
-            context$2$0.next = 28;
+          case 15:
+            context$2$0.next = 19;
             break;
 
-          case 26:
-            context$2$0.next = 28;
+          case 17:
+            context$2$0.next = 19;
             return output;
 
-          case 28:
+          case 19:
             _iteratorNormalCompletion = true;
-            context$2$0.next = 12;
+            context$2$0.next = 10;
             break;
 
-          case 31:
-            context$2$0.next = 37;
+          case 22:
+            context$2$0.next = 28;
             break;
 
-          case 33:
-            context$2$0.prev = 33;
-            context$2$0.t0 = context$2$0['catch'](10);
+          case 24:
+            context$2$0.prev = 24;
+            context$2$0.t0 = context$2$0['catch'](8);
             _didIteratorError = true;
             _iteratorError = context$2$0.t0;
 
-          case 37:
-            context$2$0.prev = 37;
-            context$2$0.prev = 38;
+          case 28:
+            context$2$0.prev = 28;
+            context$2$0.prev = 29;
 
             if (!_iteratorNormalCompletion && _iterator['return']) {
               _iterator['return']();
             }
 
-          case 40:
-            context$2$0.prev = 40;
+          case 31:
+            context$2$0.prev = 31;
 
             if (!_didIteratorError) {
-              context$2$0.next = 43;
+              context$2$0.next = 34;
               break;
             }
 
             throw _iteratorError;
 
-          case 43:
-            return context$2$0.finish(40);
+          case 34:
+            return context$2$0.finish(31);
 
-          case 44:
-            return context$2$0.finish(37);
+          case 35:
+            return context$2$0.finish(28);
 
-          case 45:
+          case 36:
           case 'end':
             return context$2$0.stop();
         }
-      }, parseChild, this, [[10, 33, 37, 45], [38,, 40, 44]]);
+      }, parseChild, this, [[8, 24, 28, 36], [29,, 31, 35]]);
     })
   }, {
     key: 'outputSelf',
     value: function outputSelf(input, options) {
-      var cancelSuppressIncomplete = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
-
       var word = {
         text: this.props.text,
         input: false,
@@ -58061,10 +58053,6 @@ var Label = (function (_Phrase) {
       };
 
       modification.words = input.words.concat(word);
-
-      if (cancelSuppressIncomplete) {
-        modification.suppressIncomplete = undefined;
-      }
 
       return _lodash2['default'].assign({}, input, modification);
     }
@@ -58102,8 +58090,7 @@ var Label = (function (_Phrase) {
     value: {
       suppress: true,
       argument: true,
-      suppressEmpty: true,
-      suppressIncomplete: false
+      suppressEmpty: true
     },
     enumerable: true
   }]);
@@ -58112,7 +58099,6 @@ var Label = (function (_Phrase) {
 })(_laconaPhrase.Phrase);
 
 exports.Label = Label;
-//only output yourself once for each input
 },{"../parse":494,"../reconcile":496,"babel-runtime/core-js/get-iterator":502,"babel-runtime/helpers/class-call-check":512,"babel-runtime/helpers/create-class":513,"babel-runtime/helpers/get":516,"babel-runtime/helpers/inherits":517,"babel-runtime/helpers/interop-require-default":518,"babel-runtime/regenerator":600,"lacona-phrase":602,"lodash":605}],485:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
@@ -58509,13 +58495,13 @@ var MapPhrase = (function (_Phrase) {
   _createClass(MapPhrase, [{
     key: '_handleParse',
     value: _regeneratorRuntime.mark(function _handleParse(input, options) {
-      var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, output, newResult, modifications;
+      var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, output, newResult, modifications, successes, newIterator, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, success;
 
       return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
         while (1) switch (context$2$0.prev = context$2$0.next) {
           case 0:
             if (!(this.props.children && this.props.children.length > 0)) {
-              context$2$0.next = 35;
+              context$2$0.next = 74;
               break;
             }
 
@@ -58529,7 +58515,7 @@ var MapPhrase = (function (_Phrase) {
 
           case 7:
             if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              context$2$0.next = 21;
+              context$2$0.next = 60;
               break;
             }
 
@@ -58544,66 +58530,156 @@ var MapPhrase = (function (_Phrase) {
             return output;
 
           case 12:
-            context$2$0.next = 18;
+            context$2$0.next = 57;
             break;
 
           case 14:
+            if (!this.props['function']) {
+              context$2$0.next = 21;
+              break;
+            }
+
             newResult = this.props['function'](output.result);
             modifications = { result: newResult };
-            context$2$0.next = 18;
+            context$2$0.next = 19;
             return _lodash2['default'].assign({}, output, modifications);
 
-          case 18:
+          case 19:
+            context$2$0.next = 57;
+            break;
+
+          case 21:
+            if (!this.props.iteratorFunction) {
+              context$2$0.next = 57;
+              break;
+            }
+
+            successes = 0;
+            newIterator = this.props.iteratorFunction(output.result);
+            _iteratorNormalCompletion2 = true;
+            _didIteratorError2 = false;
+            _iteratorError2 = undefined;
+            context$2$0.prev = 27;
+            _iterator2 = _getIterator(newIterator);
+
+          case 29:
+            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+              context$2$0.next = 43;
+              break;
+            }
+
+            newResult = _step2.value;
+            success = false;
+            modifications = { result: newResult };
+
+            if (this.props.limit) {
+              modifications.callbacks = output.callbacks.concat(function () {
+                return success = true;
+              });
+            }
+
+            context$2$0.next = 36;
+            return _lodash2['default'].assign({}, output, modifications);
+
+          case 36:
+            if (!this.props.limit) {
+              context$2$0.next = 40;
+              break;
+            }
+
+            if (success) successes++;
+
+            if (!(this.props.limit <= successes)) {
+              context$2$0.next = 40;
+              break;
+            }
+
+            return context$2$0.abrupt('break', 43);
+
+          case 40:
+            _iteratorNormalCompletion2 = true;
+            context$2$0.next = 29;
+            break;
+
+          case 43:
+            context$2$0.next = 49;
+            break;
+
+          case 45:
+            context$2$0.prev = 45;
+            context$2$0.t0 = context$2$0['catch'](27);
+            _didIteratorError2 = true;
+            _iteratorError2 = context$2$0.t0;
+
+          case 49:
+            context$2$0.prev = 49;
+            context$2$0.prev = 50;
+
+            if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+              _iterator2['return']();
+            }
+
+          case 52:
+            context$2$0.prev = 52;
+
+            if (!_didIteratorError2) {
+              context$2$0.next = 55;
+              break;
+            }
+
+            throw _iteratorError2;
+
+          case 55:
+            return context$2$0.finish(52);
+
+          case 56:
+            return context$2$0.finish(49);
+
+          case 57:
             _iteratorNormalCompletion = true;
             context$2$0.next = 7;
             break;
 
-          case 21:
-            context$2$0.next = 27;
+          case 60:
+            context$2$0.next = 66;
             break;
 
-          case 23:
-            context$2$0.prev = 23;
-            context$2$0.t0 = context$2$0['catch'](5);
+          case 62:
+            context$2$0.prev = 62;
+            context$2$0.t1 = context$2$0['catch'](5);
             _didIteratorError = true;
-            _iteratorError = context$2$0.t0;
+            _iteratorError = context$2$0.t1;
 
-          case 27:
-            context$2$0.prev = 27;
-            context$2$0.prev = 28;
+          case 66:
+            context$2$0.prev = 66;
+            context$2$0.prev = 67;
 
             if (!_iteratorNormalCompletion && _iterator['return']) {
               _iterator['return']();
             }
 
-          case 30:
-            context$2$0.prev = 30;
+          case 69:
+            context$2$0.prev = 69;
 
             if (!_didIteratorError) {
-              context$2$0.next = 33;
+              context$2$0.next = 72;
               break;
             }
 
             throw _iteratorError;
 
-          case 33:
-            return context$2$0.finish(30);
+          case 72:
+            return context$2$0.finish(69);
 
-          case 34:
-            return context$2$0.finish(27);
+          case 73:
+            return context$2$0.finish(66);
 
-          case 35:
+          case 74:
           case 'end':
             return context$2$0.stop();
         }
-      }, _handleParse, this, [[5, 23, 27, 35], [28,, 30, 34]]);
+      }, _handleParse, this, [[5, 62, 66, 74], [27, 45, 49, 57], [50,, 52, 56], [67,, 69, 73]]);
     })
-  }], [{
-    key: 'defaultProps',
-    value: {
-      'function': _lodash2['default'].identity
-    },
-    enumerable: true
   }]);
 
   return MapPhrase;
@@ -58665,7 +58741,7 @@ var Raw = (function (_Phrase) {
 
           case 6:
             if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              context$2$0.next = 20;
+              context$2$0.next = 21;
               break;
             }
 
@@ -58687,69 +58763,70 @@ var Raw = (function (_Phrase) {
             if (this.props.limit) modification.callbacks = input.callbacks.concat(function () {
               return success = true;
             });
+            if (output.ellipsis) modification.ellipsis = true;
 
-            context$2$0.next = 13;
+            context$2$0.next = 14;
             return _lodash2['default'].assign({}, input, modification);
 
-          case 13:
+          case 14:
             if (!this.props.limit) {
-              context$2$0.next = 17;
+              context$2$0.next = 18;
               break;
             }
 
             if (success) successes++;
 
             if (!(this.props.limit <= successes)) {
-              context$2$0.next = 17;
+              context$2$0.next = 18;
               break;
             }
 
-            return context$2$0.abrupt('break', 20);
+            return context$2$0.abrupt('break', 21);
 
-          case 17:
+          case 18:
             _iteratorNormalCompletion = true;
             context$2$0.next = 6;
             break;
 
-          case 20:
-            context$2$0.next = 26;
+          case 21:
+            context$2$0.next = 27;
             break;
 
-          case 22:
-            context$2$0.prev = 22;
+          case 23:
+            context$2$0.prev = 23;
             context$2$0.t0 = context$2$0['catch'](4);
             _didIteratorError = true;
             _iteratorError = context$2$0.t0;
 
-          case 26:
-            context$2$0.prev = 26;
+          case 27:
             context$2$0.prev = 27;
+            context$2$0.prev = 28;
 
             if (!_iteratorNormalCompletion && _iterator['return']) {
               _iterator['return']();
             }
 
-          case 29:
-            context$2$0.prev = 29;
+          case 30:
+            context$2$0.prev = 30;
 
             if (!_didIteratorError) {
-              context$2$0.next = 32;
+              context$2$0.next = 33;
               break;
             }
 
             throw _iteratorError;
 
-          case 32:
-            return context$2$0.finish(29);
-
           case 33:
-            return context$2$0.finish(26);
+            return context$2$0.finish(30);
 
           case 34:
+            return context$2$0.finish(27);
+
+          case 35:
           case 'end':
             return context$2$0.stop();
         }
-      }, _handleParse, this, [[4, 22, 26, 34], [27,, 29, 33]]);
+      }, _handleParse, this, [[4, 23, 27, 35], [28,, 30, 34]]);
     })
   }], [{
     key: 'defaultProps',
@@ -58847,94 +58924,107 @@ var Repeat = (function (_Phrase) {
 
           case 2:
             if (!(childIndex >= this.props.min)) {
-              context$2$0.next = 5;
+              context$2$0.next = 10;
               break;
             }
 
-            context$2$0.next = 5;
+            if (!(childIndex < this.props.max)) {
+              context$2$0.next = 8;
+              break;
+            }
+
+            context$2$0.next = 6;
+            return _lodash2['default'].assign({}, input, { ellipsis: true });
+
+          case 6:
+            context$2$0.next = 10;
+            break;
+
+          case 8:
+            context$2$0.next = 10;
             return input;
 
-          case 5:
-            if (!_lodash2['default'].some(input.words, 'placeholder')) {
-              context$2$0.next = 7;
+          case 10:
+            if (!(childIndex >= this.props.min && input.text == null)) {
+              context$2$0.next = 12;
               break;
             }
 
             return context$2$0.abrupt('return');
 
-          case 7:
+          case 12:
             if (!(childIndex > 0 && this.separator)) {
-              context$2$0.next = 36;
+              context$2$0.next = 41;
               break;
             }
 
             _iteratorNormalCompletion = true;
             _didIteratorError = false;
             _iteratorError = undefined;
-            context$2$0.prev = 11;
+            context$2$0.prev = 16;
             _iterator = _getIterator((0, _parse.parse)({ phrase: this.separator, input: input, options: options }));
 
-          case 13:
+          case 18:
             if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              context$2$0.next = 20;
+              context$2$0.next = 25;
               break;
             }
 
             sepOutput = _step.value;
             trueOutput = _lodash2['default'].assign({}, sepOutput, { result: input.result });
-            return context$2$0.delegateYield(this.callParseChild(childIndex, trueOutput, options), 't0', 17);
-
-          case 17:
-            _iteratorNormalCompletion = true;
-            context$2$0.next = 13;
-            break;
-
-          case 20:
-            context$2$0.next = 26;
-            break;
+            return context$2$0.delegateYield(this.callParseChild(childIndex, trueOutput, options), 't0', 22);
 
           case 22:
-            context$2$0.prev = 22;
-            context$2$0.t1 = context$2$0['catch'](11);
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 18;
+            break;
+
+          case 25:
+            context$2$0.next = 31;
+            break;
+
+          case 27:
+            context$2$0.prev = 27;
+            context$2$0.t1 = context$2$0['catch'](16);
             _didIteratorError = true;
             _iteratorError = context$2$0.t1;
 
-          case 26:
-            context$2$0.prev = 26;
-            context$2$0.prev = 27;
+          case 31:
+            context$2$0.prev = 31;
+            context$2$0.prev = 32;
 
             if (!_iteratorNormalCompletion && _iterator['return']) {
               _iterator['return']();
             }
 
-          case 29:
-            context$2$0.prev = 29;
+          case 34:
+            context$2$0.prev = 34;
 
             if (!_didIteratorError) {
-              context$2$0.next = 32;
+              context$2$0.next = 37;
               break;
             }
 
             throw _iteratorError;
 
-          case 32:
-            return context$2$0.finish(29);
+          case 37:
+            return context$2$0.finish(34);
 
-          case 33:
-            return context$2$0.finish(26);
+          case 38:
+            return context$2$0.finish(31);
 
-          case 34:
-            context$2$0.next = 37;
+          case 39:
+            context$2$0.next = 42;
             break;
 
-          case 36:
-            return context$2$0.delegateYield(this.callParseChild(childIndex, input, options), 't2', 37);
+          case 41:
+            return context$2$0.delegateYield(this.callParseChild(childIndex, input, options), 't2', 42);
 
-          case 37:
+          case 42:
           case 'end':
             return context$2$0.stop();
         }
-      }, parseChild, this, [[11, 22, 26, 34], [27,, 29, 33]]);
+      }, parseChild, this, [[16, 27, 31, 39], [32,, 34, 38]]);
     })
   }, {
     key: 'callParseChild',
@@ -59083,6 +59173,21 @@ var Sequence = (function (_Phrase) {
     key: 'describe',
     value: function describe() {
       // replace optionals with replacements
+      var ellipsisIndex = _lodash2['default'].findIndex(this.props.children, _lodash2['default'].property('props.ellipsis'));
+      if (ellipsisIndex > -1 && ellipsisIndex < this.props.children.length - 1) {
+        return (0, _laconaPhrase.createElement)(
+          'sequence',
+          null,
+          this.props.children.slice(0, ellipsisIndex),
+          _lodash2['default'].merge({}, this.props.children[ellipsisIndex], { props: { ellipsis: false } }),
+          (0, _laconaPhrase.createElement)(
+            'sequence',
+            { optional: true, limited: true, merge: true },
+            this.props.children.slice(ellipsisIndex + 1)
+          )
+        );
+      }
+
       if (_lodash2['default'].some(this.props.children, _lodash2['default'].property('props.optional'))) {
         var newChildren = _lodash2['default'].map(this.props.children, function (child) {
           if (child && child.props && child.props.optional) {
@@ -59140,101 +59245,107 @@ var Sequence = (function (_Phrase) {
       return _regeneratorRuntime.wrap(function parseChild$(context$2$0) {
         while (1) switch (context$2$0.prev = context$2$0.next) {
           case 0:
-            if (!(childIndex >= this.childPhrases.length)) {
-              context$2$0.next = 4;
-              break;
-            }
-
-            context$2$0.next = 3;
-            return input;
-
-          case 3:
-            return context$2$0.abrupt('return');
-
-          case 4:
-            if (!(input.suppressIncomplete && _lodash2['default'].some(input.words, 'placeholder'))) {
-              context$2$0.next = 6;
-              break;
-            }
-
-            return context$2$0.abrupt('return');
-
-          case 6:
             child = this.childPhrases[childIndex];
             _iteratorNormalCompletion = true;
             _didIteratorError = false;
             _iteratorError = undefined;
-            context$2$0.prev = 10;
-            _iterator = _getIterator((0, _parse.parse)({ phrase: this.childPhrases[childIndex], input: input, options: options }));
+            context$2$0.prev = 4;
+            _iterator = _getIterator((0, _parse.parse)({ phrase: child, input: input, options: options }));
 
-          case 12:
+          case 6:
             if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              context$2$0.next = 25;
+              context$2$0.next = 28;
               break;
             }
 
             output = _step.value;
 
-            if (!(this.props.unique && output.result != null && child.props.id && input.result[child.props.id] != null)) {
-              context$2$0.next = 16;
+            if (!(this.props.unique && output.result != null)) {
+              context$2$0.next = 15;
               break;
             }
 
-            return context$2$0.abrupt('continue', 22);
+            if (!(child.props.id && input.result[child.props.id] != null)) {
+              context$2$0.next = 13;
+              break;
+            }
 
-          case 16:
+            return context$2$0.abrupt('continue', 25);
+
+          case 13:
+            if (!(child.props.merge && !_lodash2['default'].isEmpty(_lodash2['default'].intersection(_lodash2['default'].keys(input.result), _lodash2['default'].keys(output.result))))) {
+              context$2$0.next = 15;
+              break;
+            }
+
+            return context$2$0.abrupt('continue', 25);
+
+          case 15:
             modifications = {};
 
             modifications.result = getAccumulatedResult(input.result, child, output.result);
             modifications.score = input.score * output.score;
             modifications.qualifiers = input.qualifiers.concat(output.qualifiers);
             nextOutput = _lodash2['default'].assign({}, output, modifications);
-            return context$2$0.delegateYield(this.parseChild(childIndex + 1, nextOutput, options), 't0', 22);
 
-          case 22:
-            _iteratorNormalCompletion = true;
-            context$2$0.next = 12;
-            break;
+            if (!(childIndex + 1 >= this.childPhrases.length)) {
+              context$2$0.next = 24;
+              break;
+            }
+
+            context$2$0.next = 23;
+            return nextOutput;
+
+          case 23:
+            return context$2$0.abrupt('continue', 25);
+
+          case 24:
+            return context$2$0.delegateYield(this.parseChild(childIndex + 1, nextOutput, options), 't0', 25);
 
           case 25:
-            context$2$0.next = 31;
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 6;
             break;
 
-          case 27:
-            context$2$0.prev = 27;
-            context$2$0.t1 = context$2$0['catch'](10);
+          case 28:
+            context$2$0.next = 34;
+            break;
+
+          case 30:
+            context$2$0.prev = 30;
+            context$2$0.t1 = context$2$0['catch'](4);
             _didIteratorError = true;
             _iteratorError = context$2$0.t1;
 
-          case 31:
-            context$2$0.prev = 31;
-            context$2$0.prev = 32;
+          case 34:
+            context$2$0.prev = 34;
+            context$2$0.prev = 35;
 
             if (!_iteratorNormalCompletion && _iterator['return']) {
               _iterator['return']();
             }
 
-          case 34:
-            context$2$0.prev = 34;
+          case 37:
+            context$2$0.prev = 37;
 
             if (!_didIteratorError) {
-              context$2$0.next = 37;
+              context$2$0.next = 40;
               break;
             }
 
             throw _iteratorError;
 
-          case 37:
+          case 40:
+            return context$2$0.finish(37);
+
+          case 41:
             return context$2$0.finish(34);
 
-          case 38:
-            return context$2$0.finish(31);
-
-          case 39:
+          case 42:
           case 'end':
             return context$2$0.stop();
         }
-      }, parseChild, this, [[10, 27, 31, 39], [32,, 34, 38]]);
+      }, parseChild, this, [[4, 30, 34, 42], [35,, 37, 41]]);
     })
   }]);
 
@@ -59250,7 +59361,7 @@ function getAccumulatedResult(inputResult, child, childResult) {
     if (childId) {
       return _lodash2['default'].assign({}, inputResult, _defineProperty({}, childId, childResult));
     } else if (childMerge) {
-      if (_lodash2['default'].isPlainObject(childResult)) {
+      if (!_lodash2['default'].isEmpty(inputResult) && _lodash2['default'].isPlainObject(childResult)) {
         return _lodash2['default'].merge({}, inputResult, childResult);
       } else {
         return childResult;
@@ -59259,6 +59370,20 @@ function getAccumulatedResult(inputResult, child, childResult) {
   }
   return inputResult;
 }
+// id
+// merge
+
+// if (child.props.ellipsis) {
+//   yield nextOutput
+
+//   if (output.text == null) {
+//     continue
+//   }
+
+//   if (output.ellipsis) {
+//     nextOutput = _.assign({}, nextOutput, {ellipsis: false})
+//   }
+// }
 },{"../parse":494,"../reconcile":496,"babel-runtime/core-js/get-iterator":502,"babel-runtime/helpers/class-call-check":512,"babel-runtime/helpers/create-class":513,"babel-runtime/helpers/define-property":514,"babel-runtime/helpers/extends":515,"babel-runtime/helpers/get":516,"babel-runtime/helpers/inherits":517,"babel-runtime/helpers/interop-require-default":518,"babel-runtime/regenerator":600,"lacona-phrase":602,"lodash":605}],491:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
@@ -59407,6 +59532,10 @@ function hasPlaceholder(output) {
 
 function modify(phrase, output) {
   var modifications = {};
+
+  if (phrase.props.ellipsis) {
+    modifications.ellipsis = true;
+  }
 
   if (phrase.props.value) {
     modifications.result = phrase.props.value;
@@ -59670,7 +59799,7 @@ function createOption(options) {
 }
 
 function normalizeOutput(option) {
-  var output = _lodash2['default'].pick(option, ['words', 'score', 'result', 'qualifiers']);
+  var output = _lodash2['default'].pick(option, ['words', 'score', 'result', 'qualifiers', 'ellipsis']);
   return output;
 }
 
@@ -59730,8 +59859,6 @@ var Parser = (function (_EventEmitter) {
     value: function _getReconcileParseOptions() {
       var _ref2 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-      var _ref2$isReparse = _ref2.isReparse;
-      var isReparse = _ref2$isReparse === undefined ? false : _ref2$isReparse;
       var _ref2$extensionsChanged = _ref2.extensionsChanged;
       var extensionsChanged = _ref2$extensionsChanged === undefined ? false : _ref2$extensionsChanged;
 
@@ -59740,7 +59867,6 @@ var Parser = (function (_EventEmitter) {
         getExtensions: this._getExtensions.bind(this),
         sourceManager: this._sourceManager,
         enqueueCallback: this._enqueueCallback.bind(this),
-        isReparse: isReparse,
         extensionsChanged: extensionsChanged,
         parses: 0
       };
@@ -59773,8 +59899,6 @@ var Parser = (function (_EventEmitter) {
   }, {
     key: 'parse',
     value: _regeneratorRuntime.mark(function parse(inputString) {
-      var isReparse = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
-
       var extensionsChanged, input, options, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, output;
 
       return _regeneratorRuntime.wrap(function parse$(context$2$0) {
@@ -59795,7 +59919,7 @@ var Parser = (function (_EventEmitter) {
             }
 
             input = createOption({ text: inputString });
-            options = this._getReconcileParseOptions({ isReparse: isReparse, extensionsChanged: extensionsChanged });
+            options = this._getReconcileParseOptions({ extensionsChanged: extensionsChanged });
 
             this._reconcile(options);
 
@@ -59877,9 +60001,7 @@ var Parser = (function (_EventEmitter) {
   }, {
     key: 'parseArray',
     value: function parseArray(inputString) {
-      var isReparse = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
-
-      return from(this.parse(inputString, isReparse));
+      return from(this.parse(inputString));
     }
   }]);
 
@@ -61741,6 +61863,7 @@ module.exports = function split (input, strOrRegex) {
     while ((match = regex.exec(input))) {
       results.push(input.substring(oldIndex, match.index))
       results.push(match[0])
+      if (match.index === regex.lastIndex) throw new Error('No zero-width captures allowed')
       oldIndex = match.index + match[0].length
     }
     results.push(input.substring(oldIndex))
@@ -61760,33 +61883,39 @@ module.exports = function split (input, strOrRegex) {
 
 },{}],607:[function(require,module,exports){
 arguments[4][501][0].apply(exports,arguments)
-},{"core-js/library/fn/array/from":622,"dup":501}],608:[function(require,module,exports){
+},{"core-js/library/fn/array/from":625,"dup":501}],608:[function(require,module,exports){
 arguments[4][502][0].apply(exports,arguments)
-},{"core-js/library/fn/get-iterator":623,"dup":502}],609:[function(require,module,exports){
+},{"core-js/library/fn/get-iterator":626,"dup":502}],609:[function(require,module,exports){
 arguments[4][503][0].apply(exports,arguments)
-},{"core-js/library/fn/is-iterable":624,"dup":503}],610:[function(require,module,exports){
+},{"core-js/library/fn/is-iterable":627,"dup":503}],610:[function(require,module,exports){
 arguments[4][506][0].apply(exports,arguments)
-},{"core-js/library/fn/object/create":625,"dup":506}],611:[function(require,module,exports){
+},{"core-js/library/fn/object/create":628,"dup":506}],611:[function(require,module,exports){
 arguments[4][507][0].apply(exports,arguments)
-},{"core-js/library/fn/object/define-property":626,"dup":507}],612:[function(require,module,exports){
+},{"core-js/library/fn/object/define-property":629,"dup":507}],612:[function(require,module,exports){
 arguments[4][508][0].apply(exports,arguments)
-},{"core-js/library/fn/object/get-own-property-descriptor":627,"dup":508}],613:[function(require,module,exports){
+},{"core-js/library/fn/object/get-own-property-descriptor":630,"dup":508}],613:[function(require,module,exports){
 arguments[4][509][0].apply(exports,arguments)
-},{"core-js/library/fn/object/set-prototype-of":628,"dup":509}],614:[function(require,module,exports){
+},{"core-js/library/fn/object/set-prototype-of":631,"dup":509}],614:[function(require,module,exports){
+arguments[4][510][0].apply(exports,arguments)
+},{"core-js/library/fn/promise":632,"dup":510}],615:[function(require,module,exports){
+arguments[4][511][0].apply(exports,arguments)
+},{"core-js/library/fn/symbol":633,"dup":511}],616:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/symbol/iterator"), __esModule: true };
+},{"core-js/library/fn/symbol/iterator":634}],617:[function(require,module,exports){
 arguments[4][512][0].apply(exports,arguments)
-},{"dup":512}],615:[function(require,module,exports){
+},{"dup":512}],618:[function(require,module,exports){
 arguments[4][513][0].apply(exports,arguments)
-},{"babel-runtime/core-js/object/define-property":611,"dup":513}],616:[function(require,module,exports){
+},{"babel-runtime/core-js/object/define-property":611,"dup":513}],619:[function(require,module,exports){
 arguments[4][514][0].apply(exports,arguments)
-},{"babel-runtime/core-js/object/define-property":611,"dup":514}],617:[function(require,module,exports){
+},{"babel-runtime/core-js/object/define-property":611,"dup":514}],620:[function(require,module,exports){
 arguments[4][516][0].apply(exports,arguments)
-},{"babel-runtime/core-js/object/get-own-property-descriptor":612,"dup":516}],618:[function(require,module,exports){
+},{"babel-runtime/core-js/object/get-own-property-descriptor":612,"dup":516}],621:[function(require,module,exports){
 arguments[4][517][0].apply(exports,arguments)
-},{"babel-runtime/core-js/object/create":610,"babel-runtime/core-js/object/set-prototype-of":613,"dup":517}],619:[function(require,module,exports){
+},{"babel-runtime/core-js/object/create":610,"babel-runtime/core-js/object/set-prototype-of":613,"dup":517}],622:[function(require,module,exports){
 arguments[4][518][0].apply(exports,arguments)
-},{"dup":518}],620:[function(require,module,exports){
+},{"dup":518}],623:[function(require,module,exports){
 arguments[4][520][0].apply(exports,arguments)
-},{"babel-runtime/core-js/get-iterator":608,"babel-runtime/core-js/is-iterable":609,"dup":520}],621:[function(require,module,exports){
+},{"babel-runtime/core-js/get-iterator":608,"babel-runtime/core-js/is-iterable":609,"dup":520}],624:[function(require,module,exports){
 "use strict";
 
 var _Array$from = require("babel-runtime/core-js/array/from")["default"];
@@ -61802,112 +61931,787 @@ exports["default"] = function (arr) {
 };
 
 exports.__esModule = true;
-},{"babel-runtime/core-js/array/from":607}],622:[function(require,module,exports){
+},{"babel-runtime/core-js/array/from":607}],625:[function(require,module,exports){
 arguments[4][521][0].apply(exports,arguments)
-},{"../../modules/$.core":634,"../../modules/es6.array.from":670,"../../modules/es6.string.iterator":674,"dup":521}],623:[function(require,module,exports){
+},{"../../modules/$.core":640,"../../modules/es6.array.from":691,"../../modules/es6.string.iterator":697,"dup":521}],626:[function(require,module,exports){
 arguments[4][522][0].apply(exports,arguments)
-},{"../modules/core.get-iterator":668,"../modules/es6.string.iterator":674,"../modules/web.dom.iterable":675,"dup":522}],624:[function(require,module,exports){
+},{"../modules/core.get-iterator":689,"../modules/es6.string.iterator":697,"../modules/web.dom.iterable":699,"dup":522}],627:[function(require,module,exports){
 arguments[4][523][0].apply(exports,arguments)
-},{"../modules/core.is-iterable":669,"../modules/es6.string.iterator":674,"../modules/web.dom.iterable":675,"dup":523}],625:[function(require,module,exports){
+},{"../modules/core.is-iterable":690,"../modules/es6.string.iterator":697,"../modules/web.dom.iterable":699,"dup":523}],628:[function(require,module,exports){
 arguments[4][526][0].apply(exports,arguments)
-},{"../../modules/$":652,"dup":526}],626:[function(require,module,exports){
+},{"../../modules/$":665,"dup":526}],629:[function(require,module,exports){
 arguments[4][527][0].apply(exports,arguments)
-},{"../../modules/$":652,"dup":527}],627:[function(require,module,exports){
+},{"../../modules/$":665,"dup":527}],630:[function(require,module,exports){
 arguments[4][528][0].apply(exports,arguments)
-},{"../../modules/$":652,"../../modules/es6.object.get-own-property-descriptor":672,"dup":528}],628:[function(require,module,exports){
+},{"../../modules/$":665,"../../modules/es6.object.get-own-property-descriptor":693,"dup":528}],631:[function(require,module,exports){
 arguments[4][529][0].apply(exports,arguments)
-},{"../../modules/$.core":634,"../../modules/es6.object.set-prototype-of":673,"dup":529}],629:[function(require,module,exports){
+},{"../../modules/$.core":640,"../../modules/es6.object.set-prototype-of":694,"dup":529}],632:[function(require,module,exports){
+arguments[4][530][0].apply(exports,arguments)
+},{"../modules/$.core":640,"../modules/es6.object.to-string":695,"../modules/es6.promise":696,"../modules/es6.string.iterator":697,"../modules/web.dom.iterable":699,"dup":530}],633:[function(require,module,exports){
+arguments[4][531][0].apply(exports,arguments)
+},{"../../modules/$.core":640,"../../modules/es6.object.to-string":695,"../../modules/es6.symbol":698,"dup":531}],634:[function(require,module,exports){
+require('../../modules/es6.string.iterator');
+require('../../modules/web.dom.iterable');
+module.exports = require('../../modules/$.wks')('iterator');
+},{"../../modules/$.wks":687,"../../modules/es6.string.iterator":697,"../../modules/web.dom.iterable":699}],635:[function(require,module,exports){
 arguments[4][114][0].apply(exports,arguments)
-},{"dup":114}],630:[function(require,module,exports){
+},{"dup":114}],636:[function(require,module,exports){
 arguments[4][533][0].apply(exports,arguments)
-},{"dup":533}],631:[function(require,module,exports){
+},{"dup":533}],637:[function(require,module,exports){
 arguments[4][116][0].apply(exports,arguments)
-},{"./$.is-object":645,"dup":116}],632:[function(require,module,exports){
+},{"./$.is-object":658,"dup":116}],638:[function(require,module,exports){
 arguments[4][122][0].apply(exports,arguments)
-},{"./$.cof":633,"./$.wks":666,"dup":122}],633:[function(require,module,exports){
+},{"./$.cof":639,"./$.wks":687,"dup":122}],639:[function(require,module,exports){
 arguments[4][123][0].apply(exports,arguments)
-},{"dup":123}],634:[function(require,module,exports){
+},{"dup":123}],640:[function(require,module,exports){
 arguments[4][128][0].apply(exports,arguments)
-},{"dup":128}],635:[function(require,module,exports){
+},{"dup":128}],641:[function(require,module,exports){
 arguments[4][129][0].apply(exports,arguments)
-},{"./$.a-function":629,"dup":129}],636:[function(require,module,exports){
+},{"./$.a-function":635,"dup":129}],642:[function(require,module,exports){
 arguments[4][130][0].apply(exports,arguments)
-},{"dup":130}],637:[function(require,module,exports){
+},{"dup":130}],643:[function(require,module,exports){
 arguments[4][131][0].apply(exports,arguments)
-},{"./$.fails":639,"dup":131}],638:[function(require,module,exports){
+},{"./$.fails":647,"dup":131}],644:[function(require,module,exports){
+arguments[4][132][0].apply(exports,arguments)
+},{"./$.global":650,"./$.is-object":658,"dup":132}],645:[function(require,module,exports){
+arguments[4][133][0].apply(exports,arguments)
+},{"./$":665,"dup":133}],646:[function(require,module,exports){
 arguments[4][543][0].apply(exports,arguments)
-},{"./$.core":634,"./$.ctx":635,"./$.global":640,"dup":543}],639:[function(require,module,exports){
+},{"./$.core":640,"./$.ctx":641,"./$.global":650,"dup":543}],647:[function(require,module,exports){
 arguments[4][136][0].apply(exports,arguments)
-},{"dup":136}],640:[function(require,module,exports){
+},{"dup":136}],648:[function(require,module,exports){
+arguments[4][139][0].apply(exports,arguments)
+},{"./$.an-object":637,"./$.ctx":641,"./$.is-array-iter":656,"./$.iter-call":659,"./$.to-length":684,"./core.get-iterator-method":688,"dup":139}],649:[function(require,module,exports){
+arguments[4][140][0].apply(exports,arguments)
+},{"./$":665,"./$.to-iobject":683,"dup":140}],650:[function(require,module,exports){
 arguments[4][141][0].apply(exports,arguments)
-},{"dup":141}],641:[function(require,module,exports){
+},{"dup":141}],651:[function(require,module,exports){
 arguments[4][142][0].apply(exports,arguments)
-},{"dup":142}],642:[function(require,module,exports){
+},{"dup":142}],652:[function(require,module,exports){
 arguments[4][143][0].apply(exports,arguments)
-},{"./$":652,"./$.descriptors":637,"./$.property-desc":655,"dup":143}],643:[function(require,module,exports){
+},{"./$":665,"./$.descriptors":643,"./$.property-desc":670,"dup":143}],653:[function(require,module,exports){
+arguments[4][144][0].apply(exports,arguments)
+},{"./$.global":650,"dup":144}],654:[function(require,module,exports){
+arguments[4][145][0].apply(exports,arguments)
+},{"dup":145}],655:[function(require,module,exports){
 arguments[4][146][0].apply(exports,arguments)
-},{"./$.cof":633,"dup":146}],644:[function(require,module,exports){
+},{"./$.cof":639,"dup":146}],656:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
-},{"./$.iterators":651,"./$.wks":666,"dup":147}],645:[function(require,module,exports){
+},{"./$.iterators":664,"./$.wks":687,"dup":147}],657:[function(require,module,exports){
+arguments[4][148][0].apply(exports,arguments)
+},{"./$.cof":639,"dup":148}],658:[function(require,module,exports){
 arguments[4][150][0].apply(exports,arguments)
-},{"dup":150}],646:[function(require,module,exports){
+},{"dup":150}],659:[function(require,module,exports){
 arguments[4][152][0].apply(exports,arguments)
-},{"./$.an-object":631,"dup":152}],647:[function(require,module,exports){
+},{"./$.an-object":637,"dup":152}],660:[function(require,module,exports){
 arguments[4][153][0].apply(exports,arguments)
-},{"./$":652,"./$.hide":642,"./$.property-desc":655,"./$.set-to-string-tag":658,"./$.wks":666,"dup":153}],648:[function(require,module,exports){
+},{"./$":665,"./$.hide":652,"./$.property-desc":670,"./$.set-to-string-tag":676,"./$.wks":687,"dup":153}],661:[function(require,module,exports){
 arguments[4][154][0].apply(exports,arguments)
-},{"./$":652,"./$.export":638,"./$.has":641,"./$.hide":642,"./$.iter-create":647,"./$.iterators":651,"./$.library":653,"./$.redefine":656,"./$.set-to-string-tag":658,"./$.wks":666,"dup":154}],649:[function(require,module,exports){
+},{"./$":665,"./$.export":646,"./$.has":651,"./$.hide":652,"./$.iter-create":660,"./$.iterators":664,"./$.library":667,"./$.redefine":672,"./$.set-to-string-tag":676,"./$.wks":687,"dup":154}],662:[function(require,module,exports){
 arguments[4][155][0].apply(exports,arguments)
-},{"./$.wks":666,"dup":155}],650:[function(require,module,exports){
+},{"./$.wks":687,"dup":155}],663:[function(require,module,exports){
 arguments[4][156][0].apply(exports,arguments)
-},{"dup":156}],651:[function(require,module,exports){
+},{"dup":156}],664:[function(require,module,exports){
 arguments[4][157][0].apply(exports,arguments)
-},{"dup":157}],652:[function(require,module,exports){
+},{"dup":157}],665:[function(require,module,exports){
 arguments[4][158][0].apply(exports,arguments)
-},{"dup":158}],653:[function(require,module,exports){
+},{"dup":158}],666:[function(require,module,exports){
+arguments[4][159][0].apply(exports,arguments)
+},{"./$":665,"./$.to-iobject":683,"dup":159}],667:[function(require,module,exports){
 arguments[4][564][0].apply(exports,arguments)
-},{"dup":564}],654:[function(require,module,exports){
+},{"dup":564}],668:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./$.cof":639,"./$.global":650,"./$.task":681,"dup":164}],669:[function(require,module,exports){
 arguments[4][166][0].apply(exports,arguments)
-},{"./$.core":634,"./$.export":638,"./$.fails":639,"dup":166}],655:[function(require,module,exports){
+},{"./$.core":640,"./$.export":646,"./$.fails":647,"dup":166}],670:[function(require,module,exports){
 arguments[4][171][0].apply(exports,arguments)
-},{"dup":171}],656:[function(require,module,exports){
+},{"dup":171}],671:[function(require,module,exports){
+arguments[4][172][0].apply(exports,arguments)
+},{"./$.redefine":672,"dup":172}],672:[function(require,module,exports){
 arguments[4][570][0].apply(exports,arguments)
-},{"./$.hide":642,"dup":570}],657:[function(require,module,exports){
+},{"./$.hide":652,"dup":570}],673:[function(require,module,exports){
+arguments[4][175][0].apply(exports,arguments)
+},{"dup":175}],674:[function(require,module,exports){
 arguments[4][176][0].apply(exports,arguments)
-},{"./$":652,"./$.an-object":631,"./$.ctx":635,"./$.is-object":645,"dup":176}],658:[function(require,module,exports){
+},{"./$":665,"./$.an-object":637,"./$.ctx":641,"./$.is-object":658,"dup":176}],675:[function(require,module,exports){
+arguments[4][573][0].apply(exports,arguments)
+},{"./$":665,"./$.core":640,"./$.descriptors":643,"./$.wks":687,"dup":573}],676:[function(require,module,exports){
 arguments[4][178][0].apply(exports,arguments)
-},{"./$":652,"./$.has":641,"./$.wks":666,"dup":178}],659:[function(require,module,exports){
+},{"./$":665,"./$.has":651,"./$.wks":687,"dup":178}],677:[function(require,module,exports){
 arguments[4][179][0].apply(exports,arguments)
-},{"./$.global":640,"dup":179}],660:[function(require,module,exports){
+},{"./$.global":650,"dup":179}],678:[function(require,module,exports){
+arguments[4][180][0].apply(exports,arguments)
+},{"./$.a-function":635,"./$.an-object":637,"./$.wks":687,"dup":180}],679:[function(require,module,exports){
+arguments[4][181][0].apply(exports,arguments)
+},{"dup":181}],680:[function(require,module,exports){
 arguments[4][182][0].apply(exports,arguments)
-},{"./$.defined":636,"./$.to-integer":661,"dup":182}],661:[function(require,module,exports){
+},{"./$.defined":642,"./$.to-integer":682,"dup":182}],681:[function(require,module,exports){
+arguments[4][187][0].apply(exports,arguments)
+},{"./$.cof":639,"./$.ctx":641,"./$.dom-create":644,"./$.global":650,"./$.html":653,"./$.invoke":654,"dup":187}],682:[function(require,module,exports){
 arguments[4][189][0].apply(exports,arguments)
-},{"dup":189}],662:[function(require,module,exports){
+},{"dup":189}],683:[function(require,module,exports){
 arguments[4][190][0].apply(exports,arguments)
-},{"./$.defined":636,"./$.iobject":643,"dup":190}],663:[function(require,module,exports){
+},{"./$.defined":642,"./$.iobject":655,"dup":190}],684:[function(require,module,exports){
 arguments[4][191][0].apply(exports,arguments)
-},{"./$.to-integer":661,"dup":191}],664:[function(require,module,exports){
+},{"./$.to-integer":682,"dup":191}],685:[function(require,module,exports){
 arguments[4][192][0].apply(exports,arguments)
-},{"./$.defined":636,"dup":192}],665:[function(require,module,exports){
+},{"./$.defined":642,"dup":192}],686:[function(require,module,exports){
 arguments[4][194][0].apply(exports,arguments)
-},{"dup":194}],666:[function(require,module,exports){
+},{"dup":194}],687:[function(require,module,exports){
 arguments[4][195][0].apply(exports,arguments)
-},{"./$.global":640,"./$.shared":659,"./$.uid":665,"dup":195}],667:[function(require,module,exports){
+},{"./$.global":650,"./$.shared":677,"./$.uid":686,"dup":195}],688:[function(require,module,exports){
 arguments[4][196][0].apply(exports,arguments)
-},{"./$.classof":632,"./$.core":634,"./$.iterators":651,"./$.wks":666,"dup":196}],668:[function(require,module,exports){
+},{"./$.classof":638,"./$.core":640,"./$.iterators":664,"./$.wks":687,"dup":196}],689:[function(require,module,exports){
 arguments[4][587][0].apply(exports,arguments)
-},{"./$.an-object":631,"./$.core":634,"./core.get-iterator-method":667,"dup":587}],669:[function(require,module,exports){
+},{"./$.an-object":637,"./$.core":640,"./core.get-iterator-method":688,"dup":587}],690:[function(require,module,exports){
 arguments[4][588][0].apply(exports,arguments)
-},{"./$.classof":632,"./$.core":634,"./$.iterators":651,"./$.wks":666,"dup":588}],670:[function(require,module,exports){
+},{"./$.classof":638,"./$.core":640,"./$.iterators":664,"./$.wks":687,"dup":588}],691:[function(require,module,exports){
 arguments[4][202][0].apply(exports,arguments)
-},{"./$.ctx":635,"./$.export":638,"./$.is-array-iter":644,"./$.iter-call":646,"./$.iter-detect":649,"./$.to-length":663,"./$.to-object":664,"./core.get-iterator-method":667,"dup":202}],671:[function(require,module,exports){
+},{"./$.ctx":641,"./$.export":646,"./$.is-array-iter":656,"./$.iter-call":659,"./$.iter-detect":662,"./$.to-length":684,"./$.to-object":685,"./core.get-iterator-method":688,"dup":202}],692:[function(require,module,exports){
 arguments[4][203][0].apply(exports,arguments)
-},{"./$.add-to-unscopables":630,"./$.iter-define":648,"./$.iter-step":650,"./$.iterators":651,"./$.to-iobject":662,"dup":203}],672:[function(require,module,exports){
+},{"./$.add-to-unscopables":636,"./$.iter-define":661,"./$.iter-step":663,"./$.iterators":664,"./$.to-iobject":683,"dup":203}],693:[function(require,module,exports){
 arguments[4][238][0].apply(exports,arguments)
-},{"./$.object-sap":654,"./$.to-iobject":662,"dup":238}],673:[function(require,module,exports){
+},{"./$.object-sap":669,"./$.to-iobject":683,"dup":238}],694:[function(require,module,exports){
 arguments[4][248][0].apply(exports,arguments)
-},{"./$.export":638,"./$.set-proto":657,"dup":248}],674:[function(require,module,exports){
+},{"./$.export":646,"./$.set-proto":674,"dup":248}],695:[function(require,module,exports){
+arguments[4][595][0].apply(exports,arguments)
+},{"dup":595}],696:[function(require,module,exports){
+arguments[4][250][0].apply(exports,arguments)
+},{"./$":665,"./$.a-function":635,"./$.an-object":637,"./$.classof":638,"./$.core":640,"./$.ctx":641,"./$.descriptors":643,"./$.export":646,"./$.for-of":648,"./$.global":650,"./$.is-object":658,"./$.iter-detect":662,"./$.library":667,"./$.microtask":668,"./$.redefine-all":671,"./$.same-value":673,"./$.set-proto":674,"./$.set-species":675,"./$.set-to-string-tag":676,"./$.species-constructor":678,"./$.strict-new":679,"./$.wks":687,"dup":250}],697:[function(require,module,exports){
 arguments[4][276][0].apply(exports,arguments)
-},{"./$.iter-define":648,"./$.string-at":660,"dup":276}],675:[function(require,module,exports){
+},{"./$.iter-define":661,"./$.string-at":680,"dup":276}],698:[function(require,module,exports){
+arguments[4][281][0].apply(exports,arguments)
+},{"./$":665,"./$.an-object":637,"./$.descriptors":643,"./$.enum-keys":645,"./$.export":646,"./$.fails":647,"./$.get-names":649,"./$.global":650,"./$.has":651,"./$.is-array":657,"./$.keyof":666,"./$.library":667,"./$.property-desc":670,"./$.redefine":672,"./$.set-to-string-tag":676,"./$.shared":677,"./$.to-iobject":683,"./$.uid":686,"./$.wks":687,"dup":281}],699:[function(require,module,exports){
 arguments[4][599][0].apply(exports,arguments)
-},{"./$.iterators":651,"./es6.array.iterator":671,"dup":599}]},{},[110]);
+},{"./$.iterators":664,"./es6.array.iterator":692,"dup":599}],700:[function(require,module,exports){
+arguments[4][600][0].apply(exports,arguments)
+},{"./runtime":701,"dup":600}],701:[function(require,module,exports){
+(function (process,global){
+/**
+ * Copyright (c) 2014, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * https://raw.github.com/facebook/regenerator/master/LICENSE file. An
+ * additional grant of patent rights can be found in the PATENTS file in
+ * the same directory.
+ */
+
+"use strict";
+
+var _Symbol = require("babel-runtime/core-js/symbol")["default"];
+
+var _Symbol$iterator = require("babel-runtime/core-js/symbol/iterator")["default"];
+
+var _Object$create = require("babel-runtime/core-js/object/create")["default"];
+
+var _Promise = require("babel-runtime/core-js/promise")["default"];
+
+!(function (global) {
+  "use strict";
+
+  var hasOwn = Object.prototype.hasOwnProperty;
+  var undefined; // More compressible than void 0.
+  var iteratorSymbol = typeof _Symbol === "function" && _Symbol$iterator || "@@iterator";
+
+  var inModule = typeof module === "object";
+  var runtime = global.regeneratorRuntime;
+  if (runtime) {
+    if (inModule) {
+      // If regeneratorRuntime is defined globally and we're in a module,
+      // make the exports object identical to regeneratorRuntime.
+      module.exports = runtime;
+    }
+    // Don't bother evaluating the rest of this file if the runtime was
+    // already defined globally.
+    return;
+  }
+
+  // Define the runtime globally (as expected by generated code) as either
+  // module.exports (if we're in a module) or a new, empty object.
+  runtime = global.regeneratorRuntime = inModule ? module.exports : {};
+
+  function wrap(innerFn, outerFn, self, tryLocsList) {
+    // If outerFn provided, then outerFn.prototype instanceof Generator.
+    var generator = _Object$create((outerFn || Generator).prototype);
+
+    generator._invoke = makeInvokeMethod(innerFn, self || null, new Context(tryLocsList || []));
+
+    return generator;
+  }
+  runtime.wrap = wrap;
+
+  // Try/catch helper to minimize deoptimizations. Returns a completion
+  // record like context.tryEntries[i].completion. This interface could
+  // have been (and was previously) designed to take a closure to be
+  // invoked without arguments, but in all the cases we care about we
+  // already have an existing method we want to call, so there's no need
+  // to create a new function object. We can even get away with assuming
+  // the method takes exactly one argument, since that happens to be true
+  // in every case, so we don't have to touch the arguments object. The
+  // only additional allocation required is the completion record, which
+  // has a stable shape and so hopefully should be cheap to allocate.
+  function tryCatch(fn, obj, arg) {
+    try {
+      return { type: "normal", arg: fn.call(obj, arg) };
+    } catch (err) {
+      return { type: "throw", arg: err };
+    }
+  }
+
+  var GenStateSuspendedStart = "suspendedStart";
+  var GenStateSuspendedYield = "suspendedYield";
+  var GenStateExecuting = "executing";
+  var GenStateCompleted = "completed";
+
+  // Returning this object from the innerFn has the same effect as
+  // breaking out of the dispatch switch statement.
+  var ContinueSentinel = {};
+
+  // Dummy constructor functions that we use as the .constructor and
+  // .constructor.prototype properties for functions that return Generator
+  // objects. For full spec compliance, you may wish to configure your
+  // minifier not to mangle the names of these two functions.
+  function Generator() {}
+  function GeneratorFunction() {}
+  function GeneratorFunctionPrototype() {}
+
+  var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype;
+  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
+  GeneratorFunctionPrototype.constructor = GeneratorFunction;
+  GeneratorFunction.displayName = "GeneratorFunction";
+
+  // Helper for defining the .next, .throw, and .return methods of the
+  // Iterator interface in terms of a single ._invoke method.
+  function defineIteratorMethods(prototype) {
+    ["next", "throw", "return"].forEach(function (method) {
+      prototype[method] = function (arg) {
+        return this._invoke(method, arg);
+      };
+    });
+  }
+
+  runtime.isGeneratorFunction = function (genFun) {
+    var ctor = typeof genFun === "function" && genFun.constructor;
+    return ctor ? ctor === GeneratorFunction ||
+    // For the native GeneratorFunction constructor, the best we can
+    // do is to check its .name property.
+    (ctor.displayName || ctor.name) === "GeneratorFunction" : false;
+  };
+
+  runtime.mark = function (genFun) {
+    genFun.__proto__ = GeneratorFunctionPrototype;
+    genFun.prototype = _Object$create(Gp);
+    return genFun;
+  };
+
+  // Within the body of any async function, `await x` is transformed to
+  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
+  // `value instanceof AwaitArgument` to determine if the yielded value is
+  // meant to be awaited. Some may consider the name of this method too
+  // cutesy, but they are curmudgeons.
+  runtime.awrap = function (arg) {
+    return new AwaitArgument(arg);
+  };
+
+  function AwaitArgument(arg) {
+    this.arg = arg;
+  }
+
+  function AsyncIterator(generator) {
+    // This invoke function is written in a style that assumes some
+    // calling function (or Promise) will handle exceptions.
+    function invoke(method, arg) {
+      var result = generator[method](arg);
+      var value = result.value;
+      return value instanceof AwaitArgument ? _Promise.resolve(value.arg).then(invokeNext, invokeThrow) : _Promise.resolve(value).then(function (unwrapped) {
+        // When a yielded Promise is resolved, its final value becomes
+        // the .value of the Promise<{value,done}> result for the
+        // current iteration. If the Promise is rejected, however, the
+        // result for this iteration will be rejected with the same
+        // reason. Note that rejections of yielded Promises are not
+        // thrown back into the generator function, as is the case
+        // when an awaited Promise is rejected. This difference in
+        // behavior between yield and await is important, because it
+        // allows the consumer to decide what to do with the yielded
+        // rejection (swallow it and continue, manually .throw it back
+        // into the generator, abandon iteration, whatever). With
+        // await, by contrast, there is no opportunity to examine the
+        // rejection reason outside the generator function, so the
+        // only option is to throw it from the await expression, and
+        // let the generator function handle the exception.
+        result.value = unwrapped;
+        return result;
+      });
+    }
+
+    if (typeof process === "object" && process.domain) {
+      invoke = process.domain.bind(invoke);
+    }
+
+    var invokeNext = invoke.bind(generator, "next");
+    var invokeThrow = invoke.bind(generator, "throw");
+    var invokeReturn = invoke.bind(generator, "return");
+    var previousPromise;
+
+    function enqueue(method, arg) {
+      var enqueueResult =
+      // If enqueue has been called before, then we want to wait until
+      // all previous Promises have been resolved before calling invoke,
+      // so that results are always delivered in the correct order. If
+      // enqueue has not been called before, then it is important to
+      // call invoke immediately, without waiting on a callback to fire,
+      // so that the async generator function has the opportunity to do
+      // any necessary setup in a predictable way. This predictability
+      // is why the Promise constructor synchronously invokes its
+      // executor callback, and why async functions synchronously
+      // execute code before the first await. Since we implement simple
+      // async functions in terms of async generators, it is especially
+      // important to get this right, even though it requires care.
+      previousPromise ? previousPromise.then(function () {
+        return invoke(method, arg);
+      }) : new _Promise(function (resolve) {
+        resolve(invoke(method, arg));
+      });
+
+      // Avoid propagating enqueueResult failures to Promises returned by
+      // later invocations of the iterator.
+      previousPromise = enqueueResult["catch"](function (ignored) {});
+
+      return enqueueResult;
+    }
+
+    // Define the unified helper method that is used to implement .next,
+    // .throw, and .return (see defineIteratorMethods).
+    this._invoke = enqueue;
+  }
+
+  defineIteratorMethods(AsyncIterator.prototype);
+
+  // Note that simple async functions are implemented on top of
+  // AsyncIterator objects; they just return a Promise for the value of
+  // the final result produced by the iterator.
+  runtime.async = function (innerFn, outerFn, self, tryLocsList) {
+    var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList));
+
+    return runtime.isGeneratorFunction(outerFn) ? iter // If outerFn is a generator, return the full iterator.
+    : iter.next().then(function (result) {
+      return result.done ? result.value : iter.next();
+    });
+  };
+
+  function makeInvokeMethod(innerFn, self, context) {
+    var state = GenStateSuspendedStart;
+
+    return function invoke(method, arg) {
+      if (state === GenStateExecuting) {
+        throw new Error("Generator is already running");
+      }
+
+      if (state === GenStateCompleted) {
+        if (method === "throw") {
+          throw arg;
+        }
+
+        // Be forgiving, per 25.3.3.3.3 of the spec:
+        // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
+        return doneResult();
+      }
+
+      while (true) {
+        var delegate = context.delegate;
+        if (delegate) {
+          if (method === "return" || method === "throw" && delegate.iterator[method] === undefined) {
+            // A return or throw (when the delegate iterator has no throw
+            // method) always terminates the yield* loop.
+            context.delegate = null;
+
+            // If the delegate iterator has a return method, give it a
+            // chance to clean up.
+            var returnMethod = delegate.iterator["return"];
+            if (returnMethod) {
+              var record = tryCatch(returnMethod, delegate.iterator, arg);
+              if (record.type === "throw") {
+                // If the return method threw an exception, let that
+                // exception prevail over the original return or throw.
+                method = "throw";
+                arg = record.arg;
+                continue;
+              }
+            }
+
+            if (method === "return") {
+              // Continue with the outer return, now that the delegate
+              // iterator has been terminated.
+              continue;
+            }
+          }
+
+          var record = tryCatch(delegate.iterator[method], delegate.iterator, arg);
+
+          if (record.type === "throw") {
+            context.delegate = null;
+
+            // Like returning generator.throw(uncaught), but without the
+            // overhead of an extra function call.
+            method = "throw";
+            arg = record.arg;
+            continue;
+          }
+
+          // Delegate generator ran and handled its own exceptions so
+          // regardless of what the method was, we continue as if it is
+          // "next" with an undefined arg.
+          method = "next";
+          arg = undefined;
+
+          var info = record.arg;
+          if (info.done) {
+            context[delegate.resultName] = info.value;
+            context.next = delegate.nextLoc;
+          } else {
+            state = GenStateSuspendedYield;
+            return info;
+          }
+
+          context.delegate = null;
+        }
+
+        if (method === "next") {
+          if (state === GenStateSuspendedYield) {
+            context.sent = arg;
+          } else {
+            context.sent = undefined;
+          }
+        } else if (method === "throw") {
+          if (state === GenStateSuspendedStart) {
+            state = GenStateCompleted;
+            throw arg;
+          }
+
+          if (context.dispatchException(arg)) {
+            // If the dispatched exception was caught by a catch block,
+            // then let that catch block handle the exception normally.
+            method = "next";
+            arg = undefined;
+          }
+        } else if (method === "return") {
+          context.abrupt("return", arg);
+        }
+
+        state = GenStateExecuting;
+
+        var record = tryCatch(innerFn, self, context);
+        if (record.type === "normal") {
+          // If an exception is thrown from innerFn, we leave state ===
+          // GenStateExecuting and loop back for another invocation.
+          state = context.done ? GenStateCompleted : GenStateSuspendedYield;
+
+          var info = {
+            value: record.arg,
+            done: context.done
+          };
+
+          if (record.arg === ContinueSentinel) {
+            if (context.delegate && method === "next") {
+              // Deliberately forget the last sent value so that we don't
+              // accidentally pass it on to the delegate.
+              arg = undefined;
+            }
+          } else {
+            return info;
+          }
+        } else if (record.type === "throw") {
+          state = GenStateCompleted;
+          // Dispatch the exception by looping back around to the
+          // context.dispatchException(arg) call above.
+          method = "throw";
+          arg = record.arg;
+        }
+      }
+    };
+  }
+
+  // Define Generator.prototype.{next,throw,return} in terms of the
+  // unified ._invoke helper method.
+  defineIteratorMethods(Gp);
+
+  Gp[iteratorSymbol] = function () {
+    return this;
+  };
+
+  Gp.toString = function () {
+    return "[object Generator]";
+  };
+
+  function pushTryEntry(locs) {
+    var entry = { tryLoc: locs[0] };
+
+    if (1 in locs) {
+      entry.catchLoc = locs[1];
+    }
+
+    if (2 in locs) {
+      entry.finallyLoc = locs[2];
+      entry.afterLoc = locs[3];
+    }
+
+    this.tryEntries.push(entry);
+  }
+
+  function resetTryEntry(entry) {
+    var record = entry.completion || {};
+    record.type = "normal";
+    delete record.arg;
+    entry.completion = record;
+  }
+
+  function Context(tryLocsList) {
+    // The root entry object (effectively a try statement without a catch
+    // or a finally block) gives us a place to store values thrown from
+    // locations where there is no enclosing try statement.
+    this.tryEntries = [{ tryLoc: "root" }];
+    tryLocsList.forEach(pushTryEntry, this);
+    this.reset(true);
+  }
+
+  runtime.keys = function (object) {
+    var keys = [];
+    for (var key in object) {
+      keys.push(key);
+    }
+    keys.reverse();
+
+    // Rather than returning an object with a next method, we keep
+    // things simple and return the next function itself.
+    return function next() {
+      while (keys.length) {
+        var key = keys.pop();
+        if (key in object) {
+          next.value = key;
+          next.done = false;
+          return next;
+        }
+      }
+
+      // To avoid creating an additional object, we just hang the .value
+      // and .done properties off the next function object itself. This
+      // also ensures that the minifier will not anonymize the function.
+      next.done = true;
+      return next;
+    };
+  };
+
+  function values(iterable) {
+    if (iterable) {
+      var iteratorMethod = iterable[iteratorSymbol];
+      if (iteratorMethod) {
+        return iteratorMethod.call(iterable);
+      }
+
+      if (typeof iterable.next === "function") {
+        return iterable;
+      }
+
+      if (!isNaN(iterable.length)) {
+        var i = -1,
+            next = function next() {
+          while (++i < iterable.length) {
+            if (hasOwn.call(iterable, i)) {
+              next.value = iterable[i];
+              next.done = false;
+              return next;
+            }
+          }
+
+          next.value = undefined;
+          next.done = true;
+
+          return next;
+        };
+
+        return next.next = next;
+      }
+    }
+
+    // Return an iterator with no values.
+    return { next: doneResult };
+  }
+  runtime.values = values;
+
+  function doneResult() {
+    return { value: undefined, done: true };
+  }
+
+  Context.prototype = {
+    constructor: Context,
+
+    reset: function reset(skipTempReset) {
+      this.prev = 0;
+      this.next = 0;
+      this.sent = undefined;
+      this.done = false;
+      this.delegate = null;
+
+      this.tryEntries.forEach(resetTryEntry);
+
+      if (!skipTempReset) {
+        for (var name in this) {
+          // Not sure about the optimal order of these conditions:
+          if (name.charAt(0) === "t" && hasOwn.call(this, name) && !isNaN(+name.slice(1))) {
+            this[name] = undefined;
+          }
+        }
+      }
+    },
+
+    stop: function stop() {
+      this.done = true;
+
+      var rootEntry = this.tryEntries[0];
+      var rootRecord = rootEntry.completion;
+      if (rootRecord.type === "throw") {
+        throw rootRecord.arg;
+      }
+
+      return this.rval;
+    },
+
+    dispatchException: function dispatchException(exception) {
+      if (this.done) {
+        throw exception;
+      }
+
+      var context = this;
+      function handle(loc, caught) {
+        record.type = "throw";
+        record.arg = exception;
+        context.next = loc;
+        return !!caught;
+      }
+
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        var record = entry.completion;
+
+        if (entry.tryLoc === "root") {
+          // Exception thrown outside of any try block that could handle
+          // it, so set the completion value of the entire function to
+          // throw the exception.
+          return handle("end");
+        }
+
+        if (entry.tryLoc <= this.prev) {
+          var hasCatch = hasOwn.call(entry, "catchLoc");
+          var hasFinally = hasOwn.call(entry, "finallyLoc");
+
+          if (hasCatch && hasFinally) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            } else if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+          } else if (hasCatch) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            }
+          } else if (hasFinally) {
+            if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+          } else {
+            throw new Error("try statement without catch or finally");
+          }
+        }
+      }
+    },
+
+    abrupt: function abrupt(type, arg) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) {
+          var finallyEntry = entry;
+          break;
+        }
+      }
+
+      if (finallyEntry && (type === "break" || type === "continue") && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc) {
+        // Ignore the finally entry if control is not jumping to a
+        // location outside the try/catch block.
+        finallyEntry = null;
+      }
+
+      var record = finallyEntry ? finallyEntry.completion : {};
+      record.type = type;
+      record.arg = arg;
+
+      if (finallyEntry) {
+        this.next = finallyEntry.finallyLoc;
+      } else {
+        this.complete(record);
+      }
+
+      return ContinueSentinel;
+    },
+
+    complete: function complete(record, afterLoc) {
+      if (record.type === "throw") {
+        throw record.arg;
+      }
+
+      if (record.type === "break" || record.type === "continue") {
+        this.next = record.arg;
+      } else if (record.type === "return") {
+        this.rval = record.arg;
+        this.next = "end";
+      } else if (record.type === "normal" && afterLoc) {
+        this.next = afterLoc;
+      }
+    },
+
+    finish: function finish(finallyLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.finallyLoc === finallyLoc) {
+          this.complete(entry.completion, entry.afterLoc);
+          resetTryEntry(entry);
+          return ContinueSentinel;
+        }
+      }
+    },
+
+    "catch": function _catch(tryLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc === tryLoc) {
+          var record = entry.completion;
+          if (record.type === "throw") {
+            var thrown = record.arg;
+            resetTryEntry(entry);
+          }
+          return thrown;
+        }
+      }
+
+      // The context.catch method must only be called with a location
+      // argument that corresponds to a known catch block.
+      throw new Error("illegal catch attempt");
+    },
+
+    delegateYield: function delegateYield(iterable, resultName, nextLoc) {
+      this.delegate = {
+        iterator: values(iterable),
+        resultName: resultName,
+        nextLoc: nextLoc
+      };
+
+      return ContinueSentinel;
+    }
+  };
+})(
+// Among the various tricks for obtaining a reference to the global
+// object, this seems to be the most reliable technique that does not
+// use indirect eval (which violates Content Security Policy).
+typeof global === "object" ? global : typeof window === "object" ? window : typeof self === "object" ? self : undefined);
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"_process":306,"babel-runtime/core-js/object/create":610,"babel-runtime/core-js/promise":614,"babel-runtime/core-js/symbol":615,"babel-runtime/core-js/symbol/iterator":616}]},{},[110]);

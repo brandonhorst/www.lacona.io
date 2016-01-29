@@ -14,11 +14,10 @@ const examples = [
   'open Calendar',
   'open Facebook',
   'open kickstarter.com',
-  'open ~/Downloads/Lacona.dmg',
+  // 'open ~/Downloads/Lacona.dmg',
   'open todo.txt',
   'open my-document.docx with Pages',
   'open lacona.io in Safari',
-  'schedule Vacation 10a Monday to 6:30p Thursday',
   'remind me to Pick up the car September 12 at 11:30am',
   'remind me to Buy a gift 7 days before 12/1',
   'search Google for pictures of cats',
@@ -248,9 +247,12 @@ export default class Page extends React.Component {
         <header>
           <h1><a href='#' tabIndex='-1'>Lacona</a></h1>
           <h2 className='category-action highlighted'>Natural Language Commands for your Mac</h2>
-          <h3><a href='http://us10.campaign-archive1.com/?u=f923be23d36f00f457ea3b2c6&id=12a018e9df&e=[UNIQID]'>Launching January 29</a></h3>
+          <a href='http://lacona-download.firebaseapp.com/packages/0.3.zip' className='noline download-well'>
+            <h3>Download Lacona (Beta) Now</h3>
+            <p>Requires Mac OS 10.11 El Capitan</p>
+          </a>
           <p>Call up Lacona with a keyboard shortcut, and type whatever you want to do. It gives intelligent suggestions as you type and then follows your orders.</p>
-          <p>This page is just a demo of Lacona's power. The App itself will be available for download on January 29.</p>
+          <p>Lacona Beta is <strong>available for download</strong>. It's awesome, but it's still quite buggy. Report problems <a href="https://github.com/lacona/LaconaApp/issues">here</a>. This page is an in-browser demo.</p>
         </header>
 
         <content>
@@ -301,10 +303,10 @@ export default class Page extends React.Component {
                 <li onClick={this.type.bind(this, '0', () => false, 'open kickstarter.com')}>
                   <span className='category-action'>open</span> <span className={`category-argument${hashArgument('URL')}`}>kickstarter.com</span>
                 </li>
-                <li onClick={this.type.bind(this, '0', () => false, 'open ~/Downloads/Lacona.dmg')}>
+{/*                <li onClick={this.type.bind(this, '0', () => false, 'open ~/Downloads/Lacona.dmg')}>
                   <span className='category-action'>open</span> <span className={`category-argument${hashArgument('path')}`}>~/Downloads/Lacona.dmg</span>
                 </li>
-                <li onClick={this.type.bind(this, '0', () => false, 'open Gmail and Reminders and calendar.google.com')}>
+*/}                <li onClick={this.type.bind(this, '0', () => false, 'open Gmail and Reminders and calendar.google.com')}>
                   <span className='category-action'>open</span> <span className={`category-argument${hashArgument('bookmark')}`}>Gmail</span><span className='category-conjunction'> and </span><span className={`category-argument${hashArgument('application')}`}>Reminders</span><span className='category-conjunction'> and </span><span className={`category-argument${hashArgument('URL')}`}>calendar.google.com</span>
                 </li>
                 <li onClick={this.type.bind(this, '0', () => false, 'lifehacker.com')}>
@@ -326,28 +328,28 @@ export default class Page extends React.Component {
           <section className='textRight'>
             <div className='text'>
               <a name='date' className='anchor'><h3>Organize your Life, not your Calendar</h3></a>
-              <p>Create events and reminders as though you were talking to a person. Lacona understands.</p>
+              <p>Create reminders as though you were talking to a person. Lacona understands. Event scheduling is coming soon.</p>
               <ul className='well'>
                 <li>Due to browser limitations, this may sometimes be choppy.</li>
                 <li>This demo US assumes date formats.</li>
               </ul>
               <ul className='examples'>
-                <li onClick={this.type.bind(this, '1', () => false, "schedule Dinner with Vicky for 7pm tomorrow")}>
-                  <span className='category-action'>schedule</span> <span className={`category-argument${hashArgument('calendar event')}`}>Dinner with Vicky</span>{/* <span className='category-conjunction'>at</span> <span className='descriptor-location'>Sacco's Flatbread</span>*/} <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('time')}`}>7pm</span> <span className={`category-argument${hashArgument('date')}`}>tomorrow</span>
+{/*                <li onClick={this.type.bind(this, '1', () => false, "schedule Dinner with Vicky for 7pm tomorrow")}>
+                  <span className='category-action'>schedule</span> <span className={`category-argument${hashArgument('calendar event')}`}>Dinner with Vicky</span>{/* <span className='category-conjunction'>at</span> <span className='descriptor-location'>Sacco's Flatbread</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('time')}`}>7pm</span> <span className={`category-argument${hashArgument('date')}`}>tomorrow</span>
                 </li>
-                <li onClick={this.type.bind(this, '1', () => false, 'remind me to Pick up the car September 12 at 11:30am')}>
+*/}                <li onClick={this.type.bind(this, '1', () => false, 'remind me to Pick up the car September 12 at 11:30am')}>
                   <span className='category-action'>remind me to</span> <span className={`category-argument${hashArgument('reminder title')}`}>Pick up the car</span> <span className={`category-argument${hashArgument('date')}`}>September 12</span> <span className='category-conjunction'>at</span> <span className={`category-argument${hashArgument('time')}`}>11:30am</span>
                 </li>
                 <li onClick={this.type.bind(this, '1', () => false, "remind me to Buy a gift 2 weeks before my wife's birthday")}>
                   <span className='category-action'>remind me to</span> <span className={`category-argument${hashArgument('reminder title')}`}>Buy a gift</span> <span className={`category-argument${hashArgument('date')}`}>2 weeks before my wife's birthday</span>
                 </li>
-                <li onClick={this.type.bind(this, '1', () => false, 'schedule Vacation 10a Monday to 6:30p Thursday')}>
+{/*                <li onClick={this.type.bind(this, '1', () => false, 'schedule Vacation 10a Monday to 6:30p Thursday')}>
                   <span className='category-action'>schedule</span> <span className={`category-argument${hashArgument('calendar event')}`}>Vacation</span> <span className={`category-argument${hashArgument('time')}`}>10a</span> <span className={`category-argument${hashArgument('date')}`}>Monday</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('time')}`}>6:30p</span> <span className={`category-argument${hashArgument('date')}`}>Thursday</span>
                 </li>
                 <li onClick={this.type.bind(this, '1', () => false, 'schedule China trip from Native American Day to Veterans Day')}>
                   <span className='category-action'>schedule</span> <span className={`category-argument${hashArgument('calendar event')}`}>China trip</span> <span className='category-conjunction'>from</span> <span className={`category-argument${hashArgument('holiday')}`}>Native American Day</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('holiday')}`}>Veterans Day</span>
                 </li>
-                <li onClick={this.type.bind(this, '1', () => false, 'remind me to Buy a gift 7 days before 12/1')}>
+*/}                <li onClick={this.type.bind(this, '1', () => false, 'remind me to Buy a gift 7 days before 12/1')}>
                   <span className='category-action'>remind me to</span> <span className={`category-argument${hashArgument('reminder title')}`}>Buy a gift</span> <span className={`category-argument${hashArgument('date')}`}>7 days before 12/1</span>
                 </li>
                 <li onClick={this.type.bind(this, '1', () => false, 'remind me to Call Jenny')}>

@@ -43,7 +43,7 @@ html {
 }
 
 html, input {
-  font-family: Lato, 'Lato-Local', sans-serif;
+  font-family: -system, Lato, 'Lato-Local', sans-serif;
   -webkit-font-smoothing: antialiased;
   text-shadow: rgba(0,0,0,.01) 0 0 1px;
 }
@@ -335,6 +335,25 @@ p {
   font-size: 80%;
 }
 
+.download-well {
+  display: block;
+  padding: 10px 20px;
+  border-radius: 4px;
+  margin: -4px auto 10px auto;
+  width: 400px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 120%;
+  p {
+    margin: -25px 0 2px 0;
+  }
+}
+
+.noline, .noline:hover, .noline:active, .noline:link {
+  text-decoration: none;
+}
+
 .description {
   margin-top: 20px;
   font-size: 100%;
@@ -477,7 +496,7 @@ header {
     font-size: 3.496rem;
     display: inline-block;
     padding: 10px 0 10px 100px;
-    background: url('logo.png') no-repeat left center;
+    background: url('Icon1024.png') no-repeat left center;
 
     background-size: 94px 94px;
 
@@ -586,6 +605,20 @@ footer {
       background-color: lighten(map-get($theme, 'argument2'), 20%);
       border: 1px solid map-get($theme, 'argument2');
     }
+    .download-well {
+      background-color: map-get($theme, 'argument3');
+      border: 1px solid darken(map-get($theme, 'argument3'), 30%);
+      p, h3 {
+        color: map-get($theme, 'input-bg');
+      }
+    }
+    .download-well:hover {
+      background-color: darken(map-get($theme, 'argument3'), 10%);
+    }
+    .download-well:active {
+      background-color: darken(map-get($theme, 'argument3'), 20%);
+    }
+
 
     footer {
       background-color: lighten(map-get($theme, 'action'), 30%);
