@@ -62,8 +62,8 @@
 
 .fallthrough {
   border-radius: 4px;
-  margin: -5px 0 -5px -50px;
-  padding: 5px 0 5px 50px;
+  margin: -8px 3px -8px -50px;
+  padding: 8px 2px 8px 50px;
   height: 0;
 }
 
@@ -165,6 +165,7 @@
     @include category(argument4, map-get($theme, argument4));
     @include category(argument5, map-get($theme, argument5));
     @include category(argument6, map-get($theme, argument6));
+    @include category(argument7, map-get($theme, argument7));
 
       /*
       @include descriptor(file, map-get($theme, argument0));

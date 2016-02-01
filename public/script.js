@@ -20932,11 +20932,11 @@ var Input = (function (_React$Component) {
       if (e.keyCode === 9) {
         // tab
         this.props.completeSelection();
-      } else if (e.keyCode === 38) {
-        // up
+      } else if (e.keyCode === 38 || e.ctrlKey && e.keyCode === 75) {
+        // up or ^k
         this.props.moveSelection(-1);
-      } else if (e.keyCode === 40) {
-        // down
+      } else if (e.keyCode === 40 || e.ctrlKey && e.keyCode === 74) {
+        // down or ^j
         this.props.moveSelection(1);
       } else if (e.keyCode === 13) {
         // return
@@ -20944,13 +20944,25 @@ var Input = (function (_React$Component) {
       } else if (e.keyCode === 27) {
         // escape
         this.props.cancel();
-      } else if (e.keyCode === 39) {
-        //right
+      } else if (!e.shiftKey && (e.keyCode === 39 || e.ctrlKey && e.keyCode === 76)) {
+        //right or ^l
         var node = (0, _reactDom.findDOMNode)(this.refs.input);
         if (node.selectionStart === node.selectionEnd && node.selectionStart === this.props.userInput.length) {
           this.props.completeSelection();
         } else {
-          return;
+          if (node.selectionStart === node.selectionEnd) {
+            node.setSelectionRange(node.selectionStart + 1, node.selectionStart + 1);
+          } else {
+            node.setSelectionRange(node.selectionEnd, node.selectionEnd);
+          }
+        }
+      } else if (!e.shiftKey && (e.keyCode === 37 || e.ctrlKey && e.keyCode === 72)) {
+        // left or ^h
+        var node = (0, _reactDom.findDOMNode)(this.refs.input);
+        if (node.selectionStart === node.selectionEnd && node.selectionStart >= 1) {
+          node.setSelectionRange(node.selectionStart - 1, node.selectionStart - 1);
+        } else {
+          node.setSelectionRange(node.selectionStart, node.selectionStart);
         }
       } else if (e.altKey && !e.shiftKey && !e.metaKey && !e.ctrlKey && e.keyCode >= 49 && e.keyCode <= 57) {
         this.props.execute(e.keyCode - 49);
@@ -21113,8 +21125,8 @@ var LaconaView = (function (_React$Component) {
         } else {
           this.update('');
           this.setState({ showHints: false });
-          this.props.onBlur();
           this.props.execute(index);
+          this.props.onBlur();
         }
       }
     }
@@ -21163,6 +21175,11 @@ var LaconaView = (function (_React$Component) {
     key: 'mouseUp',
     value: function mouseUp() {
       this.blurMatters = true;
+    }
+  }, {
+    key: 'focus',
+    value: function focus() {
+      this.input.focus();
     }
   }, {
     key: 'blur',
@@ -21260,14 +21277,12 @@ var _react2 = _interopRequireDefault(_react);
 var _reactDom = require('react-dom');
 
 var SPECIALCASES = {
-  URL: 0,
-  path: 4,
-  time: 0,
-  bookmark: 6,
-  path: 3,
-  artist: 0,
-  song: 3,
-  phrase: 4
+  URL: 1,
+  bookmark: 2,
+  song: 2,
+  contact: 1,
+  relationship: 3,
+  'reminder title': 0
 };
 
 function hashArgument(str) {
@@ -21279,7 +21294,7 @@ function hashArgument(str) {
   return Math.abs(str.split('').reduce(function (a, b) {
     a = (a << 5) - a + b.charCodeAt(0);
     return a & a;
-  }, 0)) % 7;
+  }, 0)) % 8;
 }
 
 var Placeholder = (function (_React$Component) {
@@ -21379,7 +21394,7 @@ var Option = (function (_React$Component2) {
         // // RTL
         // desc.style.right = `${wordsRect.right - rect.right}px`
         // 9 for Lacona, 6 for Lacona.io
-        desc.style.top = rect.top - wordsRect.top + 6 + 'px';
+        desc.style.top = rect.top - wordsRect.top + 9 + 'px';
       });
     }
   }, {
@@ -21430,11 +21445,12 @@ var Option = (function (_React$Component2) {
             if (item.placeholder) {
               return _react2['default'].createElement(Placeholder, { item: item, key: index });
             } else {
+              var text = item.fallthrough ? _lodash2['default'].trimRight(item.text) : item.text;
               var _className2 = 'word-component' + (item.input ? ' highlighted' : '') + ' category-' + item.category + (item.fallthrough ? ' fallthrough' : '') + (item.decorator ? ' decorator' : '');
               return _react2['default'].createElement(
                 'div',
                 { className: _className2, key: index },
-                item.text
+                text
               );
             }
           })

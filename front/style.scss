@@ -586,15 +586,15 @@ footer {
     }
 
     section {
-      border-bottom: 1px solid map-get($theme, 'action');
+      border-bottom: 1px solid map-get($theme, 'argument7');
     }
 
     section:nth-child(odd) {
-      background-color: lighten(map-get($theme, 'action'), 30%);
+      background-color: lighten(map-get($theme, 'argument7'), 30%);
     }
 
     section:nth-child(even) {
-      background-color: lighten(map-get($theme, 'action'), 20%);
+      background-color: lighten(map-get($theme, 'argument7'), 20%);
     }
 
     section.green {
@@ -621,7 +621,7 @@ footer {
 
 
     footer {
-      background-color: lighten(map-get($theme, 'action'), 30%);
+      background-color: lighten(map-get($theme, 'argument7'), 30%);
 
       .text {
         max-width: 940px;
