@@ -340,13 +340,13 @@ p {
   padding: 10px 20px;
   border-radius: 4px;
   margin: -4px auto 10px auto;
-  width: 400px;
+  max-width: 400px;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
   font-size: 120%;
   p {
-    margin: -25px 0 2px 0;
+    margin: -25px 0 -4px 0;
   }
 }
 
