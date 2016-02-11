@@ -11517,7 +11517,7 @@ var Page = (function (_React$Component4) {
           ),
           _react2['default'].createElement(
             'a',
-            { href: 'http://lacona-download.firebaseapp.com/packages/0.4.1/LaconaBeta.zip', className: 'noline download-well' },
+            { href: 'http://lacona-download.firebaseapp.com/packages/0.4.2/LaconaBeta.zip', className: 'noline download-well' },
             _react2['default'].createElement(
               'h3',
               null,
@@ -11526,7 +11526,7 @@ var Page = (function (_React$Component4) {
             _react2['default'].createElement(
               'p',
               null,
-              '0.4.1 - Requires OSX 10.11 El Capitan'
+              '0.4.2 - Requires OSX 10.11 El Capitan'
             )
           ),
           _react2['default'].createElement(
