@@ -67,6 +67,7 @@ exports.turnOnScreensaver = turnOnScreensaver;
 exports.emptyTrash = emptyTrash;
 exports.fetchMountedVolumes = fetchMountedVolumes;
 exports.unmountVolume = unmountVolume;
+exports.unmountAllVolumes = unmountAllVolumes;
 exports.fetchMusic = fetchMusic;
 exports.playSongIds = playSongIds;
 exports.musicPlay = musicPlay;
@@ -76,7 +77,6 @@ exports.musicPrevious = musicPrevious;
 exports.musicStop = musicStop;
 exports.fetchSearchEngines = fetchSearchEngines;
 exports.runApplescript = runApplescript;
-exports.querySpotlight = querySpotlight;
 exports.callSystem = callSystem;
 
 var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
@@ -154,25 +154,29 @@ function showNotification(_ref5) {
 
 /* Applications */
 
-function fetchApplications(done) {
+function fetchApplications() {
   if (isDemo()) {
-    return done(null, demoData.applications);
+    return new DataEmitter(demoData.applications);
   }
 
   if (isOSX()) {
-    querySpotlight({
-      directories: ['/Applications'],
+    return new SpotlightQuery({
+      directories: ['/Applications', '/Applications/Xcode.app/Contents/Applications', '/System/Library/CoreServices/Applications', userHome() + '/Applications', '/opt/homebrew-cask/Caskroom', '/usr/local/Cellar'],
       query: "kMDItemContentTypeTree == 'com.apple.application'",
-      attributes: ['kMDItemDisplayName', 'kMDItemCFBundleIdentifier']
-    }).on('data', function (data) {
-      var trueData = _lodash2['default'].map(data, function (_ref6) {
-        var kMDItemDisplayName = _ref6.kMDItemDisplayName;
-        var kMDItemCFBundleIdentifier = _ref6.kMDItemCFBundleIdentifier;
-        return { name: kMDItemDisplayName, bundleId: kMDItemCFBundleIdentifier };
-      });
-      return done(null, trueData);
-    }).on('error', function (err) {
-      return done(err);
+      attributes: ['kMDItemDisplayName', 'kMDItemCFBundleIdentifier'],
+      dataMap: function dataMap(data) {
+        return _lodash2['default'].map(data, function (_ref6) {
+          var kMDItemDisplayName = _ref6.kMDItemDisplayName;
+          var kMDItemCFBundleIdentifier = _ref6.kMDItemCFBundleIdentifier;
+          return {
+            name: kMDItemDisplayName,
+            bundleId: kMDItemCFBundleIdentifier
+          };
+        }).concat({
+          name: 'Finder',
+          bundleId: 'com.apple.finder'
+        });
+      }
     });
   }
 }
@@ -209,25 +213,24 @@ function openFileInApplication(_ref9) {
 /* Bookmarks */
 
 function fetchBookmarks() {
-  var done = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
-
   if (isDemo()) {
-    return done(null, global.demoData.bookmarks);
+    return new DataEmitter(demoData.bookmarks);
   }
 
   if (isOSX()) {
-    querySpotlight({
+    return new SpotlightQuery({
       query: "kMDItemContentTypeTree = 'com.apple.safari.bookmark'",
-      attributes: ['kMDItemDisplayName', 'kMDItemURL']
-    }).on('data', function (data) {
-      var trueData = _lodash2['default'].map(data, function (_ref10) {
-        var kMDItemDisplayName = _ref10.kMDItemDisplayName;
-        var kMDItemURL = _ref10.kMDItemURL;
-        return { name: kMDItemDisplayName, url: kMDItemURL };
-      });
-      return done(null, trueData);
-    }).on('error', function (err) {
-      return done(err);
+      attributes: ['kMDItemDisplayName', 'kMDItemURL'],
+      dataMap: function dataMap(data) {
+        return _lodash2['default'].map(data, function (_ref10) {
+          var kMDItemDisplayName = _ref10.kMDItemDisplayName;
+          var kMDItemURL = _ref10.kMDItemURL;
+          return {
+            name: kMDItemDisplayName,
+            url: kMDItemURL
+          };
+        });
+      }
     });
   }
 }
@@ -262,29 +265,26 @@ function fetchContacts() {
 
 function searchFiles(_ref11) {
   var query = _ref11.query;
-  var done = arguments.length <= 1 || arguments[1] === undefined ? function () {} : arguments[1];
 
   if (isDemo()) {
-    return done(null, global.demoData.spotlightFiles);
+    return new DataEmitter(demoData.spotlightFiles);
   }
 
   if (isOSX()) {
-    querySpotlight({
-      query: 'kMDItemFSName contains[cd] "' + query + '" && ' + 'kMDItemSupportFileType != "MDSystemFile" && ' + 'kMDItemContentTypeTree != "com.apple.application" && ' + 'kMDItemContentTypeTree != "com.apple.application-bundle" && ' + 'kMDItemContentTypeTree != "com.apple.safari.bookmark" && ' + 'kMDItemContentTypeTree != "public.contact" && ' + 'kMDItemContentTypeTree != "com.apple.safari.history" && ' + 'kMDItemContentTypeTree != "public.calendar-event" && ' + 'kMDItemContentTypeTree != "com.apple.ichat.transcript"',
-      attributes: ['kMDItemPath', 'kMDItemContentType']
-    }).on('data', function (data) {
-      var trueData = _lodash2['default'].map(data, function (_ref12) {
-        var kMDItemPath = _ref12.kMDItemPath;
-        var kMDItemContentType = _ref12.kMDItemContentType;
-        return {
-          path: kMDItemPath,
-          contentType: kMDItemContentType
-        };
-      });
-
-      return done(null, trueData);
-    }).on('error', function (err) {
-      return done(err);
+    return new SpotlightQuery({
+      query: 'kMDItemFSName beginswith[cd] "' + query.replace('\\', '\\\\') + '" && ' + 'kMDItemSupportFileType != "MDSystemFile" && ' + 'kMDItemContentTypeTree != "com.apple.application" && ' + 'kMDItemContentTypeTree != "com.apple.application-bundle" && ' + 'kMDItemContentTypeTree != "com.apple.safari.bookmark" && ' + 'kMDItemContentTypeTree != "public.contact" && ' + 'kMDItemContentTypeTree != "com.apple.safari.history" && ' + 'kMDItemContentTypeTree != "public.calendar-event" && ' + 'kMDItemContentTypeTree != "com.apple.ichat.transcript"',
+      attributes: ['kMDItemPath', 'kMDItemContentType'],
+      limit: 10,
+      dataMap: function dataMap(data) {
+        return _lodash2['default'].map(data, function (_ref12) {
+          var kMDItemPath = _ref12.kMDItemPath;
+          var kMDItemContentType = _ref12.kMDItemContentType;
+          return {
+            path: kMDItemPath,
+            contentType: kMDItemContentType
+          };
+        });
+      }
     });
   }
 }
@@ -294,7 +294,11 @@ function fetchDirectoryContents(_ref13) {
   var done = arguments.length <= 1 || arguments[1] === undefined ? function () {} : arguments[1];
 
   if (isDemo()) {
-    return done(null, global.demoData.rootFiles[path]);
+    if (_lodash2['default'].startsWith(path, '~')) {
+      return done(null, global.demoData.rootFiles['/Users/LaconaUser' + path.slice(1)]);
+    } else {
+      return done(null, global.demoData.rootFiles[path]);
+    }
   }
 
   if (isOSX()) {
@@ -468,25 +472,21 @@ function closeBrowserTab(_ref20) {
 /* Preference Panes */
 
 function fetchPreferencePanes() {
-  var done = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
-
   if (isDemo()) {
-    return done(null, global.demoData.preferencePanes);
+    return new DataEmitter(demoData.preferencePanes);
   }
 
   if (isOSX()) {
-    querySpotlight({
+    return new SpotlightQuery({
       query: "kMDItemContentType == 'com.apple.systempreference.prefpane'",
-      attributes: ['kMDItemDisplayName', 'kMDItemPath']
-    }).on('data', function (data) {
-      var trueData = _lodash2['default'].map(data, function (_ref21) {
-        var kMDItemDisplayName = _ref21.kMDItemDisplayName;
-        var kMDItemPath = _ref21.kMDItemPath;
-        return { name: kMDItemDisplayName, path: kMDItemPath };
-      });
-      return done(null, trueData);
-    }).on('error', function (err) {
-      return done(err);
+      attributes: ['kMDItemDisplayName', 'kMDItemPath'],
+      dataMap: function dataMap(data) {
+        return _lodash2['default'].map(data, function (_ref21) {
+          var kMDItemDisplayName = _ref21.kMDItemDisplayName;
+          var kMDItemPath = _ref21.kMDItemPath;
+          return { name: kMDItemDisplayName, path: kMDItemPath };
+        });
+      }
     });
   }
 }
@@ -633,7 +633,7 @@ function shutdown() {
   var done = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
 
   if (isOSX()) {
-    runApplescript({ script: 'tell application "System Events" to shutdown' }, done);
+    runApplescript({ script: 'tell application "System Events" to shut down' }, done);
   }
 }
 
@@ -727,6 +727,15 @@ function unmountVolume(_ref27) {
   }
 }
 
+function unmountAllVolumes(_) {
+  var done = arguments.length <= 1 || arguments[1] === undefined ? function () {} : arguments[1];
+
+  if (isOSX()) {
+    var _script6 = 'tell application "Finder" to eject the disks';
+    runApplescript({ script: _script6 }, done);
+  }
+}
+
 /* Music */
 
 function simplifyArtist(item) {
@@ -755,9 +764,9 @@ function fetchMusic(done) {
   }
 
   if (isOSX()) {
-    var _script6 = 'tell application "iTunes" to get {name, album, artist, album artist, composer, genre, year, disc number, track number, database ID} of every track of first library playlist';
+    var _script7 = 'tell application "iTunes" to get {name, album, artist, album artist, composer, genre, year, disc number, track number, database ID} of every track of first library playlist';
 
-    runApplescript({ script: _script6 }, function (err, arrays) {
+    runApplescript({ script: _script7 }, function (err, arrays) {
       if (err) {
         return done(err);
       }
@@ -823,11 +832,33 @@ function runApplescript(_ref29) {
   }
 }
 
-var SpotlightQuery = (function (_EventEmitter) {
-  _inherits(SpotlightQuery, _EventEmitter);
+var DataEmitter = (function (_EventEmitter) {
+  _inherits(DataEmitter, _EventEmitter);
+
+  function DataEmitter(data) {
+    var _this = this;
+
+    _classCallCheck(this, DataEmitter);
+
+    _get(Object.getPrototypeOf(DataEmitter.prototype), 'constructor', this).call(this);
+    process.nextTick(function () {
+      _this.emit('data', data);
+    });
+  }
+
+  _createClass(DataEmitter, [{
+    key: 'cancel',
+    value: function cancel() {}
+  }]);
+
+  return DataEmitter;
+})(_events.EventEmitter);
+
+var SpotlightQuery = (function (_EventEmitter2) {
+  _inherits(SpotlightQuery, _EventEmitter2);
 
   function SpotlightQuery(_ref30) {
-    var _this = this;
+    var _this2 = this;
 
     var _ref30$query = _ref30.query;
     var query = _ref30$query === undefined ? '' : _ref30$query;
@@ -836,9 +867,11 @@ var SpotlightQuery = (function (_EventEmitter) {
     var _ref30$directories = _ref30.directories;
     var directories = _ref30$directories === undefined ? [] : _ref30$directories;
     var _ref30$limit = _ref30.limit;
-    var limit = _ref30$limit === undefined ? 100 : _ref30$limit;
+    var limit = _ref30$limit === undefined ? 0 : _ref30$limit;
     var _ref30$liveUpdate = _ref30.liveUpdate;
     var liveUpdate = _ref30$liveUpdate === undefined ? false : _ref30$liveUpdate;
+    var _ref30$dataMap = _ref30.dataMap;
+    var dataMap = _ref30$dataMap === undefined ? _lodash2['default'].identity : _ref30$dataMap;
 
     _classCallCheck(this, SpotlightQuery);
 
@@ -846,9 +879,9 @@ var SpotlightQuery = (function (_EventEmitter) {
 
     this.queryId = global.spotlight(query, attributes, directories, limit, liveUpdate, function (err, data) {
       if (err) {
-        _this.emit('error', err);
+        _this2.emit('error', err);
       } else {
-        _this.emit('data', data);
+        _this2.emit('data', dataMap(data));
       }
     });
   }
@@ -857,17 +890,12 @@ var SpotlightQuery = (function (_EventEmitter) {
     key: 'cancel',
     value: function cancel() {
       global.cancelQuery(this.queryId);
+      delete this.queryId;
     }
   }]);
 
   return SpotlightQuery;
 })(_events.EventEmitter);
-
-function querySpotlight(options) {
-  if (isOSX()) {
-    return new SpotlightQuery(options);
-  }
-}
 
 function callSystem(_ref31, done) {
   var command = _ref31.command;
@@ -955,7 +983,7 @@ exports.Context = Context;
 
 Context.eventName = 'context';
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":301,"babel-runtime/helpers/class-call-check":611,"babel-runtime/helpers/create-class":612,"babel-runtime/helpers/get":614,"babel-runtime/helpers/inherits":615,"babel-runtime/helpers/interop-require-default":616,"babel-runtime/helpers/sliced-to-array":617,"events":299,"lacona-phrase":2}],2:[function(require,module,exports){
+},{"_process":299,"babel-runtime/helpers/class-call-check":609,"babel-runtime/helpers/create-class":610,"babel-runtime/helpers/get":613,"babel-runtime/helpers/inherits":614,"babel-runtime/helpers/interop-require-default":615,"babel-runtime/helpers/sliced-to-array":616,"events":297,"lacona-phrase":2}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1506,7 +1534,7 @@ exports.extensions = extensions;
  <String argument='message' id='message' limit={1} />
 </sequence>*/
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-api":1,"lacona-command":51,"lacona-phrase":6,"lacona-phrase-email":69,"lacona-phrase-phone-number":84,"lacona-phrase-string":88}],6:[function(require,module,exports){
+},{"lacona-api":1,"lacona-command":51,"lacona-phrase":6,"lacona-phrase-email":67,"lacona-phrase-phone-number":82,"lacona-phrase-string":86}],6:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
 },{"../package":8,"dup":2,"inherits":7}],7:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
@@ -1642,7 +1670,7 @@ var _laconaApi = require('lacona-api');
 
 var _laconaPhraseString = require('lacona-phrase-string');
 
-var _laconaPhraseDatetime = require( /*, Range */'lacona-phrase-datetime');
+var _laconaPhraseDatetime = require('lacona-phrase-datetime');
 
 var _laconaCommand = require('lacona-command');
 
@@ -1678,7 +1706,7 @@ function formatRange(obj) {
   var start = (0, _moment2['default'])(obj.start);
   var end = (0, _moment2['default'])(obj.end);
 
-  if (obj.allday) {
+  if (obj.allDay) {
     return [{ text: 'all day ' }, { text: start.format('dddd, MMMM Do, YYYY'), argument: 'date' }, { text: ' to all day ' }, { text: end.format('dddd, MMMM Do, YYYY'), argument: 'date' }];
   } else if (end.diff(start, 'days') === 0) {
     return [{ text: start.format('dddd, MMMM Do, YYYY'), argument: 'date' }, { text: ' at ' }, { text: start.format('h:mma'), argument: 'time' }, { text: ' to ' }, { text: end.format('h:mma'), argument: 'time' }];
@@ -1780,7 +1808,7 @@ var ScheduleEvent = (function (_Phrase2) {
           (0, _laconaPhrase.createElement)(_laconaPhraseString.String, { limit: 1, splitOn: ' ', argument: 'calendar event', id: 'title' }),
           (0, _laconaPhrase.createElement)('literal', { text: ' ', category: 'conjunction' }),
           (0, _laconaPhrase.createElement)('literal', { text: 'for ', category: 'conjunction', optional: true, preferred: true, limited: true }),
-          (0, _laconaPhrase.createElement)(Range, { id: 'range', prepositions: true, past: false, seconds: false })
+          (0, _laconaPhrase.createElement)(_laconaPhraseDatetime.Range, { id: 'range', prepositions: true, past: false, seconds: false })
         )
       );
     }
@@ -1886,11 +1914,11 @@ var CreateReminder = (function (_Phrase3) {
 })(_laconaPhrase.Phrase);
 
 exports.CreateReminder = CreateReminder;
-var extensions = [CreateReminder];
+var extensions = [ScheduleEvent, CreateReminder];
 exports.extensions = extensions;
 /*<LocationWithAt optional id='location' preferred={false} />*/ /*<LocationWithAt optional id='location' preferred={false} />*/
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-api":1,"lacona-command":51,"lacona-phrase":10,"lacona-phrase-datetime":60,"lacona-phrase-string":88}],10:[function(require,module,exports){
+},{"lacona-api":1,"lacona-command":51,"lacona-phrase":10,"lacona-phrase-datetime":59,"lacona-phrase-string":86}],10:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
 },{"../package":12,"dup":2,"inherits":11}],11:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
@@ -2048,21 +2076,21 @@ var PlaySpecific = (function (_Phrase) {
   }, {
     key: 'describe',
     value: function describe() {
-      var tracks = _lodash2['default'].map(this.source.data, function (_ref3) {
+      var tracks = _lodash2['default'].chain(this.source.data).filter('name').map(function (_ref3) {
         var name = _ref3.name;
         var id = _ref3.id;
         return { text: name, value: { song: name, ids: [id] } };
-      });
-      var albums = _lodash2['default'].chain(this.source.data).groupBy('album').map(function (albumItems, album) {
+      }).value();
+      var albums = _lodash2['default'].chain(this.source.data).filter('album').groupBy('album').map(function (albumItems, album) {
         return { text: album, value: { album: album, ids: _lodash2['default'].map(albumItems, 'id') } };
       }).value();
-      var artists = _lodash2['default'].chain(this.source.data).groupBy('artist').map(function (artistItems, artist) {
+      var artists = _lodash2['default'].chain(this.source.data).filter('artist').groupBy('artist').map(function (artistItems, artist) {
         return { text: artist, value: { artist: artist, ids: _lodash2['default'].map(artistItems, 'id') } };
       }).value();
-      var genres = _lodash2['default'].chain(this.source.data).groupBy('genre').map(function (genreItems, genre) {
+      var genres = _lodash2['default'].chain(this.source.data).filter('genre').groupBy('genre').map(function (genreItems, genre) {
         return { text: genre, value: { genre: genre, ids: _lodash2['default'].map(genreItems, 'id') } };
       }).value();
-      var composers = _lodash2['default'].chain(this.source.data).groupBy('composer').map(function (composerItems, composer) {
+      var composers = _lodash2['default'].chain(this.source.data).filter('composer').groupBy('composer').map(function (composerItems, composer) {
         return { text: composer, value: { composer: composer, ids: _lodash2['default'].map(composerItems, 'id') } };
       }).value();
 
@@ -2344,9 +2372,11 @@ var CommandObject = (function () {
     key: '_demoExecute',
     value: function _demoExecute() {
       if (this.result.verb === 'open') {
-        return outputifyOpen(this.result.items);
-      } else if (this.result.verb === 'openin') {
-        return _lodash2['default'].flatten([{ text: 'open ', category: 'action' }, outputify(this.result.items), { text: ' in ' }, outputify(this.result.apps)]);
+        if (this.result.apps) {
+          return _lodash2['default'].flatten([{ text: 'open ', category: 'action' }, outputify(this.result.items), { text: ' in ' }, outputify(this.result.apps)]);
+        } else {
+          return outputifyOpen(this.result.items);
+        }
       } else if (this.result.verb === 'switch') {
         return _lodash2['default'].flatten([{ text: 'switch focus to ', category: 'action' }, colorizeOpen(this.result.item)]);
       } else if (this.result.verb === 'close') {
@@ -2366,23 +2396,23 @@ var CommandObject = (function () {
 
       if (this.result.verb === 'open') {
         this.result.items.forEach(function (item) {
-          if (item.open) {
-            item.open();
-          } else if (item.url) {
-            (0, _laconaApi.openURL)({ url: item.url });
-          } else if (item.path) {
-            (0, _laconaApi.openFile)({ path: item.path });
-          }
-        });
-      } else if (this.result.verb === 'openin') {
-        this.result.items.forEach(function (item) {
-          _this.result.apps.forEach(function (app) {
-            if (item.url) {
-              app.openURL(item.url);
+          if (_this.result.apps) {
+            _this.result.apps.forEach(function (app) {
+              if (item.url) {
+                app.openURL(item.url);
+              } else if (item.path) {
+                app.openFile(item.path);
+              }
+            });
+          } else {
+            if (item.open) {
+              item.open();
+            } else if (item.url) {
+              (0, _laconaApi.openURL)({ url: item.url });
             } else if (item.path) {
-              app.openFile(item.path);
+              (0, _laconaApi.openFile)({ path: item.path });
             }
-          });
+          }
         });
       } else if (this.result.verb === 'switch') {
         if (this.result.item.activate) this.result.item.activate();
@@ -2402,6 +2432,8 @@ var CommandObject = (function () {
         _lodash2['default'].forEach(this.result.items, function (item) {
           if (item.eject) item.eject();
         });
+      } else if (this.result.verb === 'eject-all') {
+        (0, _laconaApi.unmountAllVolumes)();
       }
     }
   }]);
@@ -2428,6 +2460,16 @@ var Open = (function (_Phrase) {
       }
       return true;
     }
+  }, {
+    key: 'filter',
+    value: function filter(result) {
+      if (result.openin && _lodash2['default'].some(result.items, function (item) {
+        return item.open;
+      })) {
+        return false;
+      }
+      return true;
+    }
 
     // TODO add canOpen, canEject, ... support
   }, {
@@ -2442,42 +2484,31 @@ var Open = (function (_Phrase) {
           'choice',
           null,
           (0, _laconaPhrase.createElement)(
-            'sequence',
-            null,
-            (0, _laconaPhrase.createElement)('literal', { text: 'open ', category: 'action', id: 'verb', value: 'open' }),
+            'filter',
+            { 'function': this.filter, _incomplete: true },
             (0, _laconaPhrase.createElement)(
-              'repeat',
-              { id: 'items', separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1, category: 'conjunction' }) },
+              'sequence',
+              null,
+              (0, _laconaPhrase.createElement)('literal', { text: 'open ', category: 'action', id: 'verb', value: 'open' }),
               (0, _laconaPhrase.createElement)(
-                'choice',
-                null,
-                (0, _laconaPhrase.createElement)(_laconaPhraseSystem.Application, null),
-                (0, _laconaPhrase.createElement)(_laconaPhraseSystem.PreferencePane, null),
-                (0, _laconaPhrase.createElement)(_laconaPhraseSystem.MountedVolume, null),
-                (0, _laconaPhrase.createElement)(_laconaPhraseUrl.URL, { splitOn: /\s|,/, id: 'url' }),
-                (0, _laconaPhrase.createElement)(_laconaPhraseFile.File, { id: 'path' })
-              )
-            )
-          ),
-          (0, _laconaPhrase.createElement)(
-            'sequence',
-            null,
-            (0, _laconaPhrase.createElement)('literal', { text: 'open ', category: 'action', id: 'verb', value: 'openin' }),
-            (0, _laconaPhrase.createElement)(
-              'repeat',
-              { unique: true, id: 'items', separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1, category: 'conjunction' }) },
+                'repeat',
+                { id: 'items', separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1, category: 'conjunction' }), ellipsis: true },
+                (0, _laconaPhrase.createElement)(
+                  'choice',
+                  null,
+                  (0, _laconaPhrase.createElement)(_laconaPhraseSystem.Application, null),
+                  (0, _laconaPhrase.createElement)(_laconaPhraseSystem.PreferencePane, null),
+                  (0, _laconaPhrase.createElement)(_laconaPhraseSystem.MountedVolume, null),
+                  (0, _laconaPhrase.createElement)(_laconaPhraseUrl.URL, { splitOn: /\s|,/, id: 'url' }),
+                  (0, _laconaPhrase.createElement)(_laconaPhraseFile.File, { id: 'path' })
+                )
+              ),
+              (0, _laconaPhrase.createElement)('list', { items: [' in ', ' using ', ' with '], limit: 1, category: 'conjunction', id: 'openin', value: true }),
               (0, _laconaPhrase.createElement)(
-                'choice',
-                null,
-                (0, _laconaPhrase.createElement)(_laconaPhraseUrl.URL, { splitOn: /\s|,/, id: 'url' }),
-                (0, _laconaPhrase.createElement)(_laconaPhraseFile.File, { id: 'path' })
+                'repeat',
+                { unique: true, id: 'apps', separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1, category: 'conjunction' }) },
+                (0, _laconaPhrase.createElement)(_laconaPhraseSystem.Application, null)
               )
-            ),
-            (0, _laconaPhrase.createElement)('list', { items: [' in ', ' using ', ' with '], limit: 1, category: 'conjunction' }),
-            (0, _laconaPhrase.createElement)(
-              'repeat',
-              { unique: true, id: 'apps', separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1, category: 'conjunction' }) },
-              (0, _laconaPhrase.createElement)(_laconaPhraseSystem.Application, null)
             )
           ),
           (0, _laconaPhrase.createElement)(
@@ -2557,7 +2588,7 @@ exports.Open = Open;
 var extensions = [Open];
 exports.extensions = extensions;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-api":1,"lacona-command":51,"lacona-phrase":18,"lacona-phrase-file":73,"lacona-phrase-system":92,"lacona-phrase-url":96}],18:[function(require,module,exports){
+},{"lacona-api":1,"lacona-command":51,"lacona-phrase":18,"lacona-phrase-file":71,"lacona-phrase-system":90,"lacona-phrase-url":94}],18:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
 },{"../package":20,"dup":2,"inherits":19}],19:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
@@ -2638,23 +2669,22 @@ var Applications = (function (_Source) {
   _createClass(Applications, [{
     key: 'onCreate',
     value: function onCreate() {
-      this.onActivate();
-    }
-  }, {
-    key: 'onActivate',
-    value: function onActivate() {
       var _this = this;
 
-      (0, _laconaApi.fetchApplications)(function (err, apps) {
-        if (err) {
-          console.error(err);
-        } else {
-          var objs = _lodash2['default'].map(apps, function (app) {
-            return new AppObject(app);
-          });
-          _this.setData(objs);
-        }
+      this.query = (0, _laconaApi.fetchApplications)().on('data', function (data) {
+        _this.setData(_lodash2['default'].map(data, function (item) {
+          return new AppObject(item);
+        }));
+      }).on('error', function (err) {
+        console.error(err);
+        _this.setData([]);
       });
+    }
+  }, {
+    key: 'onDestroy',
+    value: function onDestroy() {
+      this.query.cancel();
+      delete this.query;
     }
   }]);
 
@@ -2688,7 +2718,7 @@ var App = (function (_Phrase) {
       return (0, _laconaPhrase.createElement)(
         'label',
         { text: 'application' },
-        (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: apps, limit: 10 })
+        (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: apps, limit: 10, score: 1 })
       );
     }
   }], [{
@@ -2702,7 +2732,7 @@ var App = (function (_Phrase) {
 
 exports.App = App;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-api":1,"lacona-phrase":36,"lacona-phrase-system":92}],22:[function(require,module,exports){
+},{"lacona-api":1,"lacona-phrase":36,"lacona-phrase-system":90}],22:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -2744,20 +2774,20 @@ var Bookmarks = (function (_Source) {
   _createClass(Bookmarks, [{
     key: 'onCreate',
     value: function onCreate() {
-      this.onActivate();
-    }
-  }, {
-    key: 'onActivate',
-    value: function onActivate() {
       var _this = this;
 
-      (0, _laconaApi.fetchBookmarks)(function (err, data) {
-        if (err) {
-          console.error(err);
-        } else {
-          _this.setData(data);
-        }
+      this.query = (0, _laconaApi.fetchBookmarks)().on('data', function (data) {
+        _this.setData(data);
+      }).on('error', function (err) {
+        console.error(err);
+        _this.setData([]);
       });
+    }
+  }, {
+    key: 'onDestroy',
+    value: function onDestroy() {
+      this.query.cancel();
+      delete this.query;
     }
   }]);
 
@@ -2801,7 +2831,7 @@ var Bookmark = (function (_Phrase) {
 })(_laconaPhrase.Phrase);
 
 exports.Bookmark = Bookmark;
-},{"lacona-api":1,"lacona-phrase":36,"lacona-phrase-url":96}],23:[function(require,module,exports){
+},{"lacona-api":1,"lacona-phrase":36,"lacona-phrase-url":94}],23:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 
@@ -3509,7 +3539,7 @@ var ContactDate = (function (_Phrase2) {
 
 exports.ContactDate = ContactDate;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./constant-maps":24,"./contact-sources":25,"lacona-phrase":36,"lacona-phrase-datetime":60,"lacona-phrase-email":69,"lacona-phrase-phone-number":84}],27:[function(require,module,exports){
+},{"./constant-maps":24,"./contact-sources":25,"lacona-phrase":36,"lacona-phrase-datetime":59,"lacona-phrase-email":67,"lacona-phrase-phone-number":82}],27:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 
@@ -3598,7 +3628,7 @@ var Holiday = (function (_Phrase) {
 
 exports.Holiday = Holiday;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-api":1,"lacona-phrase":36,"lacona-phrase-datetime":60}],28:[function(require,module,exports){
+},{"lacona-api":1,"lacona-phrase":36,"lacona-phrase-datetime":59}],28:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 'use strict';
@@ -3641,28 +3671,55 @@ var Files = (function (_Source) {
   }
 
   _createClass(Files, [{
-    key: 'fetch',
-    value: function fetch(input) {
+    key: 'onCreate',
+    value: function onCreate() {
       var _this = this;
 
-      (0, _laconaApi.searchFiles)(input, function (err, files) {
-        if (err) {
-          console.error(err);
-        } else {
-          if (!_lodash2['default'].isEqual(files, _this.data)) {
-            _this.setData(files);
-          }
-        }
+      this.query = (0, _laconaApi.searchFiles)({ query: this.props.query }).on('data', function (data) {
+        _this.setData(data);
+      }).on('error', function (err) {
+        console.log(err);
+        _this.setData([]);
       });
     }
-  }], [{
-    key: 'preventSharing',
-    value: true,
-    enumerable: true
+  }, {
+    key: 'onDestroy',
+    value: function onDestroy() {
+      this.query.cancel();
+      delete this.query;
+    }
   }]);
 
   return Files;
 })(_laconaPhrase.Source);
+
+function observe(input) {
+  if (input != null) {
+    return (0, _laconaPhrase.createElement)(Files, { query: input.toLowerCase() });
+  }
+}
+
+function describeFiles(data) {
+  var items = _lodash2['default'].chain(data).filter(function (_ref) {
+    var contentType = _ref.contentType;
+    return contentType !== 'public.folder';
+  }).map(function (_ref2) {
+    var path = _ref2.path;
+    return { text: (0, _path.basename)(path), value: path };
+  }).value();
+  return (0, _laconaPhrase.createElement)('list', { items: items });
+}
+
+function describeFolders(data) {
+  var items = _lodash2['default'].chain(data).filter(function (_ref3) {
+    var contentType = _ref3.contentType;
+    return contentType === 'public.folder';
+  }).map(function (_ref4) {
+    var path = _ref4.path;
+    return { text: (0, _path.basename)(path), value: path };
+  }).value();
+  return (0, _laconaPhrase.createElement)('list', { items: items });
+}
 
 var File = (function (_Phrase) {
   _inherits(File, _Phrase);
@@ -3674,35 +3731,20 @@ var File = (function (_Phrase) {
   }
 
   _createClass(File, [{
-    key: 'observe',
-    value: function observe() {
-      return (0, _laconaPhrase.createElement)(Files, null);
-    }
-  }, {
     key: 'describe',
     value: function describe() {
-      var files = _lodash2['default'].map(this.source.data, function (_ref) {
-        var path = _ref.path;
-
-        return (0, _laconaPhrase.createElement)(
-          'sequence',
-          { value: path },
-          (0, _laconaPhrase.createElement)('literal', { decorate: true, allowInput: false, text: (0, _path.dirname)(path) + '/' }),
-          (0, _laconaPhrase.createElement)('literal', { text: (0, _path.basename)(path) })
-        );
-      });
-
       return (0, _laconaPhrase.createElement)(
-        'label',
-        { text: 'file' },
+        'choice',
+        null,
         (0, _laconaPhrase.createElement)(
-          'tap',
-          { 'function': this.source.fetch.bind(this.source) },
-          (0, _laconaPhrase.createElement)(
-            'choice',
-            null,
-            files
-          )
+          'label',
+          { text: 'folder' },
+          (0, _laconaPhrase.createElement)('dynamic', { observe: observe, describe: describeFolders, greedy: true })
+        ),
+        (0, _laconaPhrase.createElement)(
+          'label',
+          { text: 'file' },
+          (0, _laconaPhrase.createElement)('dynamic', { observe: observe, describe: describeFiles, greedy: true })
         )
       );
     }
@@ -3717,7 +3759,7 @@ var File = (function (_Phrase) {
 
 exports.File = File;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-api":1,"lacona-phrase":36,"lacona-phrase-file":73,"path":300}],29:[function(require,module,exports){
+},{"lacona-api":1,"lacona-phrase":36,"lacona-phrase-file":71,"path":298}],29:[function(require,module,exports){
 
 // export {Applescript} from './applescript'
 // export {default as Spotlight} from './spotlight'
@@ -3756,7 +3798,7 @@ var _command = require('./command');
 
 var _volume = require('./volume');
 
-var extensions = [_app.App, _bookmark.Bookmark, /*BrowserTab,*/_contact.ContactDate, _contact.ContactEmail, _contact.ContactPhoneNumber, _file.File, _event.Holiday, /*OpenWindow, Path,*/_me.PersonalDate, _preferencePane.Pane, _relationship.RelationshipDate, _relationship.RelationshipEmail, _relationship.RelationshipPhoneNumber, _runningApp.RunningApp, _command.SystemCommand, _volume.Volume];
+var extensions = [_app.App, _bookmark.Bookmark, /*BrowserTab,*/_contact.ContactDate, _contact.ContactEmail, _contact.ContactPhoneNumber, _file.File, /* Holiday, OpenWindow,*/_path.Path, _me.PersonalDate, _preferencePane.Pane, _relationship.RelationshipDate, _relationship.RelationshipEmail, _relationship.RelationshipPhoneNumber, _runningApp.RunningApp, _command.SystemCommand, _volume.Volume];
 
 exports.extensions = extensions;
 // export default {
@@ -3866,7 +3908,7 @@ var PersonalDate = (function (_Phrase) {
 
 exports.PersonalDate = PersonalDate;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./constant-maps":24,"./contact-sources":25,"lacona-phrase":36,"lacona-phrase-datetime":60,"lacona-phrase-email":69,"lacona-phrase-phone-number":84}],31:[function(require,module,exports){
+},{"./constant-maps":24,"./contact-sources":25,"lacona-phrase":36,"lacona-phrase-datetime":59,"lacona-phrase-email":67,"lacona-phrase-phone-number":82}],31:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 'use strict';
@@ -3877,7 +3919,7 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x2, _x3, _x4) { var _again = true; _function: while (_again) { var object = _x2, property = _x3, receiver = _x4; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x2 = parent; _x3 = property; _x4 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -3904,26 +3946,21 @@ var Directory = (function (_Source) {
     _classCallCheck(this, Directory);
 
     _get(Object.getPrototypeOf(Directory.prototype), 'constructor', this).apply(this, arguments);
-
-    this.data = [];
   }
 
   _createClass(Directory, [{
     key: 'onCreate',
     value: function onCreate() {
-      this.onActivate();
-    }
-  }, {
-    key: 'onActivate',
-    value: function onActivate() {
       var _this = this;
 
-      (0, _laconaApi.fetchDirectoryContents)({ path: this.props.path }, function (err, contents) {
-        if (err) {
-          console.error(err);
-        } else {
-          _this.setData(contents);
-        }
+      (0, _laconaApi.fetchDirectoryContents)({ path: this.props.path }, function (err, files) {
+        var absFiles = _lodash2['default'].map(files, function (_ref) {
+          var file = _ref.file;
+          var isDir = _ref.isDir;
+
+          return (0, _path.join)(_this.props.path, file) + (isDir ? '/' : '');
+        });
+        _this.setData([_this.props.path].concat(absFiles));
       });
     }
   }]);
@@ -3931,114 +3968,20 @@ var Directory = (function (_Source) {
   return Directory;
 })(_laconaPhrase.Source);
 
-function processChildren(children) {
-  return _lodash2['default'].map(children, function (child) {
-    if (_lodash2['default'].isString(child)) {
-      return { file: child, isDir: false };
-    } else {
-      return { file: child.name, isDir: true, children: child.children };
-    }
-  });
+function observe(input) {
+  var path = _lodash2['default'].endsWith(input, '/') ? input : (0, _path.dirname)(input);
+  return (0, _laconaPhrase.createElement)(Directory, { path: path });
 }
 
-var TrueFile = (function (_Phrase) {
-  _inherits(TrueFile, _Phrase);
+function _describe(data) {
+  var items = _lodash2['default'].map(data, function (file) {
+    return { text: file, value: file };
+  });
+  return (0, _laconaPhrase.createElement)('list', { items: items });
+}
 
-  function TrueFile() {
-    _classCallCheck(this, TrueFile);
-
-    _get(Object.getPrototypeOf(TrueFile.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(TrueFile, [{
-    key: 'observe',
-    value: function observe() {
-      return (0, _laconaPhrase.createElement)(Directory, { path: this.props.directory });
-    }
-  }, {
-    key: 'getValue',
-    value: function getValue(result) {
-      if (!result) return;
-
-      return '' + (result.prefix || '') + (result.suffix || '');
-      // if (result && result.dir) {
-      //   return result.dir.prefix + result.dir.suffix
-      // } else if (result && result.file) {
-      //   return result.file
-      // }
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      var _this2 = this;
-
-      var dirElements = _lodash2['default'].chain(this.source.data).map(function (_ref) {
-        var isDir = _ref.isDir;
-        var file = _ref.file;
-
-        if (!isDir) return;
-        var val = file + '/';
-        var newDir = (0, _path.resolve)(_this2.props.directory, file);
-
-        return (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          (0, _laconaPhrase.createElement)('literal', { text: val, value: val, id: 'prefix' }),
-          (0, _laconaPhrase.createElement)(TrueFile, { directory: newDir + '/', id: 'suffix' })
-        );
-      }).filter().value();
-
-      var fileItems = _lodash2['default'].chain(this.source.data).map(function (_ref2) {
-        var isDir = _ref2.isDir;
-        var file = _ref2.file;
-        return isDir ? null : { text: file, value: { suffix: file } };
-      }).filter().value();
-
-      return (0, _laconaPhrase.createElement)(
-        'map',
-        { 'function': this.getValue.bind(this) },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          null,
-          (0, _laconaPhrase.createElement)(
-            'label',
-            { text: 'directory', suppressEmpty: false },
-            (0, _laconaPhrase.createElement)(
-              'choice',
-              null,
-              (0, _laconaPhrase.createElement)('literal', { text: '', value: { prefix: '', suffix: '' } }),
-              dirElements
-            )
-          ),
-          fileItems.length > 0 ? (0, _laconaPhrase.createElement)(
-            'label',
-            { text: 'file', suppressEmpty: false },
-            (0, _laconaPhrase.createElement)('list', { items: fileItems })
-          ) : null
-        )
-      );
-    }
-  }]);
-
-  return TrueFile;
-})(_laconaPhrase.Phrase);
-
-var UserHome = (function (_Source2) {
-  _inherits(UserHome, _Source2);
-
-  function UserHome() {
-    _classCallCheck(this, UserHome);
-
-    _get(Object.getPrototypeOf(UserHome.prototype), 'constructor', this).apply(this, arguments);
-
-    this.data = (0, _laconaApi.userHome)();
-  }
-
-  return UserHome;
-})(_laconaPhrase.Source);
-
-var Path = (function (_Phrase2) {
-  _inherits(Path, _Phrase2);
+var Path = (function (_Phrase) {
+  _inherits(Path, _Phrase);
 
   function Path() {
     _classCallCheck(this, Path);
@@ -4046,43 +3989,140 @@ var Path = (function (_Phrase2) {
     _get(Object.getPrototypeOf(Path.prototype), 'constructor', this).apply(this, arguments);
   }
 
+  // class Directory extends Source {
+  //   data = []
+
+  //   onCreate () {
+  //     this.onActivate()
+  //   }
+
+  //   onActivate () {
+  //     fetchDirectoryContents({path: this.props.path}, (err, contents) => {
+  //       if (err) {
+  //         console.error(err)
+  //       } else {
+  //         this.setData(contents)
+  //       }
+  //     })
+  //   }
+  // }
+
+  // function processChildren (children) {
+  //   return _.map(children, child => {
+  //     if (_.isString(child)) {
+  //       return {file: child, isDir: false}
+  //     } else {
+  //       return {file: child.name, isDir: true, children: child.children}
+  //     }
+  //   })
+  // }
+
+  // class TrueFile extends Phrase {
+  //   observe () {
+  //     return <Directory path={this.props.directory} />
+  //   }
+
+  //   getValue (result) {
+  //     if (!result) return
+
+  //     return `${result.prefix || ''}${result.suffix || ''}`
+  //     // if (result && result.dir) {
+  //     //   return result.dir.prefix + result.dir.suffix
+  //     // } else if (result && result.file) {
+  //     //   return result.file
+  //     // }
+  //   }
+
+  //   describe () {
+  //     const dirElements = _.chain(this.source.data)
+  //       .map(({isDir, file}) => {
+  //         if (!isDir) return
+  //         const val = `${file}/`
+  //         const newDir = resolve(this.props.directory, file)
+
+  //         return (
+  //           <sequence>
+  //             <literal text={val} value={val} id='prefix' />
+  //             <TrueFile directory={`${newDir}/`} id='suffix'/>
+  //           </sequence>
+  //         )
+  //       })
+  //       .filter()
+  //       .value()
+
+  //     const fileItems = _.chain(this.source.data)
+  //       .map(({isDir, file}) => (
+  //         isDir ? null : {text: file, value: {suffix: file}}
+  //       ))
+  //       .filter()
+  //       .value()
+
+  //     return (
+  //       <map function={this.getValue.bind(this)}>
+  //         <choice>
+  //           <label text='directory' suppressEmpty={false}>
+  //             <choice>
+  //               <literal text='' value={{prefix: '', suffix: ''}} />
+  //               {dirElements}
+  //             </choice>
+  //           </label>
+  //           {fileItems.length > 0 ?
+  //             <label text='file' suppressEmpty={false}>
+  //               <list items={fileItems} />
+  //             </label> :
+  //             null
+  //           }
+  //         </choice>
+  //       </map>
+  //     )
+  //   }
+  // }
+
+  // class UserHome extends Source {
+  //   data = userHome()
+  // }
+
+  // export class Path extends Phrase {
+  //   static extends = [BaseFile]
+
+  //   observe () {
+  //     return <UserHome />
+  //   }
+
+  //   getValue (result) {
+  //     if (!result) return
+  //     return `${result.prefix || ''}${result.suffix || ''}`
+  //   }
+
+  //   describe () {
+  //     return (
+  //       <label text='path'>
+  //         <map function={this.getValue.bind(this)}>
+  //           <choice>
+  //             <sequence>
+  //               <literal text='/' value='/' id='prefix' />
+  //               <TrueFile directory='/' id='suffix' />
+  //             </sequence>
+  //             <sequence>
+  //               <literal text='~/' value={`${this.source.data}/`} id='prefix' />
+  //               <TrueFile directory={`${this.source.data}/`} id='suffix' />
+  //             </sequence>
+  //           </choice>
+  //         </map>
+  //       </label>
+  //     )
+  //   }
+  // }
+
   _createClass(Path, [{
-    key: 'observe',
-    value: function observe() {
-      return (0, _laconaPhrase.createElement)(UserHome, null);
-    }
-  }, {
-    key: 'getValue',
-    value: function getValue(result) {
-      if (!result) return;
-      return '' + (result.prefix || '') + (result.suffix || '');
-    }
-  }, {
     key: 'describe',
     value: function describe() {
+      var data = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+
       return (0, _laconaPhrase.createElement)(
         'label',
         { text: 'path' },
-        (0, _laconaPhrase.createElement)(
-          'map',
-          { 'function': this.getValue.bind(this) },
-          (0, _laconaPhrase.createElement)(
-            'choice',
-            null,
-            (0, _laconaPhrase.createElement)(
-              'sequence',
-              null,
-              (0, _laconaPhrase.createElement)('literal', { text: '/', value: '/', id: 'prefix' }),
-              (0, _laconaPhrase.createElement)(TrueFile, { directory: '/', id: 'suffix' })
-            ),
-            (0, _laconaPhrase.createElement)(
-              'sequence',
-              null,
-              (0, _laconaPhrase.createElement)('literal', { text: '~/', value: this.source.data + '/', id: 'prefix' }),
-              (0, _laconaPhrase.createElement)(TrueFile, { directory: this.source.data + '/', id: 'suffix' })
-            )
-          )
-        )
+        (0, _laconaPhrase.createElement)('dynamic', { observe: observe, describe: _describe, greedy: true, limit: 1 })
       );
     }
   }], [{
@@ -4096,7 +4136,7 @@ var Path = (function (_Phrase2) {
 
 exports.Path = Path;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-api":1,"lacona-phrase":36,"lacona-phrase-file":73,"path":300}],32:[function(require,module,exports){
+},{"lacona-api":1,"lacona-phrase":36,"lacona-phrase-file":71,"path":298}],32:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 'use strict';
@@ -4161,23 +4201,22 @@ var Panes = (function (_Source) {
   _createClass(Panes, [{
     key: 'onCreate',
     value: function onCreate() {
-      this.onActivate();
-    }
-  }, {
-    key: 'onActivate',
-    value: function onActivate() {
       var _this = this;
 
-      (0, _laconaApi.fetchPreferencePanes)(function (err, panes) {
-        if (err) {
-          console.error(err);
-        } else {
-          var trueData = _lodash2['default'].map(panes, function (pane) {
-            return new PaneObject(pane);
-          });
-          _this.setData(trueData);
-        }
+      this.query = (0, _laconaApi.fetchPreferencePanes)().on('data', function (data) {
+        _this.setData(_lodash2['default'].map(data, function (item) {
+          return new PaneObject(item);
+        }));
+      }).on('error', function (err) {
+        console.error(err);
+        _this.setData([]);
       });
+    }
+  }, {
+    key: 'onDestroy',
+    value: function onDestroy() {
+      this.query.cancel();
+      delete this.query;
     }
   }]);
 
@@ -4208,7 +4247,7 @@ var Pane = (function (_Phrase) {
       return (0, _laconaPhrase.createElement)(
         'label',
         { text: 'preference pane' },
-        (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: panes, limit: 10 })
+        (0, _laconaPhrase.createElement)('list', { fuzzy: true, items: panes, limit: 10, score: 1 })
       );
     }
   }], [{
@@ -4222,7 +4261,7 @@ var Pane = (function (_Phrase) {
 
 exports.Pane = Pane;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-api":1,"lacona-phrase":36,"lacona-phrase-system":92}],33:[function(require,module,exports){
+},{"lacona-api":1,"lacona-phrase":36,"lacona-phrase-system":90}],33:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 
@@ -4474,7 +4513,7 @@ var RelationshipDate = (function (_Phrase2) {
 
 exports.RelationshipDate = RelationshipDate;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./constant-maps":24,"./contact-sources":25,"lacona-phrase":36,"lacona-phrase-datetime":60,"lacona-phrase-email":69,"lacona-phrase-phone-number":84}],34:[function(require,module,exports){
+},{"./constant-maps":24,"./contact-sources":25,"lacona-phrase":36,"lacona-phrase-datetime":59,"lacona-phrase-email":67,"lacona-phrase-phone-number":82}],34:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 'use strict';
@@ -4610,7 +4649,7 @@ exports.RunningApp = RunningApp;
 
 RunningApp['extends'] = [_laconaPhraseSystem.RunningApplication];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-api":1,"lacona-phrase":36,"lacona-phrase-system":92}],35:[function(require,module,exports){
+},{"lacona-api":1,"lacona-phrase":36,"lacona-phrase-system":90}],35:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 'use strict';
@@ -4766,7 +4805,7 @@ var Volume = (function (_Phrase) {
 
 exports.Volume = Volume;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-api":1,"lacona-phrase":36,"lacona-phrase-system":92}],36:[function(require,module,exports){
+},{"lacona-api":1,"lacona-phrase":36,"lacona-phrase-system":90}],36:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
 },{"../package":38,"dup":2,"inherits":37}],37:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
@@ -4875,7 +4914,7 @@ var SearchEngine = (function (_Phrase) {
         { unique: true, separator: (0, _laconaPhrase.createElement)('list', { items: [' and ', ', and ', ', '], limit: 1, category: 'conjunction' }) },
         (0, _laconaPhrase.createElement)(
           'label',
-          { text: 'search engine', suppressEmpty: false },
+          { text: 'search engine', suppressEmpty: false, suppress: this.props.suppress },
           (0, _laconaPhrase.createElement)('list', { items: engineItems, limit: 10, fuzzy: true })
         )
       );
@@ -4961,7 +5000,7 @@ var SearchInternet = (function (_Phrase3) {
             null,
             (0, _laconaPhrase.createElement)('literal', { text: 'search ', category: 'action' }),
             (0, _laconaPhrase.createElement)(SearchEngine, { id: 'engines' }),
-            (0, _laconaPhrase.createElement)('literal', { text: ' ', score: 1000 }),
+            (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
             (0, _laconaPhrase.createElement)('literal', { text: 'for ', decorate: true }),
             (0, _laconaPhrase.createElement)(Query, { id: 'query' })
           ),
@@ -4971,7 +5010,7 @@ var SearchInternet = (function (_Phrase3) {
             (0, _laconaPhrase.createElement)('literal', { text: 'search ', category: 'action' }),
             (0, _laconaPhrase.createElement)('literal', { text: 'for ', category: 'conjunction', optional: true, limited: true, prefered: true }),
             (0, _laconaPhrase.createElement)(Query, { id: 'query' }),
-            (0, _laconaPhrase.createElement)('list', { items: [' on ', ' with ', ' using '], category: 'conjunction', limit: 1 }),
+            (0, _laconaPhrase.createElement)('list', { items: [' on ', ' with ', ' using '], category: 'conjunction', limit: 1, score: 100 }),
             (0, _laconaPhrase.createElement)(SearchEngine, { id: 'engines' })
           )
         )
@@ -4990,7 +5029,7 @@ exports.SearchInternet = SearchInternet;
 var extensions = [SearchInternet];
 exports.extensions = extensions;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-api":1,"lacona-command":51,"lacona-phrase":40,"lacona-phrase-string":88}],40:[function(require,module,exports){
+},{"lacona-api":1,"lacona-command":51,"lacona-phrase":40,"lacona-phrase-string":86}],40:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
 },{"../package":42,"dup":2,"inherits":41}],41:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
@@ -5483,7 +5522,7 @@ exports.extensions = extensions;
 //   }]
 // }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-api":1,"lacona-command":51,"lacona-phrase":44,"lacona-phrase-datetime":60,"lacona-phrase-system":92}],44:[function(require,module,exports){
+},{"lacona-api":1,"lacona-command":51,"lacona-phrase":44,"lacona-phrase-datetime":59,"lacona-phrase-system":90}],44:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
 },{"../package":46,"dup":2,"inherits":45}],45:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
@@ -5704,7 +5743,7 @@ exports.Translate = Translate;
 var extensions = [Translate];
 exports.extensions = extensions;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-api":1,"lacona-command":51,"lacona-phrase":48,"lacona-phrase-string":88,"lacona-phrase-url":96}],48:[function(require,module,exports){
+},{"lacona-api":1,"lacona-command":51,"lacona-phrase":48,"lacona-phrase-string":86,"lacona-phrase-url":94}],48:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
 },{"../package":50,"dup":2,"inherits":49}],49:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
@@ -5901,113 +5940,13 @@ exports.BooleanSettingCommand = BooleanSettingCommand;
 var extensions = [BooleanSettingCommand];
 exports.extensions = extensions;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-phrase":52,"lacona-phrase-datetime":60}],52:[function(require,module,exports){
+},{"lacona-phrase":52,"lacona-phrase-datetime":59}],52:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
 },{"../package":54,"dup":2,"inherits":53}],53:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
 },{"dup":3}],54:[function(require,module,exports){
 arguments[4][8][0].apply(exports,arguments)
 },{"dup":8}],55:[function(require,module,exports){
-(function (global){
-/** @jsx createElement */
-
-'use strict';
-
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _moment = (typeof window !== "undefined" ? window['moment'] : typeof global !== "undefined" ? global['moment'] : null);
-
-var _moment2 = _interopRequireDefault(_moment);
-
-var _laconaPhrase = require('lacona-phrase');
-
-var _helpers = require('./helpers');
-
-var _date = require('./date');
-
-var _duration = require('./duration');
-
-var DateRange = (function (_Phrase) {
-  _inherits(DateRange, _Phrase);
-
-  function DateRange() {
-    _classCallCheck(this, DateRange);
-
-    _get(Object.getPrototypeOf(DateRange.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(DateRange, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      if (result.duration) {
-        return {
-          start: result.start,
-          end: (0, _helpers.relativeDate)(result.duration, result.start)
-        };
-      } else {
-        return result;
-      }
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'map',
-        { 'function': this.getValue.bind(this) },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          null,
-          (0, _laconaPhrase.createElement)(
-            'sequence',
-            null,
-            this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'from ', optional: true, limited: true }) : null,
-            this.props._allDay ? (0, _laconaPhrase.createElement)('literal', { text: 'all day ', optional: true, limited: true }) : null,
-            (0, _laconaPhrase.createElement)(_date.Date, { id: 'start' }),
-            (0, _laconaPhrase.createElement)('list', { items: [' to ', ' - ', '-'], limit: 1 }),
-            this.props._allDay ? (0, _laconaPhrase.createElement)('literal', { text: 'all day ', optional: true, limited: true }) : null,
-            (0, _laconaPhrase.createElement)(_date.Date, { id: 'end' })
-          ),
-          this.props._duration ? (0, _laconaPhrase.createElement)(
-            'sequence',
-            null,
-            this.props._allDay ? (0, _laconaPhrase.createElement)('literal', { text: 'all day ', optional: true, limited: true }) : null,
-            (0, _laconaPhrase.createElement)(_date.Date, { id: 'start', prepositions: this.props.prepositions }),
-            (0, _laconaPhrase.createElement)('literal', { text: ' for ' }),
-            (0, _laconaPhrase.createElement)(_duration.DateDuration, { id: 'duration' })
-          ) : null
-        )
-      );
-    }
-  }]);
-
-  return DateRange;
-})(_laconaPhrase.Phrase);
-
-exports.DateRange = DateRange;
-
-DateRange.defaultProps = {
-  prepositions: false,
-  _duration: true,
-  _allDay: false
-};
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./date":56,"./duration":58,"./helpers":59,"babel-runtime/helpers/class-call-check":611,"babel-runtime/helpers/create-class":612,"babel-runtime/helpers/get":614,"babel-runtime/helpers/inherits":615,"babel-runtime/helpers/interop-require-default":616,"lacona-phrase":66}],56:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 'use strict';
@@ -6111,18 +6050,45 @@ var Date = (function (_Phrase2) {
 
   _createClass(Date, [{
     key: 'describe',
+    value: function describe() {
+      return this.props.nullify ? null : (0, _laconaPhrase.createElement)(
+        'map',
+        { 'function': function (result) {
+            return result.date;
+          } },
+        (0, _laconaPhrase.createElement)(InternalDate, this.props)
+      );
+    }
+  }]);
 
-    // validate (result) {
-    //   if (!this.props.past && moment({}).isAfter(result)) {
-    //     return false
-    //   }
-    //   if (!this.props.future && moment({}).isBefore(result)) {
-    //     return false
-    //   }
+  return Date;
+})(_laconaPhrase.Phrase);
 
-    //   return true
-    // }
+exports.Date = Date;
 
+var InternalDate = (function (_Phrase3) {
+  _inherits(InternalDate, _Phrase3);
+
+  function InternalDate() {
+    _classCallCheck(this, InternalDate);
+
+    _get(Object.getPrototypeOf(InternalDate.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(InternalDate, [{
+    key: 'validate',
+    value: function validate(result) {
+      if (!this.props.past && (0, _moment2['default'])(result.date.date).isAfter(result)) {
+        return false;
+      }
+      if (!this.props.future && (0, _moment2['default'])(result.date.date).isBefore(result)) {
+        return false;
+      }
+
+      return true;
+    }
+  }, {
+    key: 'describe',
     value: function describe() {
       if (this.props.nullify) return;
 
@@ -6161,12 +6127,12 @@ var Date = (function (_Phrase2) {
     }
   }]);
 
-  return Date;
+  return InternalDate;
 })(_laconaPhrase.Phrase);
 
-exports.Date = Date;
+exports.InternalDate = InternalDate;
 
-Date.defaultProps = {
+InternalDate.defaultProps = {
   recurse: true,
   prepositions: false,
   nullify: false,
@@ -6254,8 +6220,8 @@ Date.defaultProps = {
 //   }
 // }
 
-var DayWithYear = (function (_Phrase3) {
-  _inherits(DayWithYear, _Phrase3);
+var DayWithYear = (function (_Phrase4) {
+  _inherits(DayWithYear, _Phrase4);
 
   function DayWithYear() {
     _classCallCheck(this, DayWithYear);
@@ -6324,8 +6290,8 @@ var DayWithYear = (function (_Phrase3) {
   return DayWithYear;
 })(_laconaPhrase.Phrase);
 
-var ExtraDateDuration = (function (_Phrase4) {
-  _inherits(ExtraDateDuration, _Phrase4);
+var ExtraDateDuration = (function (_Phrase5) {
+  _inherits(ExtraDateDuration, _Phrase5);
 
   function ExtraDateDuration() {
     _classCallCheck(this, ExtraDateDuration);
@@ -6369,8 +6335,8 @@ var ExtraDateDuration = (function (_Phrase4) {
   return ExtraDateDuration;
 })(_laconaPhrase.Phrase);
 
-var RecursiveDay = (function (_Phrase5) {
-  _inherits(RecursiveDay, _Phrase5);
+var RecursiveDay = (function (_Phrase6) {
+  _inherits(RecursiveDay, _Phrase6);
 
   function RecursiveDay() {
     _classCallCheck(this, RecursiveDay);
@@ -6423,8 +6389,8 @@ var RecursiveDay = (function (_Phrase5) {
   return RecursiveDay;
 })(_laconaPhrase.Phrase);
 
-var RecursiveDate = (function (_Phrase6) {
-  _inherits(RecursiveDate, _Phrase6);
+var RecursiveDate = (function (_Phrase7) {
+  _inherits(RecursiveDate, _Phrase7);
 
   function RecursiveDate() {
     _classCallCheck(this, RecursiveDate);
@@ -6464,7 +6430,7 @@ var RecursiveDate = (function (_Phrase6) {
             )
           ),
           (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
-          (0, _laconaPhrase.createElement)(Date, { id: 'date', recurse: false, prepositions: false })
+          (0, _laconaPhrase.createElement)(InternalDate, { id: 'date', recurse: false, prepositions: false })
         )
       );
     }
@@ -6473,8 +6439,8 @@ var RecursiveDate = (function (_Phrase6) {
   return RecursiveDate;
 })(_laconaPhrase.Phrase);
 
-var RelativeNamed = (function (_Phrase7) {
-  _inherits(RelativeNamed, _Phrase7);
+var RelativeNamed = (function (_Phrase8) {
+  _inherits(RelativeNamed, _Phrase8);
 
   function RelativeNamed() {
     _classCallCheck(this, RelativeNamed);
@@ -6519,8 +6485,8 @@ var RelativeNamed = (function (_Phrase7) {
   return RelativeNamed;
 })(_laconaPhrase.Phrase);
 
-var RelativeNumbered = (function (_Phrase8) {
-  _inherits(RelativeNumbered, _Phrase8);
+var RelativeNumbered = (function (_Phrase9) {
+  _inherits(RelativeNumbered, _Phrase9);
 
   function RelativeNumbered() {
     _classCallCheck(this, RelativeNumbered);
@@ -6564,8 +6530,8 @@ var RelativeNumbered = (function (_Phrase8) {
   return RelativeNumbered;
 })(_laconaPhrase.Phrase);
 
-var RelativeAdjacent = (function (_Phrase9) {
-  _inherits(RelativeAdjacent, _Phrase9);
+var RelativeAdjacent = (function (_Phrase10) {
+  _inherits(RelativeAdjacent, _Phrase10);
 
   function RelativeAdjacent() {
     _classCallCheck(this, RelativeAdjacent);
@@ -6613,8 +6579,8 @@ function dateFromRelative(distance, weekday) {
   return (0, _moment2['default'])().day(day).toDate();
 }
 
-var RelativeWeekday = (function (_Phrase10) {
-  _inherits(RelativeWeekday, _Phrase10);
+var RelativeWeekday = (function (_Phrase11) {
+  _inherits(RelativeWeekday, _Phrase11);
 
   function RelativeWeekday() {
     _classCallCheck(this, RelativeWeekday);
@@ -6675,8 +6641,8 @@ function leapYear(year) {
   return year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
 }
 
-var MonthNumber = (function (_Phrase11) {
-  _inherits(MonthNumber, _Phrase11);
+var MonthNumber = (function (_Phrase12) {
+  _inherits(MonthNumber, _Phrase12);
 
   function MonthNumber() {
     _classCallCheck(this, MonthNumber);
@@ -6703,8 +6669,8 @@ var MonthNumber = (function (_Phrase11) {
   return MonthNumber;
 })(_laconaPhrase.Phrase);
 
-var DayNumber = (function (_Phrase12) {
-  _inherits(DayNumber, _Phrase12);
+var DayNumber = (function (_Phrase13) {
+  _inherits(DayNumber, _Phrase13);
 
   function DayNumber() {
     _classCallCheck(this, DayNumber);
@@ -6731,8 +6697,8 @@ var DayNumber = (function (_Phrase12) {
   return DayNumber;
 })(_laconaPhrase.Phrase);
 
-var AbsoluteDay = (function (_Phrase13) {
-  _inherits(AbsoluteDay, _Phrase13);
+var AbsoluteDay = (function (_Phrase14) {
+  _inherits(AbsoluteDay, _Phrase14);
 
   function AbsoluteDay() {
     _classCallCheck(this, AbsoluteDay);
@@ -6779,8 +6745,8 @@ var AbsoluteDay = (function (_Phrase13) {
   return AbsoluteDay;
 })(_laconaPhrase.Phrase);
 
-var AmbiguousAbsoluteDay = (function (_Phrase14) {
-  _inherits(AmbiguousAbsoluteDay, _Phrase14);
+var AmbiguousAbsoluteDay = (function (_Phrase15) {
+  _inherits(AmbiguousAbsoluteDay, _Phrase15);
 
   function AmbiguousAbsoluteDay() {
     _classCallCheck(this, AmbiguousAbsoluteDay);
@@ -6808,8 +6774,8 @@ var AmbiguousAbsoluteDay = (function (_Phrase14) {
   return AmbiguousAbsoluteDay;
 })(_laconaPhrase.Phrase);
 
-var Year = (function (_Phrase15) {
-  _inherits(Year, _Phrase15);
+var Year = (function (_Phrase16) {
+  _inherits(Year, _Phrase16);
 
   function Year() {
     _classCallCheck(this, Year);
@@ -6862,8 +6828,8 @@ var Year = (function (_Phrase15) {
   return Year;
 })(_laconaPhrase.Phrase);
 
-var AmbiguousAbsoluteNamedMonth = (function (_Phrase16) {
-  _inherits(AmbiguousAbsoluteNamedMonth, _Phrase16);
+var AmbiguousAbsoluteNamedMonth = (function (_Phrase17) {
+  _inherits(AmbiguousAbsoluteNamedMonth, _Phrase17);
 
   function AmbiguousAbsoluteNamedMonth() {
     _classCallCheck(this, AmbiguousAbsoluteNamedMonth);
@@ -6913,7 +6879,7 @@ var AmbiguousAbsoluteNamedMonth = (function (_Phrase16) {
   return AmbiguousAbsoluteNamedMonth;
 })(_laconaPhrase.Phrase);
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./duration":58,"./helpers":59,"./month":61,"./time":64,"./weekday":65,"babel-runtime/helpers/class-call-check":611,"babel-runtime/helpers/create-class":612,"babel-runtime/helpers/define-property":613,"babel-runtime/helpers/get":614,"babel-runtime/helpers/inherits":615,"babel-runtime/helpers/interop-require-default":616,"lacona-phrase":66,"lacona-phrase-number":78}],57:[function(require,module,exports){
+},{"./duration":57,"./helpers":58,"./month":60,"./time":62,"./weekday":63,"babel-runtime/helpers/class-call-check":609,"babel-runtime/helpers/create-class":610,"babel-runtime/helpers/define-property":611,"babel-runtime/helpers/get":613,"babel-runtime/helpers/inherits":614,"babel-runtime/helpers/interop-require-default":615,"lacona-phrase":64,"lacona-phrase-number":76}],56:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 'use strict';
@@ -6925,6 +6891,8 @@ var _inherits = require('babel-runtime/helpers/inherits')['default'];
 var _createClass = require('babel-runtime/helpers/create-class')['default'];
 
 var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _extends = require('babel-runtime/helpers/extends')['default'];
 
 var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
 
@@ -6964,8 +6932,42 @@ function timeIsInAMPM(time, ampm) {
   }
 }
 
-var DateTime = (function (_Phrase) {
-  _inherits(DateTime, _Phrase);
+var TrueDate = (function (_Phrase) {
+  _inherits(TrueDate, _Phrase);
+
+  function TrueDate() {
+    _classCallCheck(this, TrueDate);
+
+    _get(Object.getPrototypeOf(TrueDate.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(TrueDate, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)(
+          'choice',
+          { merge: true },
+          (0, _laconaPhrase.createElement)(_date.InternalDate, _extends({}, this.props, { id: undefined })),
+          (0, _laconaPhrase.createElement)(
+            'map',
+            { 'function': function (result) {
+                return { date: result };
+              } },
+            (0, _laconaPhrase.createElement)(_date.Date, _extends({}, this.props, { nullify: true }))
+          )
+        )
+      );
+    }
+  }]);
+
+  return TrueDate;
+})(_laconaPhrase.Phrase);
+
+var DateTime = (function (_Phrase2) {
+  _inherits(DateTime, _Phrase2);
 
   function DateTime() {
     _classCallCheck(this, DateTime);
@@ -6986,6 +6988,310 @@ var DateTime = (function (_Phrase) {
 
       return true;
     }
+  }, {
+    key: 'getValues',
+    value: _regeneratorRuntime.mark(function getValues(result) {
+      var dates, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, date, _arr, _i, i;
+
+      return _regeneratorRuntime.wrap(function getValues$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            dates = undefined;
+
+            if (result.date) {
+              if (result._ambiguousWeek) {
+                dates = _lodash2['default'].map([0, 1, -1], function (weeks) {
+                  return (0, _moment2['default'])(result.date).add(weeks, 'weeks').toDate();
+                });
+              } else if (result._ambiguousCentury) {
+                dates = _lodash2['default'].map([0, 100, -100], function (years) {
+                  return (0, _moment2['default'])(result.date).add(years, 'years').toDate();
+                });
+              } else if (result._ambiguousYear) {
+                dates = _lodash2['default'].map([0, 1, -1], function (years) {
+                  return (0, _moment2['default'])(result.date).add(years, 'years').toDate();
+                });
+              } else {
+                dates = [result.date];
+              }
+            } else {
+              dates = [undefined];
+            }
+
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 5;
+            _iterator = _getIterator(dates);
+
+          case 7:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 37;
+              break;
+            }
+
+            date = _step.value;
+
+            if (!(date && result.time)) {
+              context$2$0.next = 14;
+              break;
+            }
+
+            context$2$0.next = 12;
+            return (0, _helpers.join)(date, result.time);
+
+          case 12:
+            context$2$0.next = 34;
+            break;
+
+          case 14:
+            if (!(result.time && result.relativeDate)) {
+              context$2$0.next = 19;
+              break;
+            }
+
+            context$2$0.next = 17;
+            return (0, _helpers.join)((0, _helpers.relativeDate)(result.relativeDate), result.time);
+
+          case 17:
+            context$2$0.next = 34;
+            break;
+
+          case 19:
+            if (!date) {
+              context$2$0.next = 24;
+              break;
+            }
+
+            context$2$0.next = 22;
+            return (0, _helpers.join)(date, this.props.defaultTime);
+
+          case 22:
+            context$2$0.next = 34;
+            break;
+
+          case 24:
+            if (!result.time) {
+              context$2$0.next = 34;
+              break;
+            }
+
+            _arr = [0, 1, -1];
+            _i = 0;
+
+          case 27:
+            if (!(_i < _arr.length)) {
+              context$2$0.next = 34;
+              break;
+            }
+
+            i = _arr[_i];
+            context$2$0.next = 31;
+            return (0, _helpers.join)((0, _helpers.relativeDate)({ days: i }), result.time);
+
+          case 31:
+            _i++;
+            context$2$0.next = 27;
+            break;
+
+          case 34:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 7;
+            break;
+
+          case 37:
+            context$2$0.next = 43;
+            break;
+
+          case 39:
+            context$2$0.prev = 39;
+            context$2$0.t0 = context$2$0['catch'](5);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t0;
+
+          case 43:
+            context$2$0.prev = 43;
+            context$2$0.prev = 44;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 46:
+            context$2$0.prev = 46;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 49;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 49:
+            return context$2$0.finish(46);
+
+          case 50:
+            return context$2$0.finish(43);
+
+          case 51:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, getValues, this, [[5, 39, 43, 51], [44,, 46, 50]]);
+    })
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return this.props.nullify ? null : (0, _laconaPhrase.createElement)(
+        'map',
+        { iteratorFunction: this.getValues.bind(this), limit: 1 },
+        (0, _laconaPhrase.createElement)(InternalDateTime, _extends({}, this.props, { _allowAmbiguity: false }))
+      );
+    }
+  }]);
+
+  return DateTime;
+})(_laconaPhrase.Phrase);
+
+exports.DateTime = DateTime;
+
+DateTime.defaultProps = {
+  defaultTime: { hour: 8, minute: 0, second: 0 },
+  past: true,
+  future: true,
+  prepositions: false
+};
+
+var InternalDateTime = (function (_Phrase3) {
+  _inherits(InternalDateTime, _Phrase3);
+
+  function InternalDateTime() {
+    _classCallCheck(this, InternalDateTime);
+
+    _get(Object.getPrototypeOf(InternalDateTime.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  /*class DateAndTime extends Phrase {
+    getValue (result) {
+      return join(result.date, result.time)
+    }
+  
+    describe () {
+      return (
+        <map function={this.getValue.bind(this)}>
+          <choice>
+            <sequence>
+              <Time id='time' seconds={this.props.seconds} relative={false} recurse={false} prepositions={this.props.prepositions} />
+              <literal text=' ' />
+              <Date id='date' recurse={false} prepositions />
+            </sequence>
+  
+            <sequence>
+              <Date id='date' recurse={false} prepositions={this.props.prepositions} />
+              <literal text=' ' />
+              <Time id='time' seconds={this.props.seconds} relative={false} recurse={false} prepositions />
+            </sequence>
+          </choice>
+        </map>
+      )
+  
+    }
+  }
+  
+  class DateWithTimeOfDayAndTime extends Phrase {
+    getValue (result) {
+      if (result.ambiguousTime) {
+        const time = coerceAmbiguousTime(result.ambiguousTime, result.impliedTime.range)
+        return join(result.date, time)
+      } else {
+        const time = result.time || {hour: result.impliedTime.default}
+        return join(result.date, time)
+      }
+    }
+  
+    filter (result) {
+      if (result.time && result.impliedTime) {
+        return _.inRange(result.time.hour, ...result.impliedTime.range)
+      } else {
+        return true
+      }
+    }
+  
+    describe () {
+      return (
+        <map function={this.getValue.bind(this)}>
+          <filter function={this.filter.bind(this)}>
+            <choice>
+              <sequence>
+                <choice merge>
+                  <AmbiguousTime id='ambiguousTime' prepositions={this.props.prepositions} seconds={this.props.seconds} />
+                  <Time id='time' seconds={this.props.seconds} relative={false} recurse={false} prepositions={this.props.prepositions} seconds={this.props.seconds} />
+                </choice>
+                <literal text=' ' />
+                <DateWithTimeOfDay merge />
+              </sequence>
+  
+              <sequence>
+                <DateWithTimeOfDay merge />
+                <literal text=' ' />
+                <choice limit={1} merge>
+                  <AmbiguousTime id='ambiguousTime' seconds={this.props.seconds} prepositions seconds={this.props.seconds} />
+                  <Time id='time' seconds={this.props.seconds} relative={false} recurse={false} prepositions seconds={this.props.seconds} />
+                </choice>
+              </sequence>
+            </choice>
+          </filter>
+        </map>
+      )
+    }
+  }
+  
+  class DateAlone extends Phrase {
+    getValue (result) {
+      if (result.impliedTime) {
+        return join(result.date, {hour: result.impliedTime.default, minute: 0, second: 0})
+      } else {
+        return join(result.date, this.props.time)
+      }
+    }
+  
+    describe () {
+      return (
+        <map function={this.getValue.bind(this)}>
+          <choice limit={1}>
+            {this.props._impliedTime ? <Date id='date' prepositions={this.props.prepositions} /> : null}
+            <DateWithTimeOfDay prepositions={this.props.prepositions} />
+          </choice>
+        </map>
+      )
+    }
+  }
+  
+  class TimeAlone extends Phrase {
+    getValue (result) {
+      const date = relativeDate(result.relativeDate)
+      return join(date, result.time)
+    }
+  
+    describe () {
+      return (
+        <map function={this.getValue.bind(this)}>
+          <sequence>
+            <Time id='time' prepositions={this.props.prepositions} seconds={this.props.seconds} />
+            <list id='relativeDate' limit={1} items={[
+              {text:'', value: {}},
+              {text:'', value: {days: 1}},
+              {text:'', value: {days: -1}}
+            ]} />
+          </sequence>
+        </map>
+      )
+    }
+  }
+  */
+
+  _createClass(InternalDateTime, [{
+    key: 'getValue',
 
     /*
      RelativeNamed []
@@ -7014,165 +7320,27 @@ var DateTime = (function (_Phrase) {
         # DATE AND TIME AND TIME OF DAY
     */
 
-  }, {
-    key: 'getValues',
-    value: _regeneratorRuntime.mark(function getValues(result) {
-      var time, dates, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, date, _arr, _i, i;
+    value: function getValue(result) {
+      var time = result.time;
+      if (result.timeOfDay && result.time && result.time._ambiguousAMPM) {
+        time = (0, _helpers.ambiguousTime)(result.time, result.timeOfDay.impliedAMPM);
+      } else if (result.timeOfDay && !result.time) {
+        time = { hour: result.timeOfDay['default'] };
+      }
 
-      return _regeneratorRuntime.wrap(function getValues$(context$2$0) {
-        while (1) switch (context$2$0.prev = context$2$0.next) {
-          case 0:
-            time = result.time;
+      var date = result.date && result.date.date;
+      if (result.relativeDate) {
+        date = (0, _helpers.relativeDate)(result.relativeDate);
+      }
 
-            if (result.timeOfDay && result.time && result.time._ambiguousAMPM) {
-              time = (0, _helpers.ambiguousTime)(result.time, result.timeOfDay.impliedAMPM);
-            } else if (result.timeOfDay && !result.time) {
-              time = { hour: result.timeOfDay['default'] };
-            }
-
-            dates = undefined;
-
-            if (result.date && result.date.date) {
-              if (result.date._ambiguousWeek) {
-                dates = _lodash2['default'].map([0, 1, -1], function (weeks) {
-                  return (0, _moment2['default'])(result.date.date).add(weeks, 'weeks').toDate();
-                });
-              } else if (result.date._ambiguousCentury) {
-                dates = _lodash2['default'].map([0, 100, -100], function (years) {
-                  return (0, _moment2['default'])(result.date.date).add(years, 'years').toDate();
-                });
-              } else if (result.date._ambiguousYear) {
-                dates = _lodash2['default'].map([0, 1, -1], function (years) {
-                  return (0, _moment2['default'])(result.date.date).add(years, 'years').toDate();
-                });
-              } else {
-                dates = [result.date.date];
-              }
-            } else {
-              dates = [undefined];
-            }
-
-            _iteratorNormalCompletion = true;
-            _didIteratorError = false;
-            _iteratorError = undefined;
-            context$2$0.prev = 7;
-            _iterator = _getIterator(dates);
-
-          case 9:
-            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              context$2$0.next = 39;
-              break;
-            }
-
-            date = _step.value;
-
-            if (!(date && time)) {
-              context$2$0.next = 16;
-              break;
-            }
-
-            context$2$0.next = 14;
-            return (0, _helpers.join)(date, time);
-
-          case 14:
-            context$2$0.next = 36;
-            break;
-
-          case 16:
-            if (!date) {
-              context$2$0.next = 21;
-              break;
-            }
-
-            context$2$0.next = 19;
-            return (0, _helpers.join)(date, this.props.defaultTime);
-
-          case 19:
-            context$2$0.next = 36;
-            break;
-
-          case 21:
-            if (!(time && result.impliedDate)) {
-              context$2$0.next = 26;
-              break;
-            }
-
-            context$2$0.next = 24;
-            return (0, _helpers.join)((0, _helpers.relativeDate)(result.impliedDate), time);
-
-          case 24:
-            context$2$0.next = 36;
-            break;
-
-          case 26:
-            if (!time) {
-              context$2$0.next = 36;
-              break;
-            }
-
-            _arr = [0, 1, -1];
-            _i = 0;
-
-          case 29:
-            if (!(_i < _arr.length)) {
-              context$2$0.next = 36;
-              break;
-            }
-
-            i = _arr[_i];
-            context$2$0.next = 33;
-            return (0, _helpers.join)((0, _helpers.relativeDate)({ days: i }), time);
-
-          case 33:
-            _i++;
-            context$2$0.next = 29;
-            break;
-
-          case 36:
-            _iteratorNormalCompletion = true;
-            context$2$0.next = 9;
-            break;
-
-          case 39:
-            context$2$0.next = 45;
-            break;
-
-          case 41:
-            context$2$0.prev = 41;
-            context$2$0.t0 = context$2$0['catch'](7);
-            _didIteratorError = true;
-            _iteratorError = context$2$0.t0;
-
-          case 45:
-            context$2$0.prev = 45;
-            context$2$0.prev = 46;
-
-            if (!_iteratorNormalCompletion && _iterator['return']) {
-              _iterator['return']();
-            }
-
-          case 48:
-            context$2$0.prev = 48;
-
-            if (!_didIteratorError) {
-              context$2$0.next = 51;
-              break;
-            }
-
-            throw _iteratorError;
-
-          case 51:
-            return context$2$0.finish(48);
-
-          case 52:
-            return context$2$0.finish(45);
-
-          case 53:
-          case 'end':
-            return context$2$0.stop();
-        }
-      }, getValues, this, [[7, 41, 45, 53], [46,, 48, 52]]);
-    })
+      return {
+        date: date,
+        time: time,
+        _ambiguousYear: result.date && result.date._ambiguousYear,
+        _ambiguousCentury: result.date && result.date._ambiguousCentury,
+        _ambiguousWeek: result.date && result.date._ambiguousWeek
+      };
+    }
   }, {
     key: 'filter',
     value: function filter(result) {
@@ -7182,9 +7350,8 @@ var DateTime = (function (_Phrase) {
         return false;
       } else if (result.time && result.timeOfDay && !result.time._ambiguousAMPM && !timeIsInAMPM(result.time, result.timeOfDay.impliedAMPM)) {
         return false;
-      } else if ((!result.time || !result.timeOfDay) && !this.props._impliedTime) {
-        return false;
       }
+
       return true;
     }
   }, {
@@ -7195,7 +7362,7 @@ var DateTime = (function (_Phrase) {
         { argument: false, text: 'date and time' },
         (0, _laconaPhrase.createElement)(
           'map',
-          { iteratorFunction: this.getValues.bind(this), limit: 1 },
+          { 'function': this.getValue.bind(this), limit: 1 },
           (0, _laconaPhrase.createElement)(
             'filter',
             { 'function': this.filter.bind(this) },
@@ -7223,7 +7390,7 @@ var DateTime = (function (_Phrase) {
                       'sequence',
                       { id: 'date' },
                       (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
-                      (0, _laconaPhrase.createElement)(_date.Date, { merge: true, prepositions: true })
+                      (0, _laconaPhrase.createElement)(TrueDate, { merge: true, prepositions: true })
                     )
                   ),
                   (0, _laconaPhrase.createElement)(
@@ -7247,17 +7414,17 @@ var DateTime = (function (_Phrase) {
                 (0, _laconaPhrase.createElement)(
                   'choice',
                   { merge: true, ellipsis: true },
-                  (0, _laconaPhrase.createElement)(_date.Date, { id: 'date', prepositions: this.props.prepositions }),
+                  (0, _laconaPhrase.createElement)(TrueDate, { id: 'date', prepositions: this.props.prepositions }),
                   (0, _laconaPhrase.createElement)(
                     'sequence',
                     null,
-                    (0, _laconaPhrase.createElement)('literal', { id: 'impliedDate', text: 'this ', value: { day: 0 } }),
+                    (0, _laconaPhrase.createElement)('literal', { id: 'relativeDate', text: 'this ', value: { day: 0 } }),
                     (0, _laconaPhrase.createElement)(_time.TimeOfDay, { id: 'timeOfDay' })
                   ),
                   (0, _laconaPhrase.createElement)(
                     'label',
                     { text: 'date' },
-                    (0, _laconaPhrase.createElement)('literal', { text: 'tonight', value: { impliedDate: { day: 0 }, time: { hour: 20 } } })
+                    (0, _laconaPhrase.createElement)('literal', { text: 'tonight', value: { relativeDate: { day: 0 }, time: { hour: 20 } } })
                   )
                 ),
                 (0, _laconaPhrase.createElement)(
@@ -7286,130 +7453,12 @@ var DateTime = (function (_Phrase) {
     }
   }]);
 
-  return DateTime;
+  return InternalDateTime;
 })(_laconaPhrase.Phrase);
 
-exports.DateTime = DateTime;
-
-DateTime.defaultProps = {
-  defaultTime: { hour: 8, minute: 0, second: 0 },
-  seconds: true,
-  prepositions: false,
-  _impliedTime: true,
-  _impliedDate: true,
-  past: true,
-  future: true
-};
-
-{/*class DateAndTime extends Phrase {
-   getValue (result) {
-     return join(result.date, result.time)
-   }
-    describe () {
-     return (
-       <map function={this.getValue.bind(this)}>
-         <choice>
-           <sequence>
-             <Time id='time' seconds={this.props.seconds} relative={false} recurse={false} prepositions={this.props.prepositions} />
-             <literal text=' ' />
-             <Date id='date' recurse={false} prepositions />
-           </sequence>
-            <sequence>
-             <Date id='date' recurse={false} prepositions={this.props.prepositions} />
-             <literal text=' ' />
-             <Time id='time' seconds={this.props.seconds} relative={false} recurse={false} prepositions />
-           </sequence>
-         </choice>
-       </map>
-     )
-    }
-  }
-  class DateWithTimeOfDayAndTime extends Phrase {
-   getValue (result) {
-     if (result.ambiguousTime) {
-       const time = coerceAmbiguousTime(result.ambiguousTime, result.impliedTime.range)
-       return join(result.date, time)
-     } else {
-       const time = result.time || {hour: result.impliedTime.default}
-       return join(result.date, time)
-     }
-   }
-    filter (result) {
-     if (result.time && result.impliedTime) {
-       return _.inRange(result.time.hour, ...result.impliedTime.range)
-     } else {
-       return true
-     }
-   }
-    describe () {
-     return (
-       <map function={this.getValue.bind(this)}>
-         <filter function={this.filter.bind(this)}>
-           <choice>
-             <sequence>
-               <choice merge>
-                 <AmbiguousTime id='ambiguousTime' prepositions={this.props.prepositions} seconds={this.props.seconds} />
-                 <Time id='time' seconds={this.props.seconds} relative={false} recurse={false} prepositions={this.props.prepositions} seconds={this.props.seconds} />
-               </choice>
-               <literal text=' ' />
-               <DateWithTimeOfDay merge />
-             </sequence>
-              <sequence>
-               <DateWithTimeOfDay merge />
-               <literal text=' ' />
-               <choice limit={1} merge>
-                 <AmbiguousTime id='ambiguousTime' seconds={this.props.seconds} prepositions seconds={this.props.seconds} />
-                 <Time id='time' seconds={this.props.seconds} relative={false} recurse={false} prepositions seconds={this.props.seconds} />
-               </choice>
-             </sequence>
-           </choice>
-         </filter>
-       </map>
-     )
-   }
-  }
-  class DateAlone extends Phrase {
-   getValue (result) {
-     if (result.impliedTime) {
-       return join(result.date, {hour: result.impliedTime.default, minute: 0, second: 0})
-     } else {
-       return join(result.date, this.props.time)
-     }
-   }
-    describe () {
-     return (
-       <map function={this.getValue.bind(this)}>
-         <choice limit={1}>
-           {this.props._impliedTime ? <Date id='date' prepositions={this.props.prepositions} /> : null}
-           <DateWithTimeOfDay prepositions={this.props.prepositions} />
-         </choice>
-       </map>
-     )
-   }
-  }
-  class TimeAlone extends Phrase {
-   getValue (result) {
-     const date = relativeDate(result.relativeDate)
-     return join(date, result.time)
-   }
-    describe () {
-     return (
-       <map function={this.getValue.bind(this)}>
-         <sequence>
-           <Time id='time' prepositions={this.props.prepositions} seconds={this.props.seconds} />
-           <list id='relativeDate' limit={1} items={[
-             {text:'', value: {}},
-             {text:'', value: {days: 1}},
-             {text:'', value: {days: -1}}
-           ]} />
-         </sequence>
-       </map>
-     )
-   }
-  }
-  */}
+exports.InternalDateTime = InternalDateTime;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./date":56,"./helpers":59,"./time":64,"babel-runtime/core-js/get-iterator":602,"babel-runtime/helpers/class-call-check":611,"babel-runtime/helpers/create-class":612,"babel-runtime/helpers/get":614,"babel-runtime/helpers/inherits":615,"babel-runtime/helpers/interop-require-default":616,"babel-runtime/regenerator":694,"lacona-phrase":66}],58:[function(require,module,exports){
+},{"./date":55,"./helpers":58,"./time":62,"babel-runtime/core-js/get-iterator":599,"babel-runtime/helpers/class-call-check":609,"babel-runtime/helpers/create-class":610,"babel-runtime/helpers/extends":612,"babel-runtime/helpers/get":613,"babel-runtime/helpers/inherits":614,"babel-runtime/helpers/interop-require-default":615,"babel-runtime/regenerator":696,"lacona-phrase":64}],57:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 'use strict';
@@ -7645,9 +7694,11 @@ var Duration = (function (_BaseDuration3) {
 
 exports.Duration = Duration;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/helpers/class-call-check":611,"babel-runtime/helpers/create-class":612,"babel-runtime/helpers/get":614,"babel-runtime/helpers/inherits":615,"babel-runtime/helpers/interop-require-default":616,"lacona-phrase":66,"lacona-phrase-number":78}],59:[function(require,module,exports){
+},{"babel-runtime/helpers/class-call-check":609,"babel-runtime/helpers/create-class":610,"babel-runtime/helpers/get":613,"babel-runtime/helpers/inherits":614,"babel-runtime/helpers/interop-require-default":615,"lacona-phrase":64,"lacona-phrase-number":76}],58:[function(require,module,exports){
 (function (global){
 'use strict';
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
 
 var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
 
@@ -7663,6 +7714,8 @@ exports.absoluteDate = absoluteDate;
 exports.relativeDate = relativeDate;
 exports.relativeDay = relativeDay;
 exports.validateDay = validateDay;
+exports.possibleDates = possibleDates;
+var marked0$0 = [possibleDates].map(_regeneratorRuntime.mark);
 
 var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
 
@@ -7748,8 +7801,136 @@ function validateDay() {
   var dateMoment = (0, _moment2['default'])({ year: year, month: month, day: day });
   return dateMoment.month() === month;
 }
+
+function possibleDates(obj, referenceDate) {
+  var _arr, _i, i, _arr2, _i2, _arr3, _i3, _arr4, _i4;
+
+  return _regeneratorRuntime.wrap(function possibleDates$(context$1$0) {
+    while (1) switch (context$1$0.prev = context$1$0.next) {
+      case 0:
+        if (!obj.date) {
+          context$1$0.next = 41;
+          break;
+        }
+
+        if (!obj._ambiguousWeek) {
+          context$1$0.next = 13;
+          break;
+        }
+
+        _arr = [0, 7, -7, 14, -14];
+        _i = 0;
+
+      case 4:
+        if (!(_i < _arr.length)) {
+          context$1$0.next = 11;
+          break;
+        }
+
+        i = _arr[_i];
+        context$1$0.next = 8;
+        return (0, _moment2['default'])(obj.date).add(i, 'days').toDate();
+
+      case 8:
+        _i++;
+        context$1$0.next = 4;
+        break;
+
+      case 11:
+        context$1$0.next = 39;
+        break;
+
+      case 13:
+        if (!obj._ambiguousYear) {
+          context$1$0.next = 25;
+          break;
+        }
+
+        _arr2 = [0, 1, -1];
+        _i2 = 0;
+
+      case 16:
+        if (!(_i2 < _arr2.length)) {
+          context$1$0.next = 23;
+          break;
+        }
+
+        i = _arr2[_i2];
+        context$1$0.next = 20;
+        return (0, _moment2['default'])(obj.date).add(i, 'years').toDate();
+
+      case 20:
+        _i2++;
+        context$1$0.next = 16;
+        break;
+
+      case 23:
+        context$1$0.next = 39;
+        break;
+
+      case 25:
+        if (!obj._ambiguousCentury) {
+          context$1$0.next = 37;
+          break;
+        }
+
+        _arr3 = [0, 100, -100];
+        _i3 = 0;
+
+      case 28:
+        if (!(_i3 < _arr3.length)) {
+          context$1$0.next = 35;
+          break;
+        }
+
+        i = _arr3[_i3];
+        context$1$0.next = 32;
+        return (0, _moment2['default'])(obj.date).add(i, 'years').toDate();
+
+      case 32:
+        _i3++;
+        context$1$0.next = 28;
+        break;
+
+      case 35:
+        context$1$0.next = 39;
+        break;
+
+      case 37:
+        context$1$0.next = 39;
+        return obj.date;
+
+      case 39:
+        context$1$0.next = 50;
+        break;
+
+      case 41:
+        _arr4 = [0, 1, -1];
+        _i4 = 0;
+
+      case 43:
+        if (!(_i4 < _arr4.length)) {
+          context$1$0.next = 50;
+          break;
+        }
+
+        i = _arr4[_i4];
+        context$1$0.next = 47;
+        return (0, _moment2['default'])(referenceDate).add(i, 'days').toDate();
+
+      case 47:
+        _i4++;
+        context$1$0.next = 43;
+        break;
+
+      case 50:
+      case 'end':
+        return context$1$0.stop();
+    }
+  }, marked0$0[0], this);
+}
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/helpers/interop-require-default":616}],60:[function(require,module,exports){
+},{"babel-runtime/helpers/interop-require-default":615,"babel-runtime/regenerator":696}],59:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -7819,24 +8000,9 @@ Object.defineProperty(exports, 'Range', {
   }
 });
 
-var _timeRange = require('./time-range');
-
-Object.defineProperty(exports, 'TimeRange', {
-  enumerable: true,
-  get: function get() {
-    return _timeRange.TimeRange;
-  }
-});
-
-var _dateRange = require('./date-range');
-
-Object.defineProperty(exports, 'DateRange', {
-  enumerable: true,
-  get: function get() {
-    return _dateRange.DateRange;
-  }
-});
-},{"./date":56,"./date-range":55,"./datetime":57,"./duration":58,"./range":62,"./time":64,"./time-range":63}],61:[function(require,module,exports){
+// export { TimeRange } from './time-range'
+// export { DateRange } from './date-range'
+},{"./date":55,"./datetime":56,"./duration":57,"./range":61,"./time":62}],60:[function(require,module,exports){
 /** @jsx createElement */
 
 'use strict';
@@ -7885,7 +8051,7 @@ var Month = (function (_Phrase) {
 })(_laconaPhrase.Phrase);
 
 exports.Month = Month;
-},{"babel-runtime/helpers/class-call-check":611,"babel-runtime/helpers/create-class":612,"babel-runtime/helpers/get":614,"babel-runtime/helpers/inherits":615,"lacona-phrase":66}],62:[function(require,module,exports){
+},{"babel-runtime/helpers/class-call-check":609,"babel-runtime/helpers/create-class":610,"babel-runtime/helpers/get":613,"babel-runtime/helpers/inherits":614,"lacona-phrase":64}],61:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 
@@ -7898,6 +8064,12 @@ var _inherits = require('babel-runtime/helpers/inherits')['default'];
 var _createClass = require('babel-runtime/helpers/create-class')['default'];
 
 var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _extends = require('babel-runtime/helpers/extends')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
 
 var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
 
@@ -7917,20 +8089,47 @@ var _laconaPhrase = require('lacona-phrase');
 
 var _helpers = require('./helpers');
 
-var _date = require('./date');
-
-var _dateRange = require('./date-range');
-
 var _datetime = require('./datetime');
 
 var _duration = require('./duration');
 
-var _time = require('./time');
+var TrueDateTime = (function (_Phrase) {
+  _inherits(TrueDateTime, _Phrase);
 
-var _timeRange = require('./time-range');
+  function TrueDateTime() {
+    _classCallCheck(this, TrueDateTime);
 
-var Range = (function (_Phrase) {
-  _inherits(Range, _Phrase);
+    _get(Object.getPrototypeOf(TrueDateTime.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(TrueDateTime, [{
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)(
+        'sequence',
+        null,
+        (0, _laconaPhrase.createElement)('literal', { text: 'all day ', id: 'allDay', value: true, optional: true, limited: true }),
+        (0, _laconaPhrase.createElement)(
+          'choice',
+          { merge: true },
+          (0, _laconaPhrase.createElement)(_datetime.InternalDateTime, _extends({}, this.props, { id: undefined })),
+          (0, _laconaPhrase.createElement)(
+            'map',
+            { 'function': function (result) {
+                return { dateTime: result };
+              } },
+            (0, _laconaPhrase.createElement)(_datetime.DateTime, _extends({}, this.props, { nullify: true }))
+          )
+        )
+      );
+    }
+  }]);
+
+  return TrueDateTime;
+})(_laconaPhrase.Phrase);
+
+var Range = (function (_Phrase2) {
+  _inherits(Range, _Phrase2);
 
   function Range() {
     _classCallCheck(this, Range);
@@ -7949,6 +8148,475 @@ var Range = (function (_Phrase) {
       var currentMoment = result.allDay ? (0, _moment2['default'])({}) : (0, _moment2['default'])();
       if (!this.props.past && currentMoment.isAfter(startMoment)) return false;
       if (!this.props.future && currentMoment.isBefore(endMoment)) return false;
+
+      return true;
+    }
+  }, {
+    key: 'getValues',
+    value: _regeneratorRuntime.mark(function getValues(result) {
+      var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, startDate, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, endDate, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, _iteratorNormalCompletion5, _didIteratorError5, _iteratorError5, _iterator5, _step5, start, _iteratorNormalCompletion6, _didIteratorError6, _iteratorError6, _iterator6, _step6, _iteratorNormalCompletion7, _didIteratorError7, _iteratorError7, _iterator7, _step7;
+
+      return _regeneratorRuntime.wrap(function getValues$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            if (!(result.start && result.end)) {
+              context$2$0.next = 106;
+              break;
+            }
+
+            if (!(!result.start.time && !result.end.time)) {
+              context$2$0.next = 54;
+              break;
+            }
+
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 5;
+            _iterator = _getIterator((0, _helpers.possibleDates)(result.start));
+
+          case 7:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 38;
+              break;
+            }
+
+            startDate = _step.value;
+            _iteratorNormalCompletion2 = true;
+            _didIteratorError2 = false;
+            _iteratorError2 = undefined;
+            context$2$0.prev = 12;
+            _iterator2 = _getIterator((0, _helpers.possibleDates)(result.end));
+
+          case 14:
+            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+              context$2$0.next = 21;
+              break;
+            }
+
+            endDate = _step2.value;
+            context$2$0.next = 18;
+            return {
+              start: (0, _helpers.join)(startDate, { hour: 0, minute: 0, second: 0 }),
+              end: (0, _helpers.join)(endDate, { hour: 0, minute: 0, second: 0 }),
+              allDay: true
+            };
+
+          case 18:
+            _iteratorNormalCompletion2 = true;
+            context$2$0.next = 14;
+            break;
+
+          case 21:
+            context$2$0.next = 27;
+            break;
+
+          case 23:
+            context$2$0.prev = 23;
+            context$2$0.t0 = context$2$0['catch'](12);
+            _didIteratorError2 = true;
+            _iteratorError2 = context$2$0.t0;
+
+          case 27:
+            context$2$0.prev = 27;
+            context$2$0.prev = 28;
+
+            if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+              _iterator2['return']();
+            }
+
+          case 30:
+            context$2$0.prev = 30;
+
+            if (!_didIteratorError2) {
+              context$2$0.next = 33;
+              break;
+            }
+
+            throw _iteratorError2;
+
+          case 33:
+            return context$2$0.finish(30);
+
+          case 34:
+            return context$2$0.finish(27);
+
+          case 35:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 7;
+            break;
+
+          case 38:
+            context$2$0.next = 44;
+            break;
+
+          case 40:
+            context$2$0.prev = 40;
+            context$2$0.t1 = context$2$0['catch'](5);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t1;
+
+          case 44:
+            context$2$0.prev = 44;
+            context$2$0.prev = 45;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 47:
+            context$2$0.prev = 47;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 50;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 50:
+            return context$2$0.finish(47);
+
+          case 51:
+            return context$2$0.finish(44);
+
+          case 52:
+            context$2$0.next = 104;
+            break;
+
+          case 54:
+            _iteratorNormalCompletion3 = true;
+            _didIteratorError3 = false;
+            _iteratorError3 = undefined;
+            context$2$0.prev = 57;
+            _iterator3 = _getIterator((0, _helpers.possibleDates)(result.start, result.end.date));
+
+          case 59:
+            if (_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done) {
+              context$2$0.next = 90;
+              break;
+            }
+
+            startDate = _step3.value;
+            _iteratorNormalCompletion4 = true;
+            _didIteratorError4 = false;
+            _iteratorError4 = undefined;
+            context$2$0.prev = 64;
+            _iterator4 = _getIterator((0, _helpers.possibleDates)(result.end, startDate));
+
+          case 66:
+            if (_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done) {
+              context$2$0.next = 73;
+              break;
+            }
+
+            endDate = _step4.value;
+            context$2$0.next = 70;
+            return {
+              start: (0, _helpers.join)(startDate, result.start.time || this.props.defaultTime),
+              end: (0, _helpers.join)(endDate, result.end.time || this.props.defaultTime),
+              allDay: false
+            };
+
+          case 70:
+            _iteratorNormalCompletion4 = true;
+            context$2$0.next = 66;
+            break;
+
+          case 73:
+            context$2$0.next = 79;
+            break;
+
+          case 75:
+            context$2$0.prev = 75;
+            context$2$0.t2 = context$2$0['catch'](64);
+            _didIteratorError4 = true;
+            _iteratorError4 = context$2$0.t2;
+
+          case 79:
+            context$2$0.prev = 79;
+            context$2$0.prev = 80;
+
+            if (!_iteratorNormalCompletion4 && _iterator4['return']) {
+              _iterator4['return']();
+            }
+
+          case 82:
+            context$2$0.prev = 82;
+
+            if (!_didIteratorError4) {
+              context$2$0.next = 85;
+              break;
+            }
+
+            throw _iteratorError4;
+
+          case 85:
+            return context$2$0.finish(82);
+
+          case 86:
+            return context$2$0.finish(79);
+
+          case 87:
+            _iteratorNormalCompletion3 = true;
+            context$2$0.next = 59;
+            break;
+
+          case 90:
+            context$2$0.next = 96;
+            break;
+
+          case 92:
+            context$2$0.prev = 92;
+            context$2$0.t3 = context$2$0['catch'](57);
+            _didIteratorError3 = true;
+            _iteratorError3 = context$2$0.t3;
+
+          case 96:
+            context$2$0.prev = 96;
+            context$2$0.prev = 97;
+
+            if (!_iteratorNormalCompletion3 && _iterator3['return']) {
+              _iterator3['return']();
+            }
+
+          case 99:
+            context$2$0.prev = 99;
+
+            if (!_didIteratorError3) {
+              context$2$0.next = 102;
+              break;
+            }
+
+            throw _iteratorError3;
+
+          case 102:
+            return context$2$0.finish(99);
+
+          case 103:
+            return context$2$0.finish(96);
+
+          case 104:
+            context$2$0.next = 193;
+            break;
+
+          case 106:
+            if (!(result.start && result.duration)) {
+              context$2$0.next = 136;
+              break;
+            }
+
+            _iteratorNormalCompletion5 = true;
+            _didIteratorError5 = false;
+            _iteratorError5 = undefined;
+            context$2$0.prev = 110;
+            _iterator5 = _getIterator((0, _helpers.possibleDates)(result.start));
+
+          case 112:
+            if (_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done) {
+              context$2$0.next = 120;
+              break;
+            }
+
+            startDate = _step5.value;
+            start = (0, _helpers.join)(startDate, result.start.time || this.props.defaultTime);
+            context$2$0.next = 117;
+            return {
+              start: start,
+              end: (0, _moment2['default'])(start).add(result.duration).toDate(),
+              allDay: false
+            };
+
+          case 117:
+            _iteratorNormalCompletion5 = true;
+            context$2$0.next = 112;
+            break;
+
+          case 120:
+            context$2$0.next = 126;
+            break;
+
+          case 122:
+            context$2$0.prev = 122;
+            context$2$0.t4 = context$2$0['catch'](110);
+            _didIteratorError5 = true;
+            _iteratorError5 = context$2$0.t4;
+
+          case 126:
+            context$2$0.prev = 126;
+            context$2$0.prev = 127;
+
+            if (!_iteratorNormalCompletion5 && _iterator5['return']) {
+              _iterator5['return']();
+            }
+
+          case 129:
+            context$2$0.prev = 129;
+
+            if (!_didIteratorError5) {
+              context$2$0.next = 132;
+              break;
+            }
+
+            throw _iteratorError5;
+
+          case 132:
+            return context$2$0.finish(129);
+
+          case 133:
+            return context$2$0.finish(126);
+
+          case 134:
+            context$2$0.next = 193;
+            break;
+
+          case 136:
+            if (!result.start) {
+              context$2$0.next = 193;
+              break;
+            }
+
+            if (result.start.time) {
+              context$2$0.next = 166;
+              break;
+            }
+
+            _iteratorNormalCompletion6 = true;
+            _didIteratorError6 = false;
+            _iteratorError6 = undefined;
+            context$2$0.prev = 141;
+            _iterator6 = _getIterator((0, _helpers.possibleDates)(result.start));
+
+          case 143:
+            if (_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done) {
+              context$2$0.next = 150;
+              break;
+            }
+
+            startDate = _step6.value;
+            context$2$0.next = 147;
+            return {
+              start: startDate,
+              end: startDate,
+              allDay: true
+            };
+
+          case 147:
+            _iteratorNormalCompletion6 = true;
+            context$2$0.next = 143;
+            break;
+
+          case 150:
+            context$2$0.next = 156;
+            break;
+
+          case 152:
+            context$2$0.prev = 152;
+            context$2$0.t5 = context$2$0['catch'](141);
+            _didIteratorError6 = true;
+            _iteratorError6 = context$2$0.t5;
+
+          case 156:
+            context$2$0.prev = 156;
+            context$2$0.prev = 157;
+
+            if (!_iteratorNormalCompletion6 && _iterator6['return']) {
+              _iterator6['return']();
+            }
+
+          case 159:
+            context$2$0.prev = 159;
+
+            if (!_didIteratorError6) {
+              context$2$0.next = 162;
+              break;
+            }
+
+            throw _iteratorError6;
+
+          case 162:
+            return context$2$0.finish(159);
+
+          case 163:
+            return context$2$0.finish(156);
+
+          case 164:
+            context$2$0.next = 193;
+            break;
+
+          case 166:
+            _iteratorNormalCompletion7 = true;
+            _didIteratorError7 = false;
+            _iteratorError7 = undefined;
+            context$2$0.prev = 169;
+            _iterator7 = _getIterator((0, _helpers.possibleDates)(result.start));
+
+          case 171:
+            if (_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done) {
+              context$2$0.next = 179;
+              break;
+            }
+
+            startDate = _step7.value;
+            start = (0, _helpers.join)(startDate, result.start.time);
+            context$2$0.next = 176;
+            return {
+              start: start,
+              end: (0, _moment2['default'])(start).add(this.props.defaultDuration).toDate(),
+              allDay: false
+            };
+
+          case 176:
+            _iteratorNormalCompletion7 = true;
+            context$2$0.next = 171;
+            break;
+
+          case 179:
+            context$2$0.next = 185;
+            break;
+
+          case 181:
+            context$2$0.prev = 181;
+            context$2$0.t6 = context$2$0['catch'](169);
+            _didIteratorError7 = true;
+            _iteratorError7 = context$2$0.t6;
+
+          case 185:
+            context$2$0.prev = 185;
+            context$2$0.prev = 186;
+
+            if (!_iteratorNormalCompletion7 && _iterator7['return']) {
+              _iterator7['return']();
+            }
+
+          case 188:
+            context$2$0.prev = 188;
+
+            if (!_didIteratorError7) {
+              context$2$0.next = 191;
+              break;
+            }
+
+            throw _iteratorError7;
+
+          case 191:
+            return context$2$0.finish(188);
+
+          case 192:
+            return context$2$0.finish(185);
+
+          case 193:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, getValues, this, [[5, 40, 44, 52], [12, 23, 27, 35], [28,, 30, 34], [45,, 47, 51], [57, 92, 96, 104], [64, 75, 79, 87], [80,, 82, 86], [97,, 99, 103], [110, 122, 126, 134], [127,, 129, 133], [141, 152, 156, 164], [157,, 159, 163], [169, 181, 185, 193], [186,, 188, 192]]);
+    })
+  }, {
+    key: 'filter',
+    value: function filter(result) {
+      if (result.allDay && (!result.start._ambiguousTime || result.end && !result.end._ambiguousTime)) {
+        return false;
+      }
 
       return true;
     }
@@ -7992,17 +8660,42 @@ var Range = (function (_Phrase) {
     value: function describe() {
       return (0, _laconaPhrase.createElement)(
         'label',
-        { argument: false, text: 'period of time' },
+        { argument: false, text: this.props.argument },
         (0, _laconaPhrase.createElement)(
-          'choice',
-          { limit: 1 },
-          (0, _laconaPhrase.createElement)(StartDateAlone, { prepositions: this.props.prepositions }),
-          (0, _laconaPhrase.createElement)(StartDateTimeAlone, { prepositions: this.props.prepositions, duration: this.props.defaultDuration }),
-          (0, _laconaPhrase.createElement)(TimeRangeAlone, { prepositions: this.props.prepositions }),
-          (0, _laconaPhrase.createElement)(DateRangeAlone, { prepositions: this.props.prepositions }),
-          (0, _laconaPhrase.createElement)(StartDateAndTimeRange, { prepositions: this.props.prepositions }),
-          (0, _laconaPhrase.createElement)(StartDateTimeAndDuration, { prepositions: this.props.prepositions }),
-          (0, _laconaPhrase.createElement)(StartDateTimeAndEndDateTime, { prepositions: this.props.prepositions })
+          'map',
+          { iteratorFunction: this.getValues.bind(this), limit: 1 },
+          (0, _laconaPhrase.createElement)(
+            'filter',
+            { 'function': this.filter },
+            (0, _laconaPhrase.createElement)(
+              'sequence',
+              { unique: true },
+              (0, _laconaPhrase.createElement)(
+                'sequence',
+                { id: 'duration', optional: true, limited: true },
+                this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'for ', optional: true, limited: true, preferred: true }) : null,
+                (0, _laconaPhrase.createElement)(_duration.Duration, { merge: true }),
+                (0, _laconaPhrase.createElement)('list', { items: [' ', ' starting '], limit: 1 })
+              ),
+              (0, _laconaPhrase.createElement)(TrueDateTime, { ellipsis: true, id: 'start' }),
+              (0, _laconaPhrase.createElement)(
+                'choice',
+                { merge: true },
+                (0, _laconaPhrase.createElement)(
+                  'sequence',
+                  { id: 'end' },
+                  (0, _laconaPhrase.createElement)('list', { items: [' to ', ' - ', '-'], limit: 1, category: 'conjunction' }),
+                  (0, _laconaPhrase.createElement)(TrueDateTime, { merge: true })
+                ),
+                (0, _laconaPhrase.createElement)(
+                  'sequence',
+                  { id: 'duration' },
+                  (0, _laconaPhrase.createElement)('literal', { text: ' for ' }),
+                  (0, _laconaPhrase.createElement)(_duration.Duration, { merge: true })
+                )
+              )
+            )
+          )
         )
       );
     }
@@ -8019,421 +8712,11 @@ Range.defaultProps = {
   defaultTime: { hour: 8 },
   defaultDuration: { hours: 1 },
   future: true,
-  past: true
-};
-
-var StartDateAlone = (function (_Phrase2) {
-  _inherits(StartDateAlone, _Phrase2);
-
-  function StartDateAlone() {
-    _classCallCheck(this, StartDateAlone);
-
-    _get(Object.getPrototypeOf(StartDateAlone.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(StartDateAlone, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      return {
-        start: result,
-        end: result,
-        allDay: true
-      };
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'map',
-        { 'function': this.getValue.bind(this) },
-        (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          (0, _laconaPhrase.createElement)('literal', { text: 'all day ', optional: true, limited: true }),
-          (0, _laconaPhrase.createElement)(_date.Date, { merge: true, prepositions: this.props.prepositions })
-        )
-      );
-    }
-  }]);
-
-  return StartDateAlone;
-})(_laconaPhrase.Phrase);
-
-StartDateAlone.defaultProps = {
-  prepositions: false
-};
-
-var StartDateTimeAlone = (function (_Phrase3) {
-  _inherits(StartDateTimeAlone, _Phrase3);
-
-  function StartDateTimeAlone() {
-    _classCallCheck(this, StartDateTimeAlone);
-
-    _get(Object.getPrototypeOf(StartDateTimeAlone.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(StartDateTimeAlone, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      return {
-        start: result,
-        end: (0, _moment2['default'])(result).add(_moment2['default'].duration(this.props.duration)).toDate(),
-        allDay: false
-      };
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'map',
-        { 'function': this.getValue.bind(this) },
-        (0, _laconaPhrase.createElement)(_datetime.DateTime, { _impliedTime: false, prepositions: this.props.prepositions })
-      );
-    }
-  }]);
-
-  return StartDateTimeAlone;
-})(_laconaPhrase.Phrase);
-
-StartDateTimeAlone.defaultProps = {
-  prepositions: false,
-  duration: { hours: 1 }
-};
-
-var TimeRangeAlone = (function (_Phrase4) {
-  _inherits(TimeRangeAlone, _Phrase4);
-
-  function TimeRangeAlone() {
-    _classCallCheck(this, TimeRangeAlone);
-
-    _get(Object.getPrototypeOf(TimeRangeAlone.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(TimeRangeAlone, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      var startDate = (0, _helpers.relativeDate)(result.relative);
-      var endDate = (0, _moment2['default'])(startDate).add(result.timeRange.dayOffset, 'day');
-      return {
-        start: (0, _helpers.join)(startDate, result.timeRange.start),
-        end: (0, _helpers.join)((0, _moment2['default'])(endDate), result.timeRange.end),
-        allDay: false
-      };
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'map',
-        { 'function': this.getValue.bind(this) },
-        (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          (0, _laconaPhrase.createElement)('list', { id: 'relative', limit: 1, items: [{ text: '', value: {} }, { text: '', value: { days: 1 } }, { text: '', value: { days: -1 } }] }),
-          (0, _laconaPhrase.createElement)(_timeRange.TimeRange, { id: 'timeRange', _duration: false, prepositions: this.props.prepositions })
-        )
-      );
-    }
-  }]);
-
-  return TimeRangeAlone;
-})(_laconaPhrase.Phrase);
-
-TimeRangeAlone.defaultProps = {
-  prepositions: false
-};
-
-var DateRangeAlone = (function (_Phrase5) {
-  _inherits(DateRangeAlone, _Phrase5);
-
-  function DateRangeAlone() {
-    _classCallCheck(this, DateRangeAlone);
-
-    _get(Object.getPrototypeOf(DateRangeAlone.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(DateRangeAlone, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      return {
-        start: result.start,
-        end: result.end,
-        allDay: true
-      };
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'map',
-        { 'function': this.getValue.bind(this) },
-        (0, _laconaPhrase.createElement)(_dateRange.DateRange, { prepositions: this.props.prepositions, _allDay: true })
-      );
-    }
-  }]);
-
-  return DateRangeAlone;
-})(_laconaPhrase.Phrase);
-
-var StartDateTimeAndEndDateTime = (function (_Phrase6) {
-  _inherits(StartDateTimeAndEndDateTime, _Phrase6);
-
-  function StartDateTimeAndEndDateTime() {
-    _classCallCheck(this, StartDateTimeAndEndDateTime);
-
-    _get(Object.getPrototypeOf(StartDateTimeAndEndDateTime.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(StartDateTimeAndEndDateTime, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      return {
-        start: result.start,
-        end: result.end,
-        allDay: false
-      };
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'map',
-        { 'function': this.getValue.bind(this) },
-        (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'from ', optional: true, limited: true }) : null,
-          (0, _laconaPhrase.createElement)(_datetime.DateTime, { id: 'start', defaultTime: this.props.defaultTime }),
-          (0, _laconaPhrase.createElement)('list', { items: [' to ', ' - ', '-'], limit: 1 }),
-          (0, _laconaPhrase.createElement)(_datetime.DateTime, { id: 'end', defaultTime: this.props.defaultTime })
-        )
-      );
-    }
-  }]);
-
-  return StartDateTimeAndEndDateTime;
-})(_laconaPhrase.Phrase);
-
-StartDateTimeAndEndDateTime.defaultProps = {
-  prepositions: false
-};
-
-var StartDateTimeAndDuration = (function (_Phrase7) {
-  _inherits(StartDateTimeAndDuration, _Phrase7);
-
-  function StartDateTimeAndDuration() {
-    _classCallCheck(this, StartDateTimeAndDuration);
-
-    _get(Object.getPrototypeOf(StartDateTimeAndDuration.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(StartDateTimeAndDuration, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      return {
-        start: result.start,
-        end: (0, _moment2['default'])(result.start).add(_moment2['default'].duration(result.duration)).toDate(),
-        allDay: false
-      };
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'map',
-        { 'function': this.getValue.bind(this) },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          null,
-          (0, _laconaPhrase.createElement)(
-            'sequence',
-            null,
-            this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'for ', optional: true, limited: true }) : null,
-            (0, _laconaPhrase.createElement)(_duration.Duration, { id: 'duration', seconds: this.props.seconds }),
-            (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
-            (0, _laconaPhrase.createElement)(_datetime.DateTime, { id: 'start', prepositions: true, defaultTime: this.props.defaultTime })
-          ),
-          (0, _laconaPhrase.createElement)(
-            'sequence',
-            null,
-            (0, _laconaPhrase.createElement)(_datetime.DateTime, { id: 'start', prepositions: this.props.prepositions, defaultTime: this.props.defaultTime }),
-            (0, _laconaPhrase.createElement)('literal', { text: ' for ' }),
-            (0, _laconaPhrase.createElement)(_duration.Duration, { id: 'duration', seconds: this.props.seconds })
-          )
-        )
-      );
-    }
-  }]);
-
-  return StartDateTimeAndDuration;
-})(_laconaPhrase.Phrase);
-
-StartDateTimeAndDuration.defaultProps = {
-  prepositions: false
-};
-
-var StartDateAndTimeRange = (function (_Phrase8) {
-  _inherits(StartDateAndTimeRange, _Phrase8);
-
-  function StartDateAndTimeRange() {
-    _classCallCheck(this, StartDateAndTimeRange);
-
-    _get(Object.getPrototypeOf(StartDateAndTimeRange.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(StartDateAndTimeRange, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      return {
-        start: (0, _helpers.join)(result.date, result.timeRange.start),
-        end: (0, _helpers.join)((0, _moment2['default'])(result.date).add(result.timeRange.dayOffset, 'day'), result.timeRange.end),
-        allDay: false
-      };
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'map',
-        { 'function': this.getValue.bind(this) },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          null,
-          (0, _laconaPhrase.createElement)(
-            'sequence',
-            null,
-            (0, _laconaPhrase.createElement)(_date.Date, { id: 'date', prepositions: this.props.prepositions }),
-            (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
-            (0, _laconaPhrase.createElement)(_timeRange.TimeRange, { id: 'timeRange', _duration: false, prepositions: true })
-          ),
-          (0, _laconaPhrase.createElement)(
-            'sequence',
-            null,
-            (0, _laconaPhrase.createElement)(_timeRange.TimeRange, { id: 'timeRange', prepositions: this.props.prepositions }),
-            (0, _laconaPhrase.createElement)('literal', { text: ' ' }),
-            (0, _laconaPhrase.createElement)(_date.Date, { id: 'date', prepositions: true })
-          )
-        )
-      );
-    }
-  }]);
-
-  return StartDateAndTimeRange;
-})(_laconaPhrase.Phrase);
-
-StartDateAndTimeRange.defaultProps = {
-  prepositions: false
+  past: true,
+  argument: 'period of time'
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./date":56,"./date-range":55,"./datetime":57,"./duration":58,"./helpers":59,"./time":64,"./time-range":63,"babel-runtime/helpers/class-call-check":611,"babel-runtime/helpers/create-class":612,"babel-runtime/helpers/get":614,"babel-runtime/helpers/inherits":615,"babel-runtime/helpers/interop-require-default":616,"lacona-phrase":66}],63:[function(require,module,exports){
-(function (global){
-/** @jsx createElement */
-
-'use strict';
-
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _moment = (typeof window !== "undefined" ? window['moment'] : typeof global !== "undefined" ? global['moment'] : null);
-
-var _moment2 = _interopRequireDefault(_moment);
-
-var _laconaPhrase = require('lacona-phrase');
-
-var _duration = require('./duration');
-
-var _time = require('./time');
-
-var TimeRange = (function (_Phrase) {
-  _inherits(TimeRange, _Phrase);
-
-  function TimeRange() {
-    _classCallCheck(this, TimeRange);
-
-    _get(Object.getPrototypeOf(TimeRange.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(TimeRange, [{
-    key: 'getValue',
-    value: function getValue(result) {
-      if (result.start && result.duration) {
-        var startDate = _moment2['default'].utc(result.start);
-        var endDate = (0, _moment2['default'])(startDate).add(_moment2['default'].duration(result.duration));
-        var startDay = (0, _moment2['default'])(startDate).startOf('day');
-        var endDay = (0, _moment2['default'])(endDate).startOf('day');
-        var dayOffset = endDay.diff(startDay, 'days');
-        var end = { hour: endDate.hour(), minute: endDate.minute(), second: endDate.second() };
-        return { start: result.start, end: end, dayOffset: dayOffset };
-      }
-
-      if (result.start && result.end) {
-        var dayOffset = (0, _moment2['default'])(result.end).diff(result.start, 'ms') < 0 ? 1 : 0;
-        return { start: result.start, end: result.end, dayOffset: dayOffset };
-      }
-    }
-  }, {
-    key: 'validate',
-    value: function validate(result) {
-      if (result.dayOffset > 0) return true;
-
-      var startMoment = _moment2['default'].utc(result.start);
-      return startMoment.isBefore(_moment2['default'].utc(result.end));
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)(
-        'map',
-        { 'function': this.getValue.bind(this) },
-        (0, _laconaPhrase.createElement)(
-          'choice',
-          null,
-          (0, _laconaPhrase.createElement)(
-            'sequence',
-            null,
-            this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'from ' }) : null,
-            (0, _laconaPhrase.createElement)(_time.Time, { id: 'start' }),
-            (0, _laconaPhrase.createElement)('list', { items: [' to ', ' - ', '-'], limit: 1 }),
-            (0, _laconaPhrase.createElement)(_time.Time, { id: 'end' })
-          ),
-          this.props._duration ? (0, _laconaPhrase.createElement)(
-            'sequence',
-            null,
-            (0, _laconaPhrase.createElement)(_time.Time, { id: 'start', prepositions: this.props.prepositions }),
-            (0, _laconaPhrase.createElement)('literal', { text: ' for ' }),
-            (0, _laconaPhrase.createElement)(_duration.TimeDuration, { id: 'duration', max: { hours: 23, minutes: 59, seconds: 59 } })
-          ) : null
-        )
-      );
-    }
-  }]);
-
-  return TimeRange;
-})(_laconaPhrase.Phrase);
-
-exports.TimeRange = TimeRange;
-
-TimeRange.defaultProps = {
-  prepositions: false,
-  _duration: true
-};
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./duration":58,"./time":64,"babel-runtime/helpers/class-call-check":611,"babel-runtime/helpers/create-class":612,"babel-runtime/helpers/get":614,"babel-runtime/helpers/inherits":615,"babel-runtime/helpers/interop-require-default":616,"lacona-phrase":66}],64:[function(require,module,exports){
+},{"./datetime":56,"./duration":57,"./helpers":58,"babel-runtime/core-js/get-iterator":599,"babel-runtime/helpers/class-call-check":609,"babel-runtime/helpers/create-class":610,"babel-runtime/helpers/extends":612,"babel-runtime/helpers/get":613,"babel-runtime/helpers/inherits":614,"babel-runtime/helpers/interop-require-default":615,"babel-runtime/regenerator":696,"lacona-phrase":64}],62:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 
@@ -8528,7 +8811,7 @@ var Time = (function (_Phrase2) {
         (0, _laconaPhrase.createElement)(
           'sequence',
           null,
-          this.props.prepositions ? (0, _laconaPhrase.createElement)('literal', { text: 'at ', category: 'conjunction', optional: true, preferred: true, limited: true }) : null,
+          this.props.prepositions ? (0, _laconaPhrase.createElement)('list', { items: ['at ', 'from '], limit: 1, category: 'conjunction', optional: true, preferred: true, limited: true }) : null,
           (0, _laconaPhrase.createElement)(
             'label',
             { text: this.props.argument, merge: true },
@@ -8979,7 +9262,7 @@ var Hour = (function (_Phrase13) {
 
 /*<AbsoluteTimeOfDay seconds={this.props.seconds} />*/
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./duration":58,"./helpers":59,"babel-runtime/helpers/class-call-check":611,"babel-runtime/helpers/create-class":612,"babel-runtime/helpers/get":614,"babel-runtime/helpers/inherits":615,"babel-runtime/helpers/interop-require-default":616,"lacona-phrase":66,"lacona-phrase-number":78}],65:[function(require,module,exports){
+},{"./duration":57,"./helpers":58,"babel-runtime/helpers/class-call-check":609,"babel-runtime/helpers/create-class":610,"babel-runtime/helpers/get":613,"babel-runtime/helpers/inherits":614,"babel-runtime/helpers/interop-require-default":615,"lacona-phrase":64,"lacona-phrase-number":76}],63:[function(require,module,exports){
 /** @jsx createElement */
 
 'use strict';
@@ -9028,11 +9311,11 @@ var Weekday = (function (_Phrase) {
 })(_laconaPhrase.Phrase);
 
 exports.Weekday = Weekday;
-},{"babel-runtime/helpers/class-call-check":611,"babel-runtime/helpers/create-class":612,"babel-runtime/helpers/get":614,"babel-runtime/helpers/inherits":615,"lacona-phrase":66}],66:[function(require,module,exports){
+},{"babel-runtime/helpers/class-call-check":609,"babel-runtime/helpers/create-class":610,"babel-runtime/helpers/get":613,"babel-runtime/helpers/inherits":614,"lacona-phrase":64}],64:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
-},{"../package":68,"dup":2,"inherits":67}],67:[function(require,module,exports){
+},{"../package":66,"dup":2,"inherits":65}],65:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
-},{"dup":3}],68:[function(require,module,exports){
+},{"dup":3}],66:[function(require,module,exports){
 module.exports={
   "name": "lacona-phrase",
   "version": "0.9.1",
@@ -9138,7 +9421,7 @@ module.exports={
   "_from": "lacona-phrase@>=0.9.1 <0.10.0"
 }
 
-},{}],69:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -9198,13 +9481,13 @@ var EmailAddress = (function (_Phrase) {
 })(_laconaPhrase.Phrase);
 
 exports.EmailAddress = EmailAddress;
-},{"lacona-phrase":70}],70:[function(require,module,exports){
+},{"lacona-phrase":68}],68:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
-},{"../package":72,"dup":2,"inherits":71}],71:[function(require,module,exports){
+},{"../package":70,"dup":2,"inherits":69}],69:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
-},{"dup":3}],72:[function(require,module,exports){
-arguments[4][68][0].apply(exports,arguments)
-},{"dup":68}],73:[function(require,module,exports){
+},{"dup":3}],70:[function(require,module,exports){
+arguments[4][66][0].apply(exports,arguments)
+},{"dup":66}],71:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -9241,13 +9524,13 @@ var File = (function (_Phrase) {
 })(_laconaPhrase.Phrase);
 
 exports.File = File;
-},{"lacona-phrase":74}],74:[function(require,module,exports){
+},{"lacona-phrase":72}],72:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
-},{"../package":76,"dup":2,"inherits":75}],75:[function(require,module,exports){
+},{"../package":74,"dup":2,"inherits":73}],73:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
-},{"dup":3}],76:[function(require,module,exports){
+},{"dup":3}],74:[function(require,module,exports){
 arguments[4][8][0].apply(exports,arguments)
-},{"dup":8}],77:[function(require,module,exports){
+},{"dup":8}],75:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 'use strict';
@@ -9349,7 +9632,7 @@ var DigitString = (function (_Phrase) {
 exports['default'] = DigitString;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-phrase":81}],78:[function(require,module,exports){
+},{"lacona-phrase":79}],76:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -9369,7 +9652,7 @@ exports.DigitString = _interopRequire(_digitstring);
 var _ordinal = require('./ordinal');
 
 exports.Ordinal = _interopRequire(_ordinal);
-},{"./digitstring":77,"./integer":79,"./ordinal":80}],79:[function(require,module,exports){
+},{"./digitstring":75,"./integer":77,"./ordinal":78}],77:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 
@@ -9473,7 +9756,7 @@ var Integer = (function (_Phrase) {
 exports['default'] = Integer;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-phrase":81}],80:[function(require,module,exports){
+},{"lacona-phrase":79}],78:[function(require,module,exports){
 (function (global){
 /** @jsx createElement */
 'use strict';
@@ -9583,13 +9866,13 @@ var Ordinal = (function (_Phrase) {
 exports['default'] = Ordinal;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lacona-phrase":81}],81:[function(require,module,exports){
+},{"lacona-phrase":79}],79:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
-},{"../package":83,"dup":2,"inherits":82}],82:[function(require,module,exports){
+},{"../package":81,"dup":2,"inherits":80}],80:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
-},{"dup":3}],83:[function(require,module,exports){
-arguments[4][68][0].apply(exports,arguments)
-},{"dup":68}],84:[function(require,module,exports){
+},{"dup":3}],81:[function(require,module,exports){
+arguments[4][66][0].apply(exports,arguments)
+},{"dup":66}],82:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -9649,13 +9932,13 @@ var PhoneNumber = (function (_Phrase) {
 })(_laconaPhrase.Phrase);
 
 exports.PhoneNumber = PhoneNumber;
-},{"lacona-phrase":85}],85:[function(require,module,exports){
+},{"lacona-phrase":83}],83:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
-},{"../package":87,"dup":2,"inherits":86}],86:[function(require,module,exports){
+},{"../package":85,"dup":2,"inherits":84}],84:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
-},{"dup":3}],87:[function(require,module,exports){
+},{"dup":3}],85:[function(require,module,exports){
 arguments[4][8][0].apply(exports,arguments)
-},{"dup":8}],88:[function(require,module,exports){
+},{"dup":8}],86:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -9712,13 +9995,13 @@ var String = (function (_Phrase) {
 })(_laconaPhrase.Phrase);
 
 exports.String = String;
-},{"lacona-phrase":89}],89:[function(require,module,exports){
+},{"lacona-phrase":87}],87:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
-},{"../package":91,"dup":2,"inherits":90}],90:[function(require,module,exports){
+},{"../package":89,"dup":2,"inherits":88}],88:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
-},{"dup":3}],91:[function(require,module,exports){
-arguments[4][68][0].apply(exports,arguments)
-},{"dup":68}],92:[function(require,module,exports){
+},{"dup":3}],89:[function(require,module,exports){
+arguments[4][66][0].apply(exports,arguments)
+},{"dup":66}],90:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -9839,13 +10122,13 @@ var MountedVolume = (function (_Phrase5) {
 })(_laconaPhrase.Phrase);
 
 exports.MountedVolume = MountedVolume;
-},{"lacona-phrase":93}],93:[function(require,module,exports){
+},{"lacona-phrase":91}],91:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
-},{"../package":95,"dup":2,"inherits":94}],94:[function(require,module,exports){
+},{"../package":93,"dup":2,"inherits":92}],92:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
-},{"dup":3}],95:[function(require,module,exports){
+},{"dup":3}],93:[function(require,module,exports){
 arguments[4][8][0].apply(exports,arguments)
-},{"dup":8}],96:[function(require,module,exports){
+},{"dup":8}],94:[function(require,module,exports){
 /** @jsx createElement */
 'use strict';
 
@@ -9972,13 +10255,13 @@ var SpecifiedURL = (function (_Phrase3) {
 
   return SpecifiedURL;
 })(_laconaPhrase.Phrase);
-},{"lacona-phrase":97}],97:[function(require,module,exports){
+},{"lacona-phrase":95}],95:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
-},{"../package":99,"dup":2,"inherits":98}],98:[function(require,module,exports){
+},{"../package":97,"dup":2,"inherits":96}],96:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
-},{"dup":3}],99:[function(require,module,exports){
+},{"dup":3}],97:[function(require,module,exports){
 arguments[4][8][0].apply(exports,arguments)
-},{"dup":8}],100:[function(require,module,exports){
+},{"dup":8}],98:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -10656,7 +10939,7 @@ var demoData = {
 };
 exports.demoData = demoData;
 
-},{}],101:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10670,7 +10953,7 @@ exports["default"] = (function (a, b) {
 
 module.exports = exports["default"];
 
-},{}],102:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -10715,7 +10998,7 @@ function getExecute(showNotification) {
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/helpers/interop-require-default":616,"react":473,"react-lacona":309}],103:[function(require,module,exports){
+},{"babel-runtime/helpers/interop-require-default":615,"react":597,"react-lacona":433}],101:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -10728,8 +11011,6 @@ var _createClass = require('babel-runtime/helpers/create-class')['default'];
 var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
 
 var _toConsumableArray = require('babel-runtime/helpers/to-consumable-array')['default'];
-
-var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
 
 var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
 
@@ -10760,7 +11041,7 @@ function groupPlaceholders(result) {
     return item.placeholder || item.text;
   }).map(function (item) {
     return item.placeholder ? '￼' : '￹' + item.text + '￺' + item.argument + '￻';
-  }).join('').value();
+  }).join('').concat('￹' + result.qualifiers.join('￺') + '￻').value();
 }
 
 function mapPlaceholderGroups(resultGroup) {
@@ -10769,28 +11050,30 @@ function mapPlaceholderGroups(resultGroup) {
   }).thru(function (descriptorLists) {
     return _lodash2['default'].zip.apply(_lodash2['default'], _toConsumableArray(descriptorLists));
   }).map(function (x) {
-    return _lodash2['default'].filter(x);
-  }).map(function (x) {
     return _lodash2['default'].unique(x);
+  }).map(function (x) {
+    return _lodash2['default'].filter(x);
   }).value();
 
   var result = _lodash2['default'].clone(_lodash2['default'].first(resultGroup));
 
   _lodash2['default'].chain(result.words).filter('placeholder').forEach(function (item, index) {
     item.placeholderTexts = placeholders[index];
-    delete item.argument;
+    // item.descriptors = [placeholders[index]]
   }).value();
 
   return result;
 }
 
-// function removeDescriptors (result) {
-//   _.forEach(result.match.concat(result.suggestion, result.completion), item => {
-//     item.topLevelDescriptor = item.ar_.first(item.descriptors)
-//   })
-// }
+function combinePlaceholders(results) {
+  var limit = arguments.length <= 1 || arguments[1] === undefined ? 100 : arguments[1];
 
-var prefixes = ['open ', 'search ']; //, 'open ', 'search ']
+  return _lodash2['default'].chain(results).groupBy(groupPlaceholders).map(mapPlaceholderGroups).sortBy(function (option) {
+    return -option.score;
+  }).take(limit).value();
+}
+
+var prefixes = ['open ', 'search '];
 
 var Keys = (function (_React$Component) {
   _inherits(Keys, _React$Component);
@@ -10813,7 +11096,7 @@ var Keys = (function (_React$Component) {
           _react2['default'].createElement(
             'div',
             { className: 'keyChar' },
-            '↑↓'
+            'Arrow Keys'
           ),
           _react2['default'].createElement(
             'div',
@@ -10827,7 +11110,7 @@ var Keys = (function (_React$Component) {
           _react2['default'].createElement(
             'div',
             { className: 'keyChar' },
-            '⇥'
+            'Tab'
           ),
           _react2['default'].createElement(
             'div',
@@ -10841,7 +11124,7 @@ var Keys = (function (_React$Component) {
           _react2['default'].createElement(
             'div',
             { className: 'keyChar' },
-            '↩'
+            'Return'
           ),
           _react2['default'].createElement(
             'div',
@@ -10893,106 +11176,41 @@ var Lacona = (function (_React$Component2) {
     }
   }, {
     key: 'parse',
-    value: function parse(input, checkDone) {
-      var prefixes = arguments.length <= 2 || arguments[2] === undefined ? [''] : arguments[2];
+    value: function parse(input) {
+      var _this = this;
 
-      if (checkDone()) return [];
+      if (input === '') return [];
 
-      var inputs = _lodash2['default'].map(prefixes, function (prefix) {
-        return '' + prefix + input;
-      });
+      var fullOutput = this.parser.parseArray(input);
 
-      var fullOutput = [];
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = _getIterator(prefixes), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var prefix = _step.value;
-
+      if (_lodash2['default'].isEmpty(fullOutput)) {
+        fullOutput = _lodash2['default'].chain(prefixes).map(function (prefix) {
           var prefixedInput = '' + prefix + input;
-          var _iteratorNormalCompletion2 = true;
-          var _didIteratorError2 = false;
-          var _iteratorError2 = undefined;
-
-          try {
-            for (var _iterator2 = _getIterator(this.parser.parse(prefixedInput)), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-              var output = _step2.value;
-
-              if (checkDone()) return [];
-              if (output.words[0].text === prefix) {
-                output.words[0].fallthrough = true;
-              }
-              fullOutput.push(output);
-            }
-          } catch (err) {
-            _didIteratorError2 = true;
-            _iteratorError2 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion2 && _iterator2['return']) {
-                _iterator2['return']();
-              }
-            } finally {
-              if (_didIteratorError2) {
-                throw _iteratorError2;
-              }
-            }
-          }
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator['return']) {
-            _iterator['return']();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+          var outputs = _this.parser.parseArray(prefixedInput);
+          return outputs;
+        }).flatten().forEach(function (output) {
+          return output.words[0].fallthrough = true;
+        }).value();
       }
 
-      if (checkDone()) return [];
-
-      if (!_lodash2['default'].isEmpty(fullOutput)) {
-        return _lodash2['default'].chain(fullOutput).groupBy(groupPlaceholders).map(mapPlaceholderGroups).sortBy(function (option) {
-          return -option.score;
-        }).take(20).value();
-      }
-
-      return [];
+      return combinePlaceholders(fullOutput, 20);
     }
   }, {
     key: 'update',
     value: function update(input) {
-      var _this = this;
+      var _this2 = this;
+
+      var parse = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
       this.setState({ input: input });
 
-      if (input === '') {
-        this.setState({ output: [] });
-        return;
+      if (parse) {
+        setTimeout(function () {
+          var output = _this2.parse(input);
+
+          _this2.setState({ output: output });
+        }, 11);
       }
-
-      var checkDone = function checkDone() {
-        return input !== _this.state.input;
-      };
-
-      setTimeout(function () {
-        var output = _this.parse(input, checkDone);
-        if (checkDone()) return;
-
-        if (!output.length) {
-          output = _this.parse(input, checkDone, prefixes);
-        }
-        if (checkDone()) return;
-
-        _this.setState({ output: output });
-      }, 11);
     }
   }, {
     key: 'execute',
@@ -11010,12 +11228,15 @@ var Lacona = (function (_React$Component2) {
     key: 'blur',
     value: function blur(event) {
       this.setState({ focused: false });
+      this.cancel();
+      this.props.onBlur();
     }
   }, {
     key: 'focus',
     value: function focus(event) {
       this.setState({ focused: true });
-      if (!this.props.tryMe) this.props.userInteracted();
+      // this.props.userInteracted()
+      this.props.onFocus();
     }
   }, {
     key: 'clearPrefix',
@@ -11025,26 +11246,20 @@ var Lacona = (function (_React$Component2) {
   }, {
     key: 'render',
     value: function render() {
-      return _react2['default'].createElement(
-        _reactAddonsCssTransitionGroup2['default'],
-        { component: 'div', className: 'lacona', transitionName: 'lacona', transitionAppear: true, transitionAppearTimeout: 0, transitionEnterTimeout: 1000, transitionLeaveTimeout: 1500 },
-        _react2['default'].createElement(Keys, { visible: this.state.focused, key: 'keys' }),
-        _react2['default'].createElement(_reactLacona.LaconaView, {
-          ref: 'lacona',
-          key: 'lacona',
-          onFocus: this.focus.bind(this),
-          onBlur: this.blur.bind(this),
-          userInput: this.state.input,
-          outputs: this.state.output,
-          prefix: this.state.prefix,
-          update: this.update.bind(this),
-          execute: this.execute.bind(this),
-          cancel: this.cancel.bind(this),
-          clearPrefix: this.clearPrefix.bind(this),
-          userInteracted: this.props.userInteracted,
-          tabIndex: this.props.tabIndex,
-          placeholder: this.props.placeholder })
-      );
+      return _react2['default'].createElement(_reactLacona.LaconaView, {
+        ref: 'lacona',
+        key: 'lacona',
+        onFocus: this.focus.bind(this),
+        onBlur: this.blur.bind(this),
+        userInput: this.state.input,
+        outputs: this.state.output,
+        prefix: this.state.prefix,
+        update: this.update.bind(this),
+        execute: this.execute.bind(this),
+        cancel: this.cancel.bind(this),
+        clearPrefix: this.clearPrefix.bind(this),
+        tabIndex: this.props.tabIndex,
+        placeholder: this.props.placeholder });
     }
   }]);
 
@@ -11060,7 +11275,7 @@ Lacona.defaultProps = {
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./sentence.jsx":106,"babel-runtime/core-js/get-iterator":602,"babel-runtime/helpers/class-call-check":611,"babel-runtime/helpers/create-class":612,"babel-runtime/helpers/get":614,"babel-runtime/helpers/inherits":615,"babel-runtime/helpers/interop-require-default":616,"babel-runtime/helpers/to-consumable-array":618,"lacona":488,"react":473,"react-addons-css-transition-group":305,"react-lacona":309}],104:[function(require,module,exports){
+},{"./sentence.jsx":104,"babel-runtime/helpers/class-call-check":609,"babel-runtime/helpers/create-class":610,"babel-runtime/helpers/get":613,"babel-runtime/helpers/inherits":614,"babel-runtime/helpers/interop-require-default":615,"babel-runtime/helpers/to-consumable-array":617,"lacona":318,"react":597,"react-addons-css-transition-group":429,"react-lacona":433}],102:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -11111,237 +11326,178 @@ var _reactAddonsCssTransitionGroup = require('react-addons-css-transition-group'
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
 var MS_PER_INPUT = 10;
+var DOWNLOAD_LINK = 'http://lacona-download.firebaseapp.com/packages/0.4.2/LaconaBeta.zip';
+var ISSUES_LINK = 'https://github.com/lacona/LaconaApp/issues';
+var CHANGELOG_LINK = 'https://github.com/lacona/LaconaApp/blob/master/CHANGELOG.md';
+var ABOUT_LINK = 'https://github.com/lacona/LaconaApp';
 
-var examples = ['open Calendar', 'open Facebook', 'open kickstarter.com',
-// 'open ~/Downloads/Lacona.dmg',
-'open todo.txt', 'open my-document.docx with Pages', 'open lacona.io in Safari', 'remind me to Pick up the car September 12 at 11:30am', 'remind me to Buy a gift 7 days before 12/1', 'search Google for pictures of cats', 'search Wikipedia for Pluto', 'Google stormtroopers', 'Amazon Avengers', 'play Robot Love', 'play Walk the Moon', 'play Jason Derulo, Flyte, and Elle King', 'play next song', 'pause', 'call Mom', 'email Tony Stark', 'email Dinner Plans to Peter Parker', 'facetime Bruce Banner', 'email app@lacona.io', 'call +1 617 867 5309', 'turn on do not disturb for 25 minutes', 'translate 我爱你 to English'];
+var CURRENT_VERSION = 'Beta 5';
+var REQUIRED_VERSION = 'OSX 10.11 El Capitan';
 
-var Lightbox = (function (_React$Component) {
-  _inherits(Lightbox, _React$Component);
-
-  function Lightbox() {
-    _classCallCheck(this, Lightbox);
-
-    _get(Object.getPrototypeOf(Lightbox.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Lightbox, [{
-    key: 'render',
-    value: function render() {
-      return _react2['default'].createElement(
+var Lightbox = function Lightbox(props) {
+  return _react2['default'].createElement(
+    'div',
+    { className: 'lightbox-total' + (props.visible ? ' visible' : '') },
+    _react2['default'].createElement('div', { className: 'lightbox-cover', onClick: props.hide }),
+    _react2['default'].createElement(
+      'div',
+      { className: 'lightbox' },
+      _react2['default'].createElement(
         'div',
-        { className: 'lightbox-total' },
-        _react2['default'].createElement('div', { className: 'lightbox-cover', onClick: this.props.hide }),
-        _react2['default'].createElement(
-          'div',
-          { className: 'lightbox' },
-          _react2['default'].createElement(
-            'div',
-            { tabIndex: '0', className: 'closeButton', onClick: this.props.hide },
-            '×'
-          ),
-          _react2['default'].createElement(
-            'h3',
-            null,
-            'Thanks for trying the Lacona demo!'
-          ),
-          this.props.detail ? _react2['default'].createElement(
-            'p',
-            { className: 'well' },
-            this.props.detail
-          ) : null,
-          _react2['default'].createElement(
-            'p',
-            { className: 'description' },
-            'If this were a real copy of Lacona, it would ',
-            this.props.message,
-            '.'
-          ),
-          _react2['default'].createElement(ShareSheet, { showBTCLightbox: this.props.showBTCLightbox })
-        )
-      );
-    }
-  }]);
-
-  return Lightbox;
-})(_react2['default'].Component);
-
-var BitcoinLightbox = (function (_React$Component2) {
-  _inherits(BitcoinLightbox, _React$Component2);
-
-  function BitcoinLightbox() {
-    _classCallCheck(this, BitcoinLightbox);
-
-    _get(Object.getPrototypeOf(BitcoinLightbox.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(BitcoinLightbox, [{
-    key: 'render',
-    value: function render() {
-      return _react2['default'].createElement(
-        'div',
-        { className: 'lightbox-total' },
-        _react2['default'].createElement('div', { className: 'lightbox-cover', onClick: this.props.hide }),
-        _react2['default'].createElement(
-          'div',
-          { className: 'lightbox btc' },
-          _react2['default'].createElement(
-            'div',
-            { tabIndex: '0', className: 'closeButton', onClick: this.props.hide },
-            '×'
-          ),
-          _react2['default'].createElement(
-            'h3',
-            null,
-            'Donate to development with Bitcoin'
-          ),
-          _react2['default'].createElement('img', { className: 'qr-code', src: 'btc-qr.png' }),
-          _react2['default'].createElement(
-            'a',
-            { className: 'btc-address', href: 'bitcoin:1PDi8uvM4ADkes28aJ98pUrVhnxDPWrWnx' },
-            '1PDi8uvM4ADkes28aJ98pUrVhnxDPWrWnx'
-          )
-        )
-      );
-    }
-  }]);
-
-  return BitcoinLightbox;
-})(_react2['default'].Component);
-
-var ShareSheet = (function (_React$Component3) {
-  _inherits(ShareSheet, _React$Component3);
-
-  function ShareSheet() {
-    _classCallCheck(this, ShareSheet);
-
-    _get(Object.getPrototypeOf(ShareSheet.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(ShareSheet, [{
-    key: 'render',
-    value: function render() {
-      return _react2['default'].createElement(
-        'div',
-        { className: 'share-sheet' },
-        this.props.includeTry ? _react2['default'].createElement(
-          'div',
-          { className: 'share-item extend', onClick: this.props.focusTry },
-          _react2['default'].createElement(
-            'div',
-            { className: 'share-desc' },
-            'Try'
-          ),
-          _react2['default'].createElement(
-            'div',
-            { className: 'share-icons' },
-            _react2['default'].createElement('img', { src: 'try.png' })
-          )
-        ) : null,
-        _react2['default'].createElement(
-          'div',
-          { className: 'share-item' },
-          _react2['default'].createElement(
-            'div',
-            { className: 'share-desc' },
-            'Donate'
-          ),
-          _react2['default'].createElement(
-            'div',
-            { className: 'share-icons' },
-            _react2['default'].createElement(
-              'a',
-              { href: 'https://www.paypal.me/lacona', target: '_blank' },
-              _react2['default'].createElement('img', { src: 'paypal.png' })
-            ),
-            _react2['default'].createElement(
-              'a',
-              { onClick: this.props.showBTCLightbox },
-              _react2['default'].createElement('img', { src: 'bitcoin.png' })
-            )
-          )
-        ),
-        _react2['default'].createElement(
-          'a',
-          { className: 'share-item', onClick: function (e) {
-              window.open('https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458', '_blank', 'menubar=1,resizable=1,width=550,height=420');e.preventDefault();
-            }, href: 'https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458', target: '_blank' },
-          _react2['default'].createElement(
-            'div',
-            { className: 'share-desc' },
-            'Follow'
-          ),
-          _react2['default'].createElement(
-            'div',
-            { className: 'share-icons' },
-            _react2['default'].createElement('img', { src: 'twitter.png' })
-          )
-        ),
-        _react2['default'].createElement(
-          'a',
-          { className: 'share-item', onClick: function (e) {
-              window.open('http://eepurl.com/bjPRjD', '_blank', 'menubar=1,resizable=1,width=550,height=420');e.preventDefault();
-            }, href: 'http://eepurl.com/bjPRjD', target: '_blank' },
-          _react2['default'].createElement(
-            'div',
-            { className: 'share-desc' },
-            'Subscribe'
-          ),
-          _react2['default'].createElement(
-            'div',
-            { className: 'share-icons' },
-            _react2['default'].createElement('img', { src: 'email.png' })
-          )
-        ),
-        _react2['default'].createElement(
-          'div',
-          { className: 'share-item' },
-          _react2['default'].createElement(
-            'div',
-            { className: 'share-desc' },
-            'Share'
-          ),
-          _react2['default'].createElement(
-            'div',
-            { className: 'share-icons' },
-            _react2['default'].createElement(
-              'a',
-              { onClick: function (e) {
-                  window.open('https://www.facebook.com/sharer/sharer.php?u=http://lacona.io', '_blank', 'width=550,height=231');e.preventDefault();
-                }, href: 'https://www.facebook.com/sharer/sharer.php?u=http://lacona.io' },
-              _react2['default'].createElement('img', { src: 'facebook.png' })
-            ),
-            _react2['default'].createElement(
-              'a',
-              { onClick: function (e) {
-                  window.open('https://twitter.com/intent/tweet?text=Check%20out%20Lacona%20-%20Natural%20Language%20Commands%20for%20your%20Mac&url=http%3A%2F%2Flacona.io', '_blank', 'menubar=1,resizable=1,width=550,height=420');e.preventDefault();
-                }, href: 'https://twitter.com/intent/tweet?text=Check%20out%20Lacona%20-%20Natural%20Language%20Commands%20for%20your%20Mac&url=https%3A%2F%2Flacona.io' },
-              _react2['default'].createElement('img', { src: 'twitter.png' })
-            ),
-            _react2['default'].createElement(
-              'a',
-              { onClick: function (e) {
-                  window.open('https://plus.google.com/share?url=http://lacona.io', '_blank', 'width=550,height=231');e.preventDefault();
-                }, href: 'https://plus.google.com/share?url=http://lacona.io' },
-              _react2['default'].createElement('img', { src: 'googleplus.png' })
-            )
-          )
-        )
-      );
-    }
-  }]);
-
-  return ShareSheet;
-})(_react2['default'].Component);
-
-ShareSheet.defaultProps = {
-  includeTry: false,
-  focusTry: function focusTry() {},
-  showBTCLightbox: function showBTCLightbox() {}
+        { tabIndex: '0', className: 'closeButton', onClick: props.hide },
+        '×'
+      ),
+      _react2['default'].createElement(
+        'h3',
+        null,
+        'Cool, huh?'
+      ),
+      _react2['default'].createElement(
+        'p',
+        { className: 'description' },
+        'If this were a real copy of Lacona, it would ',
+        props.message,
+        '.'
+      ),
+      _react2['default'].createElement(Buttons, { check: !props.initialLoad })
+    )
+  );
 };
 
-var Page = (function (_React$Component4) {
-  _inherits(Page, _React$Component4);
+function isOSX(userAgent) {
+  return (/Mac OS X 10/.test(userAgent)
+  );
+}
+
+function isOSX10_11Plus(userAgent) {
+  return (/Mac OS X 10_11/.test(userAgent)
+  );
+}
+
+var Buttons = function Buttons(_ref) {
+  var check = _ref.check;
+
+  return _react2['default'].createElement(
+    'div',
+    { className: 'buttons' },
+    _react2['default'].createElement(SubscribeButton, null),
+    _react2['default'].createElement(FollowButton, null),
+    _react2['default'].createElement(DownloadButton, { check: check })
+  );
+};
+
+var SubscribeButton = function SubscribeButton() {
+  return _react2['default'].createElement(
+    'div',
+    { className: 'buttonContainer' },
+    _react2['default'].createElement(
+      'a',
+      { className: 'subscribeButton button', onClick: function (e) {
+          window.open('http://eepurl.com/bjPRjD', '_blank', 'menubar=1,resizable=1,width=550,height=420');e.preventDefault();
+        }, href: 'http://eepurl.com/bjPRjD', target: '_blank' },
+      'Subscribe'
+    ),
+    _react2['default'].createElement(
+      'ul',
+      null,
+      _react2['default'].createElement(
+        'li',
+        null,
+        '~1 Email/Month'
+      )
+    )
+  );
+};
+
+var FollowButton = function FollowButton() {
+  return _react2['default'].createElement(
+    'div',
+    { className: 'buttonContainer' },
+    _react2['default'].createElement(
+      'a',
+      { className: 'followButton button', onClick: function (e) {
+          window.open('https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458', '_blank', 'menubar=1,resizable=1,width=550,height=420');e.preventDefault();
+        }, href: 'https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458', target: '_blank' },
+      'Follow'
+    ),
+    _react2['default'].createElement(
+      'ul',
+      null,
+      _react2['default'].createElement(
+        'li',
+        null,
+        '@lacona on Twitter'
+      )
+    )
+  );
+};
+
+var DownloadButton = function DownloadButton() {
+  var _ref2 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+  var _ref2$check = _ref2.check;
+  var check = _ref2$check === undefined ? true : _ref2$check;
+
+  var button = _react2['default'].createElement(
+    'a',
+    { className: 'downloadButton button', href: DOWNLOAD_LINK },
+    'Download'
+  );
+  if (check && global.navigator) {
+    var userAgent = navigator.userAgent;
+    if (!isOSX10_11Plus(userAgent)) {
+      if (!isOSX(userAgent)) {
+        button = _react2['default'].createElement(
+          'a',
+          { className: 'downloadButton warn button', href: DOWNLOAD_LINK },
+          'OSX Only'
+        );
+      } else {
+        button = _react2['default'].createElement(
+          'a',
+          { className: 'downloadButton warn button', href: DOWNLOAD_LINK },
+          'OSX 10.11+'
+        );
+      }
+    }
+  }
+
+  return _react2['default'].createElement(
+    'div',
+    { className: 'buttonContainer' },
+    button,
+    _react2['default'].createElement(
+      'ul',
+      null,
+      _react2['default'].createElement(
+        'li',
+        null,
+        CURRENT_VERSION
+      ),
+      _react2['default'].createElement(
+        'li',
+        null,
+        _react2['default'].createElement(
+          'a',
+          { href: ISSUES_LINK },
+          'Issues'
+        )
+      ),
+      _react2['default'].createElement(
+        'li',
+        null,
+        _react2['default'].createElement(
+          'a',
+          { href: CHANGELOG_LINK },
+          'Changelog'
+        )
+      )
+    )
+  );
+};
+
+var Page = (function (_React$Component) {
+  _inherits(Page, _React$Component);
 
   function Page() {
     _classCallCheck(this, Page);
@@ -11349,9 +11505,8 @@ var Page = (function (_React$Component4) {
     _get(Object.getPrototypeOf(Page.prototype), 'constructor', this).call(this);
 
     this.state = {
-      theme: 'theme-eighties-dark',
       initialLoad: true,
-      demoRunning: true
+      sticky: false
     };
 
     this.execute = (0, _executeJsx2['default'])(this.showLightbox.bind(this));
@@ -11360,22 +11515,29 @@ var Page = (function (_React$Component4) {
   _createClass(Page, [{
     key: 'showLightbox',
     value: function showLightbox(text) {
-      this.setState({ lightBoxMessage: text });
+      this.setState({ lightBoxVisible: true, lightBoxMessage: text });
     }
   }, {
     key: 'hideLightBox',
     value: function hideLightBox() {
-      this.setState({ lightBoxMessage: null, lightBoxDetail: null });
+      this.setState({ lightBoxVisible: false });
     }
   }, {
-    key: 'showBTCLightbox',
-    value: function showBTCLightbox() {
-      this.setState({ btcLightboxVisible: true });
+    key: 'testSticky',
+    value: function testSticky() {
+      var contentPos = this.content.getBoundingClientRect();
+
+      if (contentPos.top < 0 && !this.state.sticky) {
+        this.setState({ sticky: true });
+      } else if (contentPos.top >= 0 && this.state.sticky) {
+        this.setState({ sticky: false });
+      }
     }
   }, {
-    key: 'hideBTCLightbox',
-    value: function hideBTCLightbox() {
-      this.setState({ btcLightboxVisible: false });
+    key: 'enableSticky',
+    value: function enableSticky() {
+      window.addEventListener('scroll', this.testSticky.bind(this));
+      this.testSticky();
     }
   }, {
     key: 'componentDidMount',
@@ -11384,62 +11546,21 @@ var Page = (function (_React$Component4) {
       (0, _reactGoogleAnalytics2['default'])('send', 'pageview');
 
       window.addEventListener('keydown', this.checkEscape.bind(this));
+      this.enableSticky();
 
       this.setState({ initialLoad: false });
-
-      setTimeout(this.startDemo.bind(this), 2000);
-    }
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      window.removeEventListener('keydown', this.checkEscape.bind(this));
-    }
-  }, {
-    key: 'startDemo',
-    value: function startDemo() {
-      var _this = this;
-
-      var shuffledExamples = _lodash2['default'].shuffle(examples);
-      this.demoRunning = true;
-
-      var shouldStop = function shouldStop() {
-        return !_this.demoRunning;
-      };
-
-      (0, _asyncEachSeries2['default'])(shuffledExamples, function (item, done) {
-        _this.type('big', shouldStop, item, false);
-        if (!shouldStop()) setTimeout(done, 7000);
-      }, this.startDemo.bind(this));
-    }
-  }, {
-    key: 'stopDemo',
-    value: function stopDemo() {
-      this.demoRunning = false;
-      // this.setState({demoRunning: false})
-    }
-  }, {
-    key: 'executeDate',
-    value: function executeDate(date) {
-      this.setState({ lightBoxDetail: ["For the purpose of this demo, everyone's birthday is ", _react2['default'].createElement(
-          'a',
-          { href: 'https://www.youtube.com/watch?v=SIQ2MrJImpI', target: '_blank', className: 'nodifferent' },
-          'October 11'
-        ), '.'] });
-      this.execute({ date: date });
     }
   }, {
     key: 'erase',
-    value: function erase(elem, shouldStop) {
-      var focus = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
-      var done = arguments.length <= 3 || arguments[3] === undefined ? function () {} : arguments[3];
+    value: function erase(done) {
+      var _this = this;
 
-      var input = elem.getInput();
+      var input = this.lacona.getInput();
 
       var _loop = function (i) {
         _lodash2['default'].delay(function () {
-          if (shouldStop()) return;
-          elem.update(input.substr(0, input.length - i));
-          if (focus) elem.focusEnd();
+          _this.lacona.update(input.substr(0, input.length - i));
+          _this.lacona.focusEnd();
         }, i * MS_PER_INPUT / 2);
       };
 
@@ -11453,25 +11574,19 @@ var Page = (function (_React$Component4) {
     }
   }, {
     key: 'type',
-    value: function type(ref, shouldStop, content) {
-      var focus = arguments.length <= 3 || arguments[3] === undefined ? true : arguments[3];
+    value: function type(content) {
+      var _this2 = this;
 
-      var elem = this.refs[ref];
-      this.erase(elem, shouldStop, focus, function () {
+      this.erase(function () {
         var _loop2 = function (i) {
-          if (shouldStop()) return {
-              v: undefined
-            };
           _lodash2['default'].delay(function () {
-            elem.update(content.substr(0, i + 1));
-            if (focus) elem.focusEnd();
+            _this2.lacona.update(content.substr(0, i + 1), i === content.length - 1);
+            _this2.lacona.focusEnd();
           }, i * MS_PER_INPUT);
         };
 
         for (var i = 0; i < content.length; i++) {
-          var _ret2 = _loop2(i);
-
-          if (typeof _ret2 === 'object') return _ret2.v;
+          _loop2(i);
         }
       });
     }
@@ -11485,103 +11600,61 @@ var Page = (function (_React$Component4) {
       }
     }
   }, {
-    key: 'focusTry',
-    value: function focusTry() {
-      this.stopDemo();
-      this.erase(this.refs.big, function () {
-        return false;
-      });
-    }
-  }, {
     key: 'render',
     value: function render() {
+      var _this3 = this;
+
+      var isMobile = this.props.isMobile && !this.state.initialLoad;
+      var isDesktop = !this.props.isMobile && !this.state.initialLoad;
+
       return _react2['default'].createElement(
         'div',
-        { className: 'page ' + (this.props.isMobile ? 'mobile' : 'desktop') + ' theme-eighties-dark' + (this.state.initialLoad ? ' initial-load' : '') },
+        { className: 'page' },
         _react2['default'].createElement(
           'header',
           null,
           _react2['default'].createElement(
             'h1',
             null,
-            _react2['default'].createElement(
-              'a',
-              { href: '#', tabIndex: '-1' },
-              'Lacona'
-            )
-          ),
-          _react2['default'].createElement(
-            'h2',
-            { className: 'category-action highlighted' },
-            'Natural Language Commands for your Mac'
-          ),
-          _react2['default'].createElement(
-            'a',
-            { href: 'http://lacona-download.firebaseapp.com/packages/0.4.2/LaconaBeta.zip', className: 'noline download-well' },
-            _react2['default'].createElement(
-              'h3',
-              null,
-              'Download Lacona (Beta) Now'
-            ),
-            _react2['default'].createElement(
-              'p',
-              null,
-              '0.4.2 - Requires OSX 10.11 El Capitan'
-            )
+            'Lacona'
           ),
           _react2['default'].createElement(
             'p',
             null,
-            'Call up Lacona with a keyboard shortcut, and type whatever you want to do. It gives intelligent suggestions as you type and then follows your orders.'
+            'Call up Lacona with a keyboard shortcut and type whatever you want to do. It gives intelligent suggestions as you type and then follows your orders.'
           ),
-          _react2['default'].createElement(
-            'p',
-            null,
-            'Lacona Beta is ',
-            _react2['default'].createElement(
-              'strong',
-              null,
-              'available for download'
-            ),
-            '. It\'s awesome, but it\'s still quite buggy. Report problems ',
-            _react2['default'].createElement(
-              'a',
-              { href: 'https://github.com/lacona/LaconaApp/issues' },
-              'here'
-            ),
-            '. This page is an in-browser demo.'
-          )
+          _react2['default'].createElement(Buttons, { check: !this.state.initialLoad })
         ),
+        isMobile ? _react2['default'].createElement(
+          'div',
+          { className: 'disclaimer' },
+          _react2['default'].createElement(
+            'p',
+            null,
+            'Lacona is designed for use with a keyboard on a full desktop operating system. For the full experience, visit this page on your computer!'
+          )
+        ) : undefined,
+        isDesktop ? _react2['default'].createElement(
+          'div',
+          { className: 'lacona-demo' + (this.state.sticky ? ' sticky' : '') },
+          _react2['default'].createElement(_laconaJsx2['default'], {
+            onFocus: function () {},
+            onBlur: function () {},
+            execute: this.execute,
+            ref: function (c) {
+              return _this3.lacona = c;
+            },
+            tryMe: true,
+            tabIndex: 1 })
+        ) : undefined,
         _react2['default'].createElement(
           'content',
-          null,
+          { ref: function (c) {
+              return _this3.content = c;
+            } },
           _react2['default'].createElement(
             'section',
-            { className: 'full green' },
-            _react2['default'].createElement(
-              'div',
-              { className: 'text' },
-              _react2['default'].createElement(
-                'p',
-                { className: 'well mobileOnly' },
-                'Lacona is designed for use with a keyboard on a full desktop operating system, not for mobile devices. For the full experience, visit this page on your computer!'
-              ),
-              _react2['default'].createElement(ShareSheet, { includeTry: true, focusTry: this.focusTry.bind(this), showBTCLightbox: this.showBTCLightbox.bind(this) })
-            )
-          ),
-          _react2['default'].createElement(
-            'section',
-            { className: 'full' },
-            _react2['default'].createElement(_laconaJsx2['default'], {
-              userInteracted: this.stopDemo.bind(this),
-              execute: this.execute,
-              ref: 'big',
-              tryMe: true,
-              tabIndex: 1 })
-          ),
-          _react2['default'].createElement(
-            'section',
-            { className: 'textLeft' },
+            null,
             _react2['default'].createElement(
               'div',
               { className: 'text' },
@@ -11604,9 +11677,7 @@ var Page = (function (_React$Component4) {
                 { className: 'examples' },
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '0', function () {
-                      return false;
-                    }, 'open Calendar') },
+                  { onClick: !isMobile ? this.type.bind(this, 'open Calendar') : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-action' },
@@ -11621,9 +11692,7 @@ var Page = (function (_React$Component4) {
                 ),
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '0', function () {
-                      return false;
-                    }, 'open Parental Controls') },
+                  { onClick: !isMobile ? this.type.bind(this, 'open Parental Controls') : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-action' },
@@ -11638,9 +11707,7 @@ var Page = (function (_React$Component4) {
                 ),
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '0', function () {
-                      return false;
-                    }, 'open Facebook and Twitter') },
+                  { onClick: !isMobile ? this.type.bind(this, 'open Facebook and Twitter') : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-action' },
@@ -11667,9 +11734,7 @@ var Page = (function (_React$Component4) {
                 ),
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '0', function () {
-                      return false;
-                    }, 'iTunes') },
+                  { onClick: !isMobile ? this.type.bind(this, 'iTunes') : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-argument' + (0, _reactLacona.hashArgument)('application') },
@@ -11678,9 +11743,7 @@ var Page = (function (_React$Component4) {
                 ),
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '0', function () {
-                      return false;
-                    }, 'quit Safari') },
+                  { onClick: !isMobile ? this.type.bind(this, 'quit Safari') : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-action' },
@@ -11695,9 +11758,7 @@ var Page = (function (_React$Component4) {
                 ),
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '0', function () {
-                      return false;
-                    }, 'open lacona.io in Safari and Firefox') },
+                  { onClick: !isMobile ? this.type.bind(this, 'open lacona.io in Safari and Firefox') : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-action' },
@@ -11736,9 +11797,7 @@ var Page = (function (_React$Component4) {
                 ),
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '0', function () {
-                      return false;
-                    }, 'switch to Messages') },
+                  { onClick: !isMobile ? this.type.bind(this, 'switch to Messages') : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-action' },
@@ -11753,9 +11812,7 @@ var Page = (function (_React$Component4) {
                 ),
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '0', function () {
-                      return false;
-                    }, 'open kickstarter.com') },
+                  { onClick: !isMobile ? this.type.bind(this, 'open kickstarter.com') : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-action' },
@@ -11768,12 +11825,24 @@ var Page = (function (_React$Component4) {
                     'kickstarter.com'
                   )
                 ),
-                '                ',
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '0', function () {
-                      return false;
-                    }, 'open Gmail and Reminders and calendar.google.com') },
+                  { onClick: !isMobile ? this.type.bind(this, 'open ~/Downloads/Lacona.dmg') : undefined },
+                  _react2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'open'
+                  ),
+                  ' ',
+                  _react2['default'].createElement(
+                    'span',
+                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('path') },
+                    '~/Downloads/Lacona.dmg'
+                  )
+                ),
+                _react2['default'].createElement(
+                  'li',
+                  { onClick: !isMobile ? this.type.bind(this, 'open Gmail and Reminders and calendar.google.com') : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-action' },
@@ -11808,9 +11877,7 @@ var Page = (function (_React$Component4) {
                 ),
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '0', function () {
-                      return false;
-                    }, 'lifehacker.com') },
+                  { onClick: !isMobile ? this.type.bind(this, 'lifehacker.com') : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-argument' + (0, _reactLacona.hashArgument)('URL') },
@@ -11819,9 +11886,7 @@ var Page = (function (_React$Component4) {
                 ),
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '0', function () {
-                      return false;
-                    }, 'close Reminders') },
+                  { onClick: !isMobile ? this.type.bind(this, 'close Reminders') : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-action' },
@@ -11836,9 +11901,7 @@ var Page = (function (_React$Component4) {
                 ),
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '0', function () {
-                      return false;
-                    }, 'open todo.txt') },
+                  { onClick: !isMobile ? this.type.bind(this, 'open todo.txt') : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-action' },
@@ -11853,9 +11916,7 @@ var Page = (function (_React$Component4) {
                 ),
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '0', function () {
-                      return false;
-                    }, 'open my-document.docx with Pages') },
+                  { onClick: !isMobile ? this.type.bind(this, 'open my-document.docx with Pages') : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-action' },
@@ -11881,12 +11942,11 @@ var Page = (function (_React$Component4) {
                   )
                 )
               )
-            ),
-            _react2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '0', execute: this.execute })
+            )
           ),
           _react2['default'].createElement(
             'section',
-            { className: 'textRight' },
+            null,
             _react2['default'].createElement(
               'div',
               { className: 'text' },
@@ -11902,31 +11962,36 @@ var Page = (function (_React$Component4) {
               _react2['default'].createElement(
                 'p',
                 null,
-                'Create reminders as though you were talking to a person. Lacona understands. Event scheduling is coming soon.'
-              ),
-              _react2['default'].createElement(
-                'ul',
-                { className: 'well' },
-                _react2['default'].createElement(
-                  'li',
-                  null,
-                  'Due to browser limitations, this may sometimes be choppy.'
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  null,
-                  'This demo US assumes date formats.'
-                )
+                'Create reminders and schedule events as though you were talking to a person. Lacona understands. You can even use birthdays and anniversarys in your commands. It\'s natural!'
               ),
               _react2['default'].createElement(
                 'ul',
                 { className: 'examples' },
-                '                ',
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '1', function () {
-                      return false;
-                    }, 'remind me to Pick up the car September 12 at 11:30am') },
+                  { onClick: !isMobile ? this.type.bind(this, 'schedule Party at 7pm Friday') : undefined },
+                  'schedule ',
+                  _react2['default'].createElement(
+                    'span',
+                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('calendar event') },
+                    'Party'
+                  ),
+                  ' at ',
+                  _react2['default'].createElement(
+                    'span',
+                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('time') },
+                    '7pm'
+                  ),
+                  ' ',
+                  _react2['default'].createElement(
+                    'span',
+                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('date') },
+                    'Friday'
+                  )
+                ),
+                _react2['default'].createElement(
+                  'li',
+                  { onClick: !isMobile ? this.type.bind(this, 'remind me to Pick up the car September 12 at 11:30am') : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-action' },
@@ -11959,9 +12024,7 @@ var Page = (function (_React$Component4) {
                 ),
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '1', function () {
-                      return false;
-                    }, "remind me to Buy a gift 2 weeks before my wife's birthday") },
+                  { onClick: !isMobile ? this.type.bind(this, "remind me to Buy a gift 2 weeks before my wife's birthday") : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-action' },
@@ -11980,12 +12043,54 @@ var Page = (function (_React$Component4) {
                     '2 weeks before my wife\'s birthday'
                   )
                 ),
-                '                ',
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '1', function () {
-                      return false;
-                    }, 'remind me to Buy a gift 7 days before 12/1') },
+                  { onClick: !isMobile ? this.type.bind(this, 'schedule Vacation 10a Monday to 6:30p Thursday') : undefined },
+                  _react2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'schedule'
+                  ),
+                  ' ',
+                  _react2['default'].createElement(
+                    'span',
+                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('calendar event') },
+                    'Vacation'
+                  ),
+                  ' ',
+                  _react2['default'].createElement(
+                    'span',
+                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('time') },
+                    '10a'
+                  ),
+                  ' ',
+                  _react2['default'].createElement(
+                    'span',
+                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('date') },
+                    'Monday'
+                  ),
+                  ' ',
+                  _react2['default'].createElement(
+                    'span',
+                    { className: 'category-conjunction' },
+                    'to'
+                  ),
+                  ' ',
+                  _react2['default'].createElement(
+                    'span',
+                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('time') },
+                    '6:30p'
+                  ),
+                  ' ',
+                  _react2['default'].createElement(
+                    'span',
+                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('date') },
+                    'Thursday'
+                  )
+                ),
+                _react2['default'].createElement(
+                  'li',
+                  { onClick: !isMobile ? this.type.bind(this, 'remind me to Buy a gift 7 days before 12/1') : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-action' },
@@ -12006,9 +12111,7 @@ var Page = (function (_React$Component4) {
                 ),
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '1', function () {
-                      return false;
-                    }, 'remind me to Call Jenny') },
+                  { onClick: !isMobile ? this.type.bind(this, 'remind me to Call Jenny') : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-action' },
@@ -12023,9 +12126,34 @@ var Page = (function (_React$Component4) {
                 ),
                 _react2['default'].createElement(
                   'li',
-                  { onClick: this.type.bind(this, '1', function () {
-                      return false;
-                    }, 'remind me to Charge my phone at 9pm') },
+                  { onClick: !isMobile ? this.type.bind(this, 'schedule Ski Trip next Friday to Sunday') : undefined },
+                  _react2['default'].createElement(
+                    'span',
+                    { className: 'category-action' },
+                    'schedule'
+                  ),
+                  ' ',
+                  _react2['default'].createElement(
+                    'span',
+                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('calendar event') },
+                    'Ski Trip'
+                  ),
+                  ' ',
+                  _react2['default'].createElement(
+                    'span',
+                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('date') },
+                    'Next Friday'
+                  ),
+                  ' to ',
+                  _react2['default'].createElement(
+                    'span',
+                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('date') },
+                    'Sunday'
+                  )
+                ),
+                _react2['default'].createElement(
+                  'li',
+                  { onClick: !isMobile ? this.type.bind(this, 'remind me to Charge my phone at 9pm') : undefined },
                   _react2['default'].createElement(
                     'span',
                     { className: 'category-action' },
@@ -12051,1334 +12179,1280 @@ var Page = (function (_React$Component4) {
                   )
                 )
               )
-            ),
-            _react2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '1', execute: this.execute })
+            )
           ),
           _react2['default'].createElement(
             'section',
-            { className: 'textLeft' },
+            null,
             _react2['default'].createElement(
-              'div',
-              { className: 'text' },
+              'a',
+              { name: 'settings', className: 'anchor' },
               _react2['default'].createElement(
-                'a',
-                { name: 'settings', className: 'anchor' },
-                _react2['default'].createElement(
-                  'h3',
-                  null,
-                  'Setting settings, settled'
-                )
-              ),
-              _react2['default'].createElement(
-                'p',
+                'h3',
                 null,
-                'With Lacona, there is no need to fiddle with menus and forms to change your basic settings. Turn off your Wifi, turn on Do Not Disturb, or eject drives with just a few keystrokes. Set time limits on settings, so you don\'t forget to change them back.'
-              ),
-              _react2['default'].createElement(
-                'ul',
-                { className: 'examples' },
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '2', function () {
-                      return false;
-                    }, 'turn on wifi') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'turn on'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('setting') },
-                    'wifi'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '2', function () {
-                      return false;
-                    }, 'toggle Do Not Disturb') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'toggle'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('setting') },
-                    'Do Not Disturb'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '2', function () {
-                      return false;
-                    }, 'shutdown') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'shutdown'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '2', function () {
-                      return false;
-                    }, 'eject Lacona.dmg') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'eject'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('volume') },
-                    'Lacona.dmg'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '2', function () {
-                      return false;
-                    }, 'turn off display') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'turn off display'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '2', function () {
-                      return false;
-                    }, 'empty Trash') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'empty Trash'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '2', function () {
-                      return false;
-                    }, 'enable bluetooth') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'enable'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('setting') },
-                    'bluetooth'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '2', function () {
-                      return false;
-                    }, 'turn on do not disturb for 25 minutes') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'turn on'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('setting') },
-                    'do not disturb'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'for'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('time duration') },
-                    '25 minutes'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '2', function () {
-                      return false;
-                    }, 'turn on the screensaver') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'turn on the screensaver'
-                  )
-                )
+                'Setting Settings, Settled'
               )
             ),
-            _react2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '2', execute: this.execute })
+            _react2['default'].createElement(
+              'p',
+              null,
+              'With Lacona, there is no need to fiddle with menus and forms to change your basic settings. Turn off your Wifi, turn on Do Not Disturb, eject drives, or even restart your computer with just a few keystrokes. You can set time limits on settings, so you won\'t forget to change them back.'
+            ),
+            _react2['default'].createElement(
+              'ul',
+              { className: 'examples' },
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'turn on wifi') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'turn on'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('setting') },
+                  'wifi'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'toggle Do Not Disturb') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'toggle'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('setting') },
+                  'bluetooth'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'shutdown') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'shutdown'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'eject Lacona.dmg') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'eject'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('volume') },
+                  'Lacona.dmg'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'turn off display') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'turn off display'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'empty Trash') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'empty Trash'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'enable bluetooth') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'enable'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('setting') },
+                  'bluetooth'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'turn on do not disturb for 25 minutes') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'turn on'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('setting') },
+                  'do not disturb'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'for'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('time duration') },
+                  '25 minutes'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'turn on the screensaver') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'turn on the screensaver'
+                )
+              )
+            )
           ),
           _react2['default'].createElement(
             'section',
-            { className: 'textRight' },
+            null,
             _react2['default'].createElement(
-              'div',
-              { className: 'text' },
+              'a',
+              { name: 'search', className: 'anchor' },
               _react2['default'].createElement(
-                'a',
-                { name: 'search', className: 'anchor' },
-                _react2['default'].createElement(
-                  'h3',
-                  null,
-                  'Seek and Ye Shall Find'
-                )
-              ),
-              _react2['default'].createElement(
-                'p',
+                'h3',
                 null,
-                'Search the web like a boss. Utilize powerful fallthrough functionality to save even more keystrokes.'
-              ),
-              _react2['default'].createElement(
-                'ul',
-                { className: 'examples' },
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '3', function () {
-                      return false;
-                    }, 'search Google for pictures of cats') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'search'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('search engine') },
-                    'Google'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'for'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('query') },
-                    'pictures of cats'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '3', function () {
-                      return false;
-                    }, 'Google stormtroopers') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('search engine') },
-                    'Google'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('query') },
-                    'stormtroopers'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '3', function () {
-                      return false;
-                    }, 'Amazon Avengers') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('search engine') },
-                    'Amazon'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('query') },
-                    'Avengers'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '3', function () {
-                      return false;
-                    }, 'search Wikipedia for Pluto') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'search'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('search engine') },
-                    'Wikipedia'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'for'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('query') },
-                    'Pluto'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '3', function () {
-                      return false;
-                    }, 'search eBay and Amazon for iPhone 6') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'search'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('search engine') },
-                    'eBay'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'and'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('search engine') },
-                    'Amazon'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'for'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('query') },
-                    'iPhone 6'
-                  )
-                )
+                'Seek and Ye Shall Find'
               )
             ),
-            _react2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '3', execute: this.execute })
+            _react2['default'].createElement(
+              'p',
+              null,
+              'Search the web like a boss. Use powerful fallthrough functionality to save even more keystrokes. You can even search multiple sites with a single command.'
+            ),
+            _react2['default'].createElement(
+              'ul',
+              { className: 'examples' },
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'search Google for pictures of cats') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'search'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('search engine') },
+                  'Google'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'for'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('query') },
+                  'pictures of cats'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'Google stormtroopers') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('search engine') },
+                  'Google'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('query') },
+                  'stormtroopers'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'Amazon Avengers') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('search engine') },
+                  'Amazon'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('query') },
+                  'Avengers'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'search Wikipedia for Pluto') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'search'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('search engine') },
+                  'Wikipedia'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'for'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('query') },
+                  'Pluto'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'search eBay and Amazon for iPhone 6') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'search'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('search engine') },
+                  'eBay'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'and'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('search engine') },
+                  'Amazon'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'for'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('query') },
+                  'iPhone 6'
+                )
+              )
+            )
           ),
           _react2['default'].createElement(
             'section',
-            { className: 'textLeft' },
+            null,
             _react2['default'].createElement(
-              'div',
-              { className: 'text' },
+              'a',
+              { name: 'play', className: 'anchor' },
               _react2['default'].createElement(
-                'a',
-                { name: 'play', className: 'anchor' },
-                _react2['default'].createElement(
-                  'h3',
-                  null,
-                  'Your Work Needs a DJ'
-                )
-              ),
-              _react2['default'].createElement(
-                'p',
+                'h3',
                 null,
-                'Instantly play anything in your iTunes library, without ever touching the mouse.'
-              ),
-              _react2['default'].createElement(
-                'ul',
-                { className: 'examples' },
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '4', function () {
-                      return false;
-                    }, 'play Robot Love') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'play'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('song') },
-                    'Robot Love'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '4', function () {
-                      return false;
-                    }, 'play Walk the Moon') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'play'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('artist') },
-                    'Walk the Moon'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '4', function () {
-                      return false;
-                    }, 'play Jason Derulo, Flyte, and Elle King') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'play'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('artist') },
-                    'Jason Derulo'
-                  ),
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    ', '
-                  ),
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('artist') },
-                    'Flyte'
-                  ),
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    ', and '
-                  ),
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('artist') },
-                    'Elle King'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '4', function () {
-                      return false;
-                    }, 'play next song') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'play next song'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '4', function () {
-                      return false;
-                    }, 'pause') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'pause'
-                  )
-                )
+                'Your Personal DJ'
               )
             ),
-            _react2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '4', execute: this.execute })
+            _react2['default'].createElement(
+              'p',
+              null,
+              'Instantly play anything in your iTunes library, without ever touching the mouse. Choose a bunch of songs or artists together to build an impromptu playlist. You can also control playback effortlessly.'
+            ),
+            _react2['default'].createElement(
+              'ul',
+              { className: 'examples' },
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'play Couch Potato') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'play'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('song') },
+                  'Couch Potato'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'play Wild Life') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'play'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('album') },
+                  'Wild Life'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'play next song') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'play next song'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'play Walk the Moon') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'play'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('artist') },
+                  'Walk the Moon'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'play Forever and I Bet My Life and Nicki Minaj') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'play'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('album') },
+                  'Forever'
+                ),
+                ' and ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('song') },
+                  'I Bet My Life'
+                ),
+                ' and ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('artist') },
+                  'Nicki Minaj'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'play next song') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'play next song'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'play Pop and Jazz') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'play'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('genre') },
+                  'Pop'
+                ),
+                ' and ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('genre') },
+                  'Jazz'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'pause') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'pause'
+                )
+              )
+            )
           ),
           _react2['default'].createElement(
             'section',
-            { className: 'textRight' },
+            null,
             _react2['default'].createElement(
-              'div',
-              { className: 'text' },
+              'a',
+              { name: 'contact', className: 'anchor' },
               _react2['default'].createElement(
-                'a',
-                { name: 'contact', className: 'anchor' },
-                _react2['default'].createElement(
-                  'h3',
-                  null,
-                  'Keep in Touch'
-                )
-              ),
-              _react2['default'].createElement(
-                'p',
+                'h3',
                 null,
-                'Easily communicate with all of your contacts over Email, FaceTime, iMessage. Make calls and send texts through your iPhone. Smoke signals not yet supported.'
-              ),
-              _react2['default'].createElement(
-                'ul',
-                { className: 'examples' },
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '5', function () {
-                      return false;
-                    }, 'call Mom') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'call'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('relationship') },
-                    'Mom'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '5', function () {
-                      return false;
-                    }, 'email Tony Stark') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'email'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('contact') },
-                    'Tony Stark'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '5', function () {
-                      return false;
-                    }, 'email Dinner Plans to Clinton and Natalia') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'email'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('subject') },
-                    'Dinner Plans'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'to'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('contact') },
-                    'Clinton'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'and'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('contact') },
-                    'Natalia'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '5', function () {
-                      return false;
-                    }, 'facetime my boss') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'facetime'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('relationship') },
-                    'my boss'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '5', function () {
-                      return false;
-                    }, 'facetime Bruce Banner') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'facetime'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('contact') },
-                    'Bruce Banner'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '5', function () {
-                      return false;
-                    }, 'call my Husband') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'call'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('relationship') },
-                    'my Husband'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '5', function () {
-                      return false;
-                    }, 'email app@lacona.io') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'email'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('email address') },
-                    'app@lacona.io'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '5', function () {
-                      return false;
-                    }, 'call +1 617 867 5309') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'call'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('phone number') },
-                    '+1 617 867 5309'
-                  )
-                )
+                'Keep in Touch'
               )
             ),
-            _react2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), ref: '5', execute: this.execute })
+            _react2['default'].createElement(
+              'p',
+              null,
+              'Easily communicate with all of your contacts over Email, FaceTime, and iMessage. Make calls and send texts through your iPhone. Smoke signals not yet supported.'
+            ),
+            _react2['default'].createElement(
+              'ul',
+              { className: 'examples' },
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'call Mom') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'call'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('relationship') },
+                  'Mom'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'email Tony Stark') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'email'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('contact') },
+                  'Tony Stark'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'email Dinner Plans to Clinton and Natalia') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'email'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('subject') },
+                  'Dinner Plans'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'to'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('contact') },
+                  'Clinton'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'and'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('contact') },
+                  'Natalia'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'facetime my boss') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'facetime'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('relationship') },
+                  'my boss'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'facetime Bruce Banner') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'facetime'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('contact') },
+                  'Bruce Banner'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'call my Husband') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'call'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('relationship') },
+                  'my Husband'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'email app@lacona.io') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'email'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('email address') },
+                  'app@lacona.io'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'call +1 617 867 5309') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'call'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('phone number') },
+                  '+1 617 867 5309'
+                )
+              )
+            )
           ),
           _react2['default'].createElement(
             'section',
-            { className: 'textLeft' },
+            null,
             _react2['default'].createElement(
-              'div',
-              { className: 'text' },
+              'a',
+              { name: 'translate', className: 'anchor' },
               _react2['default'].createElement(
-                'a',
-                { name: 'translate', className: 'anchor' },
-                _react2['default'].createElement(
-                  'h3',
-                  null,
-                  'Become a Global Citizen'
-                )
-              ),
-              _react2['default'].createElement(
-                'p',
+                'h3',
                 null,
-                'Quickly translate words, phrases, and websites between languages. A more natural interface for Google Translate.'
-              ),
-              _react2['default'].createElement(
-                'ul',
-                { className: 'examples' },
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '6', function () {
-                      return false;
-                    }, 'translate мороженное') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'translate'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('phrase') },
-                    'мороженное'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '6', function () {
-                      return false;
-                    }, 'translate univision.com/') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'translate'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('URL') },
-                    'univision.com'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '6', function () {
-                      return false;
-                    }, 'translate 我爱你 to Korean') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'translate'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('phrase') },
-                    '我爱你'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'to'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
-                    'Korean'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '6', function () {
-                      return false;
-                    }, 'translate ¿cómo estás? from Spanish to Japanese') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'translate'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('phrase') },
-                    'como estas?'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'from'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
-                    'Spanish'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'to'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
-                    'Japanese'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '6', function () {
-                      return false;
-                    }, 'translate hujambo from Swahili') },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'translate'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('phrase') },
-                    'hujambo'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'from'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
-                    'Swahili'
-                  )
-                ),
-                _react2['default'].createElement(
-                  'li',
-                  { onClick: this.type.bind(this, '6', function () {
-                      return false;
-                    }, "translate I don't know to Arabic, Chinese, French, Russian, and Spanish") },
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'translate'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('phrase') },
-                    'I don\'t know'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'to'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
-                    'Arabic'
-                  ),
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    ','
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
-                    'Chinese'
-                  ),
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    ','
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
-                    'French'
-                  ),
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    ','
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
-                    'Russian'
-                  ),
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    ', and'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
-                    'Spanish'
-                  )
-                )
+                'Become a Global Citizen'
               )
             ),
-            _react2['default'].createElement(_laconaJsx2['default'], { userInteracted: this.stopDemo.bind(this), execute: this.execute, ref: '6' })
+            _react2['default'].createElement(
+              'p',
+              null,
+              'Quickly translate words, phrases, and websites between languages. It\'s the quickest, most natural interface for Google Translate.'
+            ),
+            _react2['default'].createElement(
+              'ul',
+              { className: 'examples' },
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'translate мороженное') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'translate'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('phrase') },
+                  'мороженное'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'translate univision.com/') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'translate'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('URL') },
+                  'univision.com'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'translate 我爱你 to Korean') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'translate'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('phrase') },
+                  '我爱你'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'to'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
+                  'Korean'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'translate ¿cómo estás? from Spanish to Japanese') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'translate'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('phrase') },
+                  'como estas?'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'from'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
+                  'Spanish'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'to'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
+                  'Japanese'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, 'translate hujambo from Swahili') : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'translate'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('phrase') },
+                  'hujambo'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'from'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
+                  'Swahili'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                { onClick: !isMobile ? this.type.bind(this, "translate I don't know to Arabic, Chinese, French, Russian, and Spanish") : undefined },
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'translate'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('phrase') },
+                  'I don\'t know'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'to'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
+                  'Arabic'
+                ),
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  ','
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
+                  'Chinese'
+                ),
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  ','
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
+                  'French'
+                ),
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  ','
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
+                  'Russian'
+                ),
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  ', and'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('language') },
+                  'Spanish'
+                )
+              )
+            )
           ),
           _react2['default'].createElement(
             'section',
             { className: 'full' },
             _react2['default'].createElement(
-              'div',
-              { className: 'text' },
+              'h3',
+              null,
               _react2['default'].createElement(
-                'h3',
+                'a',
+                { name: 'extensibility' },
+                'The Sky\'s the Limit'
+              )
+            ),
+            _react2['default'].createElement(
+              'p',
+              null,
+              'Lacona is built to be extended. An open Developer API gives it the power it do anything you need it to do, quickly and easily. Here are some ideas. ',
+              _react2['default'].createElement(
+                'strong',
+                null,
+                'Coming in March.'
+              )
+            ),
+            _react2['default'].createElement(
+              'ul',
+              { className: 'examples inactive' },
+              _react2['default'].createElement(
+                'li',
                 null,
                 _react2['default'].createElement(
-                  'a',
-                  { name: 'extensibility' },
-                  'The Sky\'s the Limit'
+                  'span',
+                  { className: 'category-action' },
+                  'tweet'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument2' },
+                  'just setting up my twttr #blessed'
                 )
               ),
               _react2['default'].createElement(
-                'p',
+                'li',
                 null,
-                'Lacona is built to be extended. An open Developer API gives it the power it do anything you need it to do, quickly and easily.'
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'skype'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('contact') },
+                  'Aaron'
+                )
               ),
               _react2['default'].createElement(
-                'ul',
-                { className: 'examples inactive' },
+                'li',
+                null,
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'tweet'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument2' },
-                    'just setting up my twttr #blessed'
-                  )
+                  'span',
+                  { className: 'category-action' },
+                  'email'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'skype'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('contact') },
-                    'Aaron'
-                  )
+                  'span',
+                  { className: 'category-argument0' },
+                  'my last instagram picture'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'email'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument0' },
-                    'my last instagram picture'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'to'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('relationship') },
-                    'Mom'
-                  )
+                  'span',
+                  { className: 'category-conjunction' },
+                  'to'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'calculate'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument3' },
-                    'sqrt(5)'
-                  )
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('relationship') },
+                  'Mom'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'calculate'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'turn off'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument5' },
-                    'the kitchen lights'
-                  )
+                  'span',
+                  { className: 'category-argument3' },
+                  'sqrt(5)'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'turn off'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'pronounce'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument4' },
-                    'indefatigable'
-                  )
+                  'span',
+                  { className: 'category-argument5' },
+                  'the kitchen lights'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'pronounce'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'check'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument6' },
-                    'APPL'
-                  )
+                  'span',
+                  { className: 'category-argument4' },
+                  'indefatigable'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'check'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'set'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument0' },
-                    'default browser'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'to'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('application') },
-                    'Firefox'
-                  )
+                  'span',
+                  { className: 'category-argument6' },
+                  'APPL'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'set'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'set a timer'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'for'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument2' },
-                    '25 minutes'
-                  )
+                  'span',
+                  { className: 'category-argument0' },
+                  'default browser'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'execute'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument5' },
-                    'ps -ef | grep -i lacona'
-                  )
+                  'span',
+                  { className: 'category-conjunction' },
+                  'to'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'email walking directions'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'from'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument6' },
-                    'Penn Station NY'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'to'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument6' },
-                    'my house'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'to'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('contact') },
-                    'Pepper Potts'
-                  )
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('application') },
+                  'Firefox'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'set a timer'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'block'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('URL') },
-                    'reddit.com'
-                  )
+                  'span',
+                  { className: 'category-conjunction' },
+                  'for'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'subscribe'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'to'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument0' },
-                    'lifehacker'
-                  )
+                  'span',
+                  { className: 'category-argument2' },
+                  '25 minutes'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'execute'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'paste'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument2' },
-                    'my last tweet'
-                  )
+                  'span',
+                  { className: 'category-argument5' },
+                  'ps -ef | grep -i lacona'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'email walking directions'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'fork'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument1' },
-                    'lacona/lacona'
-                  )
+                  'span',
+                  { className: 'category-conjunction' },
+                  'from'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'define'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument4' },
-                    'antediluvian'
-                  )
+                  'span',
+                  { className: 'category-argument6' },
+                  'Penn Station NY'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'roll'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument0' },
-                    'd12'
-                  )
+                  'span',
+                  { className: 'category-conjunction' },
+                  'to'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'find flights'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'from'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument6' },
-                    'SFO'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'to'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument6' },
-                    'BOS'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'on'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('date') },
-                    '8/6/2015'
-                  )
+                  'span',
+                  { className: 'category-argument6' },
+                  'my house'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'yo'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('contact') },
-                    'THEDUDE'
-                  )
+                  'span',
+                  { className: 'category-conjunction' },
+                  'to'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'set an alarm'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'for'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('time') },
-                    '6am'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'on'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument' + (0, _reactLacona.hashArgument)('date') },
-                    'Christmas'
-                  )
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('contact') },
+                  'Pepper Potts'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'block'
                 ),
+                ' ',
                 _react2['default'].createElement(
-                  'li',
-                  null,
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-action' },
-                    'check the weather'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-conjunction' },
-                    'in'
-                  ),
-                  ' ',
-                  _react2['default'].createElement(
-                    'span',
-                    { className: 'category-argument2' },
-                    'Boston'
-                  )
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('URL') },
+                  'reddit.com'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'subscribe'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'to'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument0' },
+                  'lifehacker'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'paste'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument2' },
+                  'my last tweet'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'fork'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument1' },
+                  'lacona/lacona'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'define'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument4' },
+                  'antediluvian'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'roll'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument0' },
+                  'd12'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'find flights'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'from'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument6' },
+                  'SFO'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'to'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument6' },
+                  'BOS'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'on'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('date') },
+                  '8/6/2015'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'yo'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('contact') },
+                  'THEDUDE'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'set an alarm'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'for'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('time') },
+                  '6am'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'on'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument' + (0, _reactLacona.hashArgument)('date') },
+                  'Christmas'
+                )
+              ),
+              _react2['default'].createElement(
+                'li',
+                null,
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-action' },
+                  'check the weather'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-conjunction' },
+                  'in'
+                ),
+                ' ',
+                _react2['default'].createElement(
+                  'span',
+                  { className: 'category-argument2' },
+                  'Boston'
                 )
               )
             )
@@ -13388,33 +13462,38 @@ var Page = (function (_React$Component4) {
           'footer',
           null,
           _react2['default'].createElement(
-            'div',
-            { className: 'text' },
+            'p',
+            null,
+            'This page is only a demonstration of Lacona\'s interface. It cannot access your files, apps, calendar, or anything else on your computer.'
+          ),
+          _react2['default'].createElement(
+            'p',
+            null,
+            '©2016 Lacona Labs — ',
             _react2['default'].createElement(
-              'p',
-              { className: 'well' },
-              'This page is only a demonstration of Lacona\'s interface. It cannot access your files, apps, calendar, or anything else on your computer.'
+              'a',
+              { href: 'mailto:app@lacona.io' },
+              'Email'
             ),
-            '©2015 Lacona Labs'
+            ' // ',
+            _react2['default'].createElement(
+              'a',
+              { href: 'http://twitter.com/lacona', target: '_blank' },
+              'Twitter'
+            ),
+            ' // ',
+            _react2['default'].createElement(
+              'a',
+              { href: 'http://github.com/lacona', target: '_blank' },
+              'Github'
+            )
           )
         ),
-        _react2['default'].createElement(
-          _reactAddonsCssTransitionGroup2['default'],
-          { transitionName: 'lightbox', element: 'div', style: { position: 'absolute', zIndex: 2000 }, transitionEnterTimeout: 0, transitionLeaveTimeout: 500 },
-          this.state.lightBoxMessage ? _react2['default'].createElement(Lightbox, {
-            key: '1',
-            message: this.state.lightBoxMessage,
-            hide: this.hideLightBox.bind(this),
-            showBTCLightbox: this.showBTCLightbox.bind(this),
-            detail: this.state.lightBoxDetail }) : null
-        ),
-        _react2['default'].createElement(
-          _reactAddonsCssTransitionGroup2['default'],
-          { transitionName: 'lightbox', element: 'div', style: { position: 'absolute', zIndex: 2000 }, transitionEnterTimeout: 0, transitionLeaveTimeout: 500 },
-          this.state.btcLightboxVisible ? _react2['default'].createElement(BitcoinLightbox, {
-            key: '1',
-            hide: this.hideBTCLightbox.bind(this) }) : null
-        ),
+        _react2['default'].createElement(Lightbox, {
+          visible: this.state.lightBoxVisible,
+          initialLoad: this.state.initialLoad,
+          message: this.state.lightBoxMessage,
+          hide: this.hideLightBox.bind(this) }),
         _react2['default'].createElement(_reactGoogleAnalytics.Initializer, null)
       );
     }
@@ -13425,22 +13504,9 @@ var Page = (function (_React$Component4) {
 
 exports['default'] = Page;
 module.exports = exports['default'];
-/*                <li onClick={this.type.bind(this, '0', () => false, 'open ~/Downloads/Lacona.dmg')}>
-                 <span className='category-action'>open</span> <span className={`category-argument${hashArgument('path')}`}>~/Downloads/Lacona.dmg</span>
-               </li>
-*/ /*                <li onClick={this.type.bind(this, '1', () => false, "schedule Dinner with Vicky for 7pm tomorrow")}>
-                    <span className='category-action'>schedule</span> <span className={`category-argument${hashArgument('calendar event')}`}>Dinner with Vicky</span>{/* <span className='category-conjunction'>at</span> <span className='descriptor-location'>Sacco's Flatbread</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('time')}`}>7pm</span> <span className={`category-argument${hashArgument('date')}`}>tomorrow</span>
-                  </li>
-   */ /*                <li onClick={this.type.bind(this, '1', () => false, 'schedule Vacation 10a Monday to 6:30p Thursday')}>
-                       <span className='category-action'>schedule</span> <span className={`category-argument${hashArgument('calendar event')}`}>Vacation</span> <span className={`category-argument${hashArgument('time')}`}>10a</span> <span className={`category-argument${hashArgument('date')}`}>Monday</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('time')}`}>6:30p</span> <span className={`category-argument${hashArgument('date')}`}>Thursday</span>
-                     </li>
-                     <li onClick={this.type.bind(this, '1', () => false, 'schedule China trip from Native American Day to Veterans Day')}>
-                       <span className='category-action'>schedule</span> <span className={`category-argument${hashArgument('calendar event')}`}>China trip</span> <span className='category-conjunction'>from</span> <span className={`category-argument${hashArgument('holiday')}`}>Native American Day</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('holiday')}`}>Veterans Day</span>
-                     </li>
-      */
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./execute.jsx":102,"./lacona.jsx":103,"./sentence.jsx":106,"async-each-series":107,"babel-runtime/helpers/class-call-check":611,"babel-runtime/helpers/create-class":612,"babel-runtime/helpers/get":614,"babel-runtime/helpers/inherits":615,"babel-runtime/helpers/interop-require-default":616,"react":473,"react-addons-css-transition-group":305,"react-google-analytics":307,"react-lacona":309}],105:[function(require,module,exports){
+},{"./execute.jsx":100,"./lacona.jsx":101,"./sentence.jsx":104,"async-each-series":105,"babel-runtime/helpers/class-call-check":609,"babel-runtime/helpers/create-class":610,"babel-runtime/helpers/get":613,"babel-runtime/helpers/inherits":614,"babel-runtime/helpers/interop-require-default":615,"react":597,"react-addons-css-transition-group":429,"react-google-analytics":431,"react-lacona":433}],103:[function(require,module,exports){
 'use strict';
 
 var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
@@ -13463,7 +13529,7 @@ require('babel/polyfill');
 
 (0, _reactDom.render)(_react2['default'].createElement(_pageJsx2['default'], { isMobile: _detect2['default'] }), document.getElementById('page'));
 
-},{"./detect":101,"./page.jsx":104,"babel-runtime/helpers/interop-require-default":616,"babel/polyfill":298,"react":473,"react-dom":306}],106:[function(require,module,exports){
+},{"./detect":99,"./page.jsx":102,"babel-runtime/helpers/interop-require-default":615,"babel/polyfill":296,"react":597,"react-dom":430}],104:[function(require,module,exports){
 (function (process,global){
 /** @jsx createElement */
 
@@ -15702,7 +15768,7 @@ export const all = {
 */
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./demo-config":100,"_process":301,"lacona-command":51,"lacona-command-communicate":5,"lacona-command-events":9,"lacona-command-itunes":13,"lacona-command-open":17,"lacona-command-osx":29,"lacona-command-search-internet":39,"lacona-command-settings":43,"lacona-command-translate":47,"lacona-phrase":302}],107:[function(require,module,exports){
+},{"./demo-config":98,"_process":299,"lacona-command":51,"lacona-command-communicate":5,"lacona-command-events":9,"lacona-command-itunes":13,"lacona-command-open":17,"lacona-command-osx":29,"lacona-command-search-internet":39,"lacona-command-settings":43,"lacona-command-translate":47,"lacona-phrase":300}],105:[function(require,module,exports){
 (function (process){
 module.exports = function (arr, iterator, callback) {
   callback = callback || function () {};
@@ -15734,7 +15800,7 @@ function nextTick (cb) {
   }
 }
 }).call(this,require('_process'))
-},{"_process":301}],108:[function(require,module,exports){
+},{"_process":299}],106:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -15747,12 +15813,12 @@ if (global._babelPolyfill) {
 }
 global._babelPolyfill = true;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"core-js/shim":295,"regenerator/runtime":296}],109:[function(require,module,exports){
+},{"core-js/shim":293,"regenerator/runtime":294}],107:[function(require,module,exports){
 module.exports = function(it){
   if(typeof it != 'function')throw TypeError(it + ' is not a function!');
   return it;
 };
-},{}],110:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 // 22.1.3.31 Array.prototype[@@unscopables]
 var UNSCOPABLES = require('./$.wks')('unscopables')
   , ArrayProto  = Array.prototype;
@@ -15760,13 +15826,13 @@ if(ArrayProto[UNSCOPABLES] == undefined)require('./$.hide')(ArrayProto, UNSCOPAB
 module.exports = function(key){
   ArrayProto[UNSCOPABLES][key] = true;
 };
-},{"./$.hide":138,"./$.wks":190}],111:[function(require,module,exports){
+},{"./$.hide":136,"./$.wks":188}],109:[function(require,module,exports){
 var isObject = require('./$.is-object');
 module.exports = function(it){
   if(!isObject(it))throw TypeError(it + ' is not an object!');
   return it;
 };
-},{"./$.is-object":145}],112:[function(require,module,exports){
+},{"./$.is-object":143}],110:[function(require,module,exports){
 // 22.1.3.3 Array.prototype.copyWithin(target, start, end = this.length)
 'use strict';
 var toObject = require('./$.to-object')
@@ -15794,7 +15860,7 @@ module.exports = [].copyWithin || function copyWithin(target/*= 0*/, start/*= 0,
     from += inc;
   } return O;
 };
-},{"./$.to-index":183,"./$.to-length":186,"./$.to-object":187}],113:[function(require,module,exports){
+},{"./$.to-index":181,"./$.to-length":184,"./$.to-object":185}],111:[function(require,module,exports){
 // 22.1.3.6 Array.prototype.fill(value, start = 0, end = this.length)
 'use strict';
 var toObject = require('./$.to-object')
@@ -15811,7 +15877,7 @@ module.exports = [].fill || function fill(value /*, start = 0, end = @length */)
   while(endPos > index)O[index++] = value;
   return O;
 };
-},{"./$.to-index":183,"./$.to-length":186,"./$.to-object":187}],114:[function(require,module,exports){
+},{"./$.to-index":181,"./$.to-length":184,"./$.to-object":185}],112:[function(require,module,exports){
 // false -> Array#indexOf
 // true  -> Array#includes
 var toIObject = require('./$.to-iobject')
@@ -15833,7 +15899,7 @@ module.exports = function(IS_INCLUDES){
     } return !IS_INCLUDES && -1;
   };
 };
-},{"./$.to-index":183,"./$.to-iobject":185,"./$.to-length":186}],115:[function(require,module,exports){
+},{"./$.to-index":181,"./$.to-iobject":183,"./$.to-length":184}],113:[function(require,module,exports){
 // 0 -> Array#forEach
 // 1 -> Array#map
 // 2 -> Array#filter
@@ -15877,7 +15943,7 @@ module.exports = function(TYPE){
     return IS_FIND_INDEX ? -1 : IS_SOME || IS_EVERY ? IS_EVERY : result;
   };
 };
-},{"./$.array-species-create":116,"./$.ctx":124,"./$.iobject":141,"./$.to-length":186,"./$.to-object":187}],116:[function(require,module,exports){
+},{"./$.array-species-create":114,"./$.ctx":122,"./$.iobject":139,"./$.to-length":184,"./$.to-object":185}],114:[function(require,module,exports){
 // 9.4.2.3 ArraySpeciesCreate(originalArray, length)
 var isObject = require('./$.is-object')
   , isArray  = require('./$.is-array')
@@ -15894,7 +15960,7 @@ module.exports = function(original, length){
     }
   } return new (C === undefined ? Array : C)(length);
 };
-},{"./$.is-array":143,"./$.is-object":145,"./$.wks":190}],117:[function(require,module,exports){
+},{"./$.is-array":141,"./$.is-object":143,"./$.wks":188}],115:[function(require,module,exports){
 // getting tag from 19.1.3.6 Object.prototype.toString()
 var cof = require('./$.cof')
   , TAG = require('./$.wks')('toStringTag')
@@ -15911,13 +15977,13 @@ module.exports = function(it){
     // ES3 arguments fallback
     : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
 };
-},{"./$.cof":118,"./$.wks":190}],118:[function(require,module,exports){
+},{"./$.cof":116,"./$.wks":188}],116:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = function(it){
   return toString.call(it).slice(8, -1);
 };
-},{}],119:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 'use strict';
 var $            = require('./$')
   , hide         = require('./$.hide')
@@ -16077,7 +16143,7 @@ module.exports = {
     setSpecies(NAME);
   }
 };
-},{"./$":153,"./$.ctx":124,"./$.defined":125,"./$.descriptors":126,"./$.for-of":134,"./$.has":137,"./$.hide":138,"./$.is-object":145,"./$.iter-define":149,"./$.iter-step":151,"./$.redefine-all":167,"./$.set-species":172,"./$.strict-new":176,"./$.uid":189}],120:[function(require,module,exports){
+},{"./$":151,"./$.ctx":122,"./$.defined":123,"./$.descriptors":124,"./$.for-of":132,"./$.has":135,"./$.hide":136,"./$.is-object":143,"./$.iter-define":147,"./$.iter-step":149,"./$.redefine-all":165,"./$.set-species":170,"./$.strict-new":174,"./$.uid":187}],118:[function(require,module,exports){
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
 var forOf   = require('./$.for-of')
   , classof = require('./$.classof');
@@ -16089,7 +16155,7 @@ module.exports = function(NAME){
     return arr;
   };
 };
-},{"./$.classof":117,"./$.for-of":134}],121:[function(require,module,exports){
+},{"./$.classof":115,"./$.for-of":132}],119:[function(require,module,exports){
 'use strict';
 var hide              = require('./$.hide')
   , redefineAll       = require('./$.redefine-all')
@@ -16176,7 +16242,7 @@ module.exports = {
   frozenStore: frozenStore,
   WEAK: WEAK
 };
-},{"./$.an-object":111,"./$.array-methods":115,"./$.for-of":134,"./$.has":137,"./$.hide":138,"./$.is-object":145,"./$.redefine-all":167,"./$.strict-new":176,"./$.uid":189}],122:[function(require,module,exports){
+},{"./$.an-object":109,"./$.array-methods":113,"./$.for-of":132,"./$.has":135,"./$.hide":136,"./$.is-object":143,"./$.redefine-all":165,"./$.strict-new":174,"./$.uid":187}],120:[function(require,module,exports){
 'use strict';
 var global         = require('./$.global')
   , $export        = require('./$.export')
@@ -16256,10 +16322,10 @@ module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK){
 
   return C;
 };
-},{"./$.export":129,"./$.fails":131,"./$.for-of":134,"./$.global":136,"./$.is-object":145,"./$.iter-detect":150,"./$.redefine":168,"./$.redefine-all":167,"./$.set-to-string-tag":173,"./$.strict-new":176}],123:[function(require,module,exports){
+},{"./$.export":127,"./$.fails":129,"./$.for-of":132,"./$.global":134,"./$.is-object":143,"./$.iter-detect":148,"./$.redefine":166,"./$.redefine-all":165,"./$.set-to-string-tag":171,"./$.strict-new":174}],121:[function(require,module,exports){
 var core = module.exports = {version: '1.2.6'};
 if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
-},{}],124:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 // optional / simple context binding
 var aFunction = require('./$.a-function');
 module.exports = function(fn, that, length){
@@ -16280,18 +16346,18 @@ module.exports = function(fn, that, length){
     return fn.apply(that, arguments);
   };
 };
-},{"./$.a-function":109}],125:[function(require,module,exports){
+},{"./$.a-function":107}],123:[function(require,module,exports){
 // 7.2.1 RequireObjectCoercible(argument)
 module.exports = function(it){
   if(it == undefined)throw TypeError("Can't call method on  " + it);
   return it;
 };
-},{}],126:[function(require,module,exports){
+},{}],124:[function(require,module,exports){
 // Thank's IE8 for his funny defineProperty
 module.exports = !require('./$.fails')(function(){
   return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
 });
-},{"./$.fails":131}],127:[function(require,module,exports){
+},{"./$.fails":129}],125:[function(require,module,exports){
 var isObject = require('./$.is-object')
   , document = require('./$.global').document
   // in old IE typeof document.createElement is 'object'
@@ -16299,7 +16365,7 @@ var isObject = require('./$.is-object')
 module.exports = function(it){
   return is ? document.createElement(it) : {};
 };
-},{"./$.global":136,"./$.is-object":145}],128:[function(require,module,exports){
+},{"./$.global":134,"./$.is-object":143}],126:[function(require,module,exports){
 // all enumerable object keys, includes symbols
 var $ = require('./$');
 module.exports = function(it){
@@ -16314,7 +16380,7 @@ module.exports = function(it){
   }
   return keys;
 };
-},{"./$":153}],129:[function(require,module,exports){
+},{"./$":151}],127:[function(require,module,exports){
 var global    = require('./$.global')
   , core      = require('./$.core')
   , hide      = require('./$.hide')
@@ -16356,7 +16422,7 @@ $export.P = 8;  // proto
 $export.B = 16; // bind
 $export.W = 32; // wrap
 module.exports = $export;
-},{"./$.core":123,"./$.ctx":124,"./$.global":136,"./$.hide":138,"./$.redefine":168}],130:[function(require,module,exports){
+},{"./$.core":121,"./$.ctx":122,"./$.global":134,"./$.hide":136,"./$.redefine":166}],128:[function(require,module,exports){
 var MATCH = require('./$.wks')('match');
 module.exports = function(KEY){
   var re = /./;
@@ -16369,7 +16435,7 @@ module.exports = function(KEY){
     } catch(f){ /* empty */ }
   } return true;
 };
-},{"./$.wks":190}],131:[function(require,module,exports){
+},{"./$.wks":188}],129:[function(require,module,exports){
 module.exports = function(exec){
   try {
     return !!exec();
@@ -16377,7 +16443,7 @@ module.exports = function(exec){
     return true;
   }
 };
-},{}],132:[function(require,module,exports){
+},{}],130:[function(require,module,exports){
 'use strict';
 var hide     = require('./$.hide')
   , redefine = require('./$.redefine')
@@ -16404,7 +16470,7 @@ module.exports = function(KEY, length, exec){
     );
   }
 };
-},{"./$.defined":125,"./$.fails":131,"./$.hide":138,"./$.redefine":168,"./$.wks":190}],133:[function(require,module,exports){
+},{"./$.defined":123,"./$.fails":129,"./$.hide":136,"./$.redefine":166,"./$.wks":188}],131:[function(require,module,exports){
 'use strict';
 // 21.2.5.3 get RegExp.prototype.flags
 var anObject = require('./$.an-object');
@@ -16418,7 +16484,7 @@ module.exports = function(){
   if(that.sticky)     result += 'y';
   return result;
 };
-},{"./$.an-object":111}],134:[function(require,module,exports){
+},{"./$.an-object":109}],132:[function(require,module,exports){
 var ctx         = require('./$.ctx')
   , call        = require('./$.iter-call')
   , isArrayIter = require('./$.is-array-iter')
@@ -16438,7 +16504,7 @@ module.exports = function(iterable, entries, fn, that){
     call(iterator, f, step.value, entries);
   }
 };
-},{"./$.an-object":111,"./$.ctx":124,"./$.is-array-iter":142,"./$.iter-call":147,"./$.to-length":186,"./core.get-iterator-method":191}],135:[function(require,module,exports){
+},{"./$.an-object":109,"./$.ctx":122,"./$.is-array-iter":140,"./$.iter-call":145,"./$.to-length":184,"./core.get-iterator-method":189}],133:[function(require,module,exports){
 // fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
 var toIObject = require('./$.to-iobject')
   , getNames  = require('./$').getNames
@@ -16459,17 +16525,17 @@ module.exports.get = function getOwnPropertyNames(it){
   if(windowNames && toString.call(it) == '[object Window]')return getWindowNames(it);
   return getNames(toIObject(it));
 };
-},{"./$":153,"./$.to-iobject":185}],136:[function(require,module,exports){
+},{"./$":151,"./$.to-iobject":183}],134:[function(require,module,exports){
 // https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
 var global = module.exports = typeof window != 'undefined' && window.Math == Math
   ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
 if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
-},{}],137:[function(require,module,exports){
+},{}],135:[function(require,module,exports){
 var hasOwnProperty = {}.hasOwnProperty;
 module.exports = function(it, key){
   return hasOwnProperty.call(it, key);
 };
-},{}],138:[function(require,module,exports){
+},{}],136:[function(require,module,exports){
 var $          = require('./$')
   , createDesc = require('./$.property-desc');
 module.exports = require('./$.descriptors') ? function(object, key, value){
@@ -16478,9 +16544,9 @@ module.exports = require('./$.descriptors') ? function(object, key, value){
   object[key] = value;
   return object;
 };
-},{"./$":153,"./$.descriptors":126,"./$.property-desc":166}],139:[function(require,module,exports){
+},{"./$":151,"./$.descriptors":124,"./$.property-desc":164}],137:[function(require,module,exports){
 module.exports = require('./$.global').document && document.documentElement;
-},{"./$.global":136}],140:[function(require,module,exports){
+},{"./$.global":134}],138:[function(require,module,exports){
 // fast apply, http://jsperf.lnkit.com/fast-apply/5
 module.exports = function(fn, args, that){
   var un = that === undefined;
@@ -16497,13 +16563,13 @@ module.exports = function(fn, args, that){
                       : fn.call(that, args[0], args[1], args[2], args[3]);
   } return              fn.apply(that, args);
 };
-},{}],141:[function(require,module,exports){
+},{}],139:[function(require,module,exports){
 // fallback for non-array-like ES3 and non-enumerable old V8 strings
 var cof = require('./$.cof');
 module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
   return cof(it) == 'String' ? it.split('') : Object(it);
 };
-},{"./$.cof":118}],142:[function(require,module,exports){
+},{"./$.cof":116}],140:[function(require,module,exports){
 // check on default Array iterator
 var Iterators  = require('./$.iterators')
   , ITERATOR   = require('./$.wks')('iterator')
@@ -16512,24 +16578,24 @@ var Iterators  = require('./$.iterators')
 module.exports = function(it){
   return it !== undefined && (Iterators.Array === it || ArrayProto[ITERATOR] === it);
 };
-},{"./$.iterators":152,"./$.wks":190}],143:[function(require,module,exports){
+},{"./$.iterators":150,"./$.wks":188}],141:[function(require,module,exports){
 // 7.2.2 IsArray(argument)
 var cof = require('./$.cof');
 module.exports = Array.isArray || function(arg){
   return cof(arg) == 'Array';
 };
-},{"./$.cof":118}],144:[function(require,module,exports){
+},{"./$.cof":116}],142:[function(require,module,exports){
 // 20.1.2.3 Number.isInteger(number)
 var isObject = require('./$.is-object')
   , floor    = Math.floor;
 module.exports = function isInteger(it){
   return !isObject(it) && isFinite(it) && floor(it) === it;
 };
-},{"./$.is-object":145}],145:[function(require,module,exports){
+},{"./$.is-object":143}],143:[function(require,module,exports){
 module.exports = function(it){
   return typeof it === 'object' ? it !== null : typeof it === 'function';
 };
-},{}],146:[function(require,module,exports){
+},{}],144:[function(require,module,exports){
 // 7.2.8 IsRegExp(argument)
 var isObject = require('./$.is-object')
   , cof      = require('./$.cof')
@@ -16538,7 +16604,7 @@ module.exports = function(it){
   var isRegExp;
   return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : cof(it) == 'RegExp');
 };
-},{"./$.cof":118,"./$.is-object":145,"./$.wks":190}],147:[function(require,module,exports){
+},{"./$.cof":116,"./$.is-object":143,"./$.wks":188}],145:[function(require,module,exports){
 // call something on iterator step with safe closing on error
 var anObject = require('./$.an-object');
 module.exports = function(iterator, fn, value, entries){
@@ -16551,7 +16617,7 @@ module.exports = function(iterator, fn, value, entries){
     throw e;
   }
 };
-},{"./$.an-object":111}],148:[function(require,module,exports){
+},{"./$.an-object":109}],146:[function(require,module,exports){
 'use strict';
 var $              = require('./$')
   , descriptor     = require('./$.property-desc')
@@ -16565,7 +16631,7 @@ module.exports = function(Constructor, NAME, next){
   Constructor.prototype = $.create(IteratorPrototype, {next: descriptor(1, next)});
   setToStringTag(Constructor, NAME + ' Iterator');
 };
-},{"./$":153,"./$.hide":138,"./$.property-desc":166,"./$.set-to-string-tag":173,"./$.wks":190}],149:[function(require,module,exports){
+},{"./$":151,"./$.hide":136,"./$.property-desc":164,"./$.set-to-string-tag":171,"./$.wks":188}],147:[function(require,module,exports){
 'use strict';
 var LIBRARY        = require('./$.library')
   , $export        = require('./$.export')
@@ -16632,7 +16698,7 @@ module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED
   }
   return methods;
 };
-},{"./$":153,"./$.export":129,"./$.has":137,"./$.hide":138,"./$.iter-create":148,"./$.iterators":152,"./$.library":155,"./$.redefine":168,"./$.set-to-string-tag":173,"./$.wks":190}],150:[function(require,module,exports){
+},{"./$":151,"./$.export":127,"./$.has":135,"./$.hide":136,"./$.iter-create":146,"./$.iterators":150,"./$.library":153,"./$.redefine":166,"./$.set-to-string-tag":171,"./$.wks":188}],148:[function(require,module,exports){
 var ITERATOR     = require('./$.wks')('iterator')
   , SAFE_CLOSING = false;
 
@@ -16654,13 +16720,13 @@ module.exports = function(exec, skipClosing){
   } catch(e){ /* empty */ }
   return safe;
 };
-},{"./$.wks":190}],151:[function(require,module,exports){
+},{"./$.wks":188}],149:[function(require,module,exports){
 module.exports = function(done, value){
   return {value: value, done: !!done};
 };
-},{}],152:[function(require,module,exports){
+},{}],150:[function(require,module,exports){
 module.exports = {};
-},{}],153:[function(require,module,exports){
+},{}],151:[function(require,module,exports){
 var $Object = Object;
 module.exports = {
   create:     $Object.create,
@@ -16674,7 +16740,7 @@ module.exports = {
   getSymbols: $Object.getOwnPropertySymbols,
   each:       [].forEach
 };
-},{}],154:[function(require,module,exports){
+},{}],152:[function(require,module,exports){
 var $         = require('./$')
   , toIObject = require('./$.to-iobject');
 module.exports = function(object, el){
@@ -16685,24 +16751,24 @@ module.exports = function(object, el){
     , key;
   while(length > index)if(O[key = keys[index++]] === el)return key;
 };
-},{"./$":153,"./$.to-iobject":185}],155:[function(require,module,exports){
+},{"./$":151,"./$.to-iobject":183}],153:[function(require,module,exports){
 module.exports = false;
-},{}],156:[function(require,module,exports){
+},{}],154:[function(require,module,exports){
 // 20.2.2.14 Math.expm1(x)
 module.exports = Math.expm1 || function expm1(x){
   return (x = +x) == 0 ? x : x > -1e-6 && x < 1e-6 ? x + x * x / 2 : Math.exp(x) - 1;
 };
-},{}],157:[function(require,module,exports){
+},{}],155:[function(require,module,exports){
 // 20.2.2.20 Math.log1p(x)
 module.exports = Math.log1p || function log1p(x){
   return (x = +x) > -1e-8 && x < 1e-8 ? x - x * x / 2 : Math.log(1 + x);
 };
-},{}],158:[function(require,module,exports){
+},{}],156:[function(require,module,exports){
 // 20.2.2.28 Math.sign(x)
 module.exports = Math.sign || function sign(x){
   return (x = +x) == 0 || x != x ? x : x < 0 ? -1 : 1;
 };
-},{}],159:[function(require,module,exports){
+},{}],157:[function(require,module,exports){
 var global    = require('./$.global')
   , macrotask = require('./$.task').set
   , Observer  = global.MutationObserver || global.WebKitMutationObserver
@@ -16767,7 +16833,7 @@ module.exports = function asap(fn){
     notify();
   } last = task;
 };
-},{"./$.cof":118,"./$.global":136,"./$.task":182}],160:[function(require,module,exports){
+},{"./$.cof":116,"./$.global":134,"./$.task":180}],158:[function(require,module,exports){
 // 19.1.2.1 Object.assign(target, source, ...)
 var $        = require('./$')
   , toObject = require('./$.to-object')
@@ -16801,7 +16867,7 @@ module.exports = require('./$.fails')(function(){
   }
   return T;
 } : Object.assign;
-},{"./$":153,"./$.fails":131,"./$.iobject":141,"./$.to-object":187}],161:[function(require,module,exports){
+},{"./$":151,"./$.fails":129,"./$.iobject":139,"./$.to-object":185}],159:[function(require,module,exports){
 // most Object methods by ES6 should accept primitives
 var $export = require('./$.export')
   , core    = require('./$.core')
@@ -16812,7 +16878,7 @@ module.exports = function(KEY, exec){
   exp[KEY] = exec(fn);
   $export($export.S + $export.F * fails(function(){ fn(1); }), 'Object', exp);
 };
-},{"./$.core":123,"./$.export":129,"./$.fails":131}],162:[function(require,module,exports){
+},{"./$.core":121,"./$.export":127,"./$.fails":129}],160:[function(require,module,exports){
 var $         = require('./$')
   , toIObject = require('./$.to-iobject')
   , isEnum    = $.isEnum;
@@ -16829,7 +16895,7 @@ module.exports = function(isEntries){
     } return result;
   };
 };
-},{"./$":153,"./$.to-iobject":185}],163:[function(require,module,exports){
+},{"./$":151,"./$.to-iobject":183}],161:[function(require,module,exports){
 // all object keys, includes non-enumerable and symbols
 var $        = require('./$')
   , anObject = require('./$.an-object')
@@ -16839,7 +16905,7 @@ module.exports = Reflect && Reflect.ownKeys || function ownKeys(it){
     , getSymbols = $.getSymbols;
   return getSymbols ? keys.concat(getSymbols(it)) : keys;
 };
-},{"./$":153,"./$.an-object":111,"./$.global":136}],164:[function(require,module,exports){
+},{"./$":151,"./$.an-object":109,"./$.global":134}],162:[function(require,module,exports){
 'use strict';
 var path      = require('./$.path')
   , invoke    = require('./$.invoke')
@@ -16864,9 +16930,9 @@ module.exports = function(/* ...pargs */){
     return invoke(fn, args, that);
   };
 };
-},{"./$.a-function":109,"./$.invoke":140,"./$.path":165}],165:[function(require,module,exports){
+},{"./$.a-function":107,"./$.invoke":138,"./$.path":163}],163:[function(require,module,exports){
 module.exports = require('./$.global');
-},{"./$.global":136}],166:[function(require,module,exports){
+},{"./$.global":134}],164:[function(require,module,exports){
 module.exports = function(bitmap, value){
   return {
     enumerable  : !(bitmap & 1),
@@ -16875,13 +16941,13 @@ module.exports = function(bitmap, value){
     value       : value
   };
 };
-},{}],167:[function(require,module,exports){
+},{}],165:[function(require,module,exports){
 var redefine = require('./$.redefine');
 module.exports = function(target, src){
   for(var key in src)redefine(target, key, src[key]);
   return target;
 };
-},{"./$.redefine":168}],168:[function(require,module,exports){
+},{"./$.redefine":166}],166:[function(require,module,exports){
 // add fake Function#toString
 // for correct work wrapped methods / constructors with methods like LoDash isNative
 var global    = require('./$.global')
@@ -16909,7 +16975,7 @@ require('./$.core').inspectSource = function(it){
 })(Function.prototype, TO_STRING, function toString(){
   return typeof this == 'function' && this[SRC] || $toString.call(this);
 });
-},{"./$.core":123,"./$.global":136,"./$.hide":138,"./$.uid":189}],169:[function(require,module,exports){
+},{"./$.core":121,"./$.global":134,"./$.hide":136,"./$.uid":187}],167:[function(require,module,exports){
 module.exports = function(regExp, replace){
   var replacer = replace === Object(replace) ? function(part){
     return replace[part];
@@ -16918,12 +16984,12 @@ module.exports = function(regExp, replace){
     return String(it).replace(regExp, replacer);
   };
 };
-},{}],170:[function(require,module,exports){
+},{}],168:[function(require,module,exports){
 // 7.2.9 SameValue(x, y)
 module.exports = Object.is || function is(x, y){
   return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
 };
-},{}],171:[function(require,module,exports){
+},{}],169:[function(require,module,exports){
 // Works with __proto__ only. Old v8 can't work with null proto objects.
 /* eslint-disable no-proto */
 var getDesc  = require('./$').getDesc
@@ -16950,7 +17016,7 @@ module.exports = {
     }({}, false) : undefined),
   check: check
 };
-},{"./$":153,"./$.an-object":111,"./$.ctx":124,"./$.is-object":145}],172:[function(require,module,exports){
+},{"./$":151,"./$.an-object":109,"./$.ctx":122,"./$.is-object":143}],170:[function(require,module,exports){
 'use strict';
 var global      = require('./$.global')
   , $           = require('./$')
@@ -16964,7 +17030,7 @@ module.exports = function(KEY){
     get: function(){ return this; }
   });
 };
-},{"./$":153,"./$.descriptors":126,"./$.global":136,"./$.wks":190}],173:[function(require,module,exports){
+},{"./$":151,"./$.descriptors":124,"./$.global":134,"./$.wks":188}],171:[function(require,module,exports){
 var def = require('./$').setDesc
   , has = require('./$.has')
   , TAG = require('./$.wks')('toStringTag');
@@ -16972,14 +17038,14 @@ var def = require('./$').setDesc
 module.exports = function(it, tag, stat){
   if(it && !has(it = stat ? it : it.prototype, TAG))def(it, TAG, {configurable: true, value: tag});
 };
-},{"./$":153,"./$.has":137,"./$.wks":190}],174:[function(require,module,exports){
+},{"./$":151,"./$.has":135,"./$.wks":188}],172:[function(require,module,exports){
 var global = require('./$.global')
   , SHARED = '__core-js_shared__'
   , store  = global[SHARED] || (global[SHARED] = {});
 module.exports = function(key){
   return store[key] || (store[key] = {});
 };
-},{"./$.global":136}],175:[function(require,module,exports){
+},{"./$.global":134}],173:[function(require,module,exports){
 // 7.3.20 SpeciesConstructor(O, defaultConstructor)
 var anObject  = require('./$.an-object')
   , aFunction = require('./$.a-function')
@@ -16988,12 +17054,12 @@ module.exports = function(O, D){
   var C = anObject(O).constructor, S;
   return C === undefined || (S = anObject(C)[SPECIES]) == undefined ? D : aFunction(S);
 };
-},{"./$.a-function":109,"./$.an-object":111,"./$.wks":190}],176:[function(require,module,exports){
+},{"./$.a-function":107,"./$.an-object":109,"./$.wks":188}],174:[function(require,module,exports){
 module.exports = function(it, Constructor, name){
   if(!(it instanceof Constructor))throw TypeError(name + ": use the 'new' operator!");
   return it;
 };
-},{}],177:[function(require,module,exports){
+},{}],175:[function(require,module,exports){
 var toInteger = require('./$.to-integer')
   , defined   = require('./$.defined');
 // true  -> String#at
@@ -17011,7 +17077,7 @@ module.exports = function(TO_STRING){
       : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
   };
 };
-},{"./$.defined":125,"./$.to-integer":184}],178:[function(require,module,exports){
+},{"./$.defined":123,"./$.to-integer":182}],176:[function(require,module,exports){
 // helper for String#{startsWith, endsWith, includes}
 var isRegExp = require('./$.is-regexp')
   , defined  = require('./$.defined');
@@ -17020,7 +17086,7 @@ module.exports = function(that, searchString, NAME){
   if(isRegExp(searchString))throw TypeError('String#' + NAME + " doesn't accept regex!");
   return String(defined(that));
 };
-},{"./$.defined":125,"./$.is-regexp":146}],179:[function(require,module,exports){
+},{"./$.defined":123,"./$.is-regexp":144}],177:[function(require,module,exports){
 // https://github.com/ljharb/proposal-string-pad-left-right
 var toLength = require('./$.to-length')
   , repeat   = require('./$.string-repeat')
@@ -17038,7 +17104,7 @@ module.exports = function(that, maxLength, fillString, left){
   if(stringFiller.length > fillLen)stringFiller = stringFiller.slice(0, fillLen);
   return left ? stringFiller + S : S + stringFiller;
 };
-},{"./$.defined":125,"./$.string-repeat":180,"./$.to-length":186}],180:[function(require,module,exports){
+},{"./$.defined":123,"./$.string-repeat":178,"./$.to-length":184}],178:[function(require,module,exports){
 'use strict';
 var toInteger = require('./$.to-integer')
   , defined   = require('./$.defined');
@@ -17051,7 +17117,7 @@ module.exports = function repeat(count){
   for(;n > 0; (n >>>= 1) && (str += str))if(n & 1)res += str;
   return res;
 };
-},{"./$.defined":125,"./$.to-integer":184}],181:[function(require,module,exports){
+},{"./$.defined":123,"./$.to-integer":182}],179:[function(require,module,exports){
 var $export = require('./$.export')
   , defined = require('./$.defined')
   , fails   = require('./$.fails')
@@ -17081,7 +17147,7 @@ var trim = exporter.trim = function(string, TYPE){
 };
 
 module.exports = exporter;
-},{"./$.defined":125,"./$.export":129,"./$.fails":131}],182:[function(require,module,exports){
+},{"./$.defined":123,"./$.export":127,"./$.fails":129}],180:[function(require,module,exports){
 var ctx                = require('./$.ctx')
   , invoke             = require('./$.invoke')
   , html               = require('./$.html')
@@ -17157,7 +17223,7 @@ module.exports = {
   set:   setTask,
   clear: clearTask
 };
-},{"./$.cof":118,"./$.ctx":124,"./$.dom-create":127,"./$.global":136,"./$.html":139,"./$.invoke":140}],183:[function(require,module,exports){
+},{"./$.cof":116,"./$.ctx":122,"./$.dom-create":125,"./$.global":134,"./$.html":137,"./$.invoke":138}],181:[function(require,module,exports){
 var toInteger = require('./$.to-integer')
   , max       = Math.max
   , min       = Math.min;
@@ -17165,34 +17231,34 @@ module.exports = function(index, length){
   index = toInteger(index);
   return index < 0 ? max(index + length, 0) : min(index, length);
 };
-},{"./$.to-integer":184}],184:[function(require,module,exports){
+},{"./$.to-integer":182}],182:[function(require,module,exports){
 // 7.1.4 ToInteger
 var ceil  = Math.ceil
   , floor = Math.floor;
 module.exports = function(it){
   return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
 };
-},{}],185:[function(require,module,exports){
+},{}],183:[function(require,module,exports){
 // to indexed object, toObject with fallback for non-array-like ES3 strings
 var IObject = require('./$.iobject')
   , defined = require('./$.defined');
 module.exports = function(it){
   return IObject(defined(it));
 };
-},{"./$.defined":125,"./$.iobject":141}],186:[function(require,module,exports){
+},{"./$.defined":123,"./$.iobject":139}],184:[function(require,module,exports){
 // 7.1.15 ToLength
 var toInteger = require('./$.to-integer')
   , min       = Math.min;
 module.exports = function(it){
   return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
 };
-},{"./$.to-integer":184}],187:[function(require,module,exports){
+},{"./$.to-integer":182}],185:[function(require,module,exports){
 // 7.1.13 ToObject(argument)
 var defined = require('./$.defined');
 module.exports = function(it){
   return Object(defined(it));
 };
-},{"./$.defined":125}],188:[function(require,module,exports){
+},{"./$.defined":123}],186:[function(require,module,exports){
 // 7.1.1 ToPrimitive(input [, PreferredType])
 var isObject = require('./$.is-object');
 // instead of the ES6 spec version, we didn't implement @@toPrimitive case
@@ -17205,13 +17271,13 @@ module.exports = function(it, S){
   if(!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
   throw TypeError("Can't convert object to primitive value");
 };
-},{"./$.is-object":145}],189:[function(require,module,exports){
+},{"./$.is-object":143}],187:[function(require,module,exports){
 var id = 0
   , px = Math.random();
 module.exports = function(key){
   return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
 };
-},{}],190:[function(require,module,exports){
+},{}],188:[function(require,module,exports){
 var store  = require('./$.shared')('wks')
   , uid    = require('./$.uid')
   , Symbol = require('./$.global').Symbol;
@@ -17219,7 +17285,7 @@ module.exports = function(name){
   return store[name] || (store[name] =
     Symbol && Symbol[name] || (Symbol || uid)('Symbol.' + name));
 };
-},{"./$.global":136,"./$.shared":174,"./$.uid":189}],191:[function(require,module,exports){
+},{"./$.global":134,"./$.shared":172,"./$.uid":187}],189:[function(require,module,exports){
 var classof   = require('./$.classof')
   , ITERATOR  = require('./$.wks')('iterator')
   , Iterators = require('./$.iterators');
@@ -17228,7 +17294,7 @@ module.exports = require('./$.core').getIteratorMethod = function(it){
     || it['@@iterator']
     || Iterators[classof(it)];
 };
-},{"./$.classof":117,"./$.core":123,"./$.iterators":152,"./$.wks":190}],192:[function(require,module,exports){
+},{"./$.classof":115,"./$.core":121,"./$.iterators":150,"./$.wks":188}],190:[function(require,module,exports){
 'use strict';
 var $                 = require('./$')
   , $export           = require('./$.export')
@@ -17505,21 +17571,21 @@ $export($export.P + $export.F * (fails(function(){
       ':' + lz(d.getUTCSeconds()) + '.' + (m > 99 ? m : '0' + lz(m)) + 'Z';
   }
 });
-},{"./$":153,"./$.a-function":109,"./$.an-object":111,"./$.array-includes":114,"./$.array-methods":115,"./$.cof":118,"./$.descriptors":126,"./$.dom-create":127,"./$.export":129,"./$.fails":131,"./$.has":137,"./$.html":139,"./$.invoke":140,"./$.iobject":141,"./$.is-array":143,"./$.is-object":145,"./$.property-desc":166,"./$.to-index":183,"./$.to-integer":184,"./$.to-iobject":185,"./$.to-length":186,"./$.to-object":187,"./$.uid":189}],193:[function(require,module,exports){
+},{"./$":151,"./$.a-function":107,"./$.an-object":109,"./$.array-includes":112,"./$.array-methods":113,"./$.cof":116,"./$.descriptors":124,"./$.dom-create":125,"./$.export":127,"./$.fails":129,"./$.has":135,"./$.html":137,"./$.invoke":138,"./$.iobject":139,"./$.is-array":141,"./$.is-object":143,"./$.property-desc":164,"./$.to-index":181,"./$.to-integer":182,"./$.to-iobject":183,"./$.to-length":184,"./$.to-object":185,"./$.uid":187}],191:[function(require,module,exports){
 // 22.1.3.3 Array.prototype.copyWithin(target, start, end = this.length)
 var $export = require('./$.export');
 
 $export($export.P, 'Array', {copyWithin: require('./$.array-copy-within')});
 
 require('./$.add-to-unscopables')('copyWithin');
-},{"./$.add-to-unscopables":110,"./$.array-copy-within":112,"./$.export":129}],194:[function(require,module,exports){
+},{"./$.add-to-unscopables":108,"./$.array-copy-within":110,"./$.export":127}],192:[function(require,module,exports){
 // 22.1.3.6 Array.prototype.fill(value, start = 0, end = this.length)
 var $export = require('./$.export');
 
 $export($export.P, 'Array', {fill: require('./$.array-fill')});
 
 require('./$.add-to-unscopables')('fill');
-},{"./$.add-to-unscopables":110,"./$.array-fill":113,"./$.export":129}],195:[function(require,module,exports){
+},{"./$.add-to-unscopables":108,"./$.array-fill":111,"./$.export":127}],193:[function(require,module,exports){
 'use strict';
 // 22.1.3.9 Array.prototype.findIndex(predicate, thisArg = undefined)
 var $export = require('./$.export')
@@ -17534,7 +17600,7 @@ $export($export.P + $export.F * forced, 'Array', {
   }
 });
 require('./$.add-to-unscopables')(KEY);
-},{"./$.add-to-unscopables":110,"./$.array-methods":115,"./$.export":129}],196:[function(require,module,exports){
+},{"./$.add-to-unscopables":108,"./$.array-methods":113,"./$.export":127}],194:[function(require,module,exports){
 'use strict';
 // 22.1.3.8 Array.prototype.find(predicate, thisArg = undefined)
 var $export = require('./$.export')
@@ -17549,7 +17615,7 @@ $export($export.P + $export.F * forced, 'Array', {
   }
 });
 require('./$.add-to-unscopables')(KEY);
-},{"./$.add-to-unscopables":110,"./$.array-methods":115,"./$.export":129}],197:[function(require,module,exports){
+},{"./$.add-to-unscopables":108,"./$.array-methods":113,"./$.export":127}],195:[function(require,module,exports){
 'use strict';
 var ctx         = require('./$.ctx')
   , $export     = require('./$.export')
@@ -17587,7 +17653,7 @@ $export($export.S + $export.F * !require('./$.iter-detect')(function(iter){ Arra
   }
 });
 
-},{"./$.ctx":124,"./$.export":129,"./$.is-array-iter":142,"./$.iter-call":147,"./$.iter-detect":150,"./$.to-length":186,"./$.to-object":187,"./core.get-iterator-method":191}],198:[function(require,module,exports){
+},{"./$.ctx":122,"./$.export":127,"./$.is-array-iter":140,"./$.iter-call":145,"./$.iter-detect":148,"./$.to-length":184,"./$.to-object":185,"./core.get-iterator-method":189}],196:[function(require,module,exports){
 'use strict';
 var addToUnscopables = require('./$.add-to-unscopables')
   , step             = require('./$.iter-step')
@@ -17622,7 +17688,7 @@ Iterators.Arguments = Iterators.Array;
 addToUnscopables('keys');
 addToUnscopables('values');
 addToUnscopables('entries');
-},{"./$.add-to-unscopables":110,"./$.iter-define":149,"./$.iter-step":151,"./$.iterators":152,"./$.to-iobject":185}],199:[function(require,module,exports){
+},{"./$.add-to-unscopables":108,"./$.iter-define":147,"./$.iter-step":149,"./$.iterators":150,"./$.to-iobject":183}],197:[function(require,module,exports){
 'use strict';
 var $export = require('./$.export');
 
@@ -17642,9 +17708,9 @@ $export($export.S + $export.F * require('./$.fails')(function(){
     return result;
   }
 });
-},{"./$.export":129,"./$.fails":131}],200:[function(require,module,exports){
+},{"./$.export":127,"./$.fails":129}],198:[function(require,module,exports){
 require('./$.set-species')('Array');
-},{"./$.set-species":172}],201:[function(require,module,exports){
+},{"./$.set-species":170}],199:[function(require,module,exports){
 'use strict';
 var $             = require('./$')
   , isObject      = require('./$.is-object')
@@ -17658,7 +17724,7 @@ if(!(HAS_INSTANCE in FunctionProto))$.setDesc(FunctionProto, HAS_INSTANCE, {valu
   while(O = $.getProto(O))if(this.prototype === O)return true;
   return false;
 }});
-},{"./$":153,"./$.is-object":145,"./$.wks":190}],202:[function(require,module,exports){
+},{"./$":151,"./$.is-object":143,"./$.wks":188}],200:[function(require,module,exports){
 var setDesc    = require('./$').setDesc
   , createDesc = require('./$.property-desc')
   , has        = require('./$.has')
@@ -17675,7 +17741,7 @@ NAME in FProto || require('./$.descriptors') && setDesc(FProto, NAME, {
     return name;
   }
 });
-},{"./$":153,"./$.descriptors":126,"./$.has":137,"./$.property-desc":166}],203:[function(require,module,exports){
+},{"./$":151,"./$.descriptors":124,"./$.has":135,"./$.property-desc":164}],201:[function(require,module,exports){
 'use strict';
 var strong = require('./$.collection-strong');
 
@@ -17693,7 +17759,7 @@ require('./$.collection')('Map', function(get){
     return strong.def(this, key === 0 ? 0 : key, value);
   }
 }, strong, true);
-},{"./$.collection":122,"./$.collection-strong":119}],204:[function(require,module,exports){
+},{"./$.collection":120,"./$.collection-strong":117}],202:[function(require,module,exports){
 // 20.2.2.3 Math.acosh(x)
 var $export = require('./$.export')
   , log1p   = require('./$.math-log1p')
@@ -17708,7 +17774,7 @@ $export($export.S + $export.F * !($acosh && Math.floor($acosh(Number.MAX_VALUE))
       : log1p(x - 1 + sqrt(x - 1) * sqrt(x + 1));
   }
 });
-},{"./$.export":129,"./$.math-log1p":157}],205:[function(require,module,exports){
+},{"./$.export":127,"./$.math-log1p":155}],203:[function(require,module,exports){
 // 20.2.2.5 Math.asinh(x)
 var $export = require('./$.export');
 
@@ -17717,7 +17783,7 @@ function asinh(x){
 }
 
 $export($export.S, 'Math', {asinh: asinh});
-},{"./$.export":129}],206:[function(require,module,exports){
+},{"./$.export":127}],204:[function(require,module,exports){
 // 20.2.2.7 Math.atanh(x)
 var $export = require('./$.export');
 
@@ -17726,7 +17792,7 @@ $export($export.S, 'Math', {
     return (x = +x) == 0 ? x : Math.log((1 + x) / (1 - x)) / 2;
   }
 });
-},{"./$.export":129}],207:[function(require,module,exports){
+},{"./$.export":127}],205:[function(require,module,exports){
 // 20.2.2.9 Math.cbrt(x)
 var $export = require('./$.export')
   , sign    = require('./$.math-sign');
@@ -17736,7 +17802,7 @@ $export($export.S, 'Math', {
     return sign(x = +x) * Math.pow(Math.abs(x), 1 / 3);
   }
 });
-},{"./$.export":129,"./$.math-sign":158}],208:[function(require,module,exports){
+},{"./$.export":127,"./$.math-sign":156}],206:[function(require,module,exports){
 // 20.2.2.11 Math.clz32(x)
 var $export = require('./$.export');
 
@@ -17745,7 +17811,7 @@ $export($export.S, 'Math', {
     return (x >>>= 0) ? 31 - Math.floor(Math.log(x + 0.5) * Math.LOG2E) : 32;
   }
 });
-},{"./$.export":129}],209:[function(require,module,exports){
+},{"./$.export":127}],207:[function(require,module,exports){
 // 20.2.2.12 Math.cosh(x)
 var $export = require('./$.export')
   , exp     = Math.exp;
@@ -17755,12 +17821,12 @@ $export($export.S, 'Math', {
     return (exp(x = +x) + exp(-x)) / 2;
   }
 });
-},{"./$.export":129}],210:[function(require,module,exports){
+},{"./$.export":127}],208:[function(require,module,exports){
 // 20.2.2.14 Math.expm1(x)
 var $export = require('./$.export');
 
 $export($export.S, 'Math', {expm1: require('./$.math-expm1')});
-},{"./$.export":129,"./$.math-expm1":156}],211:[function(require,module,exports){
+},{"./$.export":127,"./$.math-expm1":154}],209:[function(require,module,exports){
 // 20.2.2.16 Math.fround(x)
 var $export   = require('./$.export')
   , sign      = require('./$.math-sign')
@@ -17787,7 +17853,7 @@ $export($export.S, 'Math', {
     return $sign * result;
   }
 });
-},{"./$.export":129,"./$.math-sign":158}],212:[function(require,module,exports){
+},{"./$.export":127,"./$.math-sign":156}],210:[function(require,module,exports){
 // 20.2.2.17 Math.hypot([value1[, value2[, … ]]])
 var $export = require('./$.export')
   , abs     = Math.abs;
@@ -17814,7 +17880,7 @@ $export($export.S, 'Math', {
     return larg === Infinity ? Infinity : larg * Math.sqrt(sum);
   }
 });
-},{"./$.export":129}],213:[function(require,module,exports){
+},{"./$.export":127}],211:[function(require,module,exports){
 // 20.2.2.18 Math.imul(x, y)
 var $export = require('./$.export')
   , $imul   = Math.imul;
@@ -17832,7 +17898,7 @@ $export($export.S + $export.F * require('./$.fails')(function(){
     return 0 | xl * yl + ((UINT16 & xn >>> 16) * yl + xl * (UINT16 & yn >>> 16) << 16 >>> 0);
   }
 });
-},{"./$.export":129,"./$.fails":131}],214:[function(require,module,exports){
+},{"./$.export":127,"./$.fails":129}],212:[function(require,module,exports){
 // 20.2.2.21 Math.log10(x)
 var $export = require('./$.export');
 
@@ -17841,12 +17907,12 @@ $export($export.S, 'Math', {
     return Math.log(x) / Math.LN10;
   }
 });
-},{"./$.export":129}],215:[function(require,module,exports){
+},{"./$.export":127}],213:[function(require,module,exports){
 // 20.2.2.20 Math.log1p(x)
 var $export = require('./$.export');
 
 $export($export.S, 'Math', {log1p: require('./$.math-log1p')});
-},{"./$.export":129,"./$.math-log1p":157}],216:[function(require,module,exports){
+},{"./$.export":127,"./$.math-log1p":155}],214:[function(require,module,exports){
 // 20.2.2.22 Math.log2(x)
 var $export = require('./$.export');
 
@@ -17855,12 +17921,12 @@ $export($export.S, 'Math', {
     return Math.log(x) / Math.LN2;
   }
 });
-},{"./$.export":129}],217:[function(require,module,exports){
+},{"./$.export":127}],215:[function(require,module,exports){
 // 20.2.2.28 Math.sign(x)
 var $export = require('./$.export');
 
 $export($export.S, 'Math', {sign: require('./$.math-sign')});
-},{"./$.export":129,"./$.math-sign":158}],218:[function(require,module,exports){
+},{"./$.export":127,"./$.math-sign":156}],216:[function(require,module,exports){
 // 20.2.2.30 Math.sinh(x)
 var $export = require('./$.export')
   , expm1   = require('./$.math-expm1')
@@ -17876,7 +17942,7 @@ $export($export.S + $export.F * require('./$.fails')(function(){
       : (exp(x - 1) - exp(-x - 1)) * (Math.E / 2);
   }
 });
-},{"./$.export":129,"./$.fails":131,"./$.math-expm1":156}],219:[function(require,module,exports){
+},{"./$.export":127,"./$.fails":129,"./$.math-expm1":154}],217:[function(require,module,exports){
 // 20.2.2.33 Math.tanh(x)
 var $export = require('./$.export')
   , expm1   = require('./$.math-expm1')
@@ -17889,7 +17955,7 @@ $export($export.S, 'Math', {
     return a == Infinity ? 1 : b == Infinity ? -1 : (a - b) / (exp(x) + exp(-x));
   }
 });
-},{"./$.export":129,"./$.math-expm1":156}],220:[function(require,module,exports){
+},{"./$.export":127,"./$.math-expm1":154}],218:[function(require,module,exports){
 // 20.2.2.34 Math.trunc(x)
 var $export = require('./$.export');
 
@@ -17898,7 +17964,7 @@ $export($export.S, 'Math', {
     return (it > 0 ? Math.floor : Math.ceil)(it);
   }
 });
-},{"./$.export":129}],221:[function(require,module,exports){
+},{"./$.export":127}],219:[function(require,module,exports){
 'use strict';
 var $           = require('./$')
   , global      = require('./$.global')
@@ -17965,12 +18031,12 @@ if(!$Number(' 0o1') || !$Number('0b1') || $Number('+0x1')){
   proto.constructor = $Number;
   require('./$.redefine')(global, NUMBER, $Number);
 }
-},{"./$":153,"./$.cof":118,"./$.descriptors":126,"./$.fails":131,"./$.global":136,"./$.has":137,"./$.redefine":168,"./$.string-trim":181,"./$.to-primitive":188}],222:[function(require,module,exports){
+},{"./$":151,"./$.cof":116,"./$.descriptors":124,"./$.fails":129,"./$.global":134,"./$.has":135,"./$.redefine":166,"./$.string-trim":179,"./$.to-primitive":186}],220:[function(require,module,exports){
 // 20.1.2.1 Number.EPSILON
 var $export = require('./$.export');
 
 $export($export.S, 'Number', {EPSILON: Math.pow(2, -52)});
-},{"./$.export":129}],223:[function(require,module,exports){
+},{"./$.export":127}],221:[function(require,module,exports){
 // 20.1.2.2 Number.isFinite(number)
 var $export   = require('./$.export')
   , _isFinite = require('./$.global').isFinite;
@@ -17980,12 +18046,12 @@ $export($export.S, 'Number', {
     return typeof it == 'number' && _isFinite(it);
   }
 });
-},{"./$.export":129,"./$.global":136}],224:[function(require,module,exports){
+},{"./$.export":127,"./$.global":134}],222:[function(require,module,exports){
 // 20.1.2.3 Number.isInteger(number)
 var $export = require('./$.export');
 
 $export($export.S, 'Number', {isInteger: require('./$.is-integer')});
-},{"./$.export":129,"./$.is-integer":144}],225:[function(require,module,exports){
+},{"./$.export":127,"./$.is-integer":142}],223:[function(require,module,exports){
 // 20.1.2.4 Number.isNaN(number)
 var $export = require('./$.export');
 
@@ -17994,7 +18060,7 @@ $export($export.S, 'Number', {
     return number != number;
   }
 });
-},{"./$.export":129}],226:[function(require,module,exports){
+},{"./$.export":127}],224:[function(require,module,exports){
 // 20.1.2.5 Number.isSafeInteger(number)
 var $export   = require('./$.export')
   , isInteger = require('./$.is-integer')
@@ -18005,32 +18071,32 @@ $export($export.S, 'Number', {
     return isInteger(number) && abs(number) <= 0x1fffffffffffff;
   }
 });
-},{"./$.export":129,"./$.is-integer":144}],227:[function(require,module,exports){
+},{"./$.export":127,"./$.is-integer":142}],225:[function(require,module,exports){
 // 20.1.2.6 Number.MAX_SAFE_INTEGER
 var $export = require('./$.export');
 
 $export($export.S, 'Number', {MAX_SAFE_INTEGER: 0x1fffffffffffff});
-},{"./$.export":129}],228:[function(require,module,exports){
+},{"./$.export":127}],226:[function(require,module,exports){
 // 20.1.2.10 Number.MIN_SAFE_INTEGER
 var $export = require('./$.export');
 
 $export($export.S, 'Number', {MIN_SAFE_INTEGER: -0x1fffffffffffff});
-},{"./$.export":129}],229:[function(require,module,exports){
+},{"./$.export":127}],227:[function(require,module,exports){
 // 20.1.2.12 Number.parseFloat(string)
 var $export = require('./$.export');
 
 $export($export.S, 'Number', {parseFloat: parseFloat});
-},{"./$.export":129}],230:[function(require,module,exports){
+},{"./$.export":127}],228:[function(require,module,exports){
 // 20.1.2.13 Number.parseInt(string, radix)
 var $export = require('./$.export');
 
 $export($export.S, 'Number', {parseInt: parseInt});
-},{"./$.export":129}],231:[function(require,module,exports){
+},{"./$.export":127}],229:[function(require,module,exports){
 // 19.1.3.1 Object.assign(target, source)
 var $export = require('./$.export');
 
 $export($export.S + $export.F, 'Object', {assign: require('./$.object-assign')});
-},{"./$.export":129,"./$.object-assign":160}],232:[function(require,module,exports){
+},{"./$.export":127,"./$.object-assign":158}],230:[function(require,module,exports){
 // 19.1.2.5 Object.freeze(O)
 var isObject = require('./$.is-object');
 
@@ -18039,7 +18105,7 @@ require('./$.object-sap')('freeze', function($freeze){
     return $freeze && isObject(it) ? $freeze(it) : it;
   };
 });
-},{"./$.is-object":145,"./$.object-sap":161}],233:[function(require,module,exports){
+},{"./$.is-object":143,"./$.object-sap":159}],231:[function(require,module,exports){
 // 19.1.2.6 Object.getOwnPropertyDescriptor(O, P)
 var toIObject = require('./$.to-iobject');
 
@@ -18048,12 +18114,12 @@ require('./$.object-sap')('getOwnPropertyDescriptor', function($getOwnPropertyDe
     return $getOwnPropertyDescriptor(toIObject(it), key);
   };
 });
-},{"./$.object-sap":161,"./$.to-iobject":185}],234:[function(require,module,exports){
+},{"./$.object-sap":159,"./$.to-iobject":183}],232:[function(require,module,exports){
 // 19.1.2.7 Object.getOwnPropertyNames(O)
 require('./$.object-sap')('getOwnPropertyNames', function(){
   return require('./$.get-names').get;
 });
-},{"./$.get-names":135,"./$.object-sap":161}],235:[function(require,module,exports){
+},{"./$.get-names":133,"./$.object-sap":159}],233:[function(require,module,exports){
 // 19.1.2.9 Object.getPrototypeOf(O)
 var toObject = require('./$.to-object');
 
@@ -18062,7 +18128,7 @@ require('./$.object-sap')('getPrototypeOf', function($getPrototypeOf){
     return $getPrototypeOf(toObject(it));
   };
 });
-},{"./$.object-sap":161,"./$.to-object":187}],236:[function(require,module,exports){
+},{"./$.object-sap":159,"./$.to-object":185}],234:[function(require,module,exports){
 // 19.1.2.11 Object.isExtensible(O)
 var isObject = require('./$.is-object');
 
@@ -18071,7 +18137,7 @@ require('./$.object-sap')('isExtensible', function($isExtensible){
     return isObject(it) ? $isExtensible ? $isExtensible(it) : true : false;
   };
 });
-},{"./$.is-object":145,"./$.object-sap":161}],237:[function(require,module,exports){
+},{"./$.is-object":143,"./$.object-sap":159}],235:[function(require,module,exports){
 // 19.1.2.12 Object.isFrozen(O)
 var isObject = require('./$.is-object');
 
@@ -18080,7 +18146,7 @@ require('./$.object-sap')('isFrozen', function($isFrozen){
     return isObject(it) ? $isFrozen ? $isFrozen(it) : false : true;
   };
 });
-},{"./$.is-object":145,"./$.object-sap":161}],238:[function(require,module,exports){
+},{"./$.is-object":143,"./$.object-sap":159}],236:[function(require,module,exports){
 // 19.1.2.13 Object.isSealed(O)
 var isObject = require('./$.is-object');
 
@@ -18089,11 +18155,11 @@ require('./$.object-sap')('isSealed', function($isSealed){
     return isObject(it) ? $isSealed ? $isSealed(it) : false : true;
   };
 });
-},{"./$.is-object":145,"./$.object-sap":161}],239:[function(require,module,exports){
+},{"./$.is-object":143,"./$.object-sap":159}],237:[function(require,module,exports){
 // 19.1.3.10 Object.is(value1, value2)
 var $export = require('./$.export');
 $export($export.S, 'Object', {is: require('./$.same-value')});
-},{"./$.export":129,"./$.same-value":170}],240:[function(require,module,exports){
+},{"./$.export":127,"./$.same-value":168}],238:[function(require,module,exports){
 // 19.1.2.14 Object.keys(O)
 var toObject = require('./$.to-object');
 
@@ -18102,7 +18168,7 @@ require('./$.object-sap')('keys', function($keys){
     return $keys(toObject(it));
   };
 });
-},{"./$.object-sap":161,"./$.to-object":187}],241:[function(require,module,exports){
+},{"./$.object-sap":159,"./$.to-object":185}],239:[function(require,module,exports){
 // 19.1.2.15 Object.preventExtensions(O)
 var isObject = require('./$.is-object');
 
@@ -18111,7 +18177,7 @@ require('./$.object-sap')('preventExtensions', function($preventExtensions){
     return $preventExtensions && isObject(it) ? $preventExtensions(it) : it;
   };
 });
-},{"./$.is-object":145,"./$.object-sap":161}],242:[function(require,module,exports){
+},{"./$.is-object":143,"./$.object-sap":159}],240:[function(require,module,exports){
 // 19.1.2.17 Object.seal(O)
 var isObject = require('./$.is-object');
 
@@ -18120,11 +18186,11 @@ require('./$.object-sap')('seal', function($seal){
     return $seal && isObject(it) ? $seal(it) : it;
   };
 });
-},{"./$.is-object":145,"./$.object-sap":161}],243:[function(require,module,exports){
+},{"./$.is-object":143,"./$.object-sap":159}],241:[function(require,module,exports){
 // 19.1.3.19 Object.setPrototypeOf(O, proto)
 var $export = require('./$.export');
 $export($export.S, 'Object', {setPrototypeOf: require('./$.set-proto').set});
-},{"./$.export":129,"./$.set-proto":171}],244:[function(require,module,exports){
+},{"./$.export":127,"./$.set-proto":169}],242:[function(require,module,exports){
 'use strict';
 // 19.1.3.6 Object.prototype.toString()
 var classof = require('./$.classof')
@@ -18135,7 +18201,7 @@ if(test + '' != '[object z]'){
     return '[object ' + classof(this) + ']';
   }, true);
 }
-},{"./$.classof":117,"./$.redefine":168,"./$.wks":190}],245:[function(require,module,exports){
+},{"./$.classof":115,"./$.redefine":166,"./$.wks":188}],243:[function(require,module,exports){
 'use strict';
 var $          = require('./$')
   , LIBRARY    = require('./$.library')
@@ -18425,7 +18491,7 @@ $export($export.S + $export.F * !(USE_NATIVE && require('./$.iter-detect')(funct
     return capability.promise;
   }
 });
-},{"./$":153,"./$.a-function":109,"./$.an-object":111,"./$.classof":117,"./$.core":123,"./$.ctx":124,"./$.descriptors":126,"./$.export":129,"./$.for-of":134,"./$.global":136,"./$.is-object":145,"./$.iter-detect":150,"./$.library":155,"./$.microtask":159,"./$.redefine-all":167,"./$.same-value":170,"./$.set-proto":171,"./$.set-species":172,"./$.set-to-string-tag":173,"./$.species-constructor":175,"./$.strict-new":176,"./$.wks":190}],246:[function(require,module,exports){
+},{"./$":151,"./$.a-function":107,"./$.an-object":109,"./$.classof":115,"./$.core":121,"./$.ctx":122,"./$.descriptors":124,"./$.export":127,"./$.for-of":132,"./$.global":134,"./$.is-object":143,"./$.iter-detect":148,"./$.library":153,"./$.microtask":157,"./$.redefine-all":165,"./$.same-value":168,"./$.set-proto":169,"./$.set-species":170,"./$.set-to-string-tag":171,"./$.species-constructor":173,"./$.strict-new":174,"./$.wks":188}],244:[function(require,module,exports){
 // 26.1.1 Reflect.apply(target, thisArgument, argumentsList)
 var $export = require('./$.export')
   , _apply  = Function.apply;
@@ -18435,7 +18501,7 @@ $export($export.S, 'Reflect', {
     return _apply.call(target, thisArgument, argumentsList);
   }
 });
-},{"./$.export":129}],247:[function(require,module,exports){
+},{"./$.export":127}],245:[function(require,module,exports){
 // 26.1.2 Reflect.construct(target, argumentsList [, newTarget])
 var $         = require('./$')
   , $export   = require('./$.export')
@@ -18474,7 +18540,7 @@ $export($export.S + $export.F * require('./$.fails')(function(){
     return isObject(result) ? result : instance;
   }
 });
-},{"./$":153,"./$.a-function":109,"./$.an-object":111,"./$.core":123,"./$.export":129,"./$.fails":131,"./$.is-object":145}],248:[function(require,module,exports){
+},{"./$":151,"./$.a-function":107,"./$.an-object":109,"./$.core":121,"./$.export":127,"./$.fails":129,"./$.is-object":143}],246:[function(require,module,exports){
 // 26.1.3 Reflect.defineProperty(target, propertyKey, attributes)
 var $        = require('./$')
   , $export  = require('./$.export')
@@ -18494,7 +18560,7 @@ $export($export.S + $export.F * require('./$.fails')(function(){
     }
   }
 });
-},{"./$":153,"./$.an-object":111,"./$.export":129,"./$.fails":131}],249:[function(require,module,exports){
+},{"./$":151,"./$.an-object":109,"./$.export":127,"./$.fails":129}],247:[function(require,module,exports){
 // 26.1.4 Reflect.deleteProperty(target, propertyKey)
 var $export  = require('./$.export')
   , getDesc  = require('./$').getDesc
@@ -18506,7 +18572,7 @@ $export($export.S, 'Reflect', {
     return desc && !desc.configurable ? false : delete target[propertyKey];
   }
 });
-},{"./$":153,"./$.an-object":111,"./$.export":129}],250:[function(require,module,exports){
+},{"./$":151,"./$.an-object":109,"./$.export":127}],248:[function(require,module,exports){
 'use strict';
 // 26.1.5 Reflect.enumerate(target)
 var $export  = require('./$.export')
@@ -18533,7 +18599,7 @@ $export($export.S, 'Reflect', {
     return new Enumerate(target);
   }
 });
-},{"./$.an-object":111,"./$.export":129,"./$.iter-create":148}],251:[function(require,module,exports){
+},{"./$.an-object":109,"./$.export":127,"./$.iter-create":146}],249:[function(require,module,exports){
 // 26.1.7 Reflect.getOwnPropertyDescriptor(target, propertyKey)
 var $        = require('./$')
   , $export  = require('./$.export')
@@ -18544,7 +18610,7 @@ $export($export.S, 'Reflect', {
     return $.getDesc(anObject(target), propertyKey);
   }
 });
-},{"./$":153,"./$.an-object":111,"./$.export":129}],252:[function(require,module,exports){
+},{"./$":151,"./$.an-object":109,"./$.export":127}],250:[function(require,module,exports){
 // 26.1.8 Reflect.getPrototypeOf(target)
 var $export  = require('./$.export')
   , getProto = require('./$').getProto
@@ -18555,7 +18621,7 @@ $export($export.S, 'Reflect', {
     return getProto(anObject(target));
   }
 });
-},{"./$":153,"./$.an-object":111,"./$.export":129}],253:[function(require,module,exports){
+},{"./$":151,"./$.an-object":109,"./$.export":127}],251:[function(require,module,exports){
 // 26.1.6 Reflect.get(target, propertyKey [, receiver])
 var $        = require('./$')
   , has      = require('./$.has')
@@ -18576,7 +18642,7 @@ function get(target, propertyKey/*, receiver*/){
 }
 
 $export($export.S, 'Reflect', {get: get});
-},{"./$":153,"./$.an-object":111,"./$.export":129,"./$.has":137,"./$.is-object":145}],254:[function(require,module,exports){
+},{"./$":151,"./$.an-object":109,"./$.export":127,"./$.has":135,"./$.is-object":143}],252:[function(require,module,exports){
 // 26.1.9 Reflect.has(target, propertyKey)
 var $export = require('./$.export');
 
@@ -18585,7 +18651,7 @@ $export($export.S, 'Reflect', {
     return propertyKey in target;
   }
 });
-},{"./$.export":129}],255:[function(require,module,exports){
+},{"./$.export":127}],253:[function(require,module,exports){
 // 26.1.10 Reflect.isExtensible(target)
 var $export       = require('./$.export')
   , anObject      = require('./$.an-object')
@@ -18597,12 +18663,12 @@ $export($export.S, 'Reflect', {
     return $isExtensible ? $isExtensible(target) : true;
   }
 });
-},{"./$.an-object":111,"./$.export":129}],256:[function(require,module,exports){
+},{"./$.an-object":109,"./$.export":127}],254:[function(require,module,exports){
 // 26.1.11 Reflect.ownKeys(target)
 var $export = require('./$.export');
 
 $export($export.S, 'Reflect', {ownKeys: require('./$.own-keys')});
-},{"./$.export":129,"./$.own-keys":163}],257:[function(require,module,exports){
+},{"./$.export":127,"./$.own-keys":161}],255:[function(require,module,exports){
 // 26.1.12 Reflect.preventExtensions(target)
 var $export            = require('./$.export')
   , anObject           = require('./$.an-object')
@@ -18619,7 +18685,7 @@ $export($export.S, 'Reflect', {
     }
   }
 });
-},{"./$.an-object":111,"./$.export":129}],258:[function(require,module,exports){
+},{"./$.an-object":109,"./$.export":127}],256:[function(require,module,exports){
 // 26.1.14 Reflect.setPrototypeOf(target, proto)
 var $export  = require('./$.export')
   , setProto = require('./$.set-proto');
@@ -18635,7 +18701,7 @@ if(setProto)$export($export.S, 'Reflect', {
     }
   }
 });
-},{"./$.export":129,"./$.set-proto":171}],259:[function(require,module,exports){
+},{"./$.export":127,"./$.set-proto":169}],257:[function(require,module,exports){
 // 26.1.13 Reflect.set(target, propertyKey, V [, receiver])
 var $          = require('./$')
   , has        = require('./$.has')
@@ -18665,7 +18731,7 @@ function set(target, propertyKey, V/*, receiver*/){
 }
 
 $export($export.S, 'Reflect', {set: set});
-},{"./$":153,"./$.an-object":111,"./$.export":129,"./$.has":137,"./$.is-object":145,"./$.property-desc":166}],260:[function(require,module,exports){
+},{"./$":151,"./$.an-object":109,"./$.export":127,"./$.has":135,"./$.is-object":143,"./$.property-desc":164}],258:[function(require,module,exports){
 var $        = require('./$')
   , global   = require('./$.global')
   , isRegExp = require('./$.is-regexp')
@@ -18704,14 +18770,14 @@ if(require('./$.descriptors') && (!CORRECT_NEW || require('./$.fails')(function(
 }
 
 require('./$.set-species')('RegExp');
-},{"./$":153,"./$.descriptors":126,"./$.fails":131,"./$.flags":133,"./$.global":136,"./$.is-regexp":146,"./$.redefine":168,"./$.set-species":172,"./$.wks":190}],261:[function(require,module,exports){
+},{"./$":151,"./$.descriptors":124,"./$.fails":129,"./$.flags":131,"./$.global":134,"./$.is-regexp":144,"./$.redefine":166,"./$.set-species":170,"./$.wks":188}],259:[function(require,module,exports){
 // 21.2.5.3 get RegExp.prototype.flags()
 var $ = require('./$');
 if(require('./$.descriptors') && /./g.flags != 'g')$.setDesc(RegExp.prototype, 'flags', {
   configurable: true,
   get: require('./$.flags')
 });
-},{"./$":153,"./$.descriptors":126,"./$.flags":133}],262:[function(require,module,exports){
+},{"./$":151,"./$.descriptors":124,"./$.flags":131}],260:[function(require,module,exports){
 // @@match logic
 require('./$.fix-re-wks')('match', 1, function(defined, MATCH){
   // 21.1.3.11 String.prototype.match(regexp)
@@ -18722,7 +18788,7 @@ require('./$.fix-re-wks')('match', 1, function(defined, MATCH){
     return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[MATCH](String(O));
   };
 });
-},{"./$.fix-re-wks":132}],263:[function(require,module,exports){
+},{"./$.fix-re-wks":130}],261:[function(require,module,exports){
 // @@replace logic
 require('./$.fix-re-wks')('replace', 2, function(defined, REPLACE, $replace){
   // 21.1.3.14 String.prototype.replace(searchValue, replaceValue)
@@ -18735,7 +18801,7 @@ require('./$.fix-re-wks')('replace', 2, function(defined, REPLACE, $replace){
       : $replace.call(String(O), searchValue, replaceValue);
   };
 });
-},{"./$.fix-re-wks":132}],264:[function(require,module,exports){
+},{"./$.fix-re-wks":130}],262:[function(require,module,exports){
 // @@search logic
 require('./$.fix-re-wks')('search', 1, function(defined, SEARCH){
   // 21.1.3.15 String.prototype.search(regexp)
@@ -18746,7 +18812,7 @@ require('./$.fix-re-wks')('search', 1, function(defined, SEARCH){
     return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[SEARCH](String(O));
   };
 });
-},{"./$.fix-re-wks":132}],265:[function(require,module,exports){
+},{"./$.fix-re-wks":130}],263:[function(require,module,exports){
 // @@split logic
 require('./$.fix-re-wks')('split', 2, function(defined, SPLIT, $split){
   // 21.1.3.17 String.prototype.split(separator, limit)
@@ -18759,7 +18825,7 @@ require('./$.fix-re-wks')('split', 2, function(defined, SPLIT, $split){
       : $split.call(String(O), separator, limit);
   };
 });
-},{"./$.fix-re-wks":132}],266:[function(require,module,exports){
+},{"./$.fix-re-wks":130}],264:[function(require,module,exports){
 'use strict';
 var strong = require('./$.collection-strong');
 
@@ -18772,7 +18838,7 @@ require('./$.collection')('Set', function(get){
     return strong.def(this, value = value === 0 ? 0 : value, value);
   }
 }, strong);
-},{"./$.collection":122,"./$.collection-strong":119}],267:[function(require,module,exports){
+},{"./$.collection":120,"./$.collection-strong":117}],265:[function(require,module,exports){
 'use strict';
 var $export = require('./$.export')
   , $at     = require('./$.string-at')(false);
@@ -18782,7 +18848,7 @@ $export($export.P, 'String', {
     return $at(this, pos);
   }
 });
-},{"./$.export":129,"./$.string-at":177}],268:[function(require,module,exports){
+},{"./$.export":127,"./$.string-at":175}],266:[function(require,module,exports){
 // 21.1.3.6 String.prototype.endsWith(searchString [, endPosition])
 'use strict';
 var $export   = require('./$.export')
@@ -18804,7 +18870,7 @@ $export($export.P + $export.F * require('./$.fails-is-regexp')(ENDS_WITH), 'Stri
       : that.slice(end - search.length, end) === search;
   }
 });
-},{"./$.export":129,"./$.fails-is-regexp":130,"./$.string-context":178,"./$.to-length":186}],269:[function(require,module,exports){
+},{"./$.export":127,"./$.fails-is-regexp":128,"./$.string-context":176,"./$.to-length":184}],267:[function(require,module,exports){
 var $export        = require('./$.export')
   , toIndex        = require('./$.to-index')
   , fromCharCode   = String.fromCharCode
@@ -18829,7 +18895,7 @@ $export($export.S + $export.F * (!!$fromCodePoint && $fromCodePoint.length != 1)
     } return res.join('');
   }
 });
-},{"./$.export":129,"./$.to-index":183}],270:[function(require,module,exports){
+},{"./$.export":127,"./$.to-index":181}],268:[function(require,module,exports){
 // 21.1.3.7 String.prototype.includes(searchString, position = 0)
 'use strict';
 var $export  = require('./$.export')
@@ -18842,7 +18908,7 @@ $export($export.P + $export.F * require('./$.fails-is-regexp')(INCLUDES), 'Strin
       .indexOf(searchString, arguments.length > 1 ? arguments[1] : undefined);
   }
 });
-},{"./$.export":129,"./$.fails-is-regexp":130,"./$.string-context":178}],271:[function(require,module,exports){
+},{"./$.export":127,"./$.fails-is-regexp":128,"./$.string-context":176}],269:[function(require,module,exports){
 'use strict';
 var $at  = require('./$.string-at')(true);
 
@@ -18860,7 +18926,7 @@ require('./$.iter-define')(String, 'String', function(iterated){
   this._i += point.length;
   return {value: point, done: false};
 });
-},{"./$.iter-define":149,"./$.string-at":177}],272:[function(require,module,exports){
+},{"./$.iter-define":147,"./$.string-at":175}],270:[function(require,module,exports){
 var $export   = require('./$.export')
   , toIObject = require('./$.to-iobject')
   , toLength  = require('./$.to-length');
@@ -18880,14 +18946,14 @@ $export($export.S, 'String', {
     } return res.join('');
   }
 });
-},{"./$.export":129,"./$.to-iobject":185,"./$.to-length":186}],273:[function(require,module,exports){
+},{"./$.export":127,"./$.to-iobject":183,"./$.to-length":184}],271:[function(require,module,exports){
 var $export = require('./$.export');
 
 $export($export.P, 'String', {
   // 21.1.3.13 String.prototype.repeat(count)
   repeat: require('./$.string-repeat')
 });
-},{"./$.export":129,"./$.string-repeat":180}],274:[function(require,module,exports){
+},{"./$.export":127,"./$.string-repeat":178}],272:[function(require,module,exports){
 // 21.1.3.18 String.prototype.startsWith(searchString [, position ])
 'use strict';
 var $export     = require('./$.export')
@@ -18907,7 +18973,7 @@ $export($export.P + $export.F * require('./$.fails-is-regexp')(STARTS_WITH), 'St
       : that.slice(index, index + search.length) === search;
   }
 });
-},{"./$.export":129,"./$.fails-is-regexp":130,"./$.string-context":178,"./$.to-length":186}],275:[function(require,module,exports){
+},{"./$.export":127,"./$.fails-is-regexp":128,"./$.string-context":176,"./$.to-length":184}],273:[function(require,module,exports){
 'use strict';
 // 21.1.3.25 String.prototype.trim()
 require('./$.string-trim')('trim', function($trim){
@@ -18915,7 +18981,7 @@ require('./$.string-trim')('trim', function($trim){
     return $trim(this, 3);
   };
 });
-},{"./$.string-trim":181}],276:[function(require,module,exports){
+},{"./$.string-trim":179}],274:[function(require,module,exports){
 'use strict';
 // ECMAScript 6 symbols shim
 var $              = require('./$')
@@ -19143,7 +19209,7 @@ setToStringTag($Symbol, 'Symbol');
 setToStringTag(Math, 'Math', true);
 // 24.3.3 JSON[@@toStringTag]
 setToStringTag(global.JSON, 'JSON', true);
-},{"./$":153,"./$.an-object":111,"./$.descriptors":126,"./$.enum-keys":128,"./$.export":129,"./$.fails":131,"./$.get-names":135,"./$.global":136,"./$.has":137,"./$.is-array":143,"./$.keyof":154,"./$.library":155,"./$.property-desc":166,"./$.redefine":168,"./$.set-to-string-tag":173,"./$.shared":174,"./$.to-iobject":185,"./$.uid":189,"./$.wks":190}],277:[function(require,module,exports){
+},{"./$":151,"./$.an-object":109,"./$.descriptors":124,"./$.enum-keys":126,"./$.export":127,"./$.fails":129,"./$.get-names":133,"./$.global":134,"./$.has":135,"./$.is-array":141,"./$.keyof":152,"./$.library":153,"./$.property-desc":164,"./$.redefine":166,"./$.set-to-string-tag":171,"./$.shared":172,"./$.to-iobject":183,"./$.uid":187,"./$.wks":188}],275:[function(require,module,exports){
 'use strict';
 var $            = require('./$')
   , redefine     = require('./$.redefine')
@@ -19187,7 +19253,7 @@ if(new $WeakMap().set((Object.freeze || Object)(tmp), 7).get(tmp) != 7){
     });
   });
 }
-},{"./$":153,"./$.collection":122,"./$.collection-weak":121,"./$.has":137,"./$.is-object":145,"./$.redefine":168}],278:[function(require,module,exports){
+},{"./$":151,"./$.collection":120,"./$.collection-weak":119,"./$.has":135,"./$.is-object":143,"./$.redefine":166}],276:[function(require,module,exports){
 'use strict';
 var weak = require('./$.collection-weak');
 
@@ -19200,7 +19266,7 @@ require('./$.collection')('WeakSet', function(get){
     return weak.def(this, value, true);
   }
 }, weak, false, true);
-},{"./$.collection":122,"./$.collection-weak":121}],279:[function(require,module,exports){
+},{"./$.collection":120,"./$.collection-weak":119}],277:[function(require,module,exports){
 'use strict';
 var $export   = require('./$.export')
   , $includes = require('./$.array-includes')(true);
@@ -19213,12 +19279,12 @@ $export($export.P, 'Array', {
 });
 
 require('./$.add-to-unscopables')('includes');
-},{"./$.add-to-unscopables":110,"./$.array-includes":114,"./$.export":129}],280:[function(require,module,exports){
+},{"./$.add-to-unscopables":108,"./$.array-includes":112,"./$.export":127}],278:[function(require,module,exports){
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
 var $export  = require('./$.export');
 
 $export($export.P, 'Map', {toJSON: require('./$.collection-to-json')('Map')});
-},{"./$.collection-to-json":120,"./$.export":129}],281:[function(require,module,exports){
+},{"./$.collection-to-json":118,"./$.export":127}],279:[function(require,module,exports){
 // http://goo.gl/XkBrjD
 var $export  = require('./$.export')
   , $entries = require('./$.object-to-array')(true);
@@ -19228,7 +19294,7 @@ $export($export.S, 'Object', {
     return $entries(it);
   }
 });
-},{"./$.export":129,"./$.object-to-array":162}],282:[function(require,module,exports){
+},{"./$.export":127,"./$.object-to-array":160}],280:[function(require,module,exports){
 // https://gist.github.com/WebReflection/9353781
 var $          = require('./$')
   , $export    = require('./$.export')
@@ -19252,7 +19318,7 @@ $export($export.S, 'Object', {
     } return result;
   }
 });
-},{"./$":153,"./$.export":129,"./$.own-keys":163,"./$.property-desc":166,"./$.to-iobject":185}],283:[function(require,module,exports){
+},{"./$":151,"./$.export":127,"./$.own-keys":161,"./$.property-desc":164,"./$.to-iobject":183}],281:[function(require,module,exports){
 // http://goo.gl/XkBrjD
 var $export = require('./$.export')
   , $values = require('./$.object-to-array')(false);
@@ -19262,19 +19328,19 @@ $export($export.S, 'Object', {
     return $values(it);
   }
 });
-},{"./$.export":129,"./$.object-to-array":162}],284:[function(require,module,exports){
+},{"./$.export":127,"./$.object-to-array":160}],282:[function(require,module,exports){
 // https://github.com/benjamingr/RexExp.escape
 var $export = require('./$.export')
   , $re     = require('./$.replacer')(/[\\^$*+?.()|[\]{}]/g, '\\$&');
 
 $export($export.S, 'RegExp', {escape: function escape(it){ return $re(it); }});
 
-},{"./$.export":129,"./$.replacer":169}],285:[function(require,module,exports){
+},{"./$.export":127,"./$.replacer":167}],283:[function(require,module,exports){
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
 var $export  = require('./$.export');
 
 $export($export.P, 'Set', {toJSON: require('./$.collection-to-json')('Set')});
-},{"./$.collection-to-json":120,"./$.export":129}],286:[function(require,module,exports){
+},{"./$.collection-to-json":118,"./$.export":127}],284:[function(require,module,exports){
 'use strict';
 // https://github.com/mathiasbynens/String.prototype.at
 var $export = require('./$.export')
@@ -19285,7 +19351,7 @@ $export($export.P, 'String', {
     return $at(this, pos);
   }
 });
-},{"./$.export":129,"./$.string-at":177}],287:[function(require,module,exports){
+},{"./$.export":127,"./$.string-at":175}],285:[function(require,module,exports){
 'use strict';
 var $export = require('./$.export')
   , $pad    = require('./$.string-pad');
@@ -19295,7 +19361,7 @@ $export($export.P, 'String', {
     return $pad(this, maxLength, arguments.length > 1 ? arguments[1] : undefined, true);
   }
 });
-},{"./$.export":129,"./$.string-pad":179}],288:[function(require,module,exports){
+},{"./$.export":127,"./$.string-pad":177}],286:[function(require,module,exports){
 'use strict';
 var $export = require('./$.export')
   , $pad    = require('./$.string-pad');
@@ -19305,7 +19371,7 @@ $export($export.P, 'String', {
     return $pad(this, maxLength, arguments.length > 1 ? arguments[1] : undefined, false);
   }
 });
-},{"./$.export":129,"./$.string-pad":179}],289:[function(require,module,exports){
+},{"./$.export":127,"./$.string-pad":177}],287:[function(require,module,exports){
 'use strict';
 // https://github.com/sebmarkbage/ecmascript-string-left-right-trim
 require('./$.string-trim')('trimLeft', function($trim){
@@ -19313,7 +19379,7 @@ require('./$.string-trim')('trimLeft', function($trim){
     return $trim(this, 1);
   };
 });
-},{"./$.string-trim":181}],290:[function(require,module,exports){
+},{"./$.string-trim":179}],288:[function(require,module,exports){
 'use strict';
 // https://github.com/sebmarkbage/ecmascript-string-left-right-trim
 require('./$.string-trim')('trimRight', function($trim){
@@ -19321,7 +19387,7 @@ require('./$.string-trim')('trimRight', function($trim){
     return $trim(this, 2);
   };
 });
-},{"./$.string-trim":181}],291:[function(require,module,exports){
+},{"./$.string-trim":179}],289:[function(require,module,exports){
 // JavaScript 1.6 / Strawman array statics shim
 var $       = require('./$')
   , $export = require('./$.export')
@@ -19339,7 +19405,7 @@ setStatics('indexOf,every,some,forEach,map,filter,find,findIndex,includes', 3);
 setStatics('join,slice,concat,push,splice,unshift,sort,lastIndexOf,' +
            'reduce,reduceRight,copyWithin,fill');
 $export($export.S, 'Array', statics);
-},{"./$":153,"./$.core":123,"./$.ctx":124,"./$.export":129}],292:[function(require,module,exports){
+},{"./$":151,"./$.core":121,"./$.ctx":122,"./$.export":127}],290:[function(require,module,exports){
 require('./es6.array.iterator');
 var global      = require('./$.global')
   , hide        = require('./$.hide')
@@ -19352,14 +19418,14 @@ var global      = require('./$.global')
   , ArrayValues = Iterators.NodeList = Iterators.HTMLCollection = Iterators.Array;
 if(NLProto && !NLProto[ITERATOR])hide(NLProto, ITERATOR, ArrayValues);
 if(HTCProto && !HTCProto[ITERATOR])hide(HTCProto, ITERATOR, ArrayValues);
-},{"./$.global":136,"./$.hide":138,"./$.iterators":152,"./$.wks":190,"./es6.array.iterator":198}],293:[function(require,module,exports){
+},{"./$.global":134,"./$.hide":136,"./$.iterators":150,"./$.wks":188,"./es6.array.iterator":196}],291:[function(require,module,exports){
 var $export = require('./$.export')
   , $task   = require('./$.task');
 $export($export.G + $export.B, {
   setImmediate:   $task.set,
   clearImmediate: $task.clear
 });
-},{"./$.export":129,"./$.task":182}],294:[function(require,module,exports){
+},{"./$.export":127,"./$.task":180}],292:[function(require,module,exports){
 // ie9- setTimeout & setInterval additional parameters fix
 var global     = require('./$.global')
   , $export    = require('./$.export')
@@ -19380,7 +19446,7 @@ $export($export.G + $export.B + $export.F * MSIE, {
   setTimeout:  wrap(global.setTimeout),
   setInterval: wrap(global.setInterval)
 });
-},{"./$.export":129,"./$.global":136,"./$.invoke":140,"./$.partial":164}],295:[function(require,module,exports){
+},{"./$.export":127,"./$.global":134,"./$.invoke":138,"./$.partial":162}],293:[function(require,module,exports){
 require('./modules/es5');
 require('./modules/es6.symbol');
 require('./modules/es6.object.assign');
@@ -19485,7 +19551,7 @@ require('./modules/web.timers');
 require('./modules/web.immediate');
 require('./modules/web.dom.iterable');
 module.exports = require('./modules/$.core');
-},{"./modules/$.core":123,"./modules/es5":192,"./modules/es6.array.copy-within":193,"./modules/es6.array.fill":194,"./modules/es6.array.find":196,"./modules/es6.array.find-index":195,"./modules/es6.array.from":197,"./modules/es6.array.iterator":198,"./modules/es6.array.of":199,"./modules/es6.array.species":200,"./modules/es6.function.has-instance":201,"./modules/es6.function.name":202,"./modules/es6.map":203,"./modules/es6.math.acosh":204,"./modules/es6.math.asinh":205,"./modules/es6.math.atanh":206,"./modules/es6.math.cbrt":207,"./modules/es6.math.clz32":208,"./modules/es6.math.cosh":209,"./modules/es6.math.expm1":210,"./modules/es6.math.fround":211,"./modules/es6.math.hypot":212,"./modules/es6.math.imul":213,"./modules/es6.math.log10":214,"./modules/es6.math.log1p":215,"./modules/es6.math.log2":216,"./modules/es6.math.sign":217,"./modules/es6.math.sinh":218,"./modules/es6.math.tanh":219,"./modules/es6.math.trunc":220,"./modules/es6.number.constructor":221,"./modules/es6.number.epsilon":222,"./modules/es6.number.is-finite":223,"./modules/es6.number.is-integer":224,"./modules/es6.number.is-nan":225,"./modules/es6.number.is-safe-integer":226,"./modules/es6.number.max-safe-integer":227,"./modules/es6.number.min-safe-integer":228,"./modules/es6.number.parse-float":229,"./modules/es6.number.parse-int":230,"./modules/es6.object.assign":231,"./modules/es6.object.freeze":232,"./modules/es6.object.get-own-property-descriptor":233,"./modules/es6.object.get-own-property-names":234,"./modules/es6.object.get-prototype-of":235,"./modules/es6.object.is":239,"./modules/es6.object.is-extensible":236,"./modules/es6.object.is-frozen":237,"./modules/es6.object.is-sealed":238,"./modules/es6.object.keys":240,"./modules/es6.object.prevent-extensions":241,"./modules/es6.object.seal":242,"./modules/es6.object.set-prototype-of":243,"./modules/es6.object.to-string":244,"./modules/es6.promise":245,"./modules/es6.reflect.apply":246,"./modules/es6.reflect.construct":247,"./modules/es6.reflect.define-property":248,"./modules/es6.reflect.delete-property":249,"./modules/es6.reflect.enumerate":250,"./modules/es6.reflect.get":253,"./modules/es6.reflect.get-own-property-descriptor":251,"./modules/es6.reflect.get-prototype-of":252,"./modules/es6.reflect.has":254,"./modules/es6.reflect.is-extensible":255,"./modules/es6.reflect.own-keys":256,"./modules/es6.reflect.prevent-extensions":257,"./modules/es6.reflect.set":259,"./modules/es6.reflect.set-prototype-of":258,"./modules/es6.regexp.constructor":260,"./modules/es6.regexp.flags":261,"./modules/es6.regexp.match":262,"./modules/es6.regexp.replace":263,"./modules/es6.regexp.search":264,"./modules/es6.regexp.split":265,"./modules/es6.set":266,"./modules/es6.string.code-point-at":267,"./modules/es6.string.ends-with":268,"./modules/es6.string.from-code-point":269,"./modules/es6.string.includes":270,"./modules/es6.string.iterator":271,"./modules/es6.string.raw":272,"./modules/es6.string.repeat":273,"./modules/es6.string.starts-with":274,"./modules/es6.string.trim":275,"./modules/es6.symbol":276,"./modules/es6.weak-map":277,"./modules/es6.weak-set":278,"./modules/es7.array.includes":279,"./modules/es7.map.to-json":280,"./modules/es7.object.entries":281,"./modules/es7.object.get-own-property-descriptors":282,"./modules/es7.object.values":283,"./modules/es7.regexp.escape":284,"./modules/es7.set.to-json":285,"./modules/es7.string.at":286,"./modules/es7.string.pad-left":287,"./modules/es7.string.pad-right":288,"./modules/es7.string.trim-left":289,"./modules/es7.string.trim-right":290,"./modules/js.array.statics":291,"./modules/web.dom.iterable":292,"./modules/web.immediate":293,"./modules/web.timers":294}],296:[function(require,module,exports){
+},{"./modules/$.core":121,"./modules/es5":190,"./modules/es6.array.copy-within":191,"./modules/es6.array.fill":192,"./modules/es6.array.find":194,"./modules/es6.array.find-index":193,"./modules/es6.array.from":195,"./modules/es6.array.iterator":196,"./modules/es6.array.of":197,"./modules/es6.array.species":198,"./modules/es6.function.has-instance":199,"./modules/es6.function.name":200,"./modules/es6.map":201,"./modules/es6.math.acosh":202,"./modules/es6.math.asinh":203,"./modules/es6.math.atanh":204,"./modules/es6.math.cbrt":205,"./modules/es6.math.clz32":206,"./modules/es6.math.cosh":207,"./modules/es6.math.expm1":208,"./modules/es6.math.fround":209,"./modules/es6.math.hypot":210,"./modules/es6.math.imul":211,"./modules/es6.math.log10":212,"./modules/es6.math.log1p":213,"./modules/es6.math.log2":214,"./modules/es6.math.sign":215,"./modules/es6.math.sinh":216,"./modules/es6.math.tanh":217,"./modules/es6.math.trunc":218,"./modules/es6.number.constructor":219,"./modules/es6.number.epsilon":220,"./modules/es6.number.is-finite":221,"./modules/es6.number.is-integer":222,"./modules/es6.number.is-nan":223,"./modules/es6.number.is-safe-integer":224,"./modules/es6.number.max-safe-integer":225,"./modules/es6.number.min-safe-integer":226,"./modules/es6.number.parse-float":227,"./modules/es6.number.parse-int":228,"./modules/es6.object.assign":229,"./modules/es6.object.freeze":230,"./modules/es6.object.get-own-property-descriptor":231,"./modules/es6.object.get-own-property-names":232,"./modules/es6.object.get-prototype-of":233,"./modules/es6.object.is":237,"./modules/es6.object.is-extensible":234,"./modules/es6.object.is-frozen":235,"./modules/es6.object.is-sealed":236,"./modules/es6.object.keys":238,"./modules/es6.object.prevent-extensions":239,"./modules/es6.object.seal":240,"./modules/es6.object.set-prototype-of":241,"./modules/es6.object.to-string":242,"./modules/es6.promise":243,"./modules/es6.reflect.apply":244,"./modules/es6.reflect.construct":245,"./modules/es6.reflect.define-property":246,"./modules/es6.reflect.delete-property":247,"./modules/es6.reflect.enumerate":248,"./modules/es6.reflect.get":251,"./modules/es6.reflect.get-own-property-descriptor":249,"./modules/es6.reflect.get-prototype-of":250,"./modules/es6.reflect.has":252,"./modules/es6.reflect.is-extensible":253,"./modules/es6.reflect.own-keys":254,"./modules/es6.reflect.prevent-extensions":255,"./modules/es6.reflect.set":257,"./modules/es6.reflect.set-prototype-of":256,"./modules/es6.regexp.constructor":258,"./modules/es6.regexp.flags":259,"./modules/es6.regexp.match":260,"./modules/es6.regexp.replace":261,"./modules/es6.regexp.search":262,"./modules/es6.regexp.split":263,"./modules/es6.set":264,"./modules/es6.string.code-point-at":265,"./modules/es6.string.ends-with":266,"./modules/es6.string.from-code-point":267,"./modules/es6.string.includes":268,"./modules/es6.string.iterator":269,"./modules/es6.string.raw":270,"./modules/es6.string.repeat":271,"./modules/es6.string.starts-with":272,"./modules/es6.string.trim":273,"./modules/es6.symbol":274,"./modules/es6.weak-map":275,"./modules/es6.weak-set":276,"./modules/es7.array.includes":277,"./modules/es7.map.to-json":278,"./modules/es7.object.entries":279,"./modules/es7.object.get-own-property-descriptors":280,"./modules/es7.object.values":281,"./modules/es7.regexp.escape":282,"./modules/es7.set.to-json":283,"./modules/es7.string.at":284,"./modules/es7.string.pad-left":285,"./modules/es7.string.pad-right":286,"./modules/es7.string.trim-left":287,"./modules/es7.string.trim-right":288,"./modules/js.array.statics":289,"./modules/web.dom.iterable":290,"./modules/web.immediate":291,"./modules/web.timers":292}],294:[function(require,module,exports){
 (function (process,global){
 /**
  * Copyright (c) 2014, Facebook, Inc.
@@ -20145,13 +20211,13 @@ module.exports = require('./modules/$.core');
 );
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":301}],297:[function(require,module,exports){
+},{"_process":299}],295:[function(require,module,exports){
 module.exports = require("./lib/polyfill");
 
-},{"./lib/polyfill":108}],298:[function(require,module,exports){
+},{"./lib/polyfill":106}],296:[function(require,module,exports){
 module.exports = require("babel-core/polyfill");
 
-},{"babel-core/polyfill":297}],299:[function(require,module,exports){
+},{"babel-core/polyfill":295}],297:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -20451,7 +20517,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],300:[function(require,module,exports){
+},{}],298:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -20679,7 +20745,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":301}],301:[function(require,module,exports){
+},{"_process":299}],299:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -20772,20 +20838,5107 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],302:[function(require,module,exports){
+},{}],300:[function(require,module,exports){
 arguments[4][2][0].apply(exports,arguments)
-},{"../package":304,"dup":2,"inherits":303}],303:[function(require,module,exports){
+},{"../package":302,"dup":2,"inherits":301}],301:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
-},{"dup":3}],304:[function(require,module,exports){
+},{"dup":3}],302:[function(require,module,exports){
 arguments[4][8][0].apply(exports,arguments)
-},{"dup":8}],305:[function(require,module,exports){
+},{"dup":8}],303:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports.getConstructor = getConstructor;
+exports.addSource = addSource;
+exports.removeSource = removeSource;
+exports.getRealProps = getRealProps;
+exports.instantiate = instantiate;
+exports.destroyPhrase = destroyPhrase;
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _elements = require('./elements');
+
+var builtinPhrases = _interopRequireWildcard(_elements);
+
+var _sources = require('./sources');
+
+var builtinSources = _interopRequireWildcard(_sources);
+
+var _error = require('./error');
+
+function getConstructor(_ref) {
+  var Constructor = _ref.Constructor;
+  var type = _ref.type;
+
+  if (_lodash2['default'].isString(Constructor)) {
+    var builtins = getBuiltinsForType(type);
+
+    if (_lodash2['default'].has(builtins, Constructor)) {
+      return builtins[Constructor];
+    } else {
+      throw new _error.LaconaError(Constructor + ' is an invalid phrase. Note: non-builtin phrases must be uppercase');
+    }
+  } else {
+    assertValid({ Constructor: Constructor, type: type });
+  }
+  return Constructor;
+}
+
+function addSource(_ref2) {
+  var component = _ref2.component;
+  var options = _ref2.options;
+
+  if (component.observe) {
+    var sourceDescriptor = component.observe();
+    if (sourceDescriptor) {
+      var source = options.sourceManager.subscribe(sourceDescriptor);
+      component.__lastSourceVersion = 0;
+
+      component.source = source;
+    }
+  }
+}
+
+function removeSource(_ref3) {
+  var component = _ref3.component;
+  var options = _ref3.options;
+
+  if (component.source) {
+    options.sourceManager.unsubscribe(component.source);
+    delete component.source;
+  }
+}
+
+function subclassOf(Constructor, DesiredSuperclass) {
+  return Constructor.prototype instanceof DesiredSuperclass;
+}
+
+function assertValid(_ref4) {
+  var Constructor = _ref4.Constructor;
+  var type = _ref4.type;
+
+  if (!_lodash2['default'].isFunction(Constructor)) {
+    throw new _error.LaconaError('Constructor ' + Constructor + ' is not a valid ' + type);
+  }
+
+  if (type === 'phrase') {
+    if (Constructor.prototype.describe) {} else if (Constructor.translations) {
+      if (!_lodash2['default'].every(Constructor.translations, _lodash2['default'].partial(_lodash2['default'].has, _lodash2['default'], 'describe'))) {
+        throw new _error.LaconaError('Every translation must have a describe method');
+      }
+      if (!_lodash2['default'].every(Constructor.translations, _lodash2['default'].partial(_lodash2['default'].has, _lodash2['default'], 'langs'))) {
+        throw new _error.LaconaError('Every translation must have a langs property');
+      }
+      if (!_lodash2['default'].some(Constructor.translations, function (translation) {
+        return _lodash2['default'].indexOf(translation.langs, 'default') > -1;
+      })) {
+        throw new _error.LaconaError('All elements must have a describe method defined for the default language');
+      }
+    }
+  }
+}
+
+function getBuiltinsForType(type) {
+  if (type === 'phrase') {
+    return builtinPhrases;
+  } else if (type === 'source') {
+    return builtinSources;
+  } else {
+    throw new _error.LaconaError(type + ' is an invalid constructor type.');
+  }
+}
+
+function getRealProps(_ref5) {
+  var descriptor = _ref5.descriptor;
+  var Constructor = _ref5.Constructor;
+
+  var realProps = _lodash2['default'].defaults(descriptor.props || {}, Constructor.defaultProps || {});
+  if (descriptor.children && descriptor.children.length > 0) {
+    realProps.children = _lodash2['default'].flattenDeep(descriptor.children);
+  }
+  return realProps;
+}
+
+function instantiate(_ref6) {
+  var Constructor = _ref6.Constructor;
+  var props = _ref6.props;
+
+  return new Constructor({ props: props });
+}
+
+function destroyPhrase(_ref7) {
+  var phrase = _ref7.phrase;
+  var options = _ref7.options;
+
+  if (phrase) {
+    if (phrase._handleParse) {
+      var destroyCall = function destroyCall(phrase) {
+        destroyPhrase({ phrase: phrase, options: options });
+      };
+
+      phrase._destroy(destroyCall);
+    }
+
+    removeSource({ component: phrase, options: options });
+  }
+}
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./elements":308,"./error":317,"./sources":323,"babel-runtime/helpers/interop-require-default":344,"babel-runtime/helpers/interop-require-wildcard":345,"lacona-phrase":300}],304:[function(require,module,exports){
+(function (global){
+/** @jsx createElement */
+'use strict';
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _defineProperty = require('babel-runtime/helpers/define-property')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _parse = require('../parse');
+
+var _reconcile = require('../reconcile');
+
+var Choice = (function (_Phrase) {
+  _inherits(Choice, _Phrase);
+
+  function Choice() {
+    _classCallCheck(this, Choice);
+
+    _get(Object.getPrototypeOf(Choice.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Choice, [{
+    key: '_handleParse',
+    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
+      var successes, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, childPhrase, success, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, output, newResult, modifications;
+
+      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            successes = 0;
+
+            if (!(this.props.children && this.props.children.length > 0)) {
+              context$2$0.next = 65;
+              break;
+            }
+
+            this.childPhrases = (0, _reconcile.reconcile)({ descriptor: this.props.children, phrase: this.childPhrases, options: options });
+
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 6;
+            _iterator = _getIterator(this.childPhrases);
+
+          case 8:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 51;
+              break;
+            }
+
+            childPhrase = _step.value;
+            success = false;
+
+            if (!(childPhrase.props.id == null && !this.props.limit)) {
+              context$2$0.next = 15;
+              break;
+            }
+
+            return context$2$0.delegateYield((0, _parse.parse)({ phrase: childPhrase, input: input, options: options }), 't0', 13);
+
+          case 13:
+            context$2$0.next = 44;
+            break;
+
+          case 15:
+            _iteratorNormalCompletion2 = true;
+            _didIteratorError2 = false;
+            _iteratorError2 = undefined;
+            context$2$0.prev = 18;
+            _iterator2 = _getIterator((0, _parse.parse)({ phrase: childPhrase, input: input, options: options }));
+
+          case 20:
+            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+              context$2$0.next = 30;
+              break;
+            }
+
+            output = _step2.value;
+            newResult = childPhrase.props.id != null ? _defineProperty({}, childPhrase.props.id, output.result) : output.result;
+            modifications = { result: newResult };
+
+            if (this.props.limit) modifications.callbacks = output.callbacks.concat(function () {
+              return success = true;
+            });
+
+            context$2$0.next = 27;
+            return _lodash2['default'].assign({}, output, modifications);
+
+          case 27:
+            _iteratorNormalCompletion2 = true;
+            context$2$0.next = 20;
+            break;
+
+          case 30:
+            context$2$0.next = 36;
+            break;
+
+          case 32:
+            context$2$0.prev = 32;
+            context$2$0.t1 = context$2$0['catch'](18);
+            _didIteratorError2 = true;
+            _iteratorError2 = context$2$0.t1;
+
+          case 36:
+            context$2$0.prev = 36;
+            context$2$0.prev = 37;
+
+            if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+              _iterator2['return']();
+            }
+
+          case 39:
+            context$2$0.prev = 39;
+
+            if (!_didIteratorError2) {
+              context$2$0.next = 42;
+              break;
+            }
+
+            throw _iteratorError2;
+
+          case 42:
+            return context$2$0.finish(39);
+
+          case 43:
+            return context$2$0.finish(36);
+
+          case 44:
+            if (!this.props.limit) {
+              context$2$0.next = 48;
+              break;
+            }
+
+            if (success) successes++;
+
+            if (!(this.props.limit <= successes)) {
+              context$2$0.next = 48;
+              break;
+            }
+
+            return context$2$0.abrupt('break', 51);
+
+          case 48:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 8;
+            break;
+
+          case 51:
+            context$2$0.next = 57;
+            break;
+
+          case 53:
+            context$2$0.prev = 53;
+            context$2$0.t2 = context$2$0['catch'](6);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t2;
+
+          case 57:
+            context$2$0.prev = 57;
+            context$2$0.prev = 58;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 60:
+            context$2$0.prev = 60;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 63;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 63:
+            return context$2$0.finish(60);
+
+          case 64:
+            return context$2$0.finish(57);
+
+          case 65:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, _handleParse, this, [[6, 53, 57, 65], [18, 32, 36, 44], [37,, 39, 43], [58,, 60, 64]]);
+    })
+  }, {
+    key: '_destroy',
+    value: function _destroy(destroy) {
+      _lodash2['default'].forEach(this.childPhrases, destroy);
+
+      delete this.childPhrases;
+    }
+  }]);
+
+  return Choice;
+})(_laconaPhrase.Phrase);
+
+exports.Choice = Choice;
+
+//perf opt
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../parse":319,"../reconcile":321,"babel-runtime/core-js/get-iterator":328,"babel-runtime/helpers/class-call-check":338,"babel-runtime/helpers/create-class":339,"babel-runtime/helpers/define-property":340,"babel-runtime/helpers/get":342,"babel-runtime/helpers/inherits":343,"babel-runtime/helpers/interop-require-default":344,"babel-runtime/regenerator":426,"lacona-phrase":300}],305:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _component = require('../component');
+
+var _parse = require('../parse');
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _reconcile = require('../reconcile');
+
+var _stringUtils = require('../string-utils');
+
+var Dynamic = (function (_Phrase) {
+  _inherits(Dynamic, _Phrase);
+
+  function Dynamic() {
+    _classCallCheck(this, Dynamic);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _get(Object.getPrototypeOf(Dynamic.prototype), 'constructor', this).apply(this, args);
+
+    this._phrases = {};
+    this._sources = {};
+    this._lastSourceVersions = {};
+  }
+
+  _createClass(Dynamic, [{
+    key: 'sourceChanged',
+    value: function sourceChanged(text, options) {
+      return this._sources[text] && this._lastSourceVersions[text] < options.sourceManager.getDataVersion(this._sources[text]);
+    }
+  }, {
+    key: 'removeSource',
+    value: function removeSource(text, options) {
+      options.sourceManager.unsubscribe(this._sources[text]);
+      (0, _component.destroyPhrase)({ phrase: this._phrases[text], options: options });
+
+      delete this._sources[text];
+      delete this._phrases[text];
+      delete this._lastSourceVersions[text];
+    }
+  }, {
+    key: '_handleParse',
+    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
+      var successes, substringOpts, iterations, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, _ret;
+
+      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
+        var _this2 = this;
+
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            successes = 0;
+            substringOpts = {
+              splitOn: this.props.splitOn,
+              noSplit: this.props.consumeAll,
+              reverse: this.props.greedy
+            };
+            iterations = input.text == null ? ['�'] : (0, _stringUtils.substrings)(input.text, substringOpts);
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 6;
+            _loop = _regeneratorRuntime.mark(function callee$2$0() {
+              var substring, success, sourceDescriptor, source, descriptor, output;
+              return _regeneratorRuntime.wrap(function callee$2$0$(context$3$0) {
+                var _this = this;
+
+                while (1) switch (context$3$0.prev = context$3$0.next) {
+                  case 0:
+                    substring = _step.value;
+                    success = false;
+
+                    if (!this._sources[substring]) {
+                      sourceDescriptor = this.props.observe(substring === '�' ? undefined : substring);
+
+                      if (sourceDescriptor) {
+                        source = options.sourceManager.subscribe(sourceDescriptor);
+
+                        options.scheduleDeactivateCallback(function () {
+                          _this.removeSource(substring, options);
+                        });
+                        this._sources[substring] = source;
+                        this._lastSourceVersions[substring] = options.sourceManager.getDataVersion(source);
+                      }
+                    }
+
+                    descriptor = this.props.describe(this._sources[substring] ? this._sources[substring].data : undefined);
+
+                    this._phrases[substring] = (0, _reconcile.reconcile)({ descriptor: descriptor, phrase: this._phrases[substring], options: options });
+
+                    if (!this._phrases[substring]) {
+                      context$3$0.next = 41;
+                      break;
+                    }
+
+                    _iteratorNormalCompletion2 = true;
+                    _didIteratorError2 = false;
+                    _iteratorError2 = undefined;
+                    context$3$0.prev = 9;
+                    _iterator2 = _getIterator((0, _parse.parse)({ phrase: this._phrases[substring], input: input, options: options }));
+
+                  case 11:
+                    if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+                      context$3$0.next = 23;
+                      break;
+                    }
+
+                    output = _step2.value;
+
+                    if (!this.props.limit) {
+                      context$3$0.next = 18;
+                      break;
+                    }
+
+                    context$3$0.next = 16;
+                    return _lodash2['default'].assign({}, output, { callbacks: output.callbacks.concat(function () {
+                        return success = true;
+                      }) });
+
+                  case 16:
+                    context$3$0.next = 20;
+                    break;
+
+                  case 18:
+                    context$3$0.next = 20;
+                    return output;
+
+                  case 20:
+                    _iteratorNormalCompletion2 = true;
+                    context$3$0.next = 11;
+                    break;
+
+                  case 23:
+                    context$3$0.next = 29;
+                    break;
+
+                  case 25:
+                    context$3$0.prev = 25;
+                    context$3$0.t0 = context$3$0['catch'](9);
+                    _didIteratorError2 = true;
+                    _iteratorError2 = context$3$0.t0;
+
+                  case 29:
+                    context$3$0.prev = 29;
+                    context$3$0.prev = 30;
+
+                    if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+                      _iterator2['return']();
+                    }
+
+                  case 32:
+                    context$3$0.prev = 32;
+
+                    if (!_didIteratorError2) {
+                      context$3$0.next = 35;
+                      break;
+                    }
+
+                    throw _iteratorError2;
+
+                  case 35:
+                    return context$3$0.finish(32);
+
+                  case 36:
+                    return context$3$0.finish(29);
+
+                  case 37:
+                    if (!this.props.limit) {
+                      context$3$0.next = 41;
+                      break;
+                    }
+
+                    if (success) successes++;
+
+                    if (!(this.props.limit <= successes)) {
+                      context$3$0.next = 41;
+                      break;
+                    }
+
+                    return context$3$0.abrupt('return', 'break');
+
+                  case 41:
+                  case 'end':
+                    return context$3$0.stop();
+                }
+              }, callee$2$0, _this2, [[9, 25, 29, 37], [30,, 32, 36]]);
+            });
+            _iterator = _getIterator(iterations);
+
+          case 9:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 17;
+              break;
+            }
+
+            return context$2$0.delegateYield(_loop(), 't0', 11);
+
+          case 11:
+            _ret = context$2$0.t0;
+
+            if (!(_ret === 'break')) {
+              context$2$0.next = 14;
+              break;
+            }
+
+            return context$2$0.abrupt('break', 17);
+
+          case 14:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 9;
+            break;
+
+          case 17:
+            context$2$0.next = 23;
+            break;
+
+          case 19:
+            context$2$0.prev = 19;
+            context$2$0.t1 = context$2$0['catch'](6);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t1;
+
+          case 23:
+            context$2$0.prev = 23;
+            context$2$0.prev = 24;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 26:
+            context$2$0.prev = 26;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 29;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 29:
+            return context$2$0.finish(26);
+
+          case 30:
+            return context$2$0.finish(23);
+
+          case 31:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, _handleParse, this, [[6, 19, 23, 31], [24,, 26, 30]]);
+    })
+  }], [{
+    key: 'defaultProps',
+    value: {
+      splitOn: '',
+      consumeAll: false
+    },
+    enumerable: true
+  }]);
+
+  return Dynamic;
+})(_laconaPhrase.Phrase);
+
+exports.Dynamic = Dynamic;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../component":303,"../parse":319,"../reconcile":321,"../string-utils":326,"babel-runtime/core-js/get-iterator":328,"babel-runtime/helpers/class-call-check":338,"babel-runtime/helpers/create-class":339,"babel-runtime/helpers/get":342,"babel-runtime/helpers/inherits":343,"babel-runtime/helpers/interop-require-default":344,"babel-runtime/regenerator":426,"lacona-phrase":300}],306:[function(require,module,exports){
+/** @jsx createElement */
+'use strict';
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _laconaPhrase = require('lacona-phrase');
+
+var Filter = (function (_Phrase) {
+  _inherits(Filter, _Phrase);
+
+  function Filter() {
+    _classCallCheck(this, Filter);
+
+    _get(Object.getPrototypeOf(Filter.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Filter, [{
+    key: 'validate',
+    value: function validate(result) {
+      return this.props['function'](result);
+    }
+  }, {
+    key: '_validateIncomplete',
+    value: function _validateIncomplete(result) {
+      if (this.props._incomplete) {
+        return this.props['function'](result);
+      } else {
+        return true;
+      }
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return this.props.children[0];
+    }
+  }]);
+
+  return Filter;
+})(_laconaPhrase.Phrase);
+
+exports.Filter = Filter;
+},{"babel-runtime/helpers/class-call-check":338,"babel-runtime/helpers/create-class":339,"babel-runtime/helpers/get":342,"babel-runtime/helpers/inherits":343,"lacona-phrase":300}],307:[function(require,module,exports){
+/** @jsx createElement */
+'use strict';
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _stringUtils = require('../string-utils');
+
+var Freetext = (function (_Phrase) {
+  _inherits(Freetext, _Phrase);
+
+  function Freetext() {
+    _classCallCheck(this, Freetext);
+
+    _get(Object.getPrototypeOf(Freetext.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Freetext, [{
+    key: 'filter',
+    value: _regeneratorRuntime.mark(function filter(input) {
+      var substringOpts, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, stringPart;
+
+      return _regeneratorRuntime.wrap(function filter$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            substringOpts = {
+              splitOn: this.props.splitOn,
+              noSplit: this.props.consumeAll,
+              reverse: this.props.greedy
+            };
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 4;
+            _iterator = _getIterator((0, _stringUtils.substrings)(input, substringOpts));
+
+          case 6:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 14;
+              break;
+            }
+
+            stringPart = _step.value;
+
+            if (!this.props.filter(stringPart)) {
+              context$2$0.next = 11;
+              break;
+            }
+
+            context$2$0.next = 11;
+            return {
+              words: [{ text: stringPart, input: true }],
+              result: stringPart,
+              remaining: input.substring(stringPart.length),
+              score: 0.1 + 1 / (stringPart.length + 2)
+            };
+
+          case 11:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 6;
+            break;
+
+          case 14:
+            context$2$0.next = 20;
+            break;
+
+          case 16:
+            context$2$0.prev = 16;
+            context$2$0.t0 = context$2$0['catch'](4);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t0;
+
+          case 20:
+            context$2$0.prev = 20;
+            context$2$0.prev = 21;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 23:
+            context$2$0.prev = 23;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 26;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 26:
+            return context$2$0.finish(23);
+
+          case 27:
+            return context$2$0.finish(20);
+
+          case 28:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, filter, this, [[4, 16, 20, 28], [21,, 23, 27]]);
+    })
+  }, {
+    key: 'describe',
+    value: function describe() {
+      return (0, _laconaPhrase.createElement)('raw', { 'function': this.filter.bind(this), limit: this.props.limit });
+    }
+  }], [{
+    key: 'defaultProps',
+    value: {
+      filter: function filter() {
+        return true;
+      },
+      splitOn: '',
+      consumeAll: false
+    },
+    enumerable: true
+  }]);
+
+  return Freetext;
+})(_laconaPhrase.Phrase);
+
+exports.Freetext = Freetext;
+},{"../string-utils":326,"babel-runtime/core-js/get-iterator":328,"babel-runtime/helpers/class-call-check":338,"babel-runtime/helpers/create-class":339,"babel-runtime/helpers/get":342,"babel-runtime/helpers/inherits":343,"babel-runtime/regenerator":426,"lacona-phrase":300}],308:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _choice = require('./choice');
+
+Object.defineProperty(exports, 'choice', {
+  enumerable: true,
+  get: function get() {
+    return _choice.Choice;
+  }
+});
+
+var _dynamic = require('./dynamic');
+
+Object.defineProperty(exports, 'dynamic', {
+  enumerable: true,
+  get: function get() {
+    return _dynamic.Dynamic;
+  }
+});
+
+var _label = require('./label');
+
+Object.defineProperty(exports, 'label', {
+  enumerable: true,
+  get: function get() {
+    return _label.Label;
+  }
+});
+
+var _filter = require('./filter');
+
+Object.defineProperty(exports, 'filter', {
+  enumerable: true,
+  get: function get() {
+    return _filter.Filter;
+  }
+});
+
+var _freetext = require('./freetext');
+
+Object.defineProperty(exports, 'freetext', {
+  enumerable: true,
+  get: function get() {
+    return _freetext.Freetext;
+  }
+});
+
+var _list = require('./list');
+
+Object.defineProperty(exports, 'list', {
+  enumerable: true,
+  get: function get() {
+    return _list.List;
+  }
+});
+
+var _literal = require('./literal');
+
+Object.defineProperty(exports, 'literal', {
+  enumerable: true,
+  get: function get() {
+    return _literal.Literal;
+  }
+});
+
+var _map = require('./map');
+
+Object.defineProperty(exports, 'map', {
+  enumerable: true,
+  get: function get() {
+    return _map.MapPhrase;
+  }
+});
+
+var _raw = require('./raw');
+
+Object.defineProperty(exports, 'raw', {
+  enumerable: true,
+  get: function get() {
+    return _raw.Raw;
+  }
+});
+
+var _repeat = require('./repeat');
+
+Object.defineProperty(exports, 'repeat', {
+  enumerable: true,
+  get: function get() {
+    return _repeat.Repeat;
+  }
+});
+
+var _sequence = require('./sequence');
+
+Object.defineProperty(exports, 'sequence', {
+  enumerable: true,
+  get: function get() {
+    return _sequence.Sequence;
+  }
+});
+
+var _tap = require('./tap');
+
+Object.defineProperty(exports, 'tap', {
+  enumerable: true,
+  get: function get() {
+    return _tap.Tap;
+  }
+});
+},{"./choice":304,"./dynamic":305,"./filter":306,"./freetext":307,"./label":309,"./list":310,"./literal":311,"./map":312,"./raw":313,"./repeat":314,"./sequence":315,"./tap":316}],309:[function(require,module,exports){
+(function (global){
+/** @jsx createElement */
+'use strict';
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _parse = require('../parse');
+
+var _reconcile = require('../reconcile');
+
+var Label = (function (_Phrase) {
+  _inherits(Label, _Phrase);
+
+  function Label() {
+    _classCallCheck(this, Label);
+
+    _get(Object.getPrototypeOf(Label.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Label, [{
+    key: 'parseChild',
+    value: _regeneratorRuntime.mark(function parseChild(input, options) {
+      var didSetCurrentArgument, modification, inputWithArgument, didOutputSelf, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, output;
+
+      return _regeneratorRuntime.wrap(function parseChild$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            didSetCurrentArgument = false;
+            modification = {};
+
+            if (this.props.argument && !input.currentArgument) {
+              modification.currentArgument = this.props.text;
+              didSetCurrentArgument = true;
+            }
+
+            inputWithArgument = _lodash2['default'].assign({}, input, modification);
+            didOutputSelf = false;
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 8;
+            _iterator = _getIterator((0, _parse.parse)({ phrase: this.childPhrase, input: inputWithArgument, options: options }));
+
+          case 10:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 22;
+              break;
+            }
+
+            output = _step.value;
+
+            if (!didSetCurrentArgument) {
+              context$2$0.next = 17;
+              break;
+            }
+
+            context$2$0.next = 15;
+            return _lodash2['default'].assign({}, output, { currentArgument: undefined });
+
+          case 15:
+            context$2$0.next = 19;
+            break;
+
+          case 17:
+            context$2$0.next = 19;
+            return output;
+
+          case 19:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 10;
+            break;
+
+          case 22:
+            context$2$0.next = 28;
+            break;
+
+          case 24:
+            context$2$0.prev = 24;
+            context$2$0.t0 = context$2$0['catch'](8);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t0;
+
+          case 28:
+            context$2$0.prev = 28;
+            context$2$0.prev = 29;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 31:
+            context$2$0.prev = 31;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 34;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 34:
+            return context$2$0.finish(31);
+
+          case 35:
+            return context$2$0.finish(28);
+
+          case 36:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, parseChild, this, [[8, 24, 28, 36], [29,, 31, 35]]);
+    })
+  }, {
+    key: 'outputSelf',
+    value: function outputSelf(input, options) {
+      var word = {
+        text: this.props.text,
+        input: false,
+        placeholder: true,
+        argument: input.currentArgument || (this.props.argument ? this.props.text : undefined)
+      };
+
+      var modification = {
+        score: 0.01,
+        result: undefined,
+        text: null
+      };
+
+      modification.words = input.words.concat(word);
+
+      return _lodash2['default'].assign({}, input, modification);
+    }
+  }, {
+    key: '_handleParse',
+    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
+      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            this.childPhrase = (0, _reconcile.reconcile)({ descriptor: this.props.children[0], phrase: this.childPhrase, options: options });
+
+            if (!(this.props.suppress && (input.text == null || this.props.suppressEmpty && input.text === '' || this.props.suppressWhen && this.props.suppressWhen(input.text)))) {
+              context$2$0.next = 6;
+              break;
+            }
+
+            context$2$0.next = 4;
+            return this.outputSelf(input, options);
+
+          case 4:
+            context$2$0.next = 7;
+            break;
+
+          case 6:
+            return context$2$0.delegateYield(this.parseChild(input, options), 't0', 7);
+
+          case 7:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, _handleParse, this);
+    })
+  }, {
+    key: '_destroy',
+    value: function _destroy(destroy) {
+      destroy(this.childPhrase);
+
+      delete this.childPhrase;
+    }
+  }], [{
+    key: 'defaultProps',
+    value: {
+      suppress: true,
+      argument: true,
+      suppressEmpty: true
+    },
+    enumerable: true
+  }]);
+
+  return Label;
+})(_laconaPhrase.Phrase);
+
+exports.Label = Label;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../parse":319,"../reconcile":321,"babel-runtime/core-js/get-iterator":328,"babel-runtime/helpers/class-call-check":338,"babel-runtime/helpers/create-class":339,"babel-runtime/helpers/get":342,"babel-runtime/helpers/inherits":343,"babel-runtime/helpers/interop-require-default":344,"babel-runtime/regenerator":426,"lacona-phrase":300}],310:[function(require,module,exports){
+(function (global){
+/** @jsx createElement */
+'use strict';
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _Array$from = require('babel-runtime/core-js/array/from')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _stringMatch = require('../string-match');
+
+var List = (function (_Phrase) {
+  _inherits(List, _Phrase);
+
+  function List() {
+    _classCallCheck(this, List);
+
+    _get(Object.getPrototypeOf(List.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(List, [{
+    key: 'itemify',
+    value: function itemify(item) {
+      return _lodash2['default'].isString(item) ? { text: item } : item;
+    }
+  }, {
+    key: 'doMatch',
+    value: _regeneratorRuntime.mark(function doMatch(items, input) {
+      var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, item, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, output;
+
+      return _regeneratorRuntime.wrap(function doMatch$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 3;
+            _iterator = _getIterator(items);
+
+          case 5:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 38;
+              break;
+            }
+
+            item = _step.value;
+            _iteratorNormalCompletion2 = true;
+            _didIteratorError2 = false;
+            _iteratorError2 = undefined;
+            context$2$0.prev = 10;
+            _iterator2 = _getIterator((0, _stringMatch.match)({ input: input, text: item.text, fuzzy: this.props.fuzzy }));
+
+          case 12:
+            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+              context$2$0.next = 21;
+              break;
+            }
+
+            output = _step2.value;
+
+            output.result = item.value;
+            output.qualifiers = item.qualifiers;
+            context$2$0.next = 18;
+            return output;
+
+          case 18:
+            _iteratorNormalCompletion2 = true;
+            context$2$0.next = 12;
+            break;
+
+          case 21:
+            context$2$0.next = 27;
+            break;
+
+          case 23:
+            context$2$0.prev = 23;
+            context$2$0.t0 = context$2$0['catch'](10);
+            _didIteratorError2 = true;
+            _iteratorError2 = context$2$0.t0;
+
+          case 27:
+            context$2$0.prev = 27;
+            context$2$0.prev = 28;
+
+            if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+              _iterator2['return']();
+            }
+
+          case 30:
+            context$2$0.prev = 30;
+
+            if (!_didIteratorError2) {
+              context$2$0.next = 33;
+              break;
+            }
+
+            throw _iteratorError2;
+
+          case 33:
+            return context$2$0.finish(30);
+
+          case 34:
+            return context$2$0.finish(27);
+
+          case 35:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 5;
+            break;
+
+          case 38:
+            context$2$0.next = 44;
+            break;
+
+          case 40:
+            context$2$0.prev = 40;
+            context$2$0.t1 = context$2$0['catch'](3);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t1;
+
+          case 44:
+            context$2$0.prev = 44;
+            context$2$0.prev = 45;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 47:
+            context$2$0.prev = 47;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 50;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 50:
+            return context$2$0.finish(47);
+
+          case 51:
+            return context$2$0.finish(44);
+
+          case 52:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, doMatch, this, [[3, 40, 44, 52], [10, 23, 27, 35], [28,, 30, 34], [45,, 47, 51]]);
+    })
+  }, {
+    key: 'compute',
+    value: _regeneratorRuntime.mark(function compute(items, input) {
+      var resultIterator, sortedResults;
+      return _regeneratorRuntime.wrap(function compute$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            resultIterator = this.doMatch(items, input);
+
+            if (!this.props.fuzzy) {
+              context$2$0.next = 6;
+              break;
+            }
+
+            sortedResults = _lodash2['default'].chain(_Array$from(resultIterator)).sortBy(function (_ref) {
+              var score = _ref.score;
+              return -score;
+            }).value();
+            return context$2$0.delegateYield(sortedResults, 't0', 4);
+
+          case 4:
+            context$2$0.next = 7;
+            break;
+
+          case 6:
+            return context$2$0.delegateYield(resultIterator, 't1', 7);
+
+          case 7:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, compute, this);
+    })
+  }, {
+    key: 'describe',
+
+    // if (_.startsWith(input.toLowerCase(), item.text.toLowerCase())) {
+    //   const qualifiers = item.qualifiers
+    //     ? item.qualifiers
+    //     : item.qualifier ? [item.qualifier] : []
+    //
+    //   yield {
+    //     remaining: input.slice(item.text.length),
+    //     words: [{text: item.text, input: true}],
+    //     result: item.value,
+    //     qualifiers
+    //   }
+    // } else {
+    //   if (this.props.fuzzy) {
+    //     itemsForFuzzy.push(item)
+    //   }
+    // }
+
+    // if (this.props.fuzzy) {
+    //   for (let result of sort(input, itemsForFuzzy)) {
+    //     result.remaining = ''
+    //
+    //     yield result
+    //   }
+    // }
+    value: function describe() {
+      // if (this.props.fuzzy) {
+      var trueItems = _lodash2['default'].map(this.props.items, this.itemify.bind(this));
+
+      return (0, _laconaPhrase.createElement)('raw', { 'function': this.compute.bind(this, trueItems), limit: this.props.limit, category: this.props.category });
+      // } else {
+      //   const literals = _.chain(this.props.items)
+      //     .map(this.itemify.bind(this))
+      //     .map(item => <literal text={item.text} value={item.value} qualifier={item.qualifier} category={this.props.category} />)
+      //     .value()
+      //
+      //   return (
+      //     <choice limit={this.props.limit} value={this.props.value}>
+      //       {literals}
+      //     </choice>
+      //   )
+      // }
+    }
+  }]);
+
+  return List;
+})(_laconaPhrase.Phrase);
+
+exports.List = List;
+
+// TODO - this could be optimized
+//  Right now it is going to do fuzzy matching for every single item
+//  much of this processing could be eliminated if it ran the
+//  non-fuzzy (score 1) parses first, and then did the fuzzy (score 0.5)
+//  parses
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../string-match":325,"babel-runtime/core-js/array/from":327,"babel-runtime/core-js/get-iterator":328,"babel-runtime/helpers/class-call-check":338,"babel-runtime/helpers/create-class":339,"babel-runtime/helpers/get":342,"babel-runtime/helpers/inherits":343,"babel-runtime/helpers/interop-require-default":344,"babel-runtime/regenerator":426,"lacona-phrase":300}],311:[function(require,module,exports){
+(function (global){
+/** @jsx createElement */
+'use strict';
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _extends = require('babel-runtime/helpers/extends')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _stringMatch = require('../string-match');
+
+var _laconaPhrase = require('lacona-phrase');
+
+var Literal = (function (_Phrase) {
+  _inherits(Literal, _Phrase);
+
+  function Literal() {
+    _classCallCheck(this, Literal);
+
+    _get(Object.getPrototypeOf(Literal.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Literal, [{
+    key: 'compute',
+    value: function compute(input) {
+      if (this.props.text == null) return [];
+
+      var result = (0, _stringMatch.match)({ input: input, text: this.props.text, fuzzy: this.props.fuzzy });
+      return result;
+    }
+  }, {
+    key: 'decorate',
+    value: function decorate(input) {
+      if (input == null || input === '') {
+        return [];
+      } else {
+        return [{
+          words: [{ text: this.props.text, input: false }],
+          remaining: input,
+          score: 1
+        }];
+      }
+    }
+  }, {
+    key: 'describe',
+    value: function describe() {
+      if (this.props.decorate) {
+        if (this.props.allowInput) {
+          return (0, _laconaPhrase.createElement)(
+            'choice',
+            null,
+            (0, _laconaPhrase.createElement)('literal', _extends({}, this.props, { decorate: false })),
+            (0, _laconaPhrase.createElement)('raw', { 'function': this.decorate.bind(this) })
+          );
+        } else {
+          return (0, _laconaPhrase.createElement)('raw', { 'function': this.decorate.bind(this) });
+        }
+      } else {
+        return (0, _laconaPhrase.createElement)('raw', { 'function': this.compute.bind(this), category: this.props.category });
+      }
+    }
+  }], [{
+    key: 'defaultProps',
+    value: {
+      fuzzy: false,
+      allowInput: true
+    },
+    enumerable: true
+  }]);
+
+  return Literal;
+})(_laconaPhrase.Phrase);
+
+exports.Literal = Literal;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../string-match":325,"babel-runtime/helpers/class-call-check":338,"babel-runtime/helpers/create-class":339,"babel-runtime/helpers/extends":341,"babel-runtime/helpers/get":342,"babel-runtime/helpers/inherits":343,"babel-runtime/helpers/interop-require-default":344,"lacona-phrase":300}],312:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _reconcile = require('../reconcile');
+
+var _parse = require('../parse');
+
+function hasPlaceholder(output) {
+  return _lodash2['default'].any(output.words, 'placeholder');
+}
+
+var MapPhrase = (function (_Phrase) {
+  _inherits(MapPhrase, _Phrase);
+
+  function MapPhrase() {
+    _classCallCheck(this, MapPhrase);
+
+    _get(Object.getPrototypeOf(MapPhrase.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(MapPhrase, [{
+    key: '_handleParse',
+    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
+      var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, output, newResult, modifications, successes, newIterator, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, success;
+
+      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            if (!(this.props.children && this.props.children.length > 0)) {
+              context$2$0.next = 74;
+              break;
+            }
+
+            this.childPhrase = (0, _reconcile.reconcile)({ descriptor: this.props.children[0], phrase: this.childPhrase, options: options });
+
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 5;
+            _iterator = _getIterator((0, _parse.parse)({ phrase: this.childPhrase, input: input, options: options }));
+
+          case 7:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 60;
+              break;
+            }
+
+            output = _step.value;
+
+            if (!hasPlaceholder(output)) {
+              context$2$0.next = 14;
+              break;
+            }
+
+            context$2$0.next = 12;
+            return output;
+
+          case 12:
+            context$2$0.next = 57;
+            break;
+
+          case 14:
+            if (!this.props['function']) {
+              context$2$0.next = 21;
+              break;
+            }
+
+            newResult = this.props['function'](output.result);
+            modifications = { result: newResult };
+            context$2$0.next = 19;
+            return _lodash2['default'].assign({}, output, modifications);
+
+          case 19:
+            context$2$0.next = 57;
+            break;
+
+          case 21:
+            if (!this.props.iteratorFunction) {
+              context$2$0.next = 57;
+              break;
+            }
+
+            successes = 0;
+            newIterator = this.props.iteratorFunction(output.result);
+            _iteratorNormalCompletion2 = true;
+            _didIteratorError2 = false;
+            _iteratorError2 = undefined;
+            context$2$0.prev = 27;
+            _iterator2 = _getIterator(newIterator);
+
+          case 29:
+            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+              context$2$0.next = 43;
+              break;
+            }
+
+            newResult = _step2.value;
+            success = false;
+            modifications = { result: newResult };
+
+            if (this.props.limit) {
+              modifications.callbacks = output.callbacks.concat(function () {
+                return success = true;
+              });
+            }
+
+            context$2$0.next = 36;
+            return _lodash2['default'].assign({}, output, modifications);
+
+          case 36:
+            if (!this.props.limit) {
+              context$2$0.next = 40;
+              break;
+            }
+
+            if (success) successes++;
+
+            if (!(this.props.limit <= successes)) {
+              context$2$0.next = 40;
+              break;
+            }
+
+            return context$2$0.abrupt('break', 43);
+
+          case 40:
+            _iteratorNormalCompletion2 = true;
+            context$2$0.next = 29;
+            break;
+
+          case 43:
+            context$2$0.next = 49;
+            break;
+
+          case 45:
+            context$2$0.prev = 45;
+            context$2$0.t0 = context$2$0['catch'](27);
+            _didIteratorError2 = true;
+            _iteratorError2 = context$2$0.t0;
+
+          case 49:
+            context$2$0.prev = 49;
+            context$2$0.prev = 50;
+
+            if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+              _iterator2['return']();
+            }
+
+          case 52:
+            context$2$0.prev = 52;
+
+            if (!_didIteratorError2) {
+              context$2$0.next = 55;
+              break;
+            }
+
+            throw _iteratorError2;
+
+          case 55:
+            return context$2$0.finish(52);
+
+          case 56:
+            return context$2$0.finish(49);
+
+          case 57:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 7;
+            break;
+
+          case 60:
+            context$2$0.next = 66;
+            break;
+
+          case 62:
+            context$2$0.prev = 62;
+            context$2$0.t1 = context$2$0['catch'](5);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t1;
+
+          case 66:
+            context$2$0.prev = 66;
+            context$2$0.prev = 67;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 69:
+            context$2$0.prev = 69;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 72;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 72:
+            return context$2$0.finish(69);
+
+          case 73:
+            return context$2$0.finish(66);
+
+          case 74:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, _handleParse, this, [[5, 62, 66, 74], [27, 45, 49, 57], [50,, 52, 56], [67,, 69, 73]]);
+    })
+  }, {
+    key: '_destroy',
+    value: function _destroy(destroy) {
+      destroy(this.childPhrase);
+
+      delete this.childPhrase;
+    }
+  }]);
+
+  return MapPhrase;
+})(_laconaPhrase.Phrase);
+
+exports.MapPhrase = MapPhrase;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../parse":319,"../reconcile":321,"babel-runtime/core-js/get-iterator":328,"babel-runtime/helpers/class-call-check":338,"babel-runtime/helpers/create-class":339,"babel-runtime/helpers/get":342,"babel-runtime/helpers/inherits":343,"babel-runtime/helpers/interop-require-default":344,"babel-runtime/regenerator":426,"lacona-phrase":300}],313:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var Raw = (function (_Phrase) {
+  _inherits(Raw, _Phrase);
+
+  function Raw() {
+    _classCallCheck(this, Raw);
+
+    _get(Object.getPrototypeOf(Raw.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Raw, [{
+    key: '_handleParse',
+    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
+      var successes, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, output, success, modification;
+
+      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
+        var _this = this;
+
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            successes = 0;
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 4;
+            _iterator = _getIterator(this.props['function'](input.text));
+
+          case 6:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 21;
+              break;
+            }
+
+            output = _step.value;
+            success = false;
+            modification = {
+              result: output.result,
+              text: output.remaining,
+              score: output.score || 1,
+              qualifiers: output.qualifiers || [],
+              words: input.words.concat(_lodash2['default'].map(output.words, function (word) {
+                return _lodash2['default'].assign(word, {
+                  argument: input.currentArgument,
+                  category: _this.props.category
+                });
+              }))
+            };
+
+            if (this.props.limit) modification.callbacks = input.callbacks.concat(function () {
+              return success = true;
+            });
+            if (output.ellipsis) modification.ellipsis = true;
+
+            context$2$0.next = 14;
+            return _lodash2['default'].assign({}, input, modification);
+
+          case 14:
+            if (!this.props.limit) {
+              context$2$0.next = 18;
+              break;
+            }
+
+            if (success) successes++;
+
+            if (!(this.props.limit <= successes)) {
+              context$2$0.next = 18;
+              break;
+            }
+
+            return context$2$0.abrupt('break', 21);
+
+          case 18:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 6;
+            break;
+
+          case 21:
+            context$2$0.next = 27;
+            break;
+
+          case 23:
+            context$2$0.prev = 23;
+            context$2$0.t0 = context$2$0['catch'](4);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t0;
+
+          case 27:
+            context$2$0.prev = 27;
+            context$2$0.prev = 28;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 30:
+            context$2$0.prev = 30;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 33;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 33:
+            return context$2$0.finish(30);
+
+          case 34:
+            return context$2$0.finish(27);
+
+          case 35:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, _handleParse, this, [[4, 23, 27, 35], [28,, 30, 34]]);
+    })
+  }], [{
+    key: 'defaultProps',
+    value: {
+      compute: function compute() {
+        return [];
+      }
+    },
+    enumerable: true
+  }]);
+
+  return Raw;
+})(_laconaPhrase.Phrase);
+
+exports.Raw = Raw;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"babel-runtime/core-js/get-iterator":328,"babel-runtime/helpers/class-call-check":338,"babel-runtime/helpers/create-class":339,"babel-runtime/helpers/get":342,"babel-runtime/helpers/inherits":343,"babel-runtime/helpers/interop-require-default":344,"babel-runtime/regenerator":426,"lacona-phrase":300}],314:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _Number$MAX_SAFE_INTEGER = require('babel-runtime/core-js/number/max-safe-integer')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _parse = require('../parse');
+
+var _reconcile = require('../reconcile');
+
+var Repeat = (function (_Phrase) {
+  _inherits(Repeat, _Phrase);
+
+  function Repeat() {
+    _classCallCheck(this, Repeat);
+
+    _get(Object.getPrototypeOf(Repeat.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Repeat, [{
+    key: '_handleParse',
+    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
+      var modifications, trueInput;
+      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            this.child = (0, _reconcile.reconcile)({ descriptor: this.props.children[0], phrase: this.child, options: options });
+            this.separator = this.props.separator ? (0, _reconcile.reconcile)({ descriptor: this.props.separator, phrase: this.separator, options: options }) : null;
+
+            modifications = {
+              result: []
+            };
+            trueInput = _lodash2['default'].assign({}, input, modifications);
+            return context$2$0.delegateYield(this.parseChild(0, trueInput, options), 't0', 5);
+
+          case 5:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, _handleParse, this);
+    })
+  }, {
+    key: 'parseChild',
+    value: _regeneratorRuntime.mark(function parseChild(childIndex, input, options) {
+      var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, sepOutput, trueOutput;
+
+      return _regeneratorRuntime.wrap(function parseChild$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            if (!(childIndex > this.props.max)) {
+              context$2$0.next = 2;
+              break;
+            }
+
+            return context$2$0.abrupt('return');
+
+          case 2:
+            if (!(childIndex >= this.props.min)) {
+              context$2$0.next = 10;
+              break;
+            }
+
+            if (!(childIndex < this.props.max)) {
+              context$2$0.next = 8;
+              break;
+            }
+
+            context$2$0.next = 6;
+            return _lodash2['default'].assign({}, input, { ellipsis: true });
+
+          case 6:
+            context$2$0.next = 10;
+            break;
+
+          case 8:
+            context$2$0.next = 10;
+            return input;
+
+          case 10:
+            if (!(childIndex >= this.props.min && input.text == null)) {
+              context$2$0.next = 12;
+              break;
+            }
+
+            return context$2$0.abrupt('return');
+
+          case 12:
+            if (!(childIndex > 0 && this.separator)) {
+              context$2$0.next = 41;
+              break;
+            }
+
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 16;
+            _iterator = _getIterator((0, _parse.parse)({ phrase: this.separator, input: input, options: options }));
+
+          case 18:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 25;
+              break;
+            }
+
+            sepOutput = _step.value;
+            trueOutput = _lodash2['default'].assign({}, sepOutput, { result: input.result });
+            return context$2$0.delegateYield(this.callParseChild(childIndex, trueOutput, options), 't0', 22);
+
+          case 22:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 18;
+            break;
+
+          case 25:
+            context$2$0.next = 31;
+            break;
+
+          case 27:
+            context$2$0.prev = 27;
+            context$2$0.t1 = context$2$0['catch'](16);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t1;
+
+          case 31:
+            context$2$0.prev = 31;
+            context$2$0.prev = 32;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 34:
+            context$2$0.prev = 34;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 37;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 37:
+            return context$2$0.finish(34);
+
+          case 38:
+            return context$2$0.finish(31);
+
+          case 39:
+            context$2$0.next = 42;
+            break;
+
+          case 41:
+            return context$2$0.delegateYield(this.callParseChild(childIndex, input, options), 't2', 42);
+
+          case 42:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, parseChild, this, [[16, 27, 31, 39], [32,, 34, 38]]);
+    })
+  }, {
+    key: 'callParseChild',
+    value: _regeneratorRuntime.mark(function callParseChild(childIndex, input, options) {
+      var inputModifications, trueInput, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, output, outputModifications, trueOutput;
+
+      return _regeneratorRuntime.wrap(function callParseChild$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            inputModifications = { qualifiers: [] };
+            trueInput = _lodash2['default'].assign({}, input, inputModifications);
+            _iteratorNormalCompletion2 = true;
+            _didIteratorError2 = false;
+            _iteratorError2 = undefined;
+            context$2$0.prev = 5;
+            _iterator2 = _getIterator((0, _parse.parse)({ phrase: this.child, input: trueInput, options: options }));
+
+          case 7:
+            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+              context$2$0.next = 17;
+              break;
+            }
+
+            output = _step2.value;
+
+            if (!(this.props.unique && _lodash2['default'].some(input.result, _lodash2['default'].partial(_lodash2['default'].isEqual, _lodash2['default'], output.result)))) {
+              context$2$0.next = 11;
+              break;
+            }
+
+            return context$2$0.abrupt('return');
+
+          case 11:
+            outputModifications = {
+              result: input.result.concat(output.result),
+              qualifiers: input.qualifiers.concat(output.qualifiers)
+            };
+            trueOutput = _lodash2['default'].assign({}, output, outputModifications);
+            return context$2$0.delegateYield(this.parseChild(childIndex + 1, trueOutput, options), 't0', 14);
+
+          case 14:
+            _iteratorNormalCompletion2 = true;
+            context$2$0.next = 7;
+            break;
+
+          case 17:
+            context$2$0.next = 23;
+            break;
+
+          case 19:
+            context$2$0.prev = 19;
+            context$2$0.t1 = context$2$0['catch'](5);
+            _didIteratorError2 = true;
+            _iteratorError2 = context$2$0.t1;
+
+          case 23:
+            context$2$0.prev = 23;
+            context$2$0.prev = 24;
+
+            if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+              _iterator2['return']();
+            }
+
+          case 26:
+            context$2$0.prev = 26;
+
+            if (!_didIteratorError2) {
+              context$2$0.next = 29;
+              break;
+            }
+
+            throw _iteratorError2;
+
+          case 29:
+            return context$2$0.finish(26);
+
+          case 30:
+            return context$2$0.finish(23);
+
+          case 31:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, callParseChild, this, [[5, 19, 23, 31], [24,, 26, 30]]);
+    })
+  }, {
+    key: '_destroy',
+    value: function _destroy(destroy) {
+      destroy(this.child);
+      destroy(this.separator);
+
+      delete this.child;
+      delete this.separator;
+    }
+  }], [{
+    key: 'defaultProps',
+    value: {
+      max: _Number$MAX_SAFE_INTEGER,
+      min: 1,
+      unique: false
+    },
+    enumerable: true
+  }]);
+
+  return Repeat;
+})(_laconaPhrase.Phrase);
+
+exports.Repeat = Repeat;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../parse":319,"../reconcile":321,"babel-runtime/core-js/get-iterator":328,"babel-runtime/core-js/number/max-safe-integer":330,"babel-runtime/helpers/class-call-check":338,"babel-runtime/helpers/create-class":339,"babel-runtime/helpers/get":342,"babel-runtime/helpers/inherits":343,"babel-runtime/helpers/interop-require-default":344,"babel-runtime/regenerator":426,"lacona-phrase":300}],315:[function(require,module,exports){
+(function (global){
+/** @jsx createElement */
+'use strict';
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _defineProperty = require('babel-runtime/helpers/define-property')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _parse = require('../parse');
+
+var _reconcile = require('../reconcile');
+
+var Sequence = (function (_Phrase) {
+  _inherits(Sequence, _Phrase);
+
+  function Sequence() {
+    _classCallCheck(this, Sequence);
+
+    _get(Object.getPrototypeOf(Sequence.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Sequence, [{
+    key: '_handleParse',
+    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
+      var modifications;
+      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            this.childPhrases = (0, _reconcile.reconcile)({ descriptor: this.props.children, phrase: this.childPhrases, options: options });
+
+            modifications = {
+              result: {},
+              score: 1
+            };
+            return context$2$0.delegateYield(this.parseChildControl(0, _lodash2['default'].assign({}, input, modifications), options), 't0', 3);
+
+          case 3:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, _handleParse, this);
+    })
+  }, {
+    key: 'parseChildControl',
+    value: _regeneratorRuntime.mark(function parseChildControl(childIndex, input, options) {
+      var trueInput, previousChild, success, child;
+      return _regeneratorRuntime.wrap(function parseChildControl$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            if (!(childIndex >= this.childPhrases.length)) {
+              context$2$0.next = 4;
+              break;
+            }
+
+            context$2$0.next = 3;
+            return input;
+
+          case 3:
+            return context$2$0.abrupt('return');
+
+          case 4:
+            trueInput = input;
+
+            if (!(childIndex > 0 && this.childPhrases[childIndex - 1].props.ellipsis)) {
+              context$2$0.next = 19;
+              break;
+            }
+
+            previousChild = this.childPhrases[childIndex - 1];
+
+            if (!(trueInput.text === '')) {
+              context$2$0.next = 14;
+              break;
+            }
+
+            if (!(childIndex <= 1 || !_lodash2['default'].includes(trueInput._previousEllipsis, this.childPhrases[childIndex - 2]))) {
+              context$2$0.next = 12;
+              break;
+            }
+
+            context$2$0.next = 11;
+            return trueInput;
+
+          case 11:
+            trueInput = _lodash2['default'].assign({}, trueInput, {
+              _previousEllipsis: trueInput._previousEllipsis.concat(previousChild)
+            });
+
+          case 12:
+            context$2$0.next = 19;
+            break;
+
+          case 14:
+            success = false;
+            context$2$0.next = 17;
+            return _lodash2['default'].assign({}, trueInput, {
+              callbacks: trueInput.callbacks.concat(function () {
+                return success = true;
+              })
+            });
+
+          case 17:
+            if (!success) {
+              context$2$0.next = 19;
+              break;
+            }
+
+            return context$2$0.abrupt('return');
+
+          case 19:
+            child = this.childPhrases[childIndex];
+
+            if (!child.props.optional) {
+              context$2$0.next = 34;
+              break;
+            }
+
+            success = false;
+
+            if (child.props.limited) {
+              trueInput = _lodash2['default'].assign({}, trueInput, { callbacks: trueInput.callbacks.concat(function () {
+                  return success = true;
+                }) });
+            }
+
+            if (!child.props.preferred) {
+              context$2$0.next = 29;
+              break;
+            }
+
+            return context$2$0.delegateYield(this.parseChild(childIndex, trueInput, options), 't0', 25);
+
+          case 25:
+            if (!(!child.props.limited || !success)) {
+              context$2$0.next = 27;
+              break;
+            }
+
+            return context$2$0.delegateYield(this.parseChildControl(childIndex + 1, trueInput, options), 't1', 27);
+
+          case 27:
+            context$2$0.next = 32;
+            break;
+
+          case 29:
+            return context$2$0.delegateYield(this.parseChildControl(childIndex + 1, trueInput, options), 't2', 30);
+
+          case 30:
+            if (!(!child.props.limited || !success)) {
+              context$2$0.next = 32;
+              break;
+            }
+
+            return context$2$0.delegateYield(this.parseChild(childIndex, trueInput, options), 't3', 32);
+
+          case 32:
+            context$2$0.next = 35;
+            break;
+
+          case 34:
+            return context$2$0.delegateYield(this.parseChild(childIndex, trueInput, options), 't4', 35);
+
+          case 35:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, parseChildControl, this);
+    })
+  }, {
+    key: 'parseChild',
+    value: _regeneratorRuntime.mark(function parseChild(childIndex, input, options) {
+      var child, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, output, modifications, nextOutput;
+
+      return _regeneratorRuntime.wrap(function parseChild$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            child = this.childPhrases[childIndex];
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            context$2$0.prev = 4;
+            _iterator = _getIterator((0, _parse.parse)({ phrase: child, input: input, options: options }));
+
+          case 6:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              context$2$0.next = 21;
+              break;
+            }
+
+            output = _step.value;
+
+            if (!(this.props.unique && output.result != null)) {
+              context$2$0.next = 15;
+              break;
+            }
+
+            if (!(child.props.id && input.result[child.props.id] != null)) {
+              context$2$0.next = 13;
+              break;
+            }
+
+            return context$2$0.abrupt('continue', 18);
+
+          case 13:
+            if (!(child.props.merge && !_lodash2['default'].isEmpty(_lodash2['default'].intersection(_lodash2['default'].keys(input.result), _lodash2['default'].keys(output.result))))) {
+              context$2$0.next = 15;
+              break;
+            }
+
+            return context$2$0.abrupt('continue', 18);
+
+          case 15:
+            modifications = {
+              result: getAccumulatedResult(input.result, child, output.result),
+              score: input.score * output.score,
+              qualifiers: input.qualifiers.concat(output.qualifiers)
+            };
+            nextOutput = _lodash2['default'].assign({}, output, modifications);
+            return context$2$0.delegateYield(this.parseChildControl(childIndex + 1, nextOutput, options), 't0', 18);
+
+          case 18:
+            _iteratorNormalCompletion = true;
+            context$2$0.next = 6;
+            break;
+
+          case 21:
+            context$2$0.next = 27;
+            break;
+
+          case 23:
+            context$2$0.prev = 23;
+            context$2$0.t1 = context$2$0['catch'](4);
+            _didIteratorError = true;
+            _iteratorError = context$2$0.t1;
+
+          case 27:
+            context$2$0.prev = 27;
+            context$2$0.prev = 28;
+
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+
+          case 30:
+            context$2$0.prev = 30;
+
+            if (!_didIteratorError) {
+              context$2$0.next = 33;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 33:
+            return context$2$0.finish(30);
+
+          case 34:
+            return context$2$0.finish(27);
+
+          case 35:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, parseChild, this, [[4, 23, 27, 35], [28,, 30, 34]]);
+    })
+  }, {
+    key: '_destroy',
+    value: function _destroy(destroy) {
+      _lodash2['default'].forEach(this.childPhrases, destroy);
+
+      delete this.childPhrases;
+    }
+  }]);
+
+  return Sequence;
+})(_laconaPhrase.Phrase);
+
+exports.Sequence = Sequence;
+
+function getAccumulatedResult(inputResult, child, childResult) {
+  if (!_lodash2['default'].isUndefined(childResult)) {
+    var childId = child.props.id;
+    var childMerge = child.props.merge;
+    if (childId) {
+      return _lodash2['default'].assign({}, inputResult, _defineProperty({}, childId, childResult));
+    } else if (childMerge) {
+      if (!_lodash2['default'].isEmpty(inputResult) && _lodash2['default'].isPlainObject(childResult)) {
+        return _lodash2['default'].merge({}, inputResult, childResult);
+      } else {
+        return childResult;
+      }
+    }
+  }
+  return inputResult;
+}
+// we've reached the end
+// id
+// merge
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../parse":319,"../reconcile":321,"babel-runtime/core-js/get-iterator":328,"babel-runtime/helpers/class-call-check":338,"babel-runtime/helpers/create-class":339,"babel-runtime/helpers/define-property":340,"babel-runtime/helpers/get":342,"babel-runtime/helpers/inherits":343,"babel-runtime/helpers/interop-require-default":344,"babel-runtime/regenerator":426,"lacona-phrase":300}],316:[function(require,module,exports){
+(function (global){
+/** @jsx createElement */
+'use strict';
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _parse = require('../parse');
+
+var _reconcile = require('../reconcile');
+
+var Tap = (function (_Phrase) {
+  _inherits(Tap, _Phrase);
+
+  function Tap() {
+    _classCallCheck(this, Tap);
+
+    _get(Object.getPrototypeOf(Tap.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(Tap, [{
+    key: '_handleParse',
+    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
+      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
+        var _this = this;
+
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            this.childPhrase = (0, _reconcile.reconcile)({ descriptor: this.props.children[0], phrase: this.childPhrase, options: options });
+
+            if (input.text != null) {
+              options.scheduleParseEndCallback(function () {
+                return _this.props['function'](input.text);
+              });
+            }
+
+            return context$2$0.delegateYield((0, _parse.parse)({ phrase: this.childPhrase, input: input, options: options }), 't0', 3);
+
+          case 3:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, _handleParse, this);
+    })
+  }, {
+    key: '_destroy',
+    value: function _destroy(destroy) {
+      destroy(this.childPhrase);
+
+      delete this.childPhrase;
+    }
+  }], [{
+    key: 'defaultProps',
+    value: {
+      'function': function _function() {}
+    },
+    enumerable: true
+  }]);
+
+  return Tap;
+})(_laconaPhrase.Phrase);
+
+exports.Tap = Tap;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../parse":319,"../reconcile":321,"babel-runtime/helpers/class-call-check":338,"babel-runtime/helpers/create-class":339,"babel-runtime/helpers/get":342,"babel-runtime/helpers/inherits":343,"babel-runtime/helpers/interop-require-default":344,"babel-runtime/regenerator":426,"lacona-phrase":300}],317:[function(require,module,exports){
+'use strict';
+
+var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports.LaconaError = LaconaError;
+
+function LaconaError() {
+  var temp = Error.apply(this, arguments);
+  temp.name = this.name = 'LaconaError';
+  this.stack = temp.stack;
+  this.message = temp.message;
+}
+
+LaconaError.prototype = _Object$create(Error.prototype, {
+  constructor: {
+    value: LaconaError,
+    writable: true,
+    configurable: true
+  }
+});
+},{"babel-runtime/core-js/object/create":332}],318:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _parser = require('./parser');
+
+Object.defineProperty(exports, 'Parser', {
+  enumerable: true,
+  get: function get() {
+    return _parser.Parser;
+  }
+});
+
+var _error = require('./error');
+
+Object.defineProperty(exports, 'LaconaError', {
+  enumerable: true,
+  get: function get() {
+    return _error.LaconaError;
+  }
+});
+},{"./error":317,"./parser":320}],319:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports.parse = parse;
+var marked0$0 = [parse].map(_regeneratorRuntime.mark);
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function hasPlaceholder(output) {
+  return _lodash2['default'].any(output.words, 'placeholder');
+}
+
+function modify(phrase, output) {
+  var modifications = {};
+
+  if (phrase.props.ellipsis) {
+    modifications.ellipsis = true;
+  }
+
+  if (phrase.props.value) {
+    modifications.result = phrase.props.value;
+  }
+
+  if (phrase.props.qualifiers) {
+    modifications.qualifiers = phrase.props.qualifiers;
+  }
+
+  if (phrase.props.score != null) {
+    modifications.score = phrase.props.score;
+  }
+
+  return _lodash2['default'].assign({}, output, modifications);
+}
+
+function parse(_ref) {
+  var phrase = _ref.phrase;
+  var input = _ref.input;
+  var options = _ref.options;
+
+  var iterator, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, output, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2;
+
+  return _regeneratorRuntime.wrap(function parse$(context$1$0) {
+    while (1) switch (context$1$0.prev = context$1$0.next) {
+      case 0:
+        options.parses++;
+
+        if (!phrase.__describedPhrase) {
+          context$1$0.next = 32;
+          break;
+        }
+
+        iterator = parse({ phrase: phrase.__describedPhrase, input: input, options: options });
+        _iteratorNormalCompletion = true;
+        _didIteratorError = false;
+        _iteratorError = undefined;
+        context$1$0.prev = 6;
+        _iterator = _getIterator(iterator);
+
+      case 8:
+        if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+          context$1$0.next = 16;
+          break;
+        }
+
+        output = _step.value;
+
+        if (!((!phrase.validate || hasPlaceholder(output) || phrase.validate(output.result)) && (!phrase._validateIncomplete || phrase._validateIncomplete(output.result)))) {
+          context$1$0.next = 13;
+          break;
+        }
+
+        context$1$0.next = 13;
+        return modify(phrase, output);
+
+      case 13:
+        _iteratorNormalCompletion = true;
+        context$1$0.next = 8;
+        break;
+
+      case 16:
+        context$1$0.next = 22;
+        break;
+
+      case 18:
+        context$1$0.prev = 18;
+        context$1$0.t0 = context$1$0['catch'](6);
+        _didIteratorError = true;
+        _iteratorError = context$1$0.t0;
+
+      case 22:
+        context$1$0.prev = 22;
+        context$1$0.prev = 23;
+
+        if (!_iteratorNormalCompletion && _iterator['return']) {
+          _iterator['return']();
+        }
+
+      case 25:
+        context$1$0.prev = 25;
+
+        if (!_didIteratorError) {
+          context$1$0.next = 28;
+          break;
+        }
+
+        throw _iteratorError;
+
+      case 28:
+        return context$1$0.finish(25);
+
+      case 29:
+        return context$1$0.finish(22);
+
+      case 30:
+        context$1$0.next = 61;
+        break;
+
+      case 32:
+        if (!phrase._handleParse) {
+          context$1$0.next = 61;
+          break;
+        }
+
+        _iteratorNormalCompletion2 = true;
+        _didIteratorError2 = false;
+        _iteratorError2 = undefined;
+        context$1$0.prev = 36;
+        _iterator2 = _getIterator(phrase._handleParse(input, options));
+
+      case 38:
+        if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+          context$1$0.next = 45;
+          break;
+        }
+
+        output = _step2.value;
+        context$1$0.next = 42;
+        return modify(phrase, output);
+
+      case 42:
+        _iteratorNormalCompletion2 = true;
+        context$1$0.next = 38;
+        break;
+
+      case 45:
+        context$1$0.next = 51;
+        break;
+
+      case 47:
+        context$1$0.prev = 47;
+        context$1$0.t1 = context$1$0['catch'](36);
+        _didIteratorError2 = true;
+        _iteratorError2 = context$1$0.t1;
+
+      case 51:
+        context$1$0.prev = 51;
+        context$1$0.prev = 52;
+
+        if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+          _iterator2['return']();
+        }
+
+      case 54:
+        context$1$0.prev = 54;
+
+        if (!_didIteratorError2) {
+          context$1$0.next = 57;
+          break;
+        }
+
+        throw _iteratorError2;
+
+      case 57:
+        return context$1$0.finish(54);
+
+      case 58:
+        return context$1$0.finish(51);
+
+      case 59:
+        context$1$0.next = 61;
+        break;
+
+      case 61:
+        // noop
+
+        if (phrase.source) {
+          phrase.__lastSourceVersion = options.sourceManager.getDataVersion(phrase.source);
+        }
+
+      case 62:
+      case 'end':
+        return context$1$0.stop();
+    }
+  }, marked0$0[0], this, [[6, 18, 22, 30], [23,, 25, 29], [36, 47, 51, 59], [52,, 54, 58]]);
+}
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"babel-runtime/core-js/get-iterator":328,"babel-runtime/helpers/interop-require-default":344,"babel-runtime/regenerator":426}],320:[function(require,module,exports){
+(function (global){
+/** @jsx createElement */
+'use strict';
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports.createOption = createOption;
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _events = require('events');
+
+var _parse2 = require('./parse');
+
+var _reconcile2 = require('./reconcile');
+
+var _error = require('./error');
+
+var _sourceManager = require('./source-manager');
+
+var _sourceManager2 = _interopRequireDefault(_sourceManager);
+
+function from(i) {
+  var a = [];
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = _getIterator(i), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var x = _step.value;
+
+      a.push(x);
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator['return']) {
+        _iterator['return']();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  return a;
+}
+
+function callEvery(ary) {
+  _lodash2['default'].forEach(ary, function (callback) {
+    return callback();
+  });
+}
+
+var optionDefaults = {
+  text: '',
+  words: [],
+  qualifiers: [],
+  callbacks: [],
+  _previousEllipsis: []
+};
+
+function createOption(options) {
+  return _lodash2['default'].defaults(options, optionDefaults);
+}
+
+function normalizeOutput(option) {
+  var output = _lodash2['default'].pick(option, ['words', 'score', 'result', 'qualifiers', 'ellipsis']);
+  return output;
+}
+
+var Parser = (function (_EventEmitter) {
+  _inherits(Parser, _EventEmitter);
+
+  function Parser() {
+    var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+    var _ref$langs = _ref.langs;
+    var langs = _ref$langs === undefined ? ['default'] : _ref$langs;
+    var grammar = _ref.grammar;
+    var _ref$extensions = _ref.extensions;
+    var extensions = _ref$extensions === undefined ? [] : _ref$extensions;
+
+    _classCallCheck(this, Parser);
+
+    _get(Object.getPrototypeOf(Parser.prototype), 'constructor', this).call(this);
+
+    this.langs = langs;
+    this.grammar = grammar;
+    this.extensions = extensions;
+    this._oldExtensions = [];
+    this._parseEndCallbacks = [];
+    this._deactivateCallbacks = [];
+    this._sourceManager = new _sourceManager2['default']({
+      update: this._maybeReparse.bind(this)
+    });
+  }
+
+  _createClass(Parser, [{
+    key: '_maybeReparse',
+    value: function _maybeReparse() {
+      this.emit('update');
+    }
+  }, {
+    key: '_getExtensions',
+    value: function _getExtensions(Constructor) {
+      return _lodash2['default'].reduce(this.extensions, function (acc, Extension) {
+        if (_lodash2['default'].includes(Extension['extends'], Constructor)) {
+          acc.push(Extension);
+        }
+        return acc;
+      }, []);
+    }
+  }, {
+    key: '_getReconcileParseOptions',
+    value: function _getReconcileParseOptions() {
+      var _ref2 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+      var _ref2$extensionsChanged = _ref2.extensionsChanged;
+      var extensionsChanged = _ref2$extensionsChanged === undefined ? false : _ref2$extensionsChanged;
+
+      return {
+        langs: this.langs,
+        getExtensions: this._getExtensions.bind(this),
+        sourceManager: this._sourceManager,
+        scheduleParseEndCallback: this._scheduleParseEndCallback.bind(this),
+        scheduleDeactivateCallback: this._scheduleDeactivateCallback.bind(this),
+        extensionsChanged: extensionsChanged,
+        parses: 0
+      };
+    }
+  }, {
+    key: '_scheduleParseEndCallback',
+    value: function _scheduleParseEndCallback(callback) {
+      this._parseEndCallbacks.push(callback);
+    }
+  }, {
+    key: '_scheduleDeactivateCallback',
+    value: function _scheduleDeactivateCallback(callback) {
+      this._deactivateCallbacks.push(callback);
+    }
+  }, {
+    key: '_reconcile',
+    value: function _reconcile(options) {
+      this._phrase = (0, _reconcile2.reconcile)({ descriptor: this.grammar, phrase: this._phrase, options: options });
+    }
+  }, {
+    key: 'reconcile',
+    value: function reconcile() {
+      this._reconcile(this._getReconcileParseOptions());
+    }
+  }, {
+    key: 'activate',
+    value: function activate() {
+      this._sourceManager.activate();
+    }
+  }, {
+    key: 'deactivate',
+    value: function deactivate() {
+      callEvery(this._deactivateCallbacks);
+      this._deactivateCallbacks = [];
+
+      this._sourceManager.deactivate();
+    }
+  }, {
+    key: 'parse',
+    value: _regeneratorRuntime.mark(function parse(inputString) {
+      var extensionsChanged, input, options, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, output;
+
+      return _regeneratorRuntime.wrap(function parse$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            if (_lodash2['default'].isString(inputString)) {
+              context$2$0.next = 2;
+              break;
+            }
+
+            throw new _error.LaconaError('lacona parse input must be a string');
+
+          case 2:
+            extensionsChanged = !_lodash2['default'].isEqual(this._oldExtensions, this.extensions);
+
+            if (extensionsChanged) {
+              this._oldExtensions = _lodash2['default'].clone(this.extensions);
+            }
+
+            input = createOption({ text: inputString });
+            options = this._getReconcileParseOptions({ extensionsChanged: extensionsChanged });
+
+            this._reconcile(options);
+
+            _iteratorNormalCompletion2 = true;
+            _didIteratorError2 = false;
+            _iteratorError2 = undefined;
+            context$2$0.prev = 10;
+            _iterator2 = _getIterator((0, _parse2.parse)({ phrase: this._phrase, input: input, options: options }));
+
+          case 12:
+            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+              context$2$0.next = 21;
+              break;
+            }
+
+            output = _step2.value;
+
+            if (output.text) {
+              context$2$0.next = 18;
+              break;
+            }
+
+            callEvery(output.callbacks);
+            context$2$0.next = 18;
+            return normalizeOutput(output);
+
+          case 18:
+            _iteratorNormalCompletion2 = true;
+            context$2$0.next = 12;
+            break;
+
+          case 21:
+            context$2$0.next = 27;
+            break;
+
+          case 23:
+            context$2$0.prev = 23;
+            context$2$0.t0 = context$2$0['catch'](10);
+            _didIteratorError2 = true;
+            _iteratorError2 = context$2$0.t0;
+
+          case 27:
+            context$2$0.prev = 27;
+            context$2$0.prev = 28;
+
+            if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+              _iterator2['return']();
+            }
+
+          case 30:
+            context$2$0.prev = 30;
+
+            if (!_didIteratorError2) {
+              context$2$0.next = 33;
+              break;
+            }
+
+            throw _iteratorError2;
+
+          case 33:
+            return context$2$0.finish(30);
+
+          case 34:
+            return context$2$0.finish(27);
+
+          case 35:
+            if (global.logStatus) global.logStatus({ parses: options.parses });
+
+            callEvery(this._parseEndCallbacks);
+
+            this._parseEndCallbacks = [];
+
+          case 38:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, parse, this, [[10, 23, 27, 35], [28,, 30, 34]]);
+    })
+  }, {
+    key: 'parseArray',
+    value: function parseArray(inputString) {
+      return from(this.parse(inputString));
+    }
+  }]);
+
+  return Parser;
+})(_events.EventEmitter);
+
+exports.Parser = Parser;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./error":317,"./parse":319,"./reconcile":321,"./source-manager":322,"babel-runtime/core-js/get-iterator":328,"babel-runtime/helpers/class-call-check":338,"babel-runtime/helpers/create-class":339,"babel-runtime/helpers/get":342,"babel-runtime/helpers/inherits":343,"babel-runtime/helpers/interop-require-default":344,"babel-runtime/regenerator":426,"events":297}],321:[function(require,module,exports){
+(function (global){
+/** @jsx createElement */
+'use strict';
+
+var _slicedToArray = require('babel-runtime/helpers/sliced-to-array')['default'];
+
+var _extends = require('babel-runtime/helpers/extends')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports.reconcile = reconcile;
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _elements = require('./elements');
+
+var builtins = _interopRequireWildcard(_elements);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var _component = require('./component');
+
+function reconcile(_ref) {
+  var descriptor = _ref.descriptor;
+  var phrase = _ref.phrase;
+  var options = _ref.options;
+
+  var func = _lodash2['default'].isArray(descriptor) ? reconcileArray : reconcileOne;
+  return func({ descriptor: descriptor, phrase: phrase, options: options });
+}
+
+function reconcileArray(_ref2) {
+  var descriptor = _ref2.descriptor;
+  var phrase = _ref2.phrase;
+  var options = _ref2.options;
+
+  return _lodash2['default'].chain(descriptor).reject(function (item) {
+    return item == null;
+  }).reject(_lodash2['default'].isString).zip(phrase).map(function (_ref3) {
+    var _ref32 = _slicedToArray(_ref3, 2);
+
+    var descriptor = _ref32[0];
+    var phrase = _ref32[1];
+    return reconcile({ descriptor: descriptor, phrase: phrase, options: options });
+  }).value();
+}
+
+function reconcileOne(_ref4) {
+  var descriptor = _ref4.descriptor;
+  var phrase = _ref4.phrase;
+  var options = _ref4.options;
+
+  if (descriptor == null && phrase) return (0, _component.destroyPhrase)({ phrase: phrase, sourceManager: options.sourceManager });
+
+  var Constructor = (0, _component.getConstructor)({ Constructor: descriptor.Constructor, type: 'phrase' });
+  var props = (0, _component.getRealProps)({ descriptor: descriptor, Constructor: Constructor });
+
+  if (phrase && phrase.constructor === Constructor && _lodash2['default'].isEqual(props, phrase.props)) {
+    // TODO could be sped up if we don't compare props for things without a describe
+
+    var _getExtensions = getExtensions({ Constructor: Constructor, phrase: phrase, options: options });
+
+    var extensionsChanged = _getExtensions.extensionsChanged;
+    var extensions = _getExtensions.extensions;
+
+    if (extensionsChanged || sourceChanged({ phrase: phrase, options: options })) {
+      var describedPhrase = addDescribedPhrase({ Constructor: Constructor, phrase: phrase, extensions: extensions, options: options });
+    }
+
+    return phrase;
+  } else {
+    //reconstruct
+    var extensions = options.getExtensions(Constructor);
+
+    if (phrase) (0, _component.destroyPhrase)({ phrase: phrase, options: options });
+
+    var newPhrase = (0, _component.instantiate)({ Constructor: Constructor, props: props });
+
+    (0, _component.addSource)({ component: newPhrase, options: options });
+
+    var describedPhrase = addDescribedPhrase({ Constructor: Constructor, phrase: newPhrase, extensions: extensions, options: options });
+
+    newPhrase.__oldExtensions = extensions;
+
+    return newPhrase;
+  }
+}
+
+function sourceChanged(_ref5) {
+  var phrase = _ref5.phrase;
+  var options = _ref5.options;
+
+  return phrase.source && phrase.__lastSourceVersion < options.sourceManager.getDataVersion(phrase.source);
+}
+
+function getExtensions(_ref6) {
+  var Constructor = _ref6.Constructor;
+  var phrase = _ref6.phrase;
+  var options = _ref6.options;
+
+  if (options.extensionsChanged) {
+    var extensions = options.getExtensions(Constructor);
+
+    if (!_lodash2['default'].isEqual(extensions, phrase.__oldExtensions)) {
+      phrase.__oldExtensions = extensions;
+      return {
+        extensions: extensions,
+        extensionsChanged: true
+      };
+    }
+  }
+
+  return {
+    extensionsChanged: false,
+    extensions: phrase.__oldExtensions
+  };
+}
+
+function addDescribedPhrase(_ref7) {
+  var phrase = _ref7.phrase;
+  var extensions = _ref7.extensions;
+  var options = _ref7.options;
+
+  var describe = getCall({ prop: 'describe', Constructor: phrase.constructor, langs: options.langs });
+  var description = getDescription({ describe: describe, extensions: extensions, phrase: phrase });
+  var describedPhrase = description ? reconcile({ descriptor: description, options: options, phrase: phrase.__describedPhrase }) : null;
+  phrase.__describedPhrase = describedPhrase;
+}
+
+function getCall(_ref8) {
+  var Constructor = _ref8.Constructor;
+  var langs = _ref8.langs;
+  var prop = _ref8.prop;
+
+  if (Constructor.prototype[prop]) {
+    return Constructor.prototype[prop];
+  } else if (Constructor.translations) {
+    return getCallFromTranslations({ prop: prop, langs: langs, translations: Constructor.translations });
+  }
+}
+
+function getCallFromTranslations(_ref9) {
+  var prop = _ref9.prop;
+  var langs = _ref9.langs;
+  var translations = _ref9.translations;
+
+  return _lodash2['default'].chain(langs.concat('default')).map(function (lang) {
+    return _lodash2['default'].find(translations, function (obj) {
+      return _lodash2['default'].includes(obj.langs, lang);
+    });
+  }).filter(_lodash2['default'].negate(_lodash2['default'].isUndefined)).first().value()[prop];
+}
+//
+// function setPropsAndState({phrase, props, state, changed}) {
+//   phrase.props = props
+//
+//   if (!phrase.setState) {
+//     phrase.state = state || {}
+//     phrase.setState = function (nextState) {
+//       _.merge(this.state, nextState)
+//       this._stateChanged = true
+//       changed(this)
+//     }
+//   }
+// }
+
+function getDescription(_ref10) {
+  var describe = _ref10.describe;
+  var extensions = _ref10.extensions;
+  var phrase = _ref10.phrase;
+
+  if (describe) {
+    var tempDescription = describe.call(phrase);
+    if (extensions.length) {
+      var extensionElements = _lodash2['default'].map(extensions, function (Extension) {
+        return (0, _laconaPhrase.createElement)(Extension, _extends({}, phrase.props, { id: undefined }));
+      });
+
+      return (0, _laconaPhrase.createElement)(
+        'choice',
+        null,
+        tempDescription,
+        extensionElements
+      );
+    } else {
+      return tempDescription;
+    }
+  }
+}
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./component":303,"./elements":308,"babel-runtime/helpers/extends":341,"babel-runtime/helpers/interop-require-default":344,"babel-runtime/helpers/interop-require-wildcard":345,"babel-runtime/helpers/sliced-to-array":346,"lacona-phrase":300}],322:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _component = require('./component');
+
+var SourceManager = (function () {
+  function SourceManager(_ref) {
+    var _ref$update = _ref.update;
+    var update = _ref$update === undefined ? function () {} : _ref$update;
+
+    _classCallCheck(this, SourceManager);
+
+    this._sourceMaps = [];
+    this._fetchObjects = [];
+    this.update = update;
+    this.existCount = 0;
+  }
+
+  _createClass(SourceManager, [{
+    key: '_triggerSourceUpdate',
+    value: function _triggerSourceUpdate(instance) {
+      _lodash2['default'].forEach(this._sourceMaps, function (existingSource) {
+        if (existingSource.instance.source === instance) {
+          if (existingSource.instance.onUpdate) existingSource.instance.onUpdate();
+        }
+      });
+      instance.__dataVersion++;
+      this.update();
+    }
+  }, {
+    key: '_createSource',
+    value: function _createSource(descriptor) {
+      var _this = this;
+
+      var Constructor = (0, _component.getConstructor)({ Constructor: descriptor.Constructor, type: 'source' });
+      var props = (0, _component.getRealProps)({ descriptor: descriptor, Constructor: descriptor.Constructor });
+      var instance = (0, _component.instantiate)({ Constructor: Constructor, props: props });
+
+      instance.__dataVersion = 0;
+      instance.__subscriberCount = 0;
+      instance.__isCreating = true;
+
+      instance.setData = function (newData) {
+        // setData during onCreate() doesn't trigger source Update
+        instance.data = newData;
+        if (!instance.__isCreating) {
+          _this._triggerSourceUpdate(instance);
+        }
+      };
+
+      (0, _component.addSource)({ component: instance, options: { sourceManager: this } });
+
+      this._sourceMaps.push({ instance: instance, descriptor: descriptor });
+
+      if (instance.onCreate) instance.onCreate();
+
+      instance.__isCreating = false;
+
+      return instance;
+    }
+  }, {
+    key: '_destroySource',
+    value: function _destroySource(source) {
+      if (source.onDestroy) source.onDestroy();
+      (0, _component.removeSource)({ component: source, options: { sourceManager: this } });
+
+      var index = _lodash2['default'].findIndex(this._sourceMaps, function (sourceMap) {
+        return source === sourceMap.instance;
+      });
+      this._sourceMaps.splice(index, 1);
+    }
+  }, {
+    key: 'subscribe',
+    value: function subscribe(descriptor) {
+      var possibleSourceMap = _lodash2['default'].find(this._sourceMaps, function (source) {
+        return _lodash2['default'].isEqual(descriptor, source.descriptor);
+      });
+
+      var source = undefined;
+      if (possibleSourceMap) {
+        source = possibleSourceMap.instance;
+      } else {
+        source = this._createSource(descriptor);
+      }
+
+      source.__subscriberCount++;
+
+      return source;
+    }
+  }, {
+    key: 'unsubscribe',
+    value: function unsubscribe(source) {
+      source.__subscriberCount--;
+      if (source.__subscriberCount === 0) {
+        this._destroySource(source);
+      }
+    }
+  }, {
+    key: 'getDataVersion',
+    value: function getDataVersion(source) {
+      return source.__dataVersion;
+    }
+  }, {
+    key: 'activate',
+    value: function activate() {
+      _lodash2['default'].chain(this._sourceMaps).filter(function (source) {
+        return source.instance.onActivate;
+      }).forEach(function (source) {
+        return source.instance.onActivate();
+      }).value();
+    }
+  }, {
+    key: 'deactivate',
+    value: function deactivate() {
+      _lodash2['default'].chain(this._sourceMaps).filter(function (source) {
+        return source.instance.onDeactivate;
+      }).forEach(function (source) {
+        return source.instance.onDeactivate();
+      }).value();
+    }
+  }]);
+
+  return SourceManager;
+})();
+
+exports['default'] = SourceManager;
+module.exports = exports['default'];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./component":303,"babel-runtime/helpers/class-call-check":338,"babel-runtime/helpers/create-class":339,"babel-runtime/helpers/interop-require-default":344}],323:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _map = require('./map');
+
+Object.defineProperty(exports, 'map', {
+  enumerable: true,
+  get: function get() {
+    return _map.MapPhrase;
+  }
+});
+},{"./map":324}],324:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _laconaPhrase = require('lacona-phrase');
+
+var MapPhrase = (function (_Source) {
+  _inherits(MapPhrase, _Source);
+
+  function MapPhrase() {
+    _classCallCheck(this, MapPhrase);
+
+    _get(Object.getPrototypeOf(MapPhrase.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(MapPhrase, [{
+    key: 'observe',
+    value: function observe() {
+      return this.props.children[0];
+    }
+  }, {
+    key: 'onCreate',
+    value: function onCreate() {
+      this.onUpdate();
+    }
+  }, {
+    key: 'trigger',
+    value: function trigger() {
+      var _source;
+
+      (_source = this.source).trigger.apply(_source, arguments);
+    }
+  }, {
+    key: 'onUpdate',
+    value: function onUpdate() {
+      var data = this.props['function'](this.source.data);
+      this.setData(data);
+    }
+  }]);
+
+  return MapPhrase;
+})(_laconaPhrase.Source);
+
+exports.MapPhrase = MapPhrase;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"babel-runtime/helpers/class-call-check":338,"babel-runtime/helpers/create-class":339,"babel-runtime/helpers/get":342,"babel-runtime/helpers/inherits":343,"babel-runtime/helpers/interop-require-default":344,"lacona-phrase":300}],325:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports.match = match;
+
+var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+// returns a `words` object if its a match, else null
+
+function match(_ref) {
+  var input = _ref.input;
+  var text = _ref.text;
+  var _ref$fuzzy = _ref.fuzzy;
+  var fuzzy = _ref$fuzzy === undefined ? false : _ref$fuzzy;
+
+  var nullInput = nullMatch({ input: input, text: text });
+  if (nullInput) return nullInput;
+
+  var inputLower = input.toLowerCase();
+  var textLower = text.toLowerCase();
+
+  var partialBeginning = partialBeginningMatch({ input: input, text: text, inputLower: inputLower, textLower: textLower });
+  if (partialBeginning) return partialBeginning;
+
+  var fullBeginning = fullBeginningMatch({ input: input, text: text, inputLower: inputLower, textLower: textLower });
+  if (fullBeginning) return fullBeginning;
+
+  if (fuzzy) {
+    var anywhere = anywhereMatch({ input: input, text: text, inputLower: inputLower, textLower: textLower });
+    if (anywhere) return anywhere;
+  }
+
+  // const fullFuzzy = fuzzyMatch({input, text})
+  // if (fullFuzzy) return {words: fullFuzzy, score: 0.25}
+
+  return [];
+}
+
+function nullMatch(_ref2) {
+  var input = _ref2.input;
+  var text = _ref2.text;
+
+  if (input == null) {
+    return [{
+      words: [{ text: text, input: false }],
+      remaining: null,
+      score: 1
+    }];
+  }
+}
+
+function partialBeginningMatch(_ref3) {
+  var input = _ref3.input;
+  var text = _ref3.text;
+  var inputLower = _ref3.inputLower;
+  var textLower = _ref3.textLower;
+
+  if (_lodash2['default'].startsWith(inputLower, textLower)) {
+    return [{
+      words: [{ text: text, input: true }],
+      remaining: input.substring(text.length),
+      score: 1
+    }];
+  }
+}
+
+function fullBeginningMatch(_ref4) {
+  var input = _ref4.input;
+  var text = _ref4.text;
+  var inputLower = _ref4.inputLower;
+  var textLower = _ref4.textLower;
+
+  if (_lodash2['default'].startsWith(textLower, inputLower)) {
+    var words = [];
+    if (input.length > 0) {
+      words.push({ text: text.substring(0, input.length), input: true });
+    }
+    if (text.length > input.length) {
+      words.push({ text: text.substring(input.length), input: false });
+    }
+
+    return [{
+      words: words,
+      remaining: null,
+      score: 1
+    }];
+  }
+}
+
+// export function * sort (input, items) {
+//   let itemSet = _.map(items, item => ({item, matched: false}))
+//
+//   for (let [func, score] of [[beginningMatch, 1], [anywhereMatch, 0.5]]) {
+//     yield* sortFunction({input, itemSet, func, score})
+//   }
+// }
+//
+// function * sortFunction ({input, itemSet, func, score}) {
+//   for (let obj of itemSet) {
+//     if (!obj.matched) {
+//       const words = func({input, text: obj.item.text, qualifier: obj.item.qualifier})
+//       if (words) {
+//         obj.matched = true
+//         _.forEach(words, word => word.descriptor = obj.item.descriptor)
+//         yield {words, result: obj.item.value, score}
+//       }
+//     }
+//   }
+// }
+//
+// escape special characters, and wrap in parens (for matching)
+// function regexEscape (str) {
+//   return `(${str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/, '\\$&')})`
+// }
+
+// function beginningMatch ({input, text, qualifier}) {
+//   if (_.startsWith(text.toLowerCase(), input.toLowerCase())) {
+//     const matches = [{text: text.slice(0, input.length), input: true, qualifier}]
+//     if (input.length < text.length) {
+//       matches.push({text: text.slice(input.length), input: false, qualifier})
+//     }
+//     return matches
+//   }
+//   return null
+// }
+
+function anywhereMatch(_ref5) {
+  var input = _ref5.input;
+  var text = _ref5.text;
+  var inputLower = _ref5.inputLower;
+  var textLower = _ref5.textLower;
+
+  var index = textLower.indexOf(inputLower);
+
+  if (index > -1) {
+    var words = [];
+    var endIndex = index + input.length;
+
+    if (index > 0) {
+      words.push({ text: text.slice(0, index), input: false });
+    }
+
+    words.push({ text: text.slice(index, endIndex), input: true });
+
+    if (endIndex <= text.length - 1) {
+      words.push({ text: text.slice(endIndex), input: false });
+    }
+
+    return [{
+      words: words,
+      remaining: null,
+      score: 0.5
+    }];
+  }
+
+  return [];
+}
+
+// function fuzzyMatch({input, text}) {
+//   const chars = regexSplit(input)
+//   const fuzzyString = chars.reduce((a, b) => (`${a}([^${b}]*)${b}`), '^') + '(.*)$'
+//   const fuzzyRegex = new RegExp(fuzzyString, 'i')
+//   const fuzzyMatches = text.match(fuzzyRegex)
+//
+//   if (fuzzyMatches) {
+//     const words = []
+//     for (let i = 1, l = fuzzyMatches.length; i < l; i++) {
+//       if (fuzzyMatches[i].length > 0) {
+//         words.push({
+//           text: fuzzyMatches[i],
+//           input: i % 2 === 0
+//         })
+//       }
+//     }
+//     return words
+//   }
+//   return null
+// }
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"babel-runtime/helpers/interop-require-default":344}],326:[function(require,module,exports){
+'use strict';
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports.substrings = substrings;
+var marked0$0 = [substrings].map(_regeneratorRuntime.mark);
+
+var _smartSplit = require('smart-split');
+
+var _smartSplit2 = _interopRequireDefault(_smartSplit);
+
+function substrings(input, _ref) {
+  var splitOn = _ref.splitOn;
+  var noSplit = _ref.noSplit;
+  var reverse = _ref.reverse;
+  var inputs, i;
+  return _regeneratorRuntime.wrap(function substrings$(context$1$0) {
+    while (1) switch (context$1$0.prev = context$1$0.next) {
+      case 0:
+        if (!noSplit) {
+          context$1$0.next = 4;
+          break;
+        }
+
+        context$1$0.next = 3;
+        return input;
+
+      case 3:
+        return context$1$0.abrupt('return');
+
+      case 4:
+        inputs = (0, _smartSplit2['default'])(input, splitOn);
+        i = 0;
+
+      case 6:
+        if (!(i < inputs.length)) {
+          context$1$0.next = 17;
+          break;
+        }
+
+        if (!reverse) {
+          context$1$0.next = 12;
+          break;
+        }
+
+        context$1$0.next = 10;
+        return inputs.slice(0, inputs.length - i).join('');
+
+      case 10:
+        context$1$0.next = 14;
+        break;
+
+      case 12:
+        context$1$0.next = 14;
+        return inputs.slice(0, i + 1).join('');
+
+      case 14:
+        i += 2;
+        context$1$0.next = 6;
+        break;
+
+      case 17:
+      case 'end':
+        return context$1$0.stop();
+    }
+  }, marked0$0[0], this);
+}
+},{"babel-runtime/helpers/interop-require-default":344,"babel-runtime/regenerator":426,"smart-split":428}],327:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/array/from"), __esModule: true };
+},{"core-js/library/fn/array/from":347}],328:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/get-iterator"), __esModule: true };
+},{"core-js/library/fn/get-iterator":348}],329:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/is-iterable"), __esModule: true };
+},{"core-js/library/fn/is-iterable":349}],330:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/number/max-safe-integer"), __esModule: true };
+},{"core-js/library/fn/number/max-safe-integer":350}],331:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/object/assign"), __esModule: true };
+},{"core-js/library/fn/object/assign":351}],332:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/object/create"), __esModule: true };
+},{"core-js/library/fn/object/create":352}],333:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/object/define-property"), __esModule: true };
+},{"core-js/library/fn/object/define-property":353}],334:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/object/get-own-property-descriptor"), __esModule: true };
+},{"core-js/library/fn/object/get-own-property-descriptor":354}],335:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/object/set-prototype-of"), __esModule: true };
+},{"core-js/library/fn/object/set-prototype-of":355}],336:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/promise"), __esModule: true };
+},{"core-js/library/fn/promise":356}],337:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/symbol"), __esModule: true };
+},{"core-js/library/fn/symbol":357}],338:[function(require,module,exports){
+"use strict";
+
+exports["default"] = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+exports.__esModule = true;
+},{}],339:[function(require,module,exports){
+"use strict";
+
+var _Object$defineProperty = require("babel-runtime/core-js/object/define-property")["default"];
+
+exports["default"] = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+
+      _Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+})();
+
+exports.__esModule = true;
+},{"babel-runtime/core-js/object/define-property":333}],340:[function(require,module,exports){
+"use strict";
+
+var _Object$defineProperty = require("babel-runtime/core-js/object/define-property")["default"];
+
+exports["default"] = function (obj, key, value) {
+  if (key in obj) {
+    _Object$defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+};
+
+exports.__esModule = true;
+},{"babel-runtime/core-js/object/define-property":333}],341:[function(require,module,exports){
+"use strict";
+
+var _Object$assign = require("babel-runtime/core-js/object/assign")["default"];
+
+exports["default"] = _Object$assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+exports.__esModule = true;
+},{"babel-runtime/core-js/object/assign":331}],342:[function(require,module,exports){
+"use strict";
+
+var _Object$getOwnPropertyDescriptor = require("babel-runtime/core-js/object/get-own-property-descriptor")["default"];
+
+exports["default"] = function get(_x, _x2, _x3) {
+  var _again = true;
+
+  _function: while (_again) {
+    var object = _x,
+        property = _x2,
+        receiver = _x3;
+    _again = false;
+    if (object === null) object = Function.prototype;
+
+    var desc = _Object$getOwnPropertyDescriptor(object, property);
+
+    if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);
+
+      if (parent === null) {
+        return undefined;
+      } else {
+        _x = parent;
+        _x2 = property;
+        _x3 = receiver;
+        _again = true;
+        desc = parent = undefined;
+        continue _function;
+      }
+    } else if ("value" in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;
+
+      if (getter === undefined) {
+        return undefined;
+      }
+
+      return getter.call(receiver);
+    }
+  }
+};
+
+exports.__esModule = true;
+},{"babel-runtime/core-js/object/get-own-property-descriptor":334}],343:[function(require,module,exports){
+"use strict";
+
+var _Object$create = require("babel-runtime/core-js/object/create")["default"];
+
+var _Object$setPrototypeOf = require("babel-runtime/core-js/object/set-prototype-of")["default"];
+
+exports["default"] = function (subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }
+
+  subClass.prototype = _Object$create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+};
+
+exports.__esModule = true;
+},{"babel-runtime/core-js/object/create":332,"babel-runtime/core-js/object/set-prototype-of":335}],344:[function(require,module,exports){
+"use strict";
+
+exports["default"] = function (obj) {
+  return obj && obj.__esModule ? obj : {
+    "default": obj
+  };
+};
+
+exports.__esModule = true;
+},{}],345:[function(require,module,exports){
+"use strict";
+
+exports["default"] = function (obj) {
+  if (obj && obj.__esModule) {
+    return obj;
+  } else {
+    var newObj = {};
+
+    if (obj != null) {
+      for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+      }
+    }
+
+    newObj["default"] = obj;
+    return newObj;
+  }
+};
+
+exports.__esModule = true;
+},{}],346:[function(require,module,exports){
+"use strict";
+
+var _getIterator = require("babel-runtime/core-js/get-iterator")["default"];
+
+var _isIterable = require("babel-runtime/core-js/is-iterable")["default"];
+
+exports["default"] = (function () {
+  function sliceIterator(arr, i) {
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+
+    try {
+      for (var _i = _getIterator(arr), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);
+
+        if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;
+      _e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"]) _i["return"]();
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+
+    return _arr;
+  }
+
+  return function (arr, i) {
+    if (Array.isArray(arr)) {
+      return arr;
+    } else if (_isIterable(Object(arr))) {
+      return sliceIterator(arr, i);
+    } else {
+      throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    }
+  };
+})();
+
+exports.__esModule = true;
+},{"babel-runtime/core-js/get-iterator":328,"babel-runtime/core-js/is-iterable":329}],347:[function(require,module,exports){
+require('../../modules/es6.string.iterator');
+require('../../modules/es6.array.from');
+module.exports = require('../../modules/$.core').Array.from;
+},{"../../modules/$.core":363,"../../modules/es6.array.from":415,"../../modules/es6.string.iterator":423}],348:[function(require,module,exports){
+require('../modules/web.dom.iterable');
+require('../modules/es6.string.iterator');
+module.exports = require('../modules/core.get-iterator');
+},{"../modules/core.get-iterator":413,"../modules/es6.string.iterator":423,"../modules/web.dom.iterable":425}],349:[function(require,module,exports){
+require('../modules/web.dom.iterable');
+require('../modules/es6.string.iterator');
+module.exports = require('../modules/core.is-iterable');
+},{"../modules/core.is-iterable":414,"../modules/es6.string.iterator":423,"../modules/web.dom.iterable":425}],350:[function(require,module,exports){
+require('../../modules/es6.number.max-safe-integer');
+module.exports = 0x1fffffffffffff;
+},{"../../modules/es6.number.max-safe-integer":417}],351:[function(require,module,exports){
+require('../../modules/es6.object.assign');
+module.exports = require('../../modules/$.core').Object.assign;
+},{"../../modules/$.core":363,"../../modules/es6.object.assign":418}],352:[function(require,module,exports){
+var $ = require('../../modules/$');
+module.exports = function create(P, D){
+  return $.create(P, D);
+};
+},{"../../modules/$":388}],353:[function(require,module,exports){
+var $ = require('../../modules/$');
+module.exports = function defineProperty(it, key, desc){
+  return $.setDesc(it, key, desc);
+};
+},{"../../modules/$":388}],354:[function(require,module,exports){
+var $ = require('../../modules/$');
+require('../../modules/es6.object.get-own-property-descriptor');
+module.exports = function getOwnPropertyDescriptor(it, key){
+  return $.getDesc(it, key);
+};
+},{"../../modules/$":388,"../../modules/es6.object.get-own-property-descriptor":419}],355:[function(require,module,exports){
+require('../../modules/es6.object.set-prototype-of');
+module.exports = require('../../modules/$.core').Object.setPrototypeOf;
+},{"../../modules/$.core":363,"../../modules/es6.object.set-prototype-of":420}],356:[function(require,module,exports){
+require('../modules/es6.object.to-string');
+require('../modules/es6.string.iterator');
+require('../modules/web.dom.iterable');
+require('../modules/es6.promise');
+module.exports = require('../modules/$.core').Promise;
+},{"../modules/$.core":363,"../modules/es6.object.to-string":421,"../modules/es6.promise":422,"../modules/es6.string.iterator":423,"../modules/web.dom.iterable":425}],357:[function(require,module,exports){
+require('../../modules/es6.symbol');
+require('../../modules/es6.object.to-string');
+module.exports = require('../../modules/$.core').Symbol;
+},{"../../modules/$.core":363,"../../modules/es6.object.to-string":421,"../../modules/es6.symbol":424}],358:[function(require,module,exports){
+arguments[4][107][0].apply(exports,arguments)
+},{"dup":107}],359:[function(require,module,exports){
+module.exports = function(){ /* empty */ };
+},{}],360:[function(require,module,exports){
+arguments[4][109][0].apply(exports,arguments)
+},{"./$.is-object":381,"dup":109}],361:[function(require,module,exports){
+arguments[4][115][0].apply(exports,arguments)
+},{"./$.cof":362,"./$.wks":411,"dup":115}],362:[function(require,module,exports){
+arguments[4][116][0].apply(exports,arguments)
+},{"dup":116}],363:[function(require,module,exports){
+arguments[4][121][0].apply(exports,arguments)
+},{"dup":121}],364:[function(require,module,exports){
+arguments[4][122][0].apply(exports,arguments)
+},{"./$.a-function":358,"dup":122}],365:[function(require,module,exports){
+arguments[4][123][0].apply(exports,arguments)
+},{"dup":123}],366:[function(require,module,exports){
+arguments[4][124][0].apply(exports,arguments)
+},{"./$.fails":370,"dup":124}],367:[function(require,module,exports){
+arguments[4][125][0].apply(exports,arguments)
+},{"./$.global":373,"./$.is-object":381,"dup":125}],368:[function(require,module,exports){
+arguments[4][126][0].apply(exports,arguments)
+},{"./$":388,"dup":126}],369:[function(require,module,exports){
+var global    = require('./$.global')
+  , core      = require('./$.core')
+  , ctx       = require('./$.ctx')
+  , PROTOTYPE = 'prototype';
+
+var $export = function(type, name, source){
+  var IS_FORCED = type & $export.F
+    , IS_GLOBAL = type & $export.G
+    , IS_STATIC = type & $export.S
+    , IS_PROTO  = type & $export.P
+    , IS_BIND   = type & $export.B
+    , IS_WRAP   = type & $export.W
+    , exports   = IS_GLOBAL ? core : core[name] || (core[name] = {})
+    , target    = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE]
+    , key, own, out;
+  if(IS_GLOBAL)source = name;
+  for(key in source){
+    // contains in native
+    own = !IS_FORCED && target && key in target;
+    if(own && key in exports)continue;
+    // export native or passed
+    out = own ? target[key] : source[key];
+    // prevent global pollution for namespaces
+    exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key]
+    // bind timers to global for call from export context
+    : IS_BIND && own ? ctx(out, global)
+    // wrap global constructors for prevent change them in library
+    : IS_WRAP && target[key] == out ? (function(C){
+      var F = function(param){
+        return this instanceof C ? new C(param) : C(param);
+      };
+      F[PROTOTYPE] = C[PROTOTYPE];
+      return F;
+    // make static versions for prototype methods
+    })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
+    if(IS_PROTO)(exports[PROTOTYPE] || (exports[PROTOTYPE] = {}))[key] = out;
+  }
+};
+// type bitmap
+$export.F = 1;  // forced
+$export.G = 2;  // global
+$export.S = 4;  // static
+$export.P = 8;  // proto
+$export.B = 16; // bind
+$export.W = 32; // wrap
+module.exports = $export;
+},{"./$.core":363,"./$.ctx":364,"./$.global":373}],370:[function(require,module,exports){
+arguments[4][129][0].apply(exports,arguments)
+},{"dup":129}],371:[function(require,module,exports){
+arguments[4][132][0].apply(exports,arguments)
+},{"./$.an-object":360,"./$.ctx":364,"./$.is-array-iter":379,"./$.iter-call":382,"./$.to-length":408,"./core.get-iterator-method":412,"dup":132}],372:[function(require,module,exports){
+arguments[4][133][0].apply(exports,arguments)
+},{"./$":388,"./$.to-iobject":407,"dup":133}],373:[function(require,module,exports){
+arguments[4][134][0].apply(exports,arguments)
+},{"dup":134}],374:[function(require,module,exports){
+arguments[4][135][0].apply(exports,arguments)
+},{"dup":135}],375:[function(require,module,exports){
+arguments[4][136][0].apply(exports,arguments)
+},{"./$":388,"./$.descriptors":366,"./$.property-desc":394,"dup":136}],376:[function(require,module,exports){
+arguments[4][137][0].apply(exports,arguments)
+},{"./$.global":373,"dup":137}],377:[function(require,module,exports){
+arguments[4][138][0].apply(exports,arguments)
+},{"dup":138}],378:[function(require,module,exports){
+arguments[4][139][0].apply(exports,arguments)
+},{"./$.cof":362,"dup":139}],379:[function(require,module,exports){
+arguments[4][140][0].apply(exports,arguments)
+},{"./$.iterators":387,"./$.wks":411,"dup":140}],380:[function(require,module,exports){
+arguments[4][141][0].apply(exports,arguments)
+},{"./$.cof":362,"dup":141}],381:[function(require,module,exports){
+arguments[4][143][0].apply(exports,arguments)
+},{"dup":143}],382:[function(require,module,exports){
+arguments[4][145][0].apply(exports,arguments)
+},{"./$.an-object":360,"dup":145}],383:[function(require,module,exports){
+arguments[4][146][0].apply(exports,arguments)
+},{"./$":388,"./$.hide":375,"./$.property-desc":394,"./$.set-to-string-tag":400,"./$.wks":411,"dup":146}],384:[function(require,module,exports){
+arguments[4][147][0].apply(exports,arguments)
+},{"./$":388,"./$.export":369,"./$.has":374,"./$.hide":375,"./$.iter-create":383,"./$.iterators":387,"./$.library":390,"./$.redefine":396,"./$.set-to-string-tag":400,"./$.wks":411,"dup":147}],385:[function(require,module,exports){
+arguments[4][148][0].apply(exports,arguments)
+},{"./$.wks":411,"dup":148}],386:[function(require,module,exports){
+arguments[4][149][0].apply(exports,arguments)
+},{"dup":149}],387:[function(require,module,exports){
+arguments[4][150][0].apply(exports,arguments)
+},{"dup":150}],388:[function(require,module,exports){
+arguments[4][151][0].apply(exports,arguments)
+},{"dup":151}],389:[function(require,module,exports){
+arguments[4][152][0].apply(exports,arguments)
+},{"./$":388,"./$.to-iobject":407,"dup":152}],390:[function(require,module,exports){
+module.exports = true;
+},{}],391:[function(require,module,exports){
+arguments[4][157][0].apply(exports,arguments)
+},{"./$.cof":362,"./$.global":373,"./$.task":405,"dup":157}],392:[function(require,module,exports){
+arguments[4][158][0].apply(exports,arguments)
+},{"./$":388,"./$.fails":370,"./$.iobject":378,"./$.to-object":409,"dup":158}],393:[function(require,module,exports){
+arguments[4][159][0].apply(exports,arguments)
+},{"./$.core":363,"./$.export":369,"./$.fails":370,"dup":159}],394:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"dup":164}],395:[function(require,module,exports){
+arguments[4][165][0].apply(exports,arguments)
+},{"./$.redefine":396,"dup":165}],396:[function(require,module,exports){
+module.exports = require('./$.hide');
+},{"./$.hide":375}],397:[function(require,module,exports){
+arguments[4][168][0].apply(exports,arguments)
+},{"dup":168}],398:[function(require,module,exports){
+arguments[4][169][0].apply(exports,arguments)
+},{"./$":388,"./$.an-object":360,"./$.ctx":364,"./$.is-object":381,"dup":169}],399:[function(require,module,exports){
+'use strict';
+var core        = require('./$.core')
+  , $           = require('./$')
+  , DESCRIPTORS = require('./$.descriptors')
+  , SPECIES     = require('./$.wks')('species');
+
+module.exports = function(KEY){
+  var C = core[KEY];
+  if(DESCRIPTORS && C && !C[SPECIES])$.setDesc(C, SPECIES, {
+    configurable: true,
+    get: function(){ return this; }
+  });
+};
+},{"./$":388,"./$.core":363,"./$.descriptors":366,"./$.wks":411}],400:[function(require,module,exports){
+arguments[4][171][0].apply(exports,arguments)
+},{"./$":388,"./$.has":374,"./$.wks":411,"dup":171}],401:[function(require,module,exports){
+arguments[4][172][0].apply(exports,arguments)
+},{"./$.global":373,"dup":172}],402:[function(require,module,exports){
+arguments[4][173][0].apply(exports,arguments)
+},{"./$.a-function":358,"./$.an-object":360,"./$.wks":411,"dup":173}],403:[function(require,module,exports){
+arguments[4][174][0].apply(exports,arguments)
+},{"dup":174}],404:[function(require,module,exports){
+arguments[4][175][0].apply(exports,arguments)
+},{"./$.defined":365,"./$.to-integer":406,"dup":175}],405:[function(require,module,exports){
+arguments[4][180][0].apply(exports,arguments)
+},{"./$.cof":362,"./$.ctx":364,"./$.dom-create":367,"./$.global":373,"./$.html":376,"./$.invoke":377,"dup":180}],406:[function(require,module,exports){
+arguments[4][182][0].apply(exports,arguments)
+},{"dup":182}],407:[function(require,module,exports){
+arguments[4][183][0].apply(exports,arguments)
+},{"./$.defined":365,"./$.iobject":378,"dup":183}],408:[function(require,module,exports){
+arguments[4][184][0].apply(exports,arguments)
+},{"./$.to-integer":406,"dup":184}],409:[function(require,module,exports){
+arguments[4][185][0].apply(exports,arguments)
+},{"./$.defined":365,"dup":185}],410:[function(require,module,exports){
+arguments[4][187][0].apply(exports,arguments)
+},{"dup":187}],411:[function(require,module,exports){
+arguments[4][188][0].apply(exports,arguments)
+},{"./$.global":373,"./$.shared":401,"./$.uid":410,"dup":188}],412:[function(require,module,exports){
+arguments[4][189][0].apply(exports,arguments)
+},{"./$.classof":361,"./$.core":363,"./$.iterators":387,"./$.wks":411,"dup":189}],413:[function(require,module,exports){
+var anObject = require('./$.an-object')
+  , get      = require('./core.get-iterator-method');
+module.exports = require('./$.core').getIterator = function(it){
+  var iterFn = get(it);
+  if(typeof iterFn != 'function')throw TypeError(it + ' is not iterable!');
+  return anObject(iterFn.call(it));
+};
+},{"./$.an-object":360,"./$.core":363,"./core.get-iterator-method":412}],414:[function(require,module,exports){
+var classof   = require('./$.classof')
+  , ITERATOR  = require('./$.wks')('iterator')
+  , Iterators = require('./$.iterators');
+module.exports = require('./$.core').isIterable = function(it){
+  var O = Object(it);
+  return O[ITERATOR] !== undefined
+    || '@@iterator' in O
+    || Iterators.hasOwnProperty(classof(O));
+};
+},{"./$.classof":361,"./$.core":363,"./$.iterators":387,"./$.wks":411}],415:[function(require,module,exports){
+arguments[4][195][0].apply(exports,arguments)
+},{"./$.ctx":364,"./$.export":369,"./$.is-array-iter":379,"./$.iter-call":382,"./$.iter-detect":385,"./$.to-length":408,"./$.to-object":409,"./core.get-iterator-method":412,"dup":195}],416:[function(require,module,exports){
+arguments[4][196][0].apply(exports,arguments)
+},{"./$.add-to-unscopables":359,"./$.iter-define":384,"./$.iter-step":386,"./$.iterators":387,"./$.to-iobject":407,"dup":196}],417:[function(require,module,exports){
+arguments[4][225][0].apply(exports,arguments)
+},{"./$.export":369,"dup":225}],418:[function(require,module,exports){
+arguments[4][229][0].apply(exports,arguments)
+},{"./$.export":369,"./$.object-assign":392,"dup":229}],419:[function(require,module,exports){
+arguments[4][231][0].apply(exports,arguments)
+},{"./$.object-sap":393,"./$.to-iobject":407,"dup":231}],420:[function(require,module,exports){
+arguments[4][241][0].apply(exports,arguments)
+},{"./$.export":369,"./$.set-proto":398,"dup":241}],421:[function(require,module,exports){
+
+},{}],422:[function(require,module,exports){
+arguments[4][243][0].apply(exports,arguments)
+},{"./$":388,"./$.a-function":358,"./$.an-object":360,"./$.classof":361,"./$.core":363,"./$.ctx":364,"./$.descriptors":366,"./$.export":369,"./$.for-of":371,"./$.global":373,"./$.is-object":381,"./$.iter-detect":385,"./$.library":390,"./$.microtask":391,"./$.redefine-all":395,"./$.same-value":397,"./$.set-proto":398,"./$.set-species":399,"./$.set-to-string-tag":400,"./$.species-constructor":402,"./$.strict-new":403,"./$.wks":411,"dup":243}],423:[function(require,module,exports){
+arguments[4][269][0].apply(exports,arguments)
+},{"./$.iter-define":384,"./$.string-at":404,"dup":269}],424:[function(require,module,exports){
+arguments[4][274][0].apply(exports,arguments)
+},{"./$":388,"./$.an-object":360,"./$.descriptors":366,"./$.enum-keys":368,"./$.export":369,"./$.fails":370,"./$.get-names":372,"./$.global":373,"./$.has":374,"./$.is-array":380,"./$.keyof":389,"./$.library":390,"./$.property-desc":394,"./$.redefine":396,"./$.set-to-string-tag":400,"./$.shared":401,"./$.to-iobject":407,"./$.uid":410,"./$.wks":411,"dup":274}],425:[function(require,module,exports){
+require('./es6.array.iterator');
+var Iterators = require('./$.iterators');
+Iterators.NodeList = Iterators.HTMLCollection = Iterators.Array;
+},{"./$.iterators":387,"./es6.array.iterator":416}],426:[function(require,module,exports){
+(function (global){
+// This method of obtaining a reference to the global object needs to be
+// kept identical to the way it is obtained in runtime.js
+var g =
+  typeof global === "object" ? global :
+  typeof window === "object" ? window :
+  typeof self === "object" ? self : this;
+
+// Use `getOwnPropertyNames` because not all browsers support calling
+// `hasOwnProperty` on the global `self` object in a worker. See #183.
+var hadRuntime = g.regeneratorRuntime &&
+  Object.getOwnPropertyNames(g).indexOf("regeneratorRuntime") >= 0;
+
+// Save the old regeneratorRuntime in case it needs to be restored later.
+var oldRuntime = hadRuntime && g.regeneratorRuntime;
+
+// Force reevalutation of runtime.js.
+g.regeneratorRuntime = undefined;
+
+module.exports = require("./runtime");
+
+if (hadRuntime) {
+  // Restore the original runtime.
+  g.regeneratorRuntime = oldRuntime;
+} else {
+  // Remove the global property added by runtime.js.
+  try {
+    delete g.regeneratorRuntime;
+  } catch(e) {
+    g.regeneratorRuntime = undefined;
+  }
+}
+
+module.exports = { "default": module.exports, __esModule: true };
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./runtime":427}],427:[function(require,module,exports){
+(function (process,global){
+/**
+ * Copyright (c) 2014, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * https://raw.github.com/facebook/regenerator/master/LICENSE file. An
+ * additional grant of patent rights can be found in the PATENTS file in
+ * the same directory.
+ */
+
+"use strict";
+
+var _Symbol = require("babel-runtime/core-js/symbol")["default"];
+
+var _Object$create = require("babel-runtime/core-js/object/create")["default"];
+
+var _Object$setPrototypeOf = require("babel-runtime/core-js/object/set-prototype-of")["default"];
+
+var _Promise = require("babel-runtime/core-js/promise")["default"];
+
+!(function (global) {
+  "use strict";
+
+  var hasOwn = Object.prototype.hasOwnProperty;
+  var undefined; // More compressible than void 0.
+  var $Symbol = typeof _Symbol === "function" ? _Symbol : {};
+  var iteratorSymbol = $Symbol.iterator || "@@iterator";
+  var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
+
+  var inModule = typeof module === "object";
+  var runtime = global.regeneratorRuntime;
+  if (runtime) {
+    if (inModule) {
+      // If regeneratorRuntime is defined globally and we're in a module,
+      // make the exports object identical to regeneratorRuntime.
+      module.exports = runtime;
+    }
+    // Don't bother evaluating the rest of this file if the runtime was
+    // already defined globally.
+    return;
+  }
+
+  // Define the runtime globally (as expected by generated code) as either
+  // module.exports (if we're in a module) or a new, empty object.
+  runtime = global.regeneratorRuntime = inModule ? module.exports : {};
+
+  function wrap(innerFn, outerFn, self, tryLocsList) {
+    // If outerFn provided, then outerFn.prototype instanceof Generator.
+    var generator = _Object$create((outerFn || Generator).prototype);
+    var context = new Context(tryLocsList || []);
+
+    // The ._invoke method unifies the implementations of the .next,
+    // .throw, and .return methods.
+    generator._invoke = makeInvokeMethod(innerFn, self, context);
+
+    return generator;
+  }
+  runtime.wrap = wrap;
+
+  // Try/catch helper to minimize deoptimizations. Returns a completion
+  // record like context.tryEntries[i].completion. This interface could
+  // have been (and was previously) designed to take a closure to be
+  // invoked without arguments, but in all the cases we care about we
+  // already have an existing method we want to call, so there's no need
+  // to create a new function object. We can even get away with assuming
+  // the method takes exactly one argument, since that happens to be true
+  // in every case, so we don't have to touch the arguments object. The
+  // only additional allocation required is the completion record, which
+  // has a stable shape and so hopefully should be cheap to allocate.
+  function tryCatch(fn, obj, arg) {
+    try {
+      return { type: "normal", arg: fn.call(obj, arg) };
+    } catch (err) {
+      return { type: "throw", arg: err };
+    }
+  }
+
+  var GenStateSuspendedStart = "suspendedStart";
+  var GenStateSuspendedYield = "suspendedYield";
+  var GenStateExecuting = "executing";
+  var GenStateCompleted = "completed";
+
+  // Returning this object from the innerFn has the same effect as
+  // breaking out of the dispatch switch statement.
+  var ContinueSentinel = {};
+
+  // Dummy constructor functions that we use as the .constructor and
+  // .constructor.prototype properties for functions that return Generator
+  // objects. For full spec compliance, you may wish to configure your
+  // minifier not to mangle the names of these two functions.
+  function Generator() {}
+  function GeneratorFunction() {}
+  function GeneratorFunctionPrototype() {}
+
+  var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype;
+  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
+  GeneratorFunctionPrototype.constructor = GeneratorFunction;
+  GeneratorFunctionPrototype[toStringTagSymbol] = GeneratorFunction.displayName = "GeneratorFunction";
+
+  // Helper for defining the .next, .throw, and .return methods of the
+  // Iterator interface in terms of a single ._invoke method.
+  function defineIteratorMethods(prototype) {
+    ["next", "throw", "return"].forEach(function (method) {
+      prototype[method] = function (arg) {
+        return this._invoke(method, arg);
+      };
+    });
+  }
+
+  runtime.isGeneratorFunction = function (genFun) {
+    var ctor = typeof genFun === "function" && genFun.constructor;
+    return ctor ? ctor === GeneratorFunction ||
+    // For the native GeneratorFunction constructor, the best we can
+    // do is to check its .name property.
+    (ctor.displayName || ctor.name) === "GeneratorFunction" : false;
+  };
+
+  runtime.mark = function (genFun) {
+    if (_Object$setPrototypeOf) {
+      _Object$setPrototypeOf(genFun, GeneratorFunctionPrototype);
+    } else {
+      genFun.__proto__ = GeneratorFunctionPrototype;
+      if (!(toStringTagSymbol in genFun)) {
+        genFun[toStringTagSymbol] = "GeneratorFunction";
+      }
+    }
+    genFun.prototype = _Object$create(Gp);
+    return genFun;
+  };
+
+  // Within the body of any async function, `await x` is transformed to
+  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
+  // `value instanceof AwaitArgument` to determine if the yielded value is
+  // meant to be awaited. Some may consider the name of this method too
+  // cutesy, but they are curmudgeons.
+  runtime.awrap = function (arg) {
+    return new AwaitArgument(arg);
+  };
+
+  function AwaitArgument(arg) {
+    this.arg = arg;
+  }
+
+  function AsyncIterator(generator) {
+    function invoke(method, arg, resolve, reject) {
+      var record = tryCatch(generator[method], generator, arg);
+      if (record.type === "throw") {
+        reject(record.arg);
+      } else {
+        var result = record.arg;
+        var value = result.value;
+        if (value instanceof AwaitArgument) {
+          return _Promise.resolve(value.arg).then(function (value) {
+            invoke("next", value, resolve, reject);
+          }, function (err) {
+            invoke("throw", err, resolve, reject);
+          });
+        }
+
+        return _Promise.resolve(value).then(function (unwrapped) {
+          // When a yielded Promise is resolved, its final value becomes
+          // the .value of the Promise<{value,done}> result for the
+          // current iteration. If the Promise is rejected, however, the
+          // result for this iteration will be rejected with the same
+          // reason. Note that rejections of yielded Promises are not
+          // thrown back into the generator function, as is the case
+          // when an awaited Promise is rejected. This difference in
+          // behavior between yield and await is important, because it
+          // allows the consumer to decide what to do with the yielded
+          // rejection (swallow it and continue, manually .throw it back
+          // into the generator, abandon iteration, whatever). With
+          // await, by contrast, there is no opportunity to examine the
+          // rejection reason outside the generator function, so the
+          // only option is to throw it from the await expression, and
+          // let the generator function handle the exception.
+          result.value = unwrapped;
+          resolve(result);
+        }, reject);
+      }
+    }
+
+    if (typeof process === "object" && process.domain) {
+      invoke = process.domain.bind(invoke);
+    }
+
+    var previousPromise;
+
+    function enqueue(method, arg) {
+      function callInvokeWithMethodAndArg() {
+        return new _Promise(function (resolve, reject) {
+          invoke(method, arg, resolve, reject);
+        });
+      }
+
+      return previousPromise =
+      // If enqueue has been called before, then we want to wait until
+      // all previous Promises have been resolved before calling invoke,
+      // so that results are always delivered in the correct order. If
+      // enqueue has not been called before, then it is important to
+      // call invoke immediately, without waiting on a callback to fire,
+      // so that the async generator function has the opportunity to do
+      // any necessary setup in a predictable way. This predictability
+      // is why the Promise constructor synchronously invokes its
+      // executor callback, and why async functions synchronously
+      // execute code before the first await. Since we implement simple
+      // async functions in terms of async generators, it is especially
+      // important to get this right, even though it requires care.
+      previousPromise ? previousPromise.then(callInvokeWithMethodAndArg,
+      // Avoid propagating failures to Promises returned by later
+      // invocations of the iterator.
+      callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg();
+    }
+
+    // Define the unified helper method that is used to implement .next,
+    // .throw, and .return (see defineIteratorMethods).
+    this._invoke = enqueue;
+  }
+
+  defineIteratorMethods(AsyncIterator.prototype);
+
+  // Note that simple async functions are implemented on top of
+  // AsyncIterator objects; they just return a Promise for the value of
+  // the final result produced by the iterator.
+  runtime.async = function (innerFn, outerFn, self, tryLocsList) {
+    var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList));
+
+    return runtime.isGeneratorFunction(outerFn) ? iter // If outerFn is a generator, return the full iterator.
+    : iter.next().then(function (result) {
+      return result.done ? result.value : iter.next();
+    });
+  };
+
+  function makeInvokeMethod(innerFn, self, context) {
+    var state = GenStateSuspendedStart;
+
+    return function invoke(method, arg) {
+      if (state === GenStateExecuting) {
+        throw new Error("Generator is already running");
+      }
+
+      if (state === GenStateCompleted) {
+        if (method === "throw") {
+          throw arg;
+        }
+
+        // Be forgiving, per 25.3.3.3.3 of the spec:
+        // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
+        return doneResult();
+      }
+
+      while (true) {
+        var delegate = context.delegate;
+        if (delegate) {
+          if (method === "return" || method === "throw" && delegate.iterator[method] === undefined) {
+            // A return or throw (when the delegate iterator has no throw
+            // method) always terminates the yield* loop.
+            context.delegate = null;
+
+            // If the delegate iterator has a return method, give it a
+            // chance to clean up.
+            var returnMethod = delegate.iterator["return"];
+            if (returnMethod) {
+              var record = tryCatch(returnMethod, delegate.iterator, arg);
+              if (record.type === "throw") {
+                // If the return method threw an exception, let that
+                // exception prevail over the original return or throw.
+                method = "throw";
+                arg = record.arg;
+                continue;
+              }
+            }
+
+            if (method === "return") {
+              // Continue with the outer return, now that the delegate
+              // iterator has been terminated.
+              continue;
+            }
+          }
+
+          var record = tryCatch(delegate.iterator[method], delegate.iterator, arg);
+
+          if (record.type === "throw") {
+            context.delegate = null;
+
+            // Like returning generator.throw(uncaught), but without the
+            // overhead of an extra function call.
+            method = "throw";
+            arg = record.arg;
+            continue;
+          }
+
+          // Delegate generator ran and handled its own exceptions so
+          // regardless of what the method was, we continue as if it is
+          // "next" with an undefined arg.
+          method = "next";
+          arg = undefined;
+
+          var info = record.arg;
+          if (info.done) {
+            context[delegate.resultName] = info.value;
+            context.next = delegate.nextLoc;
+          } else {
+            state = GenStateSuspendedYield;
+            return info;
+          }
+
+          context.delegate = null;
+        }
+
+        if (method === "next") {
+          if (state === GenStateSuspendedYield) {
+            context.sent = arg;
+          } else {
+            context.sent = undefined;
+          }
+        } else if (method === "throw") {
+          if (state === GenStateSuspendedStart) {
+            state = GenStateCompleted;
+            throw arg;
+          }
+
+          if (context.dispatchException(arg)) {
+            // If the dispatched exception was caught by a catch block,
+            // then let that catch block handle the exception normally.
+            method = "next";
+            arg = undefined;
+          }
+        } else if (method === "return") {
+          context.abrupt("return", arg);
+        }
+
+        state = GenStateExecuting;
+
+        var record = tryCatch(innerFn, self, context);
+        if (record.type === "normal") {
+          // If an exception is thrown from innerFn, we leave state ===
+          // GenStateExecuting and loop back for another invocation.
+          state = context.done ? GenStateCompleted : GenStateSuspendedYield;
+
+          var info = {
+            value: record.arg,
+            done: context.done
+          };
+
+          if (record.arg === ContinueSentinel) {
+            if (context.delegate && method === "next") {
+              // Deliberately forget the last sent value so that we don't
+              // accidentally pass it on to the delegate.
+              arg = undefined;
+            }
+          } else {
+            return info;
+          }
+        } else if (record.type === "throw") {
+          state = GenStateCompleted;
+          // Dispatch the exception by looping back around to the
+          // context.dispatchException(arg) call above.
+          method = "throw";
+          arg = record.arg;
+        }
+      }
+    };
+  }
+
+  // Define Generator.prototype.{next,throw,return} in terms of the
+  // unified ._invoke helper method.
+  defineIteratorMethods(Gp);
+
+  Gp[iteratorSymbol] = function () {
+    return this;
+  };
+
+  Gp[toStringTagSymbol] = "Generator";
+
+  Gp.toString = function () {
+    return "[object Generator]";
+  };
+
+  function pushTryEntry(locs) {
+    var entry = { tryLoc: locs[0] };
+
+    if (1 in locs) {
+      entry.catchLoc = locs[1];
+    }
+
+    if (2 in locs) {
+      entry.finallyLoc = locs[2];
+      entry.afterLoc = locs[3];
+    }
+
+    this.tryEntries.push(entry);
+  }
+
+  function resetTryEntry(entry) {
+    var record = entry.completion || {};
+    record.type = "normal";
+    delete record.arg;
+    entry.completion = record;
+  }
+
+  function Context(tryLocsList) {
+    // The root entry object (effectively a try statement without a catch
+    // or a finally block) gives us a place to store values thrown from
+    // locations where there is no enclosing try statement.
+    this.tryEntries = [{ tryLoc: "root" }];
+    tryLocsList.forEach(pushTryEntry, this);
+    this.reset(true);
+  }
+
+  runtime.keys = function (object) {
+    var keys = [];
+    for (var key in object) {
+      keys.push(key);
+    }
+    keys.reverse();
+
+    // Rather than returning an object with a next method, we keep
+    // things simple and return the next function itself.
+    return function next() {
+      while (keys.length) {
+        var key = keys.pop();
+        if (key in object) {
+          next.value = key;
+          next.done = false;
+          return next;
+        }
+      }
+
+      // To avoid creating an additional object, we just hang the .value
+      // and .done properties off the next function object itself. This
+      // also ensures that the minifier will not anonymize the function.
+      next.done = true;
+      return next;
+    };
+  };
+
+  function values(iterable) {
+    if (iterable) {
+      var iteratorMethod = iterable[iteratorSymbol];
+      if (iteratorMethod) {
+        return iteratorMethod.call(iterable);
+      }
+
+      if (typeof iterable.next === "function") {
+        return iterable;
+      }
+
+      if (!isNaN(iterable.length)) {
+        var i = -1,
+            next = function next() {
+          while (++i < iterable.length) {
+            if (hasOwn.call(iterable, i)) {
+              next.value = iterable[i];
+              next.done = false;
+              return next;
+            }
+          }
+
+          next.value = undefined;
+          next.done = true;
+
+          return next;
+        };
+
+        return next.next = next;
+      }
+    }
+
+    // Return an iterator with no values.
+    return { next: doneResult };
+  }
+  runtime.values = values;
+
+  function doneResult() {
+    return { value: undefined, done: true };
+  }
+
+  Context.prototype = {
+    constructor: Context,
+
+    reset: function reset(skipTempReset) {
+      this.prev = 0;
+      this.next = 0;
+      this.sent = undefined;
+      this.done = false;
+      this.delegate = null;
+
+      this.tryEntries.forEach(resetTryEntry);
+
+      if (!skipTempReset) {
+        for (var name in this) {
+          // Not sure about the optimal order of these conditions:
+          if (name.charAt(0) === "t" && hasOwn.call(this, name) && !isNaN(+name.slice(1))) {
+            this[name] = undefined;
+          }
+        }
+      }
+    },
+
+    stop: function stop() {
+      this.done = true;
+
+      var rootEntry = this.tryEntries[0];
+      var rootRecord = rootEntry.completion;
+      if (rootRecord.type === "throw") {
+        throw rootRecord.arg;
+      }
+
+      return this.rval;
+    },
+
+    dispatchException: function dispatchException(exception) {
+      if (this.done) {
+        throw exception;
+      }
+
+      var context = this;
+      function handle(loc, caught) {
+        record.type = "throw";
+        record.arg = exception;
+        context.next = loc;
+        return !!caught;
+      }
+
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        var record = entry.completion;
+
+        if (entry.tryLoc === "root") {
+          // Exception thrown outside of any try block that could handle
+          // it, so set the completion value of the entire function to
+          // throw the exception.
+          return handle("end");
+        }
+
+        if (entry.tryLoc <= this.prev) {
+          var hasCatch = hasOwn.call(entry, "catchLoc");
+          var hasFinally = hasOwn.call(entry, "finallyLoc");
+
+          if (hasCatch && hasFinally) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            } else if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+          } else if (hasCatch) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            }
+          } else if (hasFinally) {
+            if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+          } else {
+            throw new Error("try statement without catch or finally");
+          }
+        }
+      }
+    },
+
+    abrupt: function abrupt(type, arg) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) {
+          var finallyEntry = entry;
+          break;
+        }
+      }
+
+      if (finallyEntry && (type === "break" || type === "continue") && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc) {
+        // Ignore the finally entry if control is not jumping to a
+        // location outside the try/catch block.
+        finallyEntry = null;
+      }
+
+      var record = finallyEntry ? finallyEntry.completion : {};
+      record.type = type;
+      record.arg = arg;
+
+      if (finallyEntry) {
+        this.next = finallyEntry.finallyLoc;
+      } else {
+        this.complete(record);
+      }
+
+      return ContinueSentinel;
+    },
+
+    complete: function complete(record, afterLoc) {
+      if (record.type === "throw") {
+        throw record.arg;
+      }
+
+      if (record.type === "break" || record.type === "continue") {
+        this.next = record.arg;
+      } else if (record.type === "return") {
+        this.rval = record.arg;
+        this.next = "end";
+      } else if (record.type === "normal" && afterLoc) {
+        this.next = afterLoc;
+      }
+    },
+
+    finish: function finish(finallyLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.finallyLoc === finallyLoc) {
+          this.complete(entry.completion, entry.afterLoc);
+          resetTryEntry(entry);
+          return ContinueSentinel;
+        }
+      }
+    },
+
+    "catch": function _catch(tryLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc === tryLoc) {
+          var record = entry.completion;
+          if (record.type === "throw") {
+            var thrown = record.arg;
+            resetTryEntry(entry);
+          }
+          return thrown;
+        }
+      }
+
+      // The context.catch method must only be called with a location
+      // argument that corresponds to a known catch block.
+      throw new Error("illegal catch attempt");
+    },
+
+    delegateYield: function delegateYield(iterable, resultName, nextLoc) {
+      this.delegate = {
+        iterator: values(iterable),
+        resultName: resultName,
+        nextLoc: nextLoc
+      };
+
+      return ContinueSentinel;
+    }
+  };
+})(
+// Among the various tricks for obtaining a reference to the global
+// object, this seems to be the most reliable technique that does not
+// use indirect eval (which violates Content Security Policy).
+typeof global === "object" ? global : typeof window === "object" ? window : typeof self === "object" ? self : undefined);
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"_process":299,"babel-runtime/core-js/object/create":332,"babel-runtime/core-js/object/set-prototype-of":335,"babel-runtime/core-js/promise":336,"babel-runtime/core-js/symbol":337}],428:[function(require,module,exports){
+module.exports = function split (input, strOrRegex) {
+  var results = []
+
+  if (strOrRegex instanceof RegExp) {
+    var regex = new RegExp(strOrRegex.toString().slice(1, -1), 'g')
+    var oldIndex = 0
+    var match
+    while ((match = regex.exec(input))) {
+      results.push(input.substring(oldIndex, match.index))
+      results.push(match[0])
+      oldIndex = match.index + match[0].length
+    }
+    results.push(input.substring(oldIndex))
+  } else {
+    var splits = input.split(strOrRegex)
+    var item
+    for (var i = 0, l = splits.length; i < l - 1; i++) {
+      item = splits[i]
+      results.push(item)
+      results.push(strOrRegex)
+    }
+    results.push(splits[splits.length - 1])
+  }
+
+  return results
+}
+
+},{}],429:[function(require,module,exports){
 module.exports = require('react/lib/ReactCSSTransitionGroup');
-},{"react/lib/ReactCSSTransitionGroup":338}],306:[function(require,module,exports){
+},{"react/lib/ReactCSSTransitionGroup":462}],430:[function(require,module,exports){
 'use strict';
 
 module.exports = require('react/lib/ReactDOM');
 
-},{"react/lib/ReactDOM":348}],307:[function(require,module,exports){
+},{"react/lib/ReactDOM":472}],431:[function(require,module,exports){
 (function (global){
 var React, ga, script, scriptIsAdded, _name,
   __slice = [].slice;
@@ -20851,7 +26004,7 @@ ga.Initializer = React.createClass({
 module.exports = ga;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],308:[function(require,module,exports){
+},{}],432:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20997,7 +26150,7 @@ var Input = (function (_React$Component) {
 })(_react2['default'].Component);
 
 exports.Input = Input;
-},{"react":473,"react-dom":306}],309:[function(require,module,exports){
+},{"react":597,"react-dom":430}],433:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -21244,7 +26397,7 @@ LaconaView.defaultProps = {
   clearPrefix: function clearPrefix() {}
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./input":308,"./option":310,"./options":311,"react":473,"react-dom":306}],310:[function(require,module,exports){
+},{"./input":432,"./option":434,"./options":435,"react":597,"react-dom":430}],434:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -21282,7 +26435,9 @@ var SPECIALCASES = {
   song: 2,
   contact: 1,
   relationship: 3,
-  'reminder title': 0
+  'reminder title': 0,
+  'time of day': 3,
+  'folder': 7
 };
 
 function hashArgument(str) {
@@ -21445,12 +26600,11 @@ var Option = (function (_React$Component2) {
             if (item.placeholder) {
               return _react2['default'].createElement(Placeholder, { item: item, key: index });
             } else {
-              var text = item.fallthrough ? _lodash2['default'].trimRight(item.text) : item.text;
               var _className2 = 'word-component' + (item.input ? ' highlighted' : '') + ' category-' + item.category + (item.fallthrough ? ' fallthrough' : '') + (item.decorator ? ' decorator' : '');
               return _react2['default'].createElement(
                 'div',
                 { className: _className2, key: index },
-                text
+                item.text
               );
             }
           })
@@ -21491,7 +26645,7 @@ var Option = (function (_React$Component2) {
 exports.Option = Option;
 /*<div className='ellipsis'>{this.props.option.ellipsis ? '…' : ''}</div>*/
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"react":473,"react-dom":306}],311:[function(require,module,exports){
+},{"react":597,"react-dom":430}],435:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -21588,7 +26742,7 @@ var Options = (function (_React$Component) {
 
 exports.Options = Options;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./option":310,"react":473}],312:[function(require,module,exports){
+},{"./option":434,"react":597}],436:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -21625,7 +26779,7 @@ var AutoFocusUtils = {
 };
 
 module.exports = AutoFocusUtils;
-},{"./ReactMount":378,"./findDOMNode":424,"fbjs/lib/focusNode":455}],313:[function(require,module,exports){
+},{"./ReactMount":502,"./findDOMNode":548,"fbjs/lib/focusNode":579}],437:[function(require,module,exports){
 /**
  * Copyright 2013-2015 Facebook, Inc.
  * All rights reserved.
@@ -22031,7 +27185,7 @@ var BeforeInputEventPlugin = {
 };
 
 module.exports = BeforeInputEventPlugin;
-},{"./EventConstants":325,"./EventPropagators":329,"./FallbackCompositionState":330,"./SyntheticCompositionEvent":406,"./SyntheticInputEvent":410,"fbjs/lib/ExecutionEnvironment":447,"fbjs/lib/keyOf":465}],314:[function(require,module,exports){
+},{"./EventConstants":449,"./EventPropagators":453,"./FallbackCompositionState":454,"./SyntheticCompositionEvent":530,"./SyntheticInputEvent":534,"fbjs/lib/ExecutionEnvironment":571,"fbjs/lib/keyOf":589}],438:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -22171,7 +27325,7 @@ var CSSProperty = {
 };
 
 module.exports = CSSProperty;
-},{}],315:[function(require,module,exports){
+},{}],439:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -22349,7 +27503,7 @@ ReactPerf.measureMethods(CSSPropertyOperations, 'CSSPropertyOperations', {
 
 module.exports = CSSPropertyOperations;
 }).call(this,require('_process'))
-},{"./CSSProperty":314,"./ReactPerf":384,"./dangerousStyleValue":421,"_process":301,"fbjs/lib/ExecutionEnvironment":447,"fbjs/lib/camelizeStyleName":449,"fbjs/lib/hyphenateStyleName":460,"fbjs/lib/memoizeStringOnly":467,"fbjs/lib/warning":472}],316:[function(require,module,exports){
+},{"./CSSProperty":438,"./ReactPerf":508,"./dangerousStyleValue":545,"_process":299,"fbjs/lib/ExecutionEnvironment":571,"fbjs/lib/camelizeStyleName":573,"fbjs/lib/hyphenateStyleName":584,"fbjs/lib/memoizeStringOnly":591,"fbjs/lib/warning":596}],440:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -22445,7 +27599,7 @@ PooledClass.addPoolingTo(CallbackQueue);
 
 module.exports = CallbackQueue;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./PooledClass":334,"_process":301,"fbjs/lib/invariant":461}],317:[function(require,module,exports){
+},{"./Object.assign":457,"./PooledClass":458,"_process":299,"fbjs/lib/invariant":585}],441:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -22767,7 +27921,7 @@ var ChangeEventPlugin = {
 };
 
 module.exports = ChangeEventPlugin;
-},{"./EventConstants":325,"./EventPluginHub":326,"./EventPropagators":329,"./ReactUpdates":399,"./SyntheticEvent":408,"./getEventTarget":430,"./isEventSupported":435,"./isTextInputElement":436,"fbjs/lib/ExecutionEnvironment":447,"fbjs/lib/keyOf":465}],318:[function(require,module,exports){
+},{"./EventConstants":449,"./EventPluginHub":450,"./EventPropagators":453,"./ReactUpdates":523,"./SyntheticEvent":532,"./getEventTarget":554,"./isEventSupported":559,"./isTextInputElement":560,"fbjs/lib/ExecutionEnvironment":571,"fbjs/lib/keyOf":589}],442:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -22791,7 +27945,7 @@ var ClientReactRootIndex = {
 };
 
 module.exports = ClientReactRootIndex;
-},{}],319:[function(require,module,exports){
+},{}],443:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -22923,7 +28077,7 @@ ReactPerf.measureMethods(DOMChildrenOperations, 'DOMChildrenOperations', {
 
 module.exports = DOMChildrenOperations;
 }).call(this,require('_process'))
-},{"./Danger":322,"./ReactMultiChildUpdateTypes":380,"./ReactPerf":384,"./setInnerHTML":440,"./setTextContent":441,"_process":301,"fbjs/lib/invariant":461}],320:[function(require,module,exports){
+},{"./Danger":446,"./ReactMultiChildUpdateTypes":504,"./ReactPerf":508,"./setInnerHTML":564,"./setTextContent":565,"_process":299,"fbjs/lib/invariant":585}],444:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -23160,7 +28314,7 @@ var DOMProperty = {
 
 module.exports = DOMProperty;
 }).call(this,require('_process'))
-},{"_process":301,"fbjs/lib/invariant":461}],321:[function(require,module,exports){
+},{"_process":299,"fbjs/lib/invariant":585}],445:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -23388,7 +28542,7 @@ ReactPerf.measureMethods(DOMPropertyOperations, 'DOMPropertyOperations', {
 
 module.exports = DOMPropertyOperations;
 }).call(this,require('_process'))
-},{"./DOMProperty":320,"./ReactPerf":384,"./quoteAttributeValueForBrowser":438,"_process":301,"fbjs/lib/warning":472}],322:[function(require,module,exports){
+},{"./DOMProperty":444,"./ReactPerf":508,"./quoteAttributeValueForBrowser":562,"_process":299,"fbjs/lib/warning":596}],446:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -23536,7 +28690,7 @@ var Danger = {
 
 module.exports = Danger;
 }).call(this,require('_process'))
-},{"_process":301,"fbjs/lib/ExecutionEnvironment":447,"fbjs/lib/createNodesFromMarkup":452,"fbjs/lib/emptyFunction":453,"fbjs/lib/getMarkupWrap":457,"fbjs/lib/invariant":461}],323:[function(require,module,exports){
+},{"_process":299,"fbjs/lib/ExecutionEnvironment":571,"fbjs/lib/createNodesFromMarkup":576,"fbjs/lib/emptyFunction":577,"fbjs/lib/getMarkupWrap":581,"fbjs/lib/invariant":585}],447:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -23564,7 +28718,7 @@ var keyOf = require('fbjs/lib/keyOf');
 var DefaultEventPluginOrder = [keyOf({ ResponderEventPlugin: null }), keyOf({ SimpleEventPlugin: null }), keyOf({ TapEventPlugin: null }), keyOf({ EnterLeaveEventPlugin: null }), keyOf({ ChangeEventPlugin: null }), keyOf({ SelectEventPlugin: null }), keyOf({ BeforeInputEventPlugin: null })];
 
 module.exports = DefaultEventPluginOrder;
-},{"fbjs/lib/keyOf":465}],324:[function(require,module,exports){
+},{"fbjs/lib/keyOf":589}],448:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -23689,7 +28843,7 @@ var EnterLeaveEventPlugin = {
 };
 
 module.exports = EnterLeaveEventPlugin;
-},{"./EventConstants":325,"./EventPropagators":329,"./ReactMount":378,"./SyntheticMouseEvent":412,"fbjs/lib/keyOf":465}],325:[function(require,module,exports){
+},{"./EventConstants":449,"./EventPropagators":453,"./ReactMount":502,"./SyntheticMouseEvent":536,"fbjs/lib/keyOf":589}],449:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -23782,7 +28936,7 @@ var EventConstants = {
 };
 
 module.exports = EventConstants;
-},{"fbjs/lib/keyMirror":464}],326:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":588}],450:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -24064,7 +29218,7 @@ var EventPluginHub = {
 
 module.exports = EventPluginHub;
 }).call(this,require('_process'))
-},{"./EventPluginRegistry":327,"./EventPluginUtils":328,"./ReactErrorUtils":369,"./accumulateInto":418,"./forEachAccumulated":426,"_process":301,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],327:[function(require,module,exports){
+},{"./EventPluginRegistry":451,"./EventPluginUtils":452,"./ReactErrorUtils":493,"./accumulateInto":542,"./forEachAccumulated":550,"_process":299,"fbjs/lib/invariant":585,"fbjs/lib/warning":596}],451:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -24287,7 +29441,7 @@ var EventPluginRegistry = {
 
 module.exports = EventPluginRegistry;
 }).call(this,require('_process'))
-},{"_process":301,"fbjs/lib/invariant":461}],328:[function(require,module,exports){
+},{"_process":299,"fbjs/lib/invariant":585}],452:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -24492,7 +29646,7 @@ var EventPluginUtils = {
 
 module.exports = EventPluginUtils;
 }).call(this,require('_process'))
-},{"./EventConstants":325,"./ReactErrorUtils":369,"_process":301,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],329:[function(require,module,exports){
+},{"./EventConstants":449,"./ReactErrorUtils":493,"_process":299,"fbjs/lib/invariant":585,"fbjs/lib/warning":596}],453:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -24630,7 +29784,7 @@ var EventPropagators = {
 
 module.exports = EventPropagators;
 }).call(this,require('_process'))
-},{"./EventConstants":325,"./EventPluginHub":326,"./accumulateInto":418,"./forEachAccumulated":426,"_process":301,"fbjs/lib/warning":472}],330:[function(require,module,exports){
+},{"./EventConstants":449,"./EventPluginHub":450,"./accumulateInto":542,"./forEachAccumulated":550,"_process":299,"fbjs/lib/warning":596}],454:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -24726,7 +29880,7 @@ assign(FallbackCompositionState.prototype, {
 PooledClass.addPoolingTo(FallbackCompositionState);
 
 module.exports = FallbackCompositionState;
-},{"./Object.assign":333,"./PooledClass":334,"./getTextContentAccessor":433}],331:[function(require,module,exports){
+},{"./Object.assign":457,"./PooledClass":458,"./getTextContentAccessor":557}],455:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -24957,7 +30111,7 @@ var HTMLDOMPropertyConfig = {
 };
 
 module.exports = HTMLDOMPropertyConfig;
-},{"./DOMProperty":320,"fbjs/lib/ExecutionEnvironment":447}],332:[function(require,module,exports){
+},{"./DOMProperty":444,"fbjs/lib/ExecutionEnvironment":571}],456:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -25094,7 +30248,7 @@ var LinkedValueUtils = {
 
 module.exports = LinkedValueUtils;
 }).call(this,require('_process'))
-},{"./ReactPropTypeLocations":386,"./ReactPropTypes":387,"_process":301,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],333:[function(require,module,exports){
+},{"./ReactPropTypeLocations":510,"./ReactPropTypes":511,"_process":299,"fbjs/lib/invariant":585,"fbjs/lib/warning":596}],457:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -25142,7 +30296,7 @@ function assign(target, sources) {
 }
 
 module.exports = assign;
-},{}],334:[function(require,module,exports){
+},{}],458:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -25264,7 +30418,7 @@ var PooledClass = {
 
 module.exports = PooledClass;
 }).call(this,require('_process'))
-},{"_process":301,"fbjs/lib/invariant":461}],335:[function(require,module,exports){
+},{"_process":299,"fbjs/lib/invariant":585}],459:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -25305,7 +30459,7 @@ React.__SECRET_DOM_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = ReactDOM;
 React.__SECRET_DOM_SERVER_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = ReactDOMServer;
 
 module.exports = React;
-},{"./Object.assign":333,"./ReactDOM":348,"./ReactDOMServer":358,"./ReactIsomorphic":376,"./deprecated":422}],336:[function(require,module,exports){
+},{"./Object.assign":457,"./ReactDOM":472,"./ReactDOMServer":482,"./ReactIsomorphic":500,"./deprecated":546}],460:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -25344,7 +30498,7 @@ var ReactBrowserComponentMixin = {
 
 module.exports = ReactBrowserComponentMixin;
 }).call(this,require('_process'))
-},{"./ReactInstanceMap":375,"./findDOMNode":424,"_process":301,"fbjs/lib/warning":472}],337:[function(require,module,exports){
+},{"./ReactInstanceMap":499,"./findDOMNode":548,"_process":299,"fbjs/lib/warning":596}],461:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -25669,7 +30823,7 @@ ReactPerf.measureMethods(ReactBrowserEventEmitter, 'ReactBrowserEventEmitter', {
 });
 
 module.exports = ReactBrowserEventEmitter;
-},{"./EventConstants":325,"./EventPluginHub":326,"./EventPluginRegistry":327,"./Object.assign":333,"./ReactEventEmitterMixin":370,"./ReactPerf":384,"./ViewportMetrics":417,"./isEventSupported":435}],338:[function(require,module,exports){
+},{"./EventConstants":449,"./EventPluginHub":450,"./EventPluginRegistry":451,"./Object.assign":457,"./ReactEventEmitterMixin":494,"./ReactPerf":508,"./ViewportMetrics":541,"./isEventSupported":559}],462:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -25753,7 +30907,7 @@ var ReactCSSTransitionGroup = React.createClass({
 });
 
 module.exports = ReactCSSTransitionGroup;
-},{"./Object.assign":333,"./React":335,"./ReactCSSTransitionGroupChild":339,"./ReactTransitionGroup":397}],339:[function(require,module,exports){
+},{"./Object.assign":457,"./React":459,"./ReactCSSTransitionGroupChild":463,"./ReactTransitionGroup":521}],463:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -25919,7 +31073,7 @@ var ReactCSSTransitionGroupChild = React.createClass({
 });
 
 module.exports = ReactCSSTransitionGroupChild;
-},{"./React":335,"./ReactDOM":348,"./ReactTransitionEvents":396,"./onlyChild":437,"fbjs/lib/CSSCore":445}],340:[function(require,module,exports){
+},{"./React":459,"./ReactDOM":472,"./ReactTransitionEvents":520,"./onlyChild":561,"fbjs/lib/CSSCore":569}],464:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -26044,7 +31198,7 @@ var ReactChildReconciler = {
 
 module.exports = ReactChildReconciler;
 }).call(this,require('_process'))
-},{"./ReactReconciler":389,"./instantiateReactComponent":434,"./shouldUpdateReactComponent":442,"./traverseAllChildren":443,"_process":301,"fbjs/lib/warning":472}],341:[function(require,module,exports){
+},{"./ReactReconciler":513,"./instantiateReactComponent":558,"./shouldUpdateReactComponent":566,"./traverseAllChildren":567,"_process":299,"fbjs/lib/warning":596}],465:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -26227,7 +31381,7 @@ var ReactChildren = {
 };
 
 module.exports = ReactChildren;
-},{"./PooledClass":334,"./ReactElement":365,"./traverseAllChildren":443,"fbjs/lib/emptyFunction":453}],342:[function(require,module,exports){
+},{"./PooledClass":458,"./ReactElement":489,"./traverseAllChildren":567,"fbjs/lib/emptyFunction":577}],466:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -27001,7 +32155,7 @@ var ReactClass = {
 
 module.exports = ReactClass;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./ReactComponent":343,"./ReactElement":365,"./ReactNoopUpdateQueue":382,"./ReactPropTypeLocationNames":385,"./ReactPropTypeLocations":386,"_process":301,"fbjs/lib/emptyObject":454,"fbjs/lib/invariant":461,"fbjs/lib/keyMirror":464,"fbjs/lib/keyOf":465,"fbjs/lib/warning":472}],343:[function(require,module,exports){
+},{"./Object.assign":457,"./ReactComponent":467,"./ReactElement":489,"./ReactNoopUpdateQueue":506,"./ReactPropTypeLocationNames":509,"./ReactPropTypeLocations":510,"_process":299,"fbjs/lib/emptyObject":578,"fbjs/lib/invariant":585,"fbjs/lib/keyMirror":588,"fbjs/lib/keyOf":589,"fbjs/lib/warning":596}],467:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -27126,7 +32280,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactComponent;
 }).call(this,require('_process'))
-},{"./ReactNoopUpdateQueue":382,"./canDefineProperty":420,"_process":301,"fbjs/lib/emptyObject":454,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],344:[function(require,module,exports){
+},{"./ReactNoopUpdateQueue":506,"./canDefineProperty":544,"_process":299,"fbjs/lib/emptyObject":578,"fbjs/lib/invariant":585,"fbjs/lib/warning":596}],468:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -27168,7 +32322,7 @@ var ReactComponentBrowserEnvironment = {
 };
 
 module.exports = ReactComponentBrowserEnvironment;
-},{"./ReactDOMIDOperations":353,"./ReactMount":378}],345:[function(require,module,exports){
+},{"./ReactDOMIDOperations":477,"./ReactMount":502}],469:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -27222,7 +32376,7 @@ var ReactComponentEnvironment = {
 
 module.exports = ReactComponentEnvironment;
 }).call(this,require('_process'))
-},{"_process":301,"fbjs/lib/invariant":461}],346:[function(require,module,exports){
+},{"_process":299,"fbjs/lib/invariant":585}],470:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -27919,7 +33073,7 @@ var ReactCompositeComponent = {
 
 module.exports = ReactCompositeComponent;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./ReactComponentEnvironment":345,"./ReactCurrentOwner":347,"./ReactElement":365,"./ReactInstanceMap":375,"./ReactPerf":384,"./ReactPropTypeLocationNames":385,"./ReactPropTypeLocations":386,"./ReactReconciler":389,"./ReactUpdateQueue":398,"./shouldUpdateReactComponent":442,"_process":301,"fbjs/lib/emptyObject":454,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],347:[function(require,module,exports){
+},{"./Object.assign":457,"./ReactComponentEnvironment":469,"./ReactCurrentOwner":471,"./ReactElement":489,"./ReactInstanceMap":499,"./ReactPerf":508,"./ReactPropTypeLocationNames":509,"./ReactPropTypeLocations":510,"./ReactReconciler":513,"./ReactUpdateQueue":522,"./shouldUpdateReactComponent":566,"_process":299,"fbjs/lib/emptyObject":578,"fbjs/lib/invariant":585,"fbjs/lib/warning":596}],471:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -27950,7 +33104,7 @@ var ReactCurrentOwner = {
 };
 
 module.exports = ReactCurrentOwner;
-},{}],348:[function(require,module,exports){
+},{}],472:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -28045,7 +33199,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = React;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":347,"./ReactDOMTextComponent":359,"./ReactDefaultInjection":362,"./ReactInstanceHandles":374,"./ReactMount":378,"./ReactPerf":384,"./ReactReconciler":389,"./ReactUpdates":399,"./ReactVersion":400,"./findDOMNode":424,"./renderSubtreeIntoContainer":439,"_process":301,"fbjs/lib/ExecutionEnvironment":447,"fbjs/lib/warning":472}],349:[function(require,module,exports){
+},{"./ReactCurrentOwner":471,"./ReactDOMTextComponent":483,"./ReactDefaultInjection":486,"./ReactInstanceHandles":498,"./ReactMount":502,"./ReactPerf":508,"./ReactReconciler":513,"./ReactUpdates":523,"./ReactVersion":524,"./findDOMNode":548,"./renderSubtreeIntoContainer":563,"_process":299,"fbjs/lib/ExecutionEnvironment":571,"fbjs/lib/warning":596}],473:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -28096,7 +33250,7 @@ var ReactDOMButton = {
 };
 
 module.exports = ReactDOMButton;
-},{}],350:[function(require,module,exports){
+},{}],474:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -29061,7 +34215,7 @@ assign(ReactDOMComponent.prototype, ReactDOMComponent.Mixin, ReactMultiChild.Mix
 
 module.exports = ReactDOMComponent;
 }).call(this,require('_process'))
-},{"./AutoFocusUtils":312,"./CSSPropertyOperations":315,"./DOMProperty":320,"./DOMPropertyOperations":321,"./EventConstants":325,"./Object.assign":333,"./ReactBrowserEventEmitter":337,"./ReactComponentBrowserEnvironment":344,"./ReactDOMButton":349,"./ReactDOMInput":354,"./ReactDOMOption":355,"./ReactDOMSelect":356,"./ReactDOMTextarea":360,"./ReactMount":378,"./ReactMultiChild":379,"./ReactPerf":384,"./ReactUpdateQueue":398,"./canDefineProperty":420,"./escapeTextContentForBrowser":423,"./isEventSupported":435,"./setInnerHTML":440,"./setTextContent":441,"./validateDOMNesting":444,"_process":301,"fbjs/lib/invariant":461,"fbjs/lib/keyOf":465,"fbjs/lib/shallowEqual":470,"fbjs/lib/warning":472}],351:[function(require,module,exports){
+},{"./AutoFocusUtils":436,"./CSSPropertyOperations":439,"./DOMProperty":444,"./DOMPropertyOperations":445,"./EventConstants":449,"./Object.assign":457,"./ReactBrowserEventEmitter":461,"./ReactComponentBrowserEnvironment":468,"./ReactDOMButton":473,"./ReactDOMInput":478,"./ReactDOMOption":479,"./ReactDOMSelect":480,"./ReactDOMTextarea":484,"./ReactMount":502,"./ReactMultiChild":503,"./ReactPerf":508,"./ReactUpdateQueue":522,"./canDefineProperty":544,"./escapeTextContentForBrowser":547,"./isEventSupported":559,"./setInnerHTML":564,"./setTextContent":565,"./validateDOMNesting":568,"_process":299,"fbjs/lib/invariant":585,"fbjs/lib/keyOf":589,"fbjs/lib/shallowEqual":594,"fbjs/lib/warning":596}],475:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -29241,7 +34395,7 @@ var ReactDOMFactories = mapObject({
 
 module.exports = ReactDOMFactories;
 }).call(this,require('_process'))
-},{"./ReactElement":365,"./ReactElementValidator":366,"_process":301,"fbjs/lib/mapObject":466}],352:[function(require,module,exports){
+},{"./ReactElement":489,"./ReactElementValidator":490,"_process":299,"fbjs/lib/mapObject":590}],476:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -29260,7 +34414,7 @@ var ReactDOMFeatureFlags = {
 };
 
 module.exports = ReactDOMFeatureFlags;
-},{}],353:[function(require,module,exports){
+},{}],477:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -29357,7 +34511,7 @@ ReactPerf.measureMethods(ReactDOMIDOperations, 'ReactDOMIDOperations', {
 
 module.exports = ReactDOMIDOperations;
 }).call(this,require('_process'))
-},{"./DOMChildrenOperations":319,"./DOMPropertyOperations":321,"./ReactMount":378,"./ReactPerf":384,"_process":301,"fbjs/lib/invariant":461}],354:[function(require,module,exports){
+},{"./DOMChildrenOperations":443,"./DOMPropertyOperations":445,"./ReactMount":502,"./ReactPerf":508,"_process":299,"fbjs/lib/invariant":585}],478:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -29513,7 +34667,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMInput;
 }).call(this,require('_process'))
-},{"./LinkedValueUtils":332,"./Object.assign":333,"./ReactDOMIDOperations":353,"./ReactMount":378,"./ReactUpdates":399,"_process":301,"fbjs/lib/invariant":461}],355:[function(require,module,exports){
+},{"./LinkedValueUtils":456,"./Object.assign":457,"./ReactDOMIDOperations":477,"./ReactMount":502,"./ReactUpdates":523,"_process":299,"fbjs/lib/invariant":585}],479:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -29605,7 +34759,7 @@ var ReactDOMOption = {
 
 module.exports = ReactDOMOption;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./ReactChildren":341,"./ReactDOMSelect":356,"_process":301,"fbjs/lib/warning":472}],356:[function(require,module,exports){
+},{"./Object.assign":457,"./ReactChildren":465,"./ReactDOMSelect":480,"_process":299,"fbjs/lib/warning":596}],480:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -29796,7 +34950,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMSelect;
 }).call(this,require('_process'))
-},{"./LinkedValueUtils":332,"./Object.assign":333,"./ReactMount":378,"./ReactUpdates":399,"_process":301,"fbjs/lib/warning":472}],357:[function(require,module,exports){
+},{"./LinkedValueUtils":456,"./Object.assign":457,"./ReactMount":502,"./ReactUpdates":523,"_process":299,"fbjs/lib/warning":596}],481:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30009,7 +35163,7 @@ var ReactDOMSelection = {
 };
 
 module.exports = ReactDOMSelection;
-},{"./getNodeForCharacterOffset":432,"./getTextContentAccessor":433,"fbjs/lib/ExecutionEnvironment":447}],358:[function(require,module,exports){
+},{"./getNodeForCharacterOffset":556,"./getTextContentAccessor":557,"fbjs/lib/ExecutionEnvironment":571}],482:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30036,7 +35190,7 @@ var ReactDOMServer = {
 };
 
 module.exports = ReactDOMServer;
-},{"./ReactDefaultInjection":362,"./ReactServerRendering":393,"./ReactVersion":400}],359:[function(require,module,exports){
+},{"./ReactDefaultInjection":486,"./ReactServerRendering":517,"./ReactVersion":524}],483:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -30166,7 +35320,7 @@ assign(ReactDOMTextComponent.prototype, {
 
 module.exports = ReactDOMTextComponent;
 }).call(this,require('_process'))
-},{"./DOMChildrenOperations":319,"./DOMPropertyOperations":321,"./Object.assign":333,"./ReactComponentBrowserEnvironment":344,"./ReactMount":378,"./escapeTextContentForBrowser":423,"./setTextContent":441,"./validateDOMNesting":444,"_process":301}],360:[function(require,module,exports){
+},{"./DOMChildrenOperations":443,"./DOMPropertyOperations":445,"./Object.assign":457,"./ReactComponentBrowserEnvironment":468,"./ReactMount":502,"./escapeTextContentForBrowser":547,"./setTextContent":565,"./validateDOMNesting":568,"_process":299}],484:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -30282,7 +35436,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMTextarea;
 }).call(this,require('_process'))
-},{"./LinkedValueUtils":332,"./Object.assign":333,"./ReactDOMIDOperations":353,"./ReactUpdates":399,"_process":301,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],361:[function(require,module,exports){
+},{"./LinkedValueUtils":456,"./Object.assign":457,"./ReactDOMIDOperations":477,"./ReactUpdates":523,"_process":299,"fbjs/lib/invariant":585,"fbjs/lib/warning":596}],485:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30350,7 +35504,7 @@ var ReactDefaultBatchingStrategy = {
 };
 
 module.exports = ReactDefaultBatchingStrategy;
-},{"./Object.assign":333,"./ReactUpdates":399,"./Transaction":416,"fbjs/lib/emptyFunction":453}],362:[function(require,module,exports){
+},{"./Object.assign":457,"./ReactUpdates":523,"./Transaction":540,"fbjs/lib/emptyFunction":577}],486:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -30450,7 +35604,7 @@ module.exports = {
   inject: inject
 };
 }).call(this,require('_process'))
-},{"./BeforeInputEventPlugin":313,"./ChangeEventPlugin":317,"./ClientReactRootIndex":318,"./DefaultEventPluginOrder":323,"./EnterLeaveEventPlugin":324,"./HTMLDOMPropertyConfig":331,"./ReactBrowserComponentMixin":336,"./ReactComponentBrowserEnvironment":344,"./ReactDOMComponent":350,"./ReactDOMTextComponent":359,"./ReactDefaultBatchingStrategy":361,"./ReactDefaultPerf":363,"./ReactEventListener":371,"./ReactInjection":372,"./ReactInstanceHandles":374,"./ReactMount":378,"./ReactReconcileTransaction":388,"./SVGDOMPropertyConfig":401,"./SelectEventPlugin":402,"./ServerReactRootIndex":403,"./SimpleEventPlugin":404,"_process":301,"fbjs/lib/ExecutionEnvironment":447}],363:[function(require,module,exports){
+},{"./BeforeInputEventPlugin":437,"./ChangeEventPlugin":441,"./ClientReactRootIndex":442,"./DefaultEventPluginOrder":447,"./EnterLeaveEventPlugin":448,"./HTMLDOMPropertyConfig":455,"./ReactBrowserComponentMixin":460,"./ReactComponentBrowserEnvironment":468,"./ReactDOMComponent":474,"./ReactDOMTextComponent":483,"./ReactDefaultBatchingStrategy":485,"./ReactDefaultPerf":487,"./ReactEventListener":495,"./ReactInjection":496,"./ReactInstanceHandles":498,"./ReactMount":502,"./ReactReconcileTransaction":512,"./SVGDOMPropertyConfig":525,"./SelectEventPlugin":526,"./ServerReactRootIndex":527,"./SimpleEventPlugin":528,"_process":299,"fbjs/lib/ExecutionEnvironment":571}],487:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30688,7 +35842,7 @@ var ReactDefaultPerf = {
 };
 
 module.exports = ReactDefaultPerf;
-},{"./DOMProperty":320,"./ReactDefaultPerfAnalysis":364,"./ReactMount":378,"./ReactPerf":384,"fbjs/lib/performanceNow":469}],364:[function(require,module,exports){
+},{"./DOMProperty":444,"./ReactDefaultPerfAnalysis":488,"./ReactMount":502,"./ReactPerf":508,"fbjs/lib/performanceNow":593}],488:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30890,7 +36044,7 @@ var ReactDefaultPerfAnalysis = {
 };
 
 module.exports = ReactDefaultPerfAnalysis;
-},{"./Object.assign":333}],365:[function(require,module,exports){
+},{"./Object.assign":457}],489:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -31140,7 +36294,7 @@ ReactElement.isValidElement = function (object) {
 
 module.exports = ReactElement;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./ReactCurrentOwner":347,"./canDefineProperty":420,"_process":301}],366:[function(require,module,exports){
+},{"./Object.assign":457,"./ReactCurrentOwner":471,"./canDefineProperty":544,"_process":299}],490:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -31424,7 +36578,7 @@ var ReactElementValidator = {
 
 module.exports = ReactElementValidator;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":347,"./ReactElement":365,"./ReactPropTypeLocationNames":385,"./ReactPropTypeLocations":386,"./canDefineProperty":420,"./getIteratorFn":431,"_process":301,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],367:[function(require,module,exports){
+},{"./ReactCurrentOwner":471,"./ReactElement":489,"./ReactPropTypeLocationNames":509,"./ReactPropTypeLocations":510,"./canDefineProperty":544,"./getIteratorFn":555,"_process":299,"fbjs/lib/invariant":585,"fbjs/lib/warning":596}],491:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -31476,7 +36630,7 @@ assign(ReactEmptyComponent.prototype, {
 ReactEmptyComponent.injection = ReactEmptyComponentInjection;
 
 module.exports = ReactEmptyComponent;
-},{"./Object.assign":333,"./ReactElement":365,"./ReactEmptyComponentRegistry":368,"./ReactReconciler":389}],368:[function(require,module,exports){
+},{"./Object.assign":457,"./ReactElement":489,"./ReactEmptyComponentRegistry":492,"./ReactReconciler":513}],492:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -31525,7 +36679,7 @@ var ReactEmptyComponentRegistry = {
 };
 
 module.exports = ReactEmptyComponentRegistry;
-},{}],369:[function(require,module,exports){
+},{}],493:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -31605,7 +36759,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactErrorUtils;
 }).call(this,require('_process'))
-},{"_process":301}],370:[function(require,module,exports){
+},{"_process":299}],494:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -31644,7 +36798,7 @@ var ReactEventEmitterMixin = {
 };
 
 module.exports = ReactEventEmitterMixin;
-},{"./EventPluginHub":326}],371:[function(require,module,exports){
+},{"./EventPluginHub":450}],495:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -31856,7 +37010,7 @@ var ReactEventListener = {
 };
 
 module.exports = ReactEventListener;
-},{"./Object.assign":333,"./PooledClass":334,"./ReactInstanceHandles":374,"./ReactMount":378,"./ReactUpdates":399,"./getEventTarget":430,"fbjs/lib/EventListener":446,"fbjs/lib/ExecutionEnvironment":447,"fbjs/lib/getUnboundedScrollPosition":458}],372:[function(require,module,exports){
+},{"./Object.assign":457,"./PooledClass":458,"./ReactInstanceHandles":498,"./ReactMount":502,"./ReactUpdates":523,"./getEventTarget":554,"fbjs/lib/EventListener":570,"fbjs/lib/ExecutionEnvironment":571,"fbjs/lib/getUnboundedScrollPosition":582}],496:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -31895,7 +37049,7 @@ var ReactInjection = {
 };
 
 module.exports = ReactInjection;
-},{"./DOMProperty":320,"./EventPluginHub":326,"./ReactBrowserEventEmitter":337,"./ReactClass":342,"./ReactComponentEnvironment":345,"./ReactEmptyComponent":367,"./ReactNativeComponent":381,"./ReactPerf":384,"./ReactRootIndex":391,"./ReactUpdates":399}],373:[function(require,module,exports){
+},{"./DOMProperty":444,"./EventPluginHub":450,"./ReactBrowserEventEmitter":461,"./ReactClass":466,"./ReactComponentEnvironment":469,"./ReactEmptyComponent":491,"./ReactNativeComponent":505,"./ReactPerf":508,"./ReactRootIndex":515,"./ReactUpdates":523}],497:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -32020,7 +37174,7 @@ var ReactInputSelection = {
 };
 
 module.exports = ReactInputSelection;
-},{"./ReactDOMSelection":357,"fbjs/lib/containsNode":450,"fbjs/lib/focusNode":455,"fbjs/lib/getActiveElement":456}],374:[function(require,module,exports){
+},{"./ReactDOMSelection":481,"fbjs/lib/containsNode":574,"fbjs/lib/focusNode":579,"fbjs/lib/getActiveElement":580}],498:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -32325,7 +37479,7 @@ var ReactInstanceHandles = {
 
 module.exports = ReactInstanceHandles;
 }).call(this,require('_process'))
-},{"./ReactRootIndex":391,"_process":301,"fbjs/lib/invariant":461}],375:[function(require,module,exports){
+},{"./ReactRootIndex":515,"_process":299,"fbjs/lib/invariant":585}],499:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -32373,7 +37527,7 @@ var ReactInstanceMap = {
 };
 
 module.exports = ReactInstanceMap;
-},{}],376:[function(require,module,exports){
+},{}],500:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -32450,7 +37604,7 @@ var React = {
 
 module.exports = React;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./ReactChildren":341,"./ReactClass":342,"./ReactComponent":343,"./ReactDOMFactories":351,"./ReactElement":365,"./ReactElementValidator":366,"./ReactPropTypes":387,"./ReactVersion":400,"./onlyChild":437,"_process":301}],377:[function(require,module,exports){
+},{"./Object.assign":457,"./ReactChildren":465,"./ReactClass":466,"./ReactComponent":467,"./ReactDOMFactories":475,"./ReactElement":489,"./ReactElementValidator":490,"./ReactPropTypes":511,"./ReactVersion":524,"./onlyChild":561,"_process":299}],501:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -32496,7 +37650,7 @@ var ReactMarkupChecksum = {
 };
 
 module.exports = ReactMarkupChecksum;
-},{"./adler32":419}],378:[function(require,module,exports){
+},{"./adler32":543}],502:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -33349,7 +38503,7 @@ ReactPerf.measureMethods(ReactMount, 'ReactMount', {
 
 module.exports = ReactMount;
 }).call(this,require('_process'))
-},{"./DOMProperty":320,"./Object.assign":333,"./ReactBrowserEventEmitter":337,"./ReactCurrentOwner":347,"./ReactDOMFeatureFlags":352,"./ReactElement":365,"./ReactEmptyComponentRegistry":368,"./ReactInstanceHandles":374,"./ReactInstanceMap":375,"./ReactMarkupChecksum":377,"./ReactPerf":384,"./ReactReconciler":389,"./ReactUpdateQueue":398,"./ReactUpdates":399,"./instantiateReactComponent":434,"./setInnerHTML":440,"./shouldUpdateReactComponent":442,"./validateDOMNesting":444,"_process":301,"fbjs/lib/containsNode":450,"fbjs/lib/emptyObject":454,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],379:[function(require,module,exports){
+},{"./DOMProperty":444,"./Object.assign":457,"./ReactBrowserEventEmitter":461,"./ReactCurrentOwner":471,"./ReactDOMFeatureFlags":476,"./ReactElement":489,"./ReactEmptyComponentRegistry":492,"./ReactInstanceHandles":498,"./ReactInstanceMap":499,"./ReactMarkupChecksum":501,"./ReactPerf":508,"./ReactReconciler":513,"./ReactUpdateQueue":522,"./ReactUpdates":523,"./instantiateReactComponent":558,"./setInnerHTML":564,"./shouldUpdateReactComponent":566,"./validateDOMNesting":568,"_process":299,"fbjs/lib/containsNode":574,"fbjs/lib/emptyObject":578,"fbjs/lib/invariant":585,"fbjs/lib/warning":596}],503:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -33848,7 +39002,7 @@ var ReactMultiChild = {
 
 module.exports = ReactMultiChild;
 }).call(this,require('_process'))
-},{"./ReactChildReconciler":340,"./ReactComponentEnvironment":345,"./ReactCurrentOwner":347,"./ReactMultiChildUpdateTypes":380,"./ReactReconciler":389,"./flattenChildren":425,"_process":301}],380:[function(require,module,exports){
+},{"./ReactChildReconciler":464,"./ReactComponentEnvironment":469,"./ReactCurrentOwner":471,"./ReactMultiChildUpdateTypes":504,"./ReactReconciler":513,"./flattenChildren":549,"_process":299}],504:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -33881,7 +39035,7 @@ var ReactMultiChildUpdateTypes = keyMirror({
 });
 
 module.exports = ReactMultiChildUpdateTypes;
-},{"fbjs/lib/keyMirror":464}],381:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":588}],505:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -33978,7 +39132,7 @@ var ReactNativeComponent = {
 
 module.exports = ReactNativeComponent;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"_process":301,"fbjs/lib/invariant":461}],382:[function(require,module,exports){
+},{"./Object.assign":457,"_process":299,"fbjs/lib/invariant":585}],506:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015, Facebook, Inc.
@@ -34099,7 +39253,7 @@ var ReactNoopUpdateQueue = {
 
 module.exports = ReactNoopUpdateQueue;
 }).call(this,require('_process'))
-},{"_process":301,"fbjs/lib/warning":472}],383:[function(require,module,exports){
+},{"_process":299,"fbjs/lib/warning":596}],507:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -34193,7 +39347,7 @@ var ReactOwner = {
 
 module.exports = ReactOwner;
 }).call(this,require('_process'))
-},{"_process":301,"fbjs/lib/invariant":461}],384:[function(require,module,exports){
+},{"_process":299,"fbjs/lib/invariant":585}],508:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -34292,7 +39446,7 @@ function _noMeasure(objName, fnName, func) {
 
 module.exports = ReactPerf;
 }).call(this,require('_process'))
-},{"_process":301}],385:[function(require,module,exports){
+},{"_process":299}],509:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -34319,7 +39473,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactPropTypeLocationNames;
 }).call(this,require('_process'))
-},{"_process":301}],386:[function(require,module,exports){
+},{"_process":299}],510:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -34342,7 +39496,7 @@ var ReactPropTypeLocations = keyMirror({
 });
 
 module.exports = ReactPropTypeLocations;
-},{"fbjs/lib/keyMirror":464}],387:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":588}],511:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -34699,7 +39853,7 @@ function getClassName(propValue) {
 }
 
 module.exports = ReactPropTypes;
-},{"./ReactElement":365,"./ReactPropTypeLocationNames":385,"./getIteratorFn":431,"fbjs/lib/emptyFunction":453}],388:[function(require,module,exports){
+},{"./ReactElement":489,"./ReactPropTypeLocationNames":509,"./getIteratorFn":555,"fbjs/lib/emptyFunction":577}],512:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -34851,7 +40005,7 @@ assign(ReactReconcileTransaction.prototype, Transaction.Mixin, Mixin);
 PooledClass.addPoolingTo(ReactReconcileTransaction);
 
 module.exports = ReactReconcileTransaction;
-},{"./CallbackQueue":316,"./Object.assign":333,"./PooledClass":334,"./ReactBrowserEventEmitter":337,"./ReactDOMFeatureFlags":352,"./ReactInputSelection":373,"./Transaction":416}],389:[function(require,module,exports){
+},{"./CallbackQueue":440,"./Object.assign":457,"./PooledClass":458,"./ReactBrowserEventEmitter":461,"./ReactDOMFeatureFlags":476,"./ReactInputSelection":497,"./Transaction":540}],513:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -34959,7 +40113,7 @@ var ReactReconciler = {
 };
 
 module.exports = ReactReconciler;
-},{"./ReactRef":390}],390:[function(require,module,exports){
+},{"./ReactRef":514}],514:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -35038,7 +40192,7 @@ ReactRef.detachRefs = function (instance, element) {
 };
 
 module.exports = ReactRef;
-},{"./ReactOwner":383}],391:[function(require,module,exports){
+},{"./ReactOwner":507}],515:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -35068,7 +40222,7 @@ var ReactRootIndex = {
 };
 
 module.exports = ReactRootIndex;
-},{}],392:[function(require,module,exports){
+},{}],516:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -35092,7 +40246,7 @@ var ReactServerBatchingStrategy = {
 };
 
 module.exports = ReactServerBatchingStrategy;
-},{}],393:[function(require,module,exports){
+},{}],517:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -35178,7 +40332,7 @@ module.exports = {
   renderToStaticMarkup: renderToStaticMarkup
 };
 }).call(this,require('_process'))
-},{"./ReactDefaultBatchingStrategy":361,"./ReactElement":365,"./ReactInstanceHandles":374,"./ReactMarkupChecksum":377,"./ReactServerBatchingStrategy":392,"./ReactServerRenderingTransaction":394,"./ReactUpdates":399,"./instantiateReactComponent":434,"_process":301,"fbjs/lib/emptyObject":454,"fbjs/lib/invariant":461}],394:[function(require,module,exports){
+},{"./ReactDefaultBatchingStrategy":485,"./ReactElement":489,"./ReactInstanceHandles":498,"./ReactMarkupChecksum":501,"./ReactServerBatchingStrategy":516,"./ReactServerRenderingTransaction":518,"./ReactUpdates":523,"./instantiateReactComponent":558,"_process":299,"fbjs/lib/emptyObject":578,"fbjs/lib/invariant":585}],518:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -35266,7 +40420,7 @@ assign(ReactServerRenderingTransaction.prototype, Transaction.Mixin, Mixin);
 PooledClass.addPoolingTo(ReactServerRenderingTransaction);
 
 module.exports = ReactServerRenderingTransaction;
-},{"./CallbackQueue":316,"./Object.assign":333,"./PooledClass":334,"./Transaction":416,"fbjs/lib/emptyFunction":453}],395:[function(require,module,exports){
+},{"./CallbackQueue":440,"./Object.assign":457,"./PooledClass":458,"./Transaction":540,"fbjs/lib/emptyFunction":577}],519:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -35365,7 +40519,7 @@ var ReactTransitionChildMapping = {
 };
 
 module.exports = ReactTransitionChildMapping;
-},{"./flattenChildren":425}],396:[function(require,module,exports){
+},{"./flattenChildren":549}],520:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -35475,7 +40629,7 @@ var ReactTransitionEvents = {
 };
 
 module.exports = ReactTransitionEvents;
-},{"fbjs/lib/ExecutionEnvironment":447}],397:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":571}],521:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -35681,7 +40835,7 @@ var ReactTransitionGroup = React.createClass({
 });
 
 module.exports = ReactTransitionGroup;
-},{"./Object.assign":333,"./React":335,"./ReactTransitionChildMapping":395,"fbjs/lib/emptyFunction":453}],398:[function(require,module,exports){
+},{"./Object.assign":457,"./React":459,"./ReactTransitionChildMapping":519,"fbjs/lib/emptyFunction":577}],522:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015, Facebook, Inc.
@@ -35941,7 +41095,7 @@ var ReactUpdateQueue = {
 
 module.exports = ReactUpdateQueue;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./ReactCurrentOwner":347,"./ReactElement":365,"./ReactInstanceMap":375,"./ReactUpdates":399,"_process":301,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],399:[function(require,module,exports){
+},{"./Object.assign":457,"./ReactCurrentOwner":471,"./ReactElement":489,"./ReactInstanceMap":499,"./ReactUpdates":523,"_process":299,"fbjs/lib/invariant":585,"fbjs/lib/warning":596}],523:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -36167,7 +41321,7 @@ var ReactUpdates = {
 
 module.exports = ReactUpdates;
 }).call(this,require('_process'))
-},{"./CallbackQueue":316,"./Object.assign":333,"./PooledClass":334,"./ReactPerf":384,"./ReactReconciler":389,"./Transaction":416,"_process":301,"fbjs/lib/invariant":461}],400:[function(require,module,exports){
+},{"./CallbackQueue":440,"./Object.assign":457,"./PooledClass":458,"./ReactPerf":508,"./ReactReconciler":513,"./Transaction":540,"_process":299,"fbjs/lib/invariant":585}],524:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -36182,7 +41336,7 @@ module.exports = ReactUpdates;
 'use strict';
 
 module.exports = '0.14.7';
-},{}],401:[function(require,module,exports){
+},{}],525:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -36310,7 +41464,7 @@ var SVGDOMPropertyConfig = {
 };
 
 module.exports = SVGDOMPropertyConfig;
-},{"./DOMProperty":320}],402:[function(require,module,exports){
+},{"./DOMProperty":444}],526:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -36512,7 +41666,7 @@ var SelectEventPlugin = {
 };
 
 module.exports = SelectEventPlugin;
-},{"./EventConstants":325,"./EventPropagators":329,"./ReactInputSelection":373,"./SyntheticEvent":408,"./isTextInputElement":436,"fbjs/lib/ExecutionEnvironment":447,"fbjs/lib/getActiveElement":456,"fbjs/lib/keyOf":465,"fbjs/lib/shallowEqual":470}],403:[function(require,module,exports){
+},{"./EventConstants":449,"./EventPropagators":453,"./ReactInputSelection":497,"./SyntheticEvent":532,"./isTextInputElement":560,"fbjs/lib/ExecutionEnvironment":571,"fbjs/lib/getActiveElement":580,"fbjs/lib/keyOf":589,"fbjs/lib/shallowEqual":594}],527:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -36542,7 +41696,7 @@ var ServerReactRootIndex = {
 };
 
 module.exports = ServerReactRootIndex;
-},{}],404:[function(require,module,exports){
+},{}],528:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -37132,7 +42286,7 @@ var SimpleEventPlugin = {
 
 module.exports = SimpleEventPlugin;
 }).call(this,require('_process'))
-},{"./EventConstants":325,"./EventPropagators":329,"./ReactMount":378,"./SyntheticClipboardEvent":405,"./SyntheticDragEvent":407,"./SyntheticEvent":408,"./SyntheticFocusEvent":409,"./SyntheticKeyboardEvent":411,"./SyntheticMouseEvent":412,"./SyntheticTouchEvent":413,"./SyntheticUIEvent":414,"./SyntheticWheelEvent":415,"./getEventCharCode":427,"_process":301,"fbjs/lib/EventListener":446,"fbjs/lib/emptyFunction":453,"fbjs/lib/invariant":461,"fbjs/lib/keyOf":465}],405:[function(require,module,exports){
+},{"./EventConstants":449,"./EventPropagators":453,"./ReactMount":502,"./SyntheticClipboardEvent":529,"./SyntheticDragEvent":531,"./SyntheticEvent":532,"./SyntheticFocusEvent":533,"./SyntheticKeyboardEvent":535,"./SyntheticMouseEvent":536,"./SyntheticTouchEvent":537,"./SyntheticUIEvent":538,"./SyntheticWheelEvent":539,"./getEventCharCode":551,"_process":299,"fbjs/lib/EventListener":570,"fbjs/lib/emptyFunction":577,"fbjs/lib/invariant":585,"fbjs/lib/keyOf":589}],529:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -37172,7 +42326,7 @@ function SyntheticClipboardEvent(dispatchConfig, dispatchMarker, nativeEvent, na
 SyntheticEvent.augmentClass(SyntheticClipboardEvent, ClipboardEventInterface);
 
 module.exports = SyntheticClipboardEvent;
-},{"./SyntheticEvent":408}],406:[function(require,module,exports){
+},{"./SyntheticEvent":532}],530:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -37210,7 +42364,7 @@ function SyntheticCompositionEvent(dispatchConfig, dispatchMarker, nativeEvent, 
 SyntheticEvent.augmentClass(SyntheticCompositionEvent, CompositionEventInterface);
 
 module.exports = SyntheticCompositionEvent;
-},{"./SyntheticEvent":408}],407:[function(require,module,exports){
+},{"./SyntheticEvent":532}],531:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -37248,7 +42402,7 @@ function SyntheticDragEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeE
 SyntheticMouseEvent.augmentClass(SyntheticDragEvent, DragEventInterface);
 
 module.exports = SyntheticDragEvent;
-},{"./SyntheticMouseEvent":412}],408:[function(require,module,exports){
+},{"./SyntheticMouseEvent":536}],532:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -37431,7 +42585,7 @@ PooledClass.addPoolingTo(SyntheticEvent, PooledClass.fourArgumentPooler);
 
 module.exports = SyntheticEvent;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./PooledClass":334,"_process":301,"fbjs/lib/emptyFunction":453,"fbjs/lib/warning":472}],409:[function(require,module,exports){
+},{"./Object.assign":457,"./PooledClass":458,"_process":299,"fbjs/lib/emptyFunction":577,"fbjs/lib/warning":596}],533:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -37469,7 +42623,7 @@ function SyntheticFocusEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticFocusEvent, FocusEventInterface);
 
 module.exports = SyntheticFocusEvent;
-},{"./SyntheticUIEvent":414}],410:[function(require,module,exports){
+},{"./SyntheticUIEvent":538}],534:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -37508,7 +42662,7 @@ function SyntheticInputEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticEvent.augmentClass(SyntheticInputEvent, InputEventInterface);
 
 module.exports = SyntheticInputEvent;
-},{"./SyntheticEvent":408}],411:[function(require,module,exports){
+},{"./SyntheticEvent":532}],535:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -37594,7 +42748,7 @@ function SyntheticKeyboardEvent(dispatchConfig, dispatchMarker, nativeEvent, nat
 SyntheticUIEvent.augmentClass(SyntheticKeyboardEvent, KeyboardEventInterface);
 
 module.exports = SyntheticKeyboardEvent;
-},{"./SyntheticUIEvent":414,"./getEventCharCode":427,"./getEventKey":428,"./getEventModifierState":429}],412:[function(require,module,exports){
+},{"./SyntheticUIEvent":538,"./getEventCharCode":551,"./getEventKey":552,"./getEventModifierState":553}],536:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -37668,7 +42822,7 @@ function SyntheticMouseEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticMouseEvent, MouseEventInterface);
 
 module.exports = SyntheticMouseEvent;
-},{"./SyntheticUIEvent":414,"./ViewportMetrics":417,"./getEventModifierState":429}],413:[function(require,module,exports){
+},{"./SyntheticUIEvent":538,"./ViewportMetrics":541,"./getEventModifierState":553}],537:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -37715,7 +42869,7 @@ function SyntheticTouchEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticTouchEvent, TouchEventInterface);
 
 module.exports = SyntheticTouchEvent;
-},{"./SyntheticUIEvent":414,"./getEventModifierState":429}],414:[function(require,module,exports){
+},{"./SyntheticUIEvent":538,"./getEventModifierState":553}],538:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -37776,7 +42930,7 @@ function SyntheticUIEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeEve
 SyntheticEvent.augmentClass(SyntheticUIEvent, UIEventInterface);
 
 module.exports = SyntheticUIEvent;
-},{"./SyntheticEvent":408,"./getEventTarget":430}],415:[function(require,module,exports){
+},{"./SyntheticEvent":532,"./getEventTarget":554}],539:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -37832,7 +42986,7 @@ function SyntheticWheelEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticMouseEvent.augmentClass(SyntheticWheelEvent, WheelEventInterface);
 
 module.exports = SyntheticWheelEvent;
-},{"./SyntheticMouseEvent":412}],416:[function(require,module,exports){
+},{"./SyntheticMouseEvent":536}],540:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -38066,7 +43220,7 @@ var Transaction = {
 
 module.exports = Transaction;
 }).call(this,require('_process'))
-},{"_process":301,"fbjs/lib/invariant":461}],417:[function(require,module,exports){
+},{"_process":299,"fbjs/lib/invariant":585}],541:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -38094,7 +43248,7 @@ var ViewportMetrics = {
 };
 
 module.exports = ViewportMetrics;
-},{}],418:[function(require,module,exports){
+},{}],542:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -38156,7 +43310,7 @@ function accumulateInto(current, next) {
 
 module.exports = accumulateInto;
 }).call(this,require('_process'))
-},{"_process":301,"fbjs/lib/invariant":461}],419:[function(require,module,exports){
+},{"_process":299,"fbjs/lib/invariant":585}],543:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -38199,7 +43353,7 @@ function adler32(data) {
 }
 
 module.exports = adler32;
-},{}],420:[function(require,module,exports){
+},{}],544:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -38226,7 +43380,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = canDefineProperty;
 }).call(this,require('_process'))
-},{"_process":301}],421:[function(require,module,exports){
+},{"_process":299}],545:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -38282,7 +43436,7 @@ function dangerousStyleValue(name, value) {
 }
 
 module.exports = dangerousStyleValue;
-},{"./CSSProperty":314}],422:[function(require,module,exports){
+},{"./CSSProperty":438}],546:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -38333,7 +43487,7 @@ function deprecated(fnName, newModule, newPackage, ctx, fn) {
 
 module.exports = deprecated;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"_process":301,"fbjs/lib/warning":472}],423:[function(require,module,exports){
+},{"./Object.assign":457,"_process":299,"fbjs/lib/warning":596}],547:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -38372,7 +43526,7 @@ function escapeTextContentForBrowser(text) {
 }
 
 module.exports = escapeTextContentForBrowser;
-},{}],424:[function(require,module,exports){
+},{}],548:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -38424,7 +43578,7 @@ function findDOMNode(componentOrElement) {
 
 module.exports = findDOMNode;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":347,"./ReactInstanceMap":375,"./ReactMount":378,"_process":301,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],425:[function(require,module,exports){
+},{"./ReactCurrentOwner":471,"./ReactInstanceMap":499,"./ReactMount":502,"_process":299,"fbjs/lib/invariant":585,"fbjs/lib/warning":596}],549:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -38475,7 +43629,7 @@ function flattenChildren(children) {
 
 module.exports = flattenChildren;
 }).call(this,require('_process'))
-},{"./traverseAllChildren":443,"_process":301,"fbjs/lib/warning":472}],426:[function(require,module,exports){
+},{"./traverseAllChildren":567,"_process":299,"fbjs/lib/warning":596}],550:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -38505,7 +43659,7 @@ var forEachAccumulated = function (arr, cb, scope) {
 };
 
 module.exports = forEachAccumulated;
-},{}],427:[function(require,module,exports){
+},{}],551:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -38556,7 +43710,7 @@ function getEventCharCode(nativeEvent) {
 }
 
 module.exports = getEventCharCode;
-},{}],428:[function(require,module,exports){
+},{}],552:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -38660,7 +43814,7 @@ function getEventKey(nativeEvent) {
 }
 
 module.exports = getEventKey;
-},{"./getEventCharCode":427}],429:[function(require,module,exports){
+},{"./getEventCharCode":551}],553:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -38705,7 +43859,7 @@ function getEventModifierState(nativeEvent) {
 }
 
 module.exports = getEventModifierState;
-},{}],430:[function(require,module,exports){
+},{}],554:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -38735,7 +43889,7 @@ function getEventTarget(nativeEvent) {
 }
 
 module.exports = getEventTarget;
-},{}],431:[function(require,module,exports){
+},{}],555:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -38776,7 +43930,7 @@ function getIteratorFn(maybeIterable) {
 }
 
 module.exports = getIteratorFn;
-},{}],432:[function(require,module,exports){
+},{}],556:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -38850,7 +44004,7 @@ function getNodeForCharacterOffset(root, offset) {
 }
 
 module.exports = getNodeForCharacterOffset;
-},{}],433:[function(require,module,exports){
+},{}],557:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -38884,7 +44038,7 @@ function getTextContentAccessor() {
 }
 
 module.exports = getTextContentAccessor;
-},{"fbjs/lib/ExecutionEnvironment":447}],434:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":571}],558:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -38999,7 +44153,7 @@ function instantiateReactComponent(node) {
 
 module.exports = instantiateReactComponent;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"./ReactCompositeComponent":346,"./ReactEmptyComponent":367,"./ReactNativeComponent":381,"_process":301,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],435:[function(require,module,exports){
+},{"./Object.assign":457,"./ReactCompositeComponent":470,"./ReactEmptyComponent":491,"./ReactNativeComponent":505,"_process":299,"fbjs/lib/invariant":585,"fbjs/lib/warning":596}],559:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -39060,7 +44214,7 @@ function isEventSupported(eventNameSuffix, capture) {
 }
 
 module.exports = isEventSupported;
-},{"fbjs/lib/ExecutionEnvironment":447}],436:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":571}],560:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -39101,7 +44255,7 @@ function isTextInputElement(elem) {
 }
 
 module.exports = isTextInputElement;
-},{}],437:[function(require,module,exports){
+},{}],561:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -39137,7 +44291,7 @@ function onlyChild(children) {
 
 module.exports = onlyChild;
 }).call(this,require('_process'))
-},{"./ReactElement":365,"_process":301,"fbjs/lib/invariant":461}],438:[function(require,module,exports){
+},{"./ReactElement":489,"_process":299,"fbjs/lib/invariant":585}],562:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -39164,7 +44318,7 @@ function quoteAttributeValueForBrowser(value) {
 }
 
 module.exports = quoteAttributeValueForBrowser;
-},{"./escapeTextContentForBrowser":423}],439:[function(require,module,exports){
+},{"./escapeTextContentForBrowser":547}],563:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -39181,7 +44335,7 @@ module.exports = quoteAttributeValueForBrowser;
 var ReactMount = require('./ReactMount');
 
 module.exports = ReactMount.renderSubtreeIntoContainer;
-},{"./ReactMount":378}],440:[function(require,module,exports){
+},{"./ReactMount":502}],564:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -39272,7 +44426,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = setInnerHTML;
-},{"fbjs/lib/ExecutionEnvironment":447}],441:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":571}],565:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -39313,7 +44467,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = setTextContent;
-},{"./escapeTextContentForBrowser":423,"./setInnerHTML":440,"fbjs/lib/ExecutionEnvironment":447}],442:[function(require,module,exports){
+},{"./escapeTextContentForBrowser":547,"./setInnerHTML":564,"fbjs/lib/ExecutionEnvironment":571}],566:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -39357,7 +44511,7 @@ function shouldUpdateReactComponent(prevElement, nextElement) {
 }
 
 module.exports = shouldUpdateReactComponent;
-},{}],443:[function(require,module,exports){
+},{}],567:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -39549,7 +44703,7 @@ function traverseAllChildren(children, callback, traverseContext) {
 
 module.exports = traverseAllChildren;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":347,"./ReactElement":365,"./ReactInstanceHandles":374,"./getIteratorFn":431,"_process":301,"fbjs/lib/invariant":461,"fbjs/lib/warning":472}],444:[function(require,module,exports){
+},{"./ReactCurrentOwner":471,"./ReactElement":489,"./ReactInstanceHandles":498,"./getIteratorFn":555,"_process":299,"fbjs/lib/invariant":585,"fbjs/lib/warning":596}],568:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015, Facebook, Inc.
@@ -39915,7 +45069,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = validateDOMNesting;
 }).call(this,require('_process'))
-},{"./Object.assign":333,"_process":301,"fbjs/lib/emptyFunction":453,"fbjs/lib/warning":472}],445:[function(require,module,exports){
+},{"./Object.assign":457,"_process":299,"fbjs/lib/emptyFunction":577,"fbjs/lib/warning":596}],569:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -40015,7 +45169,7 @@ var CSSCore = {
 
 module.exports = CSSCore;
 }).call(this,require('_process'))
-},{"./invariant":461,"_process":301}],446:[function(require,module,exports){
+},{"./invariant":585,"_process":299}],570:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -40102,7 +45256,7 @@ var EventListener = {
 
 module.exports = EventListener;
 }).call(this,require('_process'))
-},{"./emptyFunction":453,"_process":301}],447:[function(require,module,exports){
+},{"./emptyFunction":577,"_process":299}],571:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40139,7 +45293,7 @@ var ExecutionEnvironment = {
 };
 
 module.exports = ExecutionEnvironment;
-},{}],448:[function(require,module,exports){
+},{}],572:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40172,7 +45326,7 @@ function camelize(string) {
 }
 
 module.exports = camelize;
-},{}],449:[function(require,module,exports){
+},{}],573:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40213,7 +45367,7 @@ function camelizeStyleName(string) {
 }
 
 module.exports = camelizeStyleName;
-},{"./camelize":448}],450:[function(require,module,exports){
+},{"./camelize":572}],574:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40269,7 +45423,7 @@ function containsNode(_x, _x2) {
 }
 
 module.exports = containsNode;
-},{"./isTextNode":463}],451:[function(require,module,exports){
+},{"./isTextNode":587}],575:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40355,7 +45509,7 @@ function createArrayFromMixed(obj) {
 }
 
 module.exports = createArrayFromMixed;
-},{"./toArray":471}],452:[function(require,module,exports){
+},{"./toArray":595}],576:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -40442,7 +45596,7 @@ function createNodesFromMarkup(markup, handleScript) {
 
 module.exports = createNodesFromMarkup;
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":447,"./createArrayFromMixed":451,"./getMarkupWrap":457,"./invariant":461,"_process":301}],453:[function(require,module,exports){
+},{"./ExecutionEnvironment":571,"./createArrayFromMixed":575,"./getMarkupWrap":581,"./invariant":585,"_process":299}],577:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40481,7 +45635,7 @@ emptyFunction.thatReturnsArgument = function (arg) {
 };
 
 module.exports = emptyFunction;
-},{}],454:[function(require,module,exports){
+},{}],578:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -40504,7 +45658,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = emptyObject;
 }).call(this,require('_process'))
-},{"_process":301}],455:[function(require,module,exports){
+},{"_process":299}],579:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40531,7 +45685,7 @@ function focusNode(node) {
 }
 
 module.exports = focusNode;
-},{}],456:[function(require,module,exports){
+},{}],580:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40567,7 +45721,7 @@ function getActiveElement() /*?DOMElement*/{
 }
 
 module.exports = getActiveElement;
-},{}],457:[function(require,module,exports){
+},{}],581:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -40665,7 +45819,7 @@ function getMarkupWrap(nodeName) {
 
 module.exports = getMarkupWrap;
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":447,"./invariant":461,"_process":301}],458:[function(require,module,exports){
+},{"./ExecutionEnvironment":571,"./invariant":585,"_process":299}],582:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40704,7 +45858,7 @@ function getUnboundedScrollPosition(scrollable) {
 }
 
 module.exports = getUnboundedScrollPosition;
-},{}],459:[function(require,module,exports){
+},{}],583:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40738,7 +45892,7 @@ function hyphenate(string) {
 }
 
 module.exports = hyphenate;
-},{}],460:[function(require,module,exports){
+},{}],584:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40778,7 +45932,7 @@ function hyphenateStyleName(string) {
 }
 
 module.exports = hyphenateStyleName;
-},{"./hyphenate":459}],461:[function(require,module,exports){
+},{"./hyphenate":583}],585:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -40831,7 +45985,7 @@ function invariant(condition, format, a, b, c, d, e, f) {
 
 module.exports = invariant;
 }).call(this,require('_process'))
-},{"_process":301}],462:[function(require,module,exports){
+},{"_process":299}],586:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40855,7 +46009,7 @@ function isNode(object) {
 }
 
 module.exports = isNode;
-},{}],463:[function(require,module,exports){
+},{}],587:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40881,7 +46035,7 @@ function isTextNode(object) {
 }
 
 module.exports = isTextNode;
-},{"./isNode":462}],464:[function(require,module,exports){
+},{"./isNode":586}],588:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -40932,7 +46086,7 @@ var keyMirror = function (obj) {
 
 module.exports = keyMirror;
 }).call(this,require('_process'))
-},{"./invariant":461,"_process":301}],465:[function(require,module,exports){
+},{"./invariant":585,"_process":299}],589:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -40968,7 +46122,7 @@ var keyOf = function (oneKeyObj) {
 };
 
 module.exports = keyOf;
-},{}],466:[function(require,module,exports){
+},{}],590:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -41020,7 +46174,7 @@ function mapObject(object, callback, context) {
 }
 
 module.exports = mapObject;
-},{}],467:[function(require,module,exports){
+},{}],591:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -41052,7 +46206,7 @@ function memoizeStringOnly(callback) {
 }
 
 module.exports = memoizeStringOnly;
-},{}],468:[function(require,module,exports){
+},{}],592:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -41076,7 +46230,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = performance || {};
-},{"./ExecutionEnvironment":447}],469:[function(require,module,exports){
+},{"./ExecutionEnvironment":571}],593:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -41111,7 +46265,7 @@ if (performance.now) {
 }
 
 module.exports = performanceNow;
-},{"./performance":468}],470:[function(require,module,exports){
+},{"./performance":592}],594:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -41162,7 +46316,7 @@ function shallowEqual(objA, objB) {
 }
 
 module.exports = shallowEqual;
-},{}],471:[function(require,module,exports){
+},{}],595:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -41222,7 +46376,7 @@ function toArray(obj) {
 
 module.exports = toArray;
 }).call(this,require('_process'))
-},{"./invariant":461,"_process":301}],472:[function(require,module,exports){
+},{"./invariant":585,"_process":299}],596:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -41282,4703 +46436,50 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = warning;
 }).call(this,require('_process'))
-},{"./emptyFunction":453,"_process":301}],473:[function(require,module,exports){
+},{"./emptyFunction":577,"_process":299}],597:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/React');
 
-},{"./lib/React":335}],474:[function(require,module,exports){
-(function (global){
-'use strict';
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-exports.getConstructor = getConstructor;
-exports.getRealProps = getRealProps;
-exports.instantiate = instantiate;
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _laconaPhrase = require('lacona-phrase');
-
-var _elements = require('./elements');
-
-var builtinPhrases = _interopRequireWildcard(_elements);
-
-var _sources = require('./sources');
-
-var builtinSources = _interopRequireWildcard(_sources);
-
-var _error = require('./error');
-
-function getConstructor(_ref) {
-  var Constructor = _ref.Constructor;
-  var type = _ref.type;
-
-  if (_lodash2['default'].isString(Constructor)) {
-    var builtins = getBuiltinsForType(type);
-
-    if (_lodash2['default'].has(builtins, Constructor)) {
-      return builtins[Constructor];
-    } else {
-      throw new _error.LaconaError(Constructor + ' is an invalid phrase. Note: non-builtin phrases must be uppercase');
-    }
-  } else {
-    assertValid({ Constructor: Constructor, type: type });
-  }
-  return Constructor;
-}
-
-function subclassOf(Constructor, DesiredSuperclass) {
-  return Constructor.prototype instanceof DesiredSuperclass;
-}
-
-function assertValid(_ref2) {
-  var Constructor = _ref2.Constructor;
-  var type = _ref2.type;
-
-  if (!_lodash2['default'].isFunction(Constructor)) {
-    throw new _error.LaconaError('Constructor ' + Constructor + ' is not a valid ' + type);
-  }
-
-  if (type === 'phrase') {
-    if (Constructor.prototype.describe) {} else if (Constructor.translations) {
-      if (!_lodash2['default'].every(Constructor.translations, _lodash2['default'].partial(_lodash2['default'].has, _lodash2['default'], 'describe'))) {
-        throw new _error.LaconaError('Every translation must have a describe method');
-      }
-      if (!_lodash2['default'].every(Constructor.translations, _lodash2['default'].partial(_lodash2['default'].has, _lodash2['default'], 'langs'))) {
-        throw new _error.LaconaError('Every translation must have a langs property');
-      }
-      if (!_lodash2['default'].some(Constructor.translations, function (translation) {
-        return _lodash2['default'].indexOf(translation.langs, 'default') > -1;
-      })) {
-        throw new _error.LaconaError('All elements must have a describe method defined for the default language');
-      }
-    }
-  }
-}
-
-function getBuiltinsForType(type) {
-  if (type === 'phrase') {
-    return builtinPhrases;
-  } else if (type === 'source') {
-    return builtinSources;
-  } else {
-    throw new _error.LaconaError(type + ' is an invalid constructor type.');
-  }
-}
-
-function getRealProps(_ref3) {
-  var descriptor = _ref3.descriptor;
-  var Constructor = _ref3.Constructor;
-
-  var realProps = _lodash2['default'].defaults(descriptor.props || {}, Constructor.defaultProps || {});
-  if (descriptor.children && descriptor.children.length > 0) {
-    realProps.children = _lodash2['default'].flattenDeep(descriptor.children);
-  }
-  return realProps;
-}
-
-function instantiate(_ref4) {
-  var Constructor = _ref4.Constructor;
-  var props = _ref4.props;
-
-  return new Constructor({ props: props });
-}
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./elements":478,"./error":487,"./sources":493,"babel-runtime/helpers/interop-require-default":513,"babel-runtime/helpers/interop-require-wildcard":514,"lacona-phrase":597}],475:[function(require,module,exports){
-(function (global){
-/** @jsx createElement */
-'use strict';
-
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _defineProperty = require('babel-runtime/helpers/define-property')['default'];
-
-var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
-
-var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _laconaPhrase = require('lacona-phrase');
-
-var _parse = require('../parse');
-
-var _reconcile = require('../reconcile');
-
-var Choice = (function (_Phrase) {
-  _inherits(Choice, _Phrase);
-
-  function Choice() {
-    _classCallCheck(this, Choice);
-
-    _get(Object.getPrototypeOf(Choice.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Choice, [{
-    key: '_handleParse',
-    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
-      var successes, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, childPhrase, success, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, output, newResult, modifications;
-
-      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
-        while (1) switch (context$2$0.prev = context$2$0.next) {
-          case 0:
-            successes = 0;
-
-            if (!(this.props.children && this.props.children.length > 0)) {
-              context$2$0.next = 65;
-              break;
-            }
-
-            this.childPhrases = (0, _reconcile.reconcile)({ descriptor: this.props.children, phrase: this.childPhrases, options: options });
-
-            _iteratorNormalCompletion = true;
-            _didIteratorError = false;
-            _iteratorError = undefined;
-            context$2$0.prev = 6;
-            _iterator = _getIterator(this.childPhrases);
-
-          case 8:
-            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              context$2$0.next = 51;
-              break;
-            }
-
-            childPhrase = _step.value;
-            success = false;
-
-            if (!(childPhrase.props.id == null && !this.props.limit)) {
-              context$2$0.next = 15;
-              break;
-            }
-
-            return context$2$0.delegateYield((0, _parse.parse)({ phrase: childPhrase, input: input, options: options }), 't0', 13);
-
-          case 13:
-            context$2$0.next = 44;
-            break;
-
-          case 15:
-            _iteratorNormalCompletion2 = true;
-            _didIteratorError2 = false;
-            _iteratorError2 = undefined;
-            context$2$0.prev = 18;
-            _iterator2 = _getIterator((0, _parse.parse)({ phrase: childPhrase, input: input, options: options }));
-
-          case 20:
-            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
-              context$2$0.next = 30;
-              break;
-            }
-
-            output = _step2.value;
-            newResult = childPhrase.props.id != null ? _defineProperty({}, childPhrase.props.id, output.result) : output.result;
-            modifications = { result: newResult };
-
-            if (this.props.limit) modifications.callbacks = output.callbacks.concat(function () {
-              return success = true;
-            });
-
-            context$2$0.next = 27;
-            return _lodash2['default'].assign({}, output, modifications);
-
-          case 27:
-            _iteratorNormalCompletion2 = true;
-            context$2$0.next = 20;
-            break;
-
-          case 30:
-            context$2$0.next = 36;
-            break;
-
-          case 32:
-            context$2$0.prev = 32;
-            context$2$0.t1 = context$2$0['catch'](18);
-            _didIteratorError2 = true;
-            _iteratorError2 = context$2$0.t1;
-
-          case 36:
-            context$2$0.prev = 36;
-            context$2$0.prev = 37;
-
-            if (!_iteratorNormalCompletion2 && _iterator2['return']) {
-              _iterator2['return']();
-            }
-
-          case 39:
-            context$2$0.prev = 39;
-
-            if (!_didIteratorError2) {
-              context$2$0.next = 42;
-              break;
-            }
-
-            throw _iteratorError2;
-
-          case 42:
-            return context$2$0.finish(39);
-
-          case 43:
-            return context$2$0.finish(36);
-
-          case 44:
-            if (!this.props.limit) {
-              context$2$0.next = 48;
-              break;
-            }
-
-            if (success) successes++;
-
-            if (!(this.props.limit <= successes)) {
-              context$2$0.next = 48;
-              break;
-            }
-
-            return context$2$0.abrupt('break', 51);
-
-          case 48:
-            _iteratorNormalCompletion = true;
-            context$2$0.next = 8;
-            break;
-
-          case 51:
-            context$2$0.next = 57;
-            break;
-
-          case 53:
-            context$2$0.prev = 53;
-            context$2$0.t2 = context$2$0['catch'](6);
-            _didIteratorError = true;
-            _iteratorError = context$2$0.t2;
-
-          case 57:
-            context$2$0.prev = 57;
-            context$2$0.prev = 58;
-
-            if (!_iteratorNormalCompletion && _iterator['return']) {
-              _iterator['return']();
-            }
-
-          case 60:
-            context$2$0.prev = 60;
-
-            if (!_didIteratorError) {
-              context$2$0.next = 63;
-              break;
-            }
-
-            throw _iteratorError;
-
-          case 63:
-            return context$2$0.finish(60);
-
-          case 64:
-            return context$2$0.finish(57);
-
-          case 65:
-          case 'end':
-            return context$2$0.stop();
-        }
-      }, _handleParse, this, [[6, 53, 57, 65], [18, 32, 36, 44], [37,, 39, 43], [58,, 60, 64]]);
-    })
-  }]);
-
-  return Choice;
-})(_laconaPhrase.Phrase);
-
-exports.Choice = Choice;
-
-//perf opt
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../parse":489,"../reconcile":491,"babel-runtime/core-js/get-iterator":497,"babel-runtime/helpers/class-call-check":507,"babel-runtime/helpers/create-class":508,"babel-runtime/helpers/define-property":509,"babel-runtime/helpers/get":511,"babel-runtime/helpers/inherits":512,"babel-runtime/helpers/interop-require-default":513,"babel-runtime/regenerator":595,"lacona-phrase":597}],476:[function(require,module,exports){
-/** @jsx createElement */
-'use strict';
-
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _laconaPhrase = require('lacona-phrase');
-
-var Filter = (function (_Phrase) {
-  _inherits(Filter, _Phrase);
-
-  function Filter() {
-    _classCallCheck(this, Filter);
-
-    _get(Object.getPrototypeOf(Filter.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Filter, [{
-    key: 'validate',
-    value: function validate(result) {
-      return this.props['function'](result);
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return this.props.children[0];
-    }
-  }]);
-
-  return Filter;
-})(_laconaPhrase.Phrase);
-
-exports.Filter = Filter;
-},{"babel-runtime/helpers/class-call-check":507,"babel-runtime/helpers/create-class":508,"babel-runtime/helpers/get":511,"babel-runtime/helpers/inherits":512,"lacona-phrase":597}],477:[function(require,module,exports){
-/** @jsx createElement */
-'use strict';
-
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
-
-var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-var marked0$0 = [substrings].map(_regeneratorRuntime.mark);
-
-var _laconaPhrase = require('lacona-phrase');
-
-var _smartSplit = require('smart-split');
-
-var _smartSplit2 = _interopRequireDefault(_smartSplit);
-
-function substrings(input, _ref) {
-  var splitOn = _ref.splitOn;
-  var noSplit = _ref.noSplit;
-  var inputs, i;
-  return _regeneratorRuntime.wrap(function substrings$(context$1$0) {
-    while (1) switch (context$1$0.prev = context$1$0.next) {
-      case 0:
-        if (!noSplit) {
-          context$1$0.next = 4;
-          break;
-        }
-
-        context$1$0.next = 3;
-        return input;
-
-      case 3:
-        return context$1$0.abrupt('return');
-
-      case 4:
-        inputs = (0, _smartSplit2['default'])(input, splitOn);
-        i = 0;
-
-      case 6:
-        if (!(i < inputs.length)) {
-          context$1$0.next = 12;
-          break;
-        }
-
-        context$1$0.next = 9;
-        return inputs.slice(0, i + 1).join('');
-
-      case 9:
-        i += 2;
-        context$1$0.next = 6;
-        break;
-
-      case 12:
-      case 'end':
-        return context$1$0.stop();
-    }
-  }, marked0$0[0], this);
-}
-
-var Freetext = (function (_Phrase) {
-  _inherits(Freetext, _Phrase);
-
-  function Freetext() {
-    _classCallCheck(this, Freetext);
-
-    _get(Object.getPrototypeOf(Freetext.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Freetext, [{
-    key: 'filter',
-    value: _regeneratorRuntime.mark(function filter(input) {
-      var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, stringPart;
-
-      return _regeneratorRuntime.wrap(function filter$(context$2$0) {
-        while (1) switch (context$2$0.prev = context$2$0.next) {
-          case 0:
-            _iteratorNormalCompletion = true;
-            _didIteratorError = false;
-            _iteratorError = undefined;
-            context$2$0.prev = 3;
-            _iterator = _getIterator(substrings(input, { splitOn: this.props.splitOn, noSplit: this.props.consumeAll }));
-
-          case 5:
-            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              context$2$0.next = 13;
-              break;
-            }
-
-            stringPart = _step.value;
-
-            if (!this.props.filter(stringPart)) {
-              context$2$0.next = 10;
-              break;
-            }
-
-            context$2$0.next = 10;
-            return {
-              words: [{ text: stringPart, input: true }],
-              result: stringPart,
-              remaining: input.substring(stringPart.length),
-              score: 0.1 + 1 / (stringPart.length + 2)
-            };
-
-          case 10:
-            _iteratorNormalCompletion = true;
-            context$2$0.next = 5;
-            break;
-
-          case 13:
-            context$2$0.next = 19;
-            break;
-
-          case 15:
-            context$2$0.prev = 15;
-            context$2$0.t0 = context$2$0['catch'](3);
-            _didIteratorError = true;
-            _iteratorError = context$2$0.t0;
-
-          case 19:
-            context$2$0.prev = 19;
-            context$2$0.prev = 20;
-
-            if (!_iteratorNormalCompletion && _iterator['return']) {
-              _iterator['return']();
-            }
-
-          case 22:
-            context$2$0.prev = 22;
-
-            if (!_didIteratorError) {
-              context$2$0.next = 25;
-              break;
-            }
-
-            throw _iteratorError;
-
-          case 25:
-            return context$2$0.finish(22);
-
-          case 26:
-            return context$2$0.finish(19);
-
-          case 27:
-          case 'end':
-            return context$2$0.stop();
-        }
-      }, filter, this, [[3, 15, 19, 27], [20,, 22, 26]]);
-    })
-  }, {
-    key: 'describe',
-    value: function describe() {
-      return (0, _laconaPhrase.createElement)('raw', { 'function': this.filter.bind(this), limit: this.props.limit });
-    }
-  }], [{
-    key: 'defaultProps',
-    value: {
-      filter: function filter() {
-        return true;
-      },
-      splitOn: '',
-      consumeAll: false
-    },
-    enumerable: true
-  }]);
-
-  return Freetext;
-})(_laconaPhrase.Phrase);
-
-exports.Freetext = Freetext;
-},{"babel-runtime/core-js/get-iterator":497,"babel-runtime/helpers/class-call-check":507,"babel-runtime/helpers/create-class":508,"babel-runtime/helpers/get":511,"babel-runtime/helpers/inherits":512,"babel-runtime/helpers/interop-require-default":513,"babel-runtime/regenerator":595,"lacona-phrase":597,"smart-split":600}],478:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _choice = require('./choice');
-
-Object.defineProperty(exports, 'choice', {
-  enumerable: true,
-  get: function get() {
-    return _choice.Choice;
-  }
-});
-
-var _label = require('./label');
-
-Object.defineProperty(exports, 'label', {
-  enumerable: true,
-  get: function get() {
-    return _label.Label;
-  }
-});
-
-var _filter = require('./filter');
-
-Object.defineProperty(exports, 'filter', {
-  enumerable: true,
-  get: function get() {
-    return _filter.Filter;
-  }
-});
-
-var _freetext = require('./freetext');
-
-Object.defineProperty(exports, 'freetext', {
-  enumerable: true,
-  get: function get() {
-    return _freetext.Freetext;
-  }
-});
-
-var _list = require('./list');
-
-Object.defineProperty(exports, 'list', {
-  enumerable: true,
-  get: function get() {
-    return _list.List;
-  }
-});
-
-var _literal = require('./literal');
-
-Object.defineProperty(exports, 'literal', {
-  enumerable: true,
-  get: function get() {
-    return _literal.Literal;
-  }
-});
-
-var _map = require('./map');
-
-Object.defineProperty(exports, 'map', {
-  enumerable: true,
-  get: function get() {
-    return _map.MapPhrase;
-  }
-});
-
-var _raw = require('./raw');
-
-Object.defineProperty(exports, 'raw', {
-  enumerable: true,
-  get: function get() {
-    return _raw.Raw;
-  }
-});
-
-var _repeat = require('./repeat');
-
-Object.defineProperty(exports, 'repeat', {
-  enumerable: true,
-  get: function get() {
-    return _repeat.Repeat;
-  }
-});
-
-var _sequence = require('./sequence');
-
-Object.defineProperty(exports, 'sequence', {
-  enumerable: true,
-  get: function get() {
-    return _sequence.Sequence;
-  }
-});
-
-var _tap = require('./tap');
-
-Object.defineProperty(exports, 'tap', {
-  enumerable: true,
-  get: function get() {
-    return _tap.Tap;
-  }
-});
-},{"./choice":475,"./filter":476,"./freetext":477,"./label":479,"./list":480,"./literal":481,"./map":482,"./raw":483,"./repeat":484,"./sequence":485,"./tap":486}],479:[function(require,module,exports){
-(function (global){
-/** @jsx createElement */
-'use strict';
-
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
-
-var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _laconaPhrase = require('lacona-phrase');
-
-var _parse = require('../parse');
-
-var _reconcile = require('../reconcile');
-
-var Label = (function (_Phrase) {
-  _inherits(Label, _Phrase);
-
-  function Label() {
-    _classCallCheck(this, Label);
-
-    _get(Object.getPrototypeOf(Label.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Label, [{
-    key: 'parseChild',
-    value: _regeneratorRuntime.mark(function parseChild(input, options) {
-      var didSetCurrentArgument, modification, inputWithArgument, didOutputSelf, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, output;
-
-      return _regeneratorRuntime.wrap(function parseChild$(context$2$0) {
-        while (1) switch (context$2$0.prev = context$2$0.next) {
-          case 0:
-            didSetCurrentArgument = false;
-            modification = {};
-
-            if (this.props.argument && !input.currentArgument) {
-              modification.currentArgument = this.props.text;
-              didSetCurrentArgument = true;
-            }
-
-            inputWithArgument = _lodash2['default'].assign({}, input, modification);
-            didOutputSelf = false;
-            _iteratorNormalCompletion = true;
-            _didIteratorError = false;
-            _iteratorError = undefined;
-            context$2$0.prev = 8;
-            _iterator = _getIterator((0, _parse.parse)({ phrase: this.childPhrase, input: inputWithArgument, options: options }));
-
-          case 10:
-            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              context$2$0.next = 22;
-              break;
-            }
-
-            output = _step.value;
-
-            if (!didSetCurrentArgument) {
-              context$2$0.next = 17;
-              break;
-            }
-
-            context$2$0.next = 15;
-            return _lodash2['default'].assign({}, output, { currentArgument: undefined });
-
-          case 15:
-            context$2$0.next = 19;
-            break;
-
-          case 17:
-            context$2$0.next = 19;
-            return output;
-
-          case 19:
-            _iteratorNormalCompletion = true;
-            context$2$0.next = 10;
-            break;
-
-          case 22:
-            context$2$0.next = 28;
-            break;
-
-          case 24:
-            context$2$0.prev = 24;
-            context$2$0.t0 = context$2$0['catch'](8);
-            _didIteratorError = true;
-            _iteratorError = context$2$0.t0;
-
-          case 28:
-            context$2$0.prev = 28;
-            context$2$0.prev = 29;
-
-            if (!_iteratorNormalCompletion && _iterator['return']) {
-              _iterator['return']();
-            }
-
-          case 31:
-            context$2$0.prev = 31;
-
-            if (!_didIteratorError) {
-              context$2$0.next = 34;
-              break;
-            }
-
-            throw _iteratorError;
-
-          case 34:
-            return context$2$0.finish(31);
-
-          case 35:
-            return context$2$0.finish(28);
-
-          case 36:
-          case 'end':
-            return context$2$0.stop();
-        }
-      }, parseChild, this, [[8, 24, 28, 36], [29,, 31, 35]]);
-    })
-  }, {
-    key: 'outputSelf',
-    value: function outputSelf(input, options) {
-      var word = {
-        text: this.props.text,
-        input: false,
-        placeholder: true,
-        argument: input.currentArgument || (this.props.argument ? this.props.text : undefined)
-      };
-
-      var modification = {
-        score: 0.01,
-        result: undefined,
-        text: null
-      };
-
-      modification.words = input.words.concat(word);
-
-      return _lodash2['default'].assign({}, input, modification);
-    }
-  }, {
-    key: '_handleParse',
-    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
-      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
-        while (1) switch (context$2$0.prev = context$2$0.next) {
-          case 0:
-            this.childPhrase = (0, _reconcile.reconcile)({ descriptor: this.props.children[0], phrase: this.childPhrase, options: options });
-
-            if (!(input.text == null || this.props.suppress && (this.props.suppressEmpty && input.text === '' || this.props.suppressWhen && this.props.suppressWhen(input.text)))) {
-              context$2$0.next = 6;
-              break;
-            }
-
-            context$2$0.next = 4;
-            return this.outputSelf(input, options);
-
-          case 4:
-            context$2$0.next = 7;
-            break;
-
-          case 6:
-            return context$2$0.delegateYield(this.parseChild(input, options), 't0', 7);
-
-          case 7:
-          case 'end':
-            return context$2$0.stop();
-        }
-      }, _handleParse, this);
-    })
-  }], [{
-    key: 'defaultProps',
-    value: {
-      suppress: true,
-      argument: true,
-      suppressEmpty: true
-    },
-    enumerable: true
-  }]);
-
-  return Label;
-})(_laconaPhrase.Phrase);
-
-exports.Label = Label;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../parse":489,"../reconcile":491,"babel-runtime/core-js/get-iterator":497,"babel-runtime/helpers/class-call-check":507,"babel-runtime/helpers/create-class":508,"babel-runtime/helpers/get":511,"babel-runtime/helpers/inherits":512,"babel-runtime/helpers/interop-require-default":513,"babel-runtime/regenerator":595,"lacona-phrase":597}],480:[function(require,module,exports){
-(function (global){
-/** @jsx createElement */
-'use strict';
-
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
-
-var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
-
-var _Array$from = require('babel-runtime/core-js/array/from')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _laconaPhrase = require('lacona-phrase');
-
-var _stringMatch = require('../string-match');
-
-var List = (function (_Phrase) {
-  _inherits(List, _Phrase);
-
-  function List() {
-    _classCallCheck(this, List);
-
-    _get(Object.getPrototypeOf(List.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(List, [{
-    key: 'itemify',
-    value: function itemify(item) {
-      return _lodash2['default'].isString(item) ? { text: item } : item;
-    }
-  }, {
-    key: 'doMatch',
-    value: _regeneratorRuntime.mark(function doMatch(items, input) {
-      var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, item, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, output;
-
-      return _regeneratorRuntime.wrap(function doMatch$(context$2$0) {
-        while (1) switch (context$2$0.prev = context$2$0.next) {
-          case 0:
-            _iteratorNormalCompletion = true;
-            _didIteratorError = false;
-            _iteratorError = undefined;
-            context$2$0.prev = 3;
-            _iterator = _getIterator(items);
-
-          case 5:
-            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              context$2$0.next = 38;
-              break;
-            }
-
-            item = _step.value;
-            _iteratorNormalCompletion2 = true;
-            _didIteratorError2 = false;
-            _iteratorError2 = undefined;
-            context$2$0.prev = 10;
-            _iterator2 = _getIterator((0, _stringMatch.match)({ input: input, text: item.text, fuzzy: this.props.fuzzy }));
-
-          case 12:
-            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
-              context$2$0.next = 21;
-              break;
-            }
-
-            output = _step2.value;
-
-            output.result = item.value;
-            output.qualifiers = item.qualifiers;
-            context$2$0.next = 18;
-            return output;
-
-          case 18:
-            _iteratorNormalCompletion2 = true;
-            context$2$0.next = 12;
-            break;
-
-          case 21:
-            context$2$0.next = 27;
-            break;
-
-          case 23:
-            context$2$0.prev = 23;
-            context$2$0.t0 = context$2$0['catch'](10);
-            _didIteratorError2 = true;
-            _iteratorError2 = context$2$0.t0;
-
-          case 27:
-            context$2$0.prev = 27;
-            context$2$0.prev = 28;
-
-            if (!_iteratorNormalCompletion2 && _iterator2['return']) {
-              _iterator2['return']();
-            }
-
-          case 30:
-            context$2$0.prev = 30;
-
-            if (!_didIteratorError2) {
-              context$2$0.next = 33;
-              break;
-            }
-
-            throw _iteratorError2;
-
-          case 33:
-            return context$2$0.finish(30);
-
-          case 34:
-            return context$2$0.finish(27);
-
-          case 35:
-            _iteratorNormalCompletion = true;
-            context$2$0.next = 5;
-            break;
-
-          case 38:
-            context$2$0.next = 44;
-            break;
-
-          case 40:
-            context$2$0.prev = 40;
-            context$2$0.t1 = context$2$0['catch'](3);
-            _didIteratorError = true;
-            _iteratorError = context$2$0.t1;
-
-          case 44:
-            context$2$0.prev = 44;
-            context$2$0.prev = 45;
-
-            if (!_iteratorNormalCompletion && _iterator['return']) {
-              _iterator['return']();
-            }
-
-          case 47:
-            context$2$0.prev = 47;
-
-            if (!_didIteratorError) {
-              context$2$0.next = 50;
-              break;
-            }
-
-            throw _iteratorError;
-
-          case 50:
-            return context$2$0.finish(47);
-
-          case 51:
-            return context$2$0.finish(44);
-
-          case 52:
-          case 'end':
-            return context$2$0.stop();
-        }
-      }, doMatch, this, [[3, 40, 44, 52], [10, 23, 27, 35], [28,, 30, 34], [45,, 47, 51]]);
-    })
-  }, {
-    key: 'compute',
-    value: _regeneratorRuntime.mark(function compute(items, input) {
-      var resultIterator, sortedResults;
-      return _regeneratorRuntime.wrap(function compute$(context$2$0) {
-        while (1) switch (context$2$0.prev = context$2$0.next) {
-          case 0:
-            resultIterator = this.doMatch(items, input);
-
-            if (!this.props.fuzzy) {
-              context$2$0.next = 6;
-              break;
-            }
-
-            sortedResults = _lodash2['default'].chain(_Array$from(resultIterator)).sortBy(function (_ref) {
-              var score = _ref.score;
-              return -score;
-            }).value();
-            return context$2$0.delegateYield(sortedResults, 't0', 4);
-
-          case 4:
-            context$2$0.next = 7;
-            break;
-
-          case 6:
-            return context$2$0.delegateYield(resultIterator, 't1', 7);
-
-          case 7:
-          case 'end':
-            return context$2$0.stop();
-        }
-      }, compute, this);
-    })
-  }, {
-    key: 'describe',
-
-    // if (_.startsWith(input.toLowerCase(), item.text.toLowerCase())) {
-    //   const qualifiers = item.qualifiers
-    //     ? item.qualifiers
-    //     : item.qualifier ? [item.qualifier] : []
-    //
-    //   yield {
-    //     remaining: input.slice(item.text.length),
-    //     words: [{text: item.text, input: true}],
-    //     result: item.value,
-    //     qualifiers
-    //   }
-    // } else {
-    //   if (this.props.fuzzy) {
-    //     itemsForFuzzy.push(item)
-    //   }
-    // }
-
-    // if (this.props.fuzzy) {
-    //   for (let result of sort(input, itemsForFuzzy)) {
-    //     result.remaining = ''
-    //
-    //     yield result
-    //   }
-    // }
-    value: function describe() {
-      // if (this.props.fuzzy) {
-      var trueItems = _lodash2['default'].map(this.props.items, this.itemify.bind(this));
-
-      return (0, _laconaPhrase.createElement)('raw', { 'function': this.compute.bind(this, trueItems), limit: this.props.limit, category: this.props.category });
-      // } else {
-      //   const literals = _.chain(this.props.items)
-      //     .map(this.itemify.bind(this))
-      //     .map(item => <literal text={item.text} value={item.value} qualifier={item.qualifier} category={this.props.category} />)
-      //     .value()
-      //
-      //   return (
-      //     <choice limit={this.props.limit} value={this.props.value}>
-      //       {literals}
-      //     </choice>
-      //   )
-      // }
-    }
-  }]);
-
-  return List;
-})(_laconaPhrase.Phrase);
-
-exports.List = List;
-
-// TODO - this could be optimized
-//  Right now it is going to do fuzzy matching for every single item
-//  much of this processing could be eliminated if it ran the
-//  non-fuzzy (score 1) parses first, and then did the fuzzy (score 0.5)
-//  parses
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../string-match":495,"babel-runtime/core-js/array/from":496,"babel-runtime/core-js/get-iterator":497,"babel-runtime/helpers/class-call-check":507,"babel-runtime/helpers/create-class":508,"babel-runtime/helpers/get":511,"babel-runtime/helpers/inherits":512,"babel-runtime/helpers/interop-require-default":513,"babel-runtime/regenerator":595,"lacona-phrase":597}],481:[function(require,module,exports){
-(function (global){
-/** @jsx createElement */
-'use strict';
-
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _extends = require('babel-runtime/helpers/extends')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _stringMatch = require('../string-match');
-
-var _laconaPhrase = require('lacona-phrase');
-
-var Literal = (function (_Phrase) {
-  _inherits(Literal, _Phrase);
-
-  function Literal() {
-    _classCallCheck(this, Literal);
-
-    _get(Object.getPrototypeOf(Literal.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Literal, [{
-    key: 'compute',
-    value: function compute(input) {
-      if (this.props.text == null) return [];
-
-      var result = (0, _stringMatch.match)({ input: input, text: this.props.text, fuzzy: this.props.fuzzy });
-      return result;
-    }
-  }, {
-    key: 'decorate',
-    value: function decorate(input) {
-      if (input == null || input === '') {
-        return [];
-      } else {
-        return [{
-          words: [{ text: this.props.text, input: false }],
-          remaining: input,
-          score: 1
-        }];
-      }
-    }
-  }, {
-    key: 'describe',
-    value: function describe() {
-      if (this.props.decorate) {
-        if (this.props.allowInput) {
-          return (0, _laconaPhrase.createElement)(
-            'choice',
-            null,
-            (0, _laconaPhrase.createElement)('literal', _extends({}, this.props, { decorate: false })),
-            (0, _laconaPhrase.createElement)('raw', { 'function': this.decorate.bind(this) })
-          );
-        } else {
-          return (0, _laconaPhrase.createElement)('raw', { 'function': this.decorate.bind(this) });
-        }
-      } else {
-        return (0, _laconaPhrase.createElement)('raw', { 'function': this.compute.bind(this), category: this.props.category });
-      }
-    }
-  }], [{
-    key: 'defaultProps',
-    value: {
-      fuzzy: false,
-      allowInput: true
-    },
-    enumerable: true
-  }]);
-
-  return Literal;
-})(_laconaPhrase.Phrase);
-
-exports.Literal = Literal;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../string-match":495,"babel-runtime/helpers/class-call-check":507,"babel-runtime/helpers/create-class":508,"babel-runtime/helpers/extends":510,"babel-runtime/helpers/get":511,"babel-runtime/helpers/inherits":512,"babel-runtime/helpers/interop-require-default":513,"lacona-phrase":597}],482:[function(require,module,exports){
-(function (global){
-'use strict';
-
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
-
-var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _laconaPhrase = require('lacona-phrase');
-
-var _reconcile = require('../reconcile');
-
-var _parse = require('../parse');
-
-function hasPlaceholder(output) {
-  return _lodash2['default'].any(output.words, 'placeholder');
-}
-
-var MapPhrase = (function (_Phrase) {
-  _inherits(MapPhrase, _Phrase);
-
-  function MapPhrase() {
-    _classCallCheck(this, MapPhrase);
-
-    _get(Object.getPrototypeOf(MapPhrase.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(MapPhrase, [{
-    key: '_handleParse',
-    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
-      var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, output, newResult, modifications, successes, newIterator, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, success;
-
-      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
-        while (1) switch (context$2$0.prev = context$2$0.next) {
-          case 0:
-            if (!(this.props.children && this.props.children.length > 0)) {
-              context$2$0.next = 74;
-              break;
-            }
-
-            this.childPhrase = (0, _reconcile.reconcile)({ descriptor: this.props.children[0], phrase: this.childPhrase, options: options });
-
-            _iteratorNormalCompletion = true;
-            _didIteratorError = false;
-            _iteratorError = undefined;
-            context$2$0.prev = 5;
-            _iterator = _getIterator((0, _parse.parse)({ phrase: this.childPhrase, input: input, options: options }));
-
-          case 7:
-            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              context$2$0.next = 60;
-              break;
-            }
-
-            output = _step.value;
-
-            if (!hasPlaceholder(output)) {
-              context$2$0.next = 14;
-              break;
-            }
-
-            context$2$0.next = 12;
-            return output;
-
-          case 12:
-            context$2$0.next = 57;
-            break;
-
-          case 14:
-            if (!this.props['function']) {
-              context$2$0.next = 21;
-              break;
-            }
-
-            newResult = this.props['function'](output.result);
-            modifications = { result: newResult };
-            context$2$0.next = 19;
-            return _lodash2['default'].assign({}, output, modifications);
-
-          case 19:
-            context$2$0.next = 57;
-            break;
-
-          case 21:
-            if (!this.props.iteratorFunction) {
-              context$2$0.next = 57;
-              break;
-            }
-
-            successes = 0;
-            newIterator = this.props.iteratorFunction(output.result);
-            _iteratorNormalCompletion2 = true;
-            _didIteratorError2 = false;
-            _iteratorError2 = undefined;
-            context$2$0.prev = 27;
-            _iterator2 = _getIterator(newIterator);
-
-          case 29:
-            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
-              context$2$0.next = 43;
-              break;
-            }
-
-            newResult = _step2.value;
-            success = false;
-            modifications = { result: newResult };
-
-            if (this.props.limit) {
-              modifications.callbacks = output.callbacks.concat(function () {
-                return success = true;
-              });
-            }
-
-            context$2$0.next = 36;
-            return _lodash2['default'].assign({}, output, modifications);
-
-          case 36:
-            if (!this.props.limit) {
-              context$2$0.next = 40;
-              break;
-            }
-
-            if (success) successes++;
-
-            if (!(this.props.limit <= successes)) {
-              context$2$0.next = 40;
-              break;
-            }
-
-            return context$2$0.abrupt('break', 43);
-
-          case 40:
-            _iteratorNormalCompletion2 = true;
-            context$2$0.next = 29;
-            break;
-
-          case 43:
-            context$2$0.next = 49;
-            break;
-
-          case 45:
-            context$2$0.prev = 45;
-            context$2$0.t0 = context$2$0['catch'](27);
-            _didIteratorError2 = true;
-            _iteratorError2 = context$2$0.t0;
-
-          case 49:
-            context$2$0.prev = 49;
-            context$2$0.prev = 50;
-
-            if (!_iteratorNormalCompletion2 && _iterator2['return']) {
-              _iterator2['return']();
-            }
-
-          case 52:
-            context$2$0.prev = 52;
-
-            if (!_didIteratorError2) {
-              context$2$0.next = 55;
-              break;
-            }
-
-            throw _iteratorError2;
-
-          case 55:
-            return context$2$0.finish(52);
-
-          case 56:
-            return context$2$0.finish(49);
-
-          case 57:
-            _iteratorNormalCompletion = true;
-            context$2$0.next = 7;
-            break;
-
-          case 60:
-            context$2$0.next = 66;
-            break;
-
-          case 62:
-            context$2$0.prev = 62;
-            context$2$0.t1 = context$2$0['catch'](5);
-            _didIteratorError = true;
-            _iteratorError = context$2$0.t1;
-
-          case 66:
-            context$2$0.prev = 66;
-            context$2$0.prev = 67;
-
-            if (!_iteratorNormalCompletion && _iterator['return']) {
-              _iterator['return']();
-            }
-
-          case 69:
-            context$2$0.prev = 69;
-
-            if (!_didIteratorError) {
-              context$2$0.next = 72;
-              break;
-            }
-
-            throw _iteratorError;
-
-          case 72:
-            return context$2$0.finish(69);
-
-          case 73:
-            return context$2$0.finish(66);
-
-          case 74:
-          case 'end':
-            return context$2$0.stop();
-        }
-      }, _handleParse, this, [[5, 62, 66, 74], [27, 45, 49, 57], [50,, 52, 56], [67,, 69, 73]]);
-    })
-  }]);
-
-  return MapPhrase;
-})(_laconaPhrase.Phrase);
-
-exports.MapPhrase = MapPhrase;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../parse":489,"../reconcile":491,"babel-runtime/core-js/get-iterator":497,"babel-runtime/helpers/class-call-check":507,"babel-runtime/helpers/create-class":508,"babel-runtime/helpers/get":511,"babel-runtime/helpers/inherits":512,"babel-runtime/helpers/interop-require-default":513,"babel-runtime/regenerator":595,"lacona-phrase":597}],483:[function(require,module,exports){
-(function (global){
-'use strict';
-
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
-
-var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _laconaPhrase = require('lacona-phrase');
-
-var Raw = (function (_Phrase) {
-  _inherits(Raw, _Phrase);
-
-  function Raw() {
-    _classCallCheck(this, Raw);
-
-    _get(Object.getPrototypeOf(Raw.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Raw, [{
-    key: '_handleParse',
-    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
-      var successes, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, output, success, modification;
-
-      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
-        var _this = this;
-
-        while (1) switch (context$2$0.prev = context$2$0.next) {
-          case 0:
-            successes = 0;
-            _iteratorNormalCompletion = true;
-            _didIteratorError = false;
-            _iteratorError = undefined;
-            context$2$0.prev = 4;
-            _iterator = _getIterator(this.props['function'](input.text));
-
-          case 6:
-            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              context$2$0.next = 21;
-              break;
-            }
-
-            output = _step.value;
-            success = false;
-            modification = {
-              result: output.result,
-              text: output.remaining,
-              score: output.score || 1,
-              qualifiers: output.qualifiers || [],
-              words: input.words.concat(_lodash2['default'].map(output.words, function (word) {
-                return _lodash2['default'].assign(word, {
-                  argument: input.currentArgument,
-                  category: _this.props.category
-                });
-              }))
-            };
-
-            if (this.props.limit) modification.callbacks = input.callbacks.concat(function () {
-              return success = true;
-            });
-            if (output.ellipsis) modification.ellipsis = true;
-
-            context$2$0.next = 14;
-            return _lodash2['default'].assign({}, input, modification);
-
-          case 14:
-            if (!this.props.limit) {
-              context$2$0.next = 18;
-              break;
-            }
-
-            if (success) successes++;
-
-            if (!(this.props.limit <= successes)) {
-              context$2$0.next = 18;
-              break;
-            }
-
-            return context$2$0.abrupt('break', 21);
-
-          case 18:
-            _iteratorNormalCompletion = true;
-            context$2$0.next = 6;
-            break;
-
-          case 21:
-            context$2$0.next = 27;
-            break;
-
-          case 23:
-            context$2$0.prev = 23;
-            context$2$0.t0 = context$2$0['catch'](4);
-            _didIteratorError = true;
-            _iteratorError = context$2$0.t0;
-
-          case 27:
-            context$2$0.prev = 27;
-            context$2$0.prev = 28;
-
-            if (!_iteratorNormalCompletion && _iterator['return']) {
-              _iterator['return']();
-            }
-
-          case 30:
-            context$2$0.prev = 30;
-
-            if (!_didIteratorError) {
-              context$2$0.next = 33;
-              break;
-            }
-
-            throw _iteratorError;
-
-          case 33:
-            return context$2$0.finish(30);
-
-          case 34:
-            return context$2$0.finish(27);
-
-          case 35:
-          case 'end':
-            return context$2$0.stop();
-        }
-      }, _handleParse, this, [[4, 23, 27, 35], [28,, 30, 34]]);
-    })
-  }], [{
-    key: 'defaultProps',
-    value: {
-      compute: function compute() {
-        return [];
-      }
-    },
-    enumerable: true
-  }]);
-
-  return Raw;
-})(_laconaPhrase.Phrase);
-
-exports.Raw = Raw;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/core-js/get-iterator":497,"babel-runtime/helpers/class-call-check":507,"babel-runtime/helpers/create-class":508,"babel-runtime/helpers/get":511,"babel-runtime/helpers/inherits":512,"babel-runtime/helpers/interop-require-default":513,"babel-runtime/regenerator":595,"lacona-phrase":597}],484:[function(require,module,exports){
-(function (global){
-'use strict';
-
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
-
-var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
-
-var _Number$MAX_SAFE_INTEGER = require('babel-runtime/core-js/number/max-safe-integer')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _laconaPhrase = require('lacona-phrase');
-
-var _parse = require('../parse');
-
-var _reconcile = require('../reconcile');
-
-var Repeat = (function (_Phrase) {
-  _inherits(Repeat, _Phrase);
-
-  function Repeat() {
-    _classCallCheck(this, Repeat);
-
-    _get(Object.getPrototypeOf(Repeat.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Repeat, [{
-    key: '_handleParse',
-    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
-      var modifications, trueInput;
-      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
-        while (1) switch (context$2$0.prev = context$2$0.next) {
-          case 0:
-            this.child = (0, _reconcile.reconcile)({ descriptor: this.props.children[0], phrase: this.child, options: options });
-            this.separator = this.props.separator ? (0, _reconcile.reconcile)({ descriptor: this.props.separator, phrase: this.separator, options: options }) : null;
-
-            modifications = {
-              result: [],
-              score: 1
-            };
-            trueInput = _lodash2['default'].assign({}, input, modifications);
-            return context$2$0.delegateYield(this.parseChild(0, trueInput, options), 't0', 5);
-
-          case 5:
-          case 'end':
-            return context$2$0.stop();
-        }
-      }, _handleParse, this);
-    })
-  }, {
-    key: 'parseChild',
-    value: _regeneratorRuntime.mark(function parseChild(childIndex, input, options) {
-      var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, sepOutput, trueOutput;
-
-      return _regeneratorRuntime.wrap(function parseChild$(context$2$0) {
-        while (1) switch (context$2$0.prev = context$2$0.next) {
-          case 0:
-            if (!(childIndex > this.props.max)) {
-              context$2$0.next = 2;
-              break;
-            }
-
-            return context$2$0.abrupt('return');
-
-          case 2:
-            if (!(childIndex >= this.props.min)) {
-              context$2$0.next = 10;
-              break;
-            }
-
-            if (!(childIndex < this.props.max)) {
-              context$2$0.next = 8;
-              break;
-            }
-
-            context$2$0.next = 6;
-            return _lodash2['default'].assign({}, input, { ellipsis: true });
-
-          case 6:
-            context$2$0.next = 10;
-            break;
-
-          case 8:
-            context$2$0.next = 10;
-            return input;
-
-          case 10:
-            if (!(childIndex >= this.props.min && input.text == null)) {
-              context$2$0.next = 12;
-              break;
-            }
-
-            return context$2$0.abrupt('return');
-
-          case 12:
-            if (!(childIndex > 0 && this.separator)) {
-              context$2$0.next = 41;
-              break;
-            }
-
-            _iteratorNormalCompletion = true;
-            _didIteratorError = false;
-            _iteratorError = undefined;
-            context$2$0.prev = 16;
-            _iterator = _getIterator((0, _parse.parse)({ phrase: this.separator, input: input, options: options }));
-
-          case 18:
-            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              context$2$0.next = 25;
-              break;
-            }
-
-            sepOutput = _step.value;
-            trueOutput = _lodash2['default'].assign({}, sepOutput, { result: input.result });
-            return context$2$0.delegateYield(this.callParseChild(childIndex, trueOutput, options), 't0', 22);
-
-          case 22:
-            _iteratorNormalCompletion = true;
-            context$2$0.next = 18;
-            break;
-
-          case 25:
-            context$2$0.next = 31;
-            break;
-
-          case 27:
-            context$2$0.prev = 27;
-            context$2$0.t1 = context$2$0['catch'](16);
-            _didIteratorError = true;
-            _iteratorError = context$2$0.t1;
-
-          case 31:
-            context$2$0.prev = 31;
-            context$2$0.prev = 32;
-
-            if (!_iteratorNormalCompletion && _iterator['return']) {
-              _iterator['return']();
-            }
-
-          case 34:
-            context$2$0.prev = 34;
-
-            if (!_didIteratorError) {
-              context$2$0.next = 37;
-              break;
-            }
-
-            throw _iteratorError;
-
-          case 37:
-            return context$2$0.finish(34);
-
-          case 38:
-            return context$2$0.finish(31);
-
-          case 39:
-            context$2$0.next = 42;
-            break;
-
-          case 41:
-            return context$2$0.delegateYield(this.callParseChild(childIndex, input, options), 't2', 42);
-
-          case 42:
-          case 'end':
-            return context$2$0.stop();
-        }
-      }, parseChild, this, [[16, 27, 31, 39], [32,, 34, 38]]);
-    })
-  }, {
-    key: 'callParseChild',
-    value: _regeneratorRuntime.mark(function callParseChild(childIndex, input, options) {
-      var inputModifications, trueInput, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, output, outputModifications, trueOutput;
-
-      return _regeneratorRuntime.wrap(function callParseChild$(context$2$0) {
-        while (1) switch (context$2$0.prev = context$2$0.next) {
-          case 0:
-            inputModifications = { qualifiers: [] };
-            trueInput = _lodash2['default'].assign({}, input, inputModifications);
-            _iteratorNormalCompletion2 = true;
-            _didIteratorError2 = false;
-            _iteratorError2 = undefined;
-            context$2$0.prev = 5;
-            _iterator2 = _getIterator((0, _parse.parse)({ phrase: this.child, input: trueInput, options: options }));
-
-          case 7:
-            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
-              context$2$0.next = 17;
-              break;
-            }
-
-            output = _step2.value;
-
-            if (!(this.props.unique && _lodash2['default'].some(input.result, _lodash2['default'].partial(_lodash2['default'].isEqual, _lodash2['default'], output.result)))) {
-              context$2$0.next = 11;
-              break;
-            }
-
-            return context$2$0.abrupt('return');
-
-          case 11:
-            outputModifications = {
-              result: input.result.concat(output.result),
-              qualifiers: input.qualifiers.concat(output.qualifiers)
-            };
-            trueOutput = _lodash2['default'].assign({}, output, outputModifications);
-            return context$2$0.delegateYield(this.parseChild(childIndex + 1, trueOutput, options), 't0', 14);
-
-          case 14:
-            _iteratorNormalCompletion2 = true;
-            context$2$0.next = 7;
-            break;
-
-          case 17:
-            context$2$0.next = 23;
-            break;
-
-          case 19:
-            context$2$0.prev = 19;
-            context$2$0.t1 = context$2$0['catch'](5);
-            _didIteratorError2 = true;
-            _iteratorError2 = context$2$0.t1;
-
-          case 23:
-            context$2$0.prev = 23;
-            context$2$0.prev = 24;
-
-            if (!_iteratorNormalCompletion2 && _iterator2['return']) {
-              _iterator2['return']();
-            }
-
-          case 26:
-            context$2$0.prev = 26;
-
-            if (!_didIteratorError2) {
-              context$2$0.next = 29;
-              break;
-            }
-
-            throw _iteratorError2;
-
-          case 29:
-            return context$2$0.finish(26);
-
-          case 30:
-            return context$2$0.finish(23);
-
-          case 31:
-          case 'end':
-            return context$2$0.stop();
-        }
-      }, callParseChild, this, [[5, 19, 23, 31], [24,, 26, 30]]);
-    })
-  }], [{
-    key: 'defaultProps',
-    value: {
-      max: _Number$MAX_SAFE_INTEGER,
-      min: 1,
-      unique: false
-    },
-    enumerable: true
-  }]);
-
-  return Repeat;
-})(_laconaPhrase.Phrase);
-
-exports.Repeat = Repeat;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../parse":489,"../reconcile":491,"babel-runtime/core-js/get-iterator":497,"babel-runtime/core-js/number/max-safe-integer":499,"babel-runtime/helpers/class-call-check":507,"babel-runtime/helpers/create-class":508,"babel-runtime/helpers/get":511,"babel-runtime/helpers/inherits":512,"babel-runtime/helpers/interop-require-default":513,"babel-runtime/regenerator":595,"lacona-phrase":597}],485:[function(require,module,exports){
-(function (global){
-/** @jsx createElement */
-'use strict';
-
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _defineProperty = require('babel-runtime/helpers/define-property')['default'];
-
-var _extends = require('babel-runtime/helpers/extends')['default'];
-
-var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
-
-var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _laconaPhrase = require('lacona-phrase');
-
-var _parse = require('../parse');
-
-var _reconcile = require('../reconcile');
-
-var Sequence = (function (_Phrase) {
-  _inherits(Sequence, _Phrase);
-
-  function Sequence() {
-    _classCallCheck(this, Sequence);
-
-    _get(Object.getPrototypeOf(Sequence.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Sequence, [{
-    key: 'describe',
-    value: function describe() {
-      // replace optionals with replacements
-      var ellipsisIndex = _lodash2['default'].findIndex(this.props.children, _lodash2['default'].property('props.ellipsis'));
-      if (ellipsisIndex > -1 && ellipsisIndex < this.props.children.length - 1) {
-        return (0, _laconaPhrase.createElement)(
-          'sequence',
-          null,
-          this.props.children.slice(0, ellipsisIndex),
-          _lodash2['default'].merge({}, this.props.children[ellipsisIndex], { props: { ellipsis: false } }),
-          (0, _laconaPhrase.createElement)(
-            'sequence',
-            { optional: true, limited: true, merge: true },
-            this.props.children.slice(ellipsisIndex + 1)
-          )
-        );
-      }
-
-      if (_lodash2['default'].some(this.props.children, _lodash2['default'].property('props.optional'))) {
-        var newChildren = _lodash2['default'].map(this.props.children, function (child) {
-          if (child && child.props && child.props.optional) {
-            var newChild = _lodash2['default'].merge({}, child, { props: { optional: false } });
-            delete newChild.props.id;
-            delete newChild.props.merge;
-
-            var choiceChildren = [(0, _laconaPhrase.createElement)('literal', { text: '' }), newChild];
-
-            if (child.props.preferred) choiceChildren.reverse();
-
-            return (0, _laconaPhrase.createElement)(
-              'choice',
-              { limit: child.props.limited ? 1 : undefined, id: child.props.id, merge: child.props.merge },
-              choiceChildren
-            );
-          }
-
-          return child;
-        });
-
-        return (0, _laconaPhrase.createElement)(
-          'sequence',
-          _extends({}, this.props, { children: undefined }),
-          newChildren
-        );
-      }
-    }
-  }, {
-    key: '_handleParse',
-    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
-      var modifications;
-      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
-        while (1) switch (context$2$0.prev = context$2$0.next) {
-          case 0:
-            this.childPhrases = (0, _reconcile.reconcile)({ descriptor: this.props.children, phrase: this.childPhrases, options: options });
-
-            modifications = {
-              result: {},
-              score: 1
-            };
-            return context$2$0.delegateYield(this.parseChild(0, _lodash2['default'].assign({}, input, modifications), options), 't0', 3);
-
-          case 3:
-          case 'end':
-            return context$2$0.stop();
-        }
-      }, _handleParse, this);
-    })
-  }, {
-    key: 'parseChild',
-    value: _regeneratorRuntime.mark(function parseChild(childIndex, input, options) {
-      var child, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, output, modifications, nextOutput;
-
-      return _regeneratorRuntime.wrap(function parseChild$(context$2$0) {
-        while (1) switch (context$2$0.prev = context$2$0.next) {
-          case 0:
-            child = this.childPhrases[childIndex];
-            _iteratorNormalCompletion = true;
-            _didIteratorError = false;
-            _iteratorError = undefined;
-            context$2$0.prev = 4;
-            _iterator = _getIterator((0, _parse.parse)({ phrase: child, input: input, options: options }));
-
-          case 6:
-            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              context$2$0.next = 28;
-              break;
-            }
-
-            output = _step.value;
-
-            if (!(this.props.unique && output.result != null)) {
-              context$2$0.next = 15;
-              break;
-            }
-
-            if (!(child.props.id && input.result[child.props.id] != null)) {
-              context$2$0.next = 13;
-              break;
-            }
-
-            return context$2$0.abrupt('continue', 25);
-
-          case 13:
-            if (!(child.props.merge && !_lodash2['default'].isEmpty(_lodash2['default'].intersection(_lodash2['default'].keys(input.result), _lodash2['default'].keys(output.result))))) {
-              context$2$0.next = 15;
-              break;
-            }
-
-            return context$2$0.abrupt('continue', 25);
-
-          case 15:
-            modifications = {};
-
-            modifications.result = getAccumulatedResult(input.result, child, output.result);
-            modifications.score = input.score * output.score;
-            modifications.qualifiers = input.qualifiers.concat(output.qualifiers);
-            nextOutput = _lodash2['default'].assign({}, output, modifications);
-
-            if (!(childIndex + 1 >= this.childPhrases.length)) {
-              context$2$0.next = 24;
-              break;
-            }
-
-            context$2$0.next = 23;
-            return nextOutput;
-
-          case 23:
-            return context$2$0.abrupt('continue', 25);
-
-          case 24:
-            return context$2$0.delegateYield(this.parseChild(childIndex + 1, nextOutput, options), 't0', 25);
-
-          case 25:
-            _iteratorNormalCompletion = true;
-            context$2$0.next = 6;
-            break;
-
-          case 28:
-            context$2$0.next = 34;
-            break;
-
-          case 30:
-            context$2$0.prev = 30;
-            context$2$0.t1 = context$2$0['catch'](4);
-            _didIteratorError = true;
-            _iteratorError = context$2$0.t1;
-
-          case 34:
-            context$2$0.prev = 34;
-            context$2$0.prev = 35;
-
-            if (!_iteratorNormalCompletion && _iterator['return']) {
-              _iterator['return']();
-            }
-
-          case 37:
-            context$2$0.prev = 37;
-
-            if (!_didIteratorError) {
-              context$2$0.next = 40;
-              break;
-            }
-
-            throw _iteratorError;
-
-          case 40:
-            return context$2$0.finish(37);
-
-          case 41:
-            return context$2$0.finish(34);
-
-          case 42:
-          case 'end':
-            return context$2$0.stop();
-        }
-      }, parseChild, this, [[4, 30, 34, 42], [35,, 37, 41]]);
-    })
-  }]);
-
-  return Sequence;
-})(_laconaPhrase.Phrase);
-
-exports.Sequence = Sequence;
-
-function getAccumulatedResult(inputResult, child, childResult) {
-  if (!_lodash2['default'].isUndefined(childResult)) {
-    var childId = child.props.id;
-    var childMerge = child.props.merge;
-    if (childId) {
-      return _lodash2['default'].assign({}, inputResult, _defineProperty({}, childId, childResult));
-    } else if (childMerge) {
-      if (!_lodash2['default'].isEmpty(inputResult) && _lodash2['default'].isPlainObject(childResult)) {
-        return _lodash2['default'].merge({}, inputResult, childResult);
-      } else {
-        return childResult;
-      }
-    }
-  }
-  return inputResult;
-}
-// id
-// merge
-
-// if (child.props.ellipsis) {
-//   yield nextOutput
-
-//   if (output.text == null) {
-//     continue
-//   }
-
-//   if (output.ellipsis) {
-//     nextOutput = _.assign({}, nextOutput, {ellipsis: false})
-//   }
-// }
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../parse":489,"../reconcile":491,"babel-runtime/core-js/get-iterator":497,"babel-runtime/helpers/class-call-check":507,"babel-runtime/helpers/create-class":508,"babel-runtime/helpers/define-property":509,"babel-runtime/helpers/extends":510,"babel-runtime/helpers/get":511,"babel-runtime/helpers/inherits":512,"babel-runtime/helpers/interop-require-default":513,"babel-runtime/regenerator":595,"lacona-phrase":597}],486:[function(require,module,exports){
-(function (global){
-/** @jsx createElement */
-'use strict';
-
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _laconaPhrase = require('lacona-phrase');
-
-var _parse = require('../parse');
-
-var _reconcile = require('../reconcile');
-
-var Tap = (function (_Phrase) {
-  _inherits(Tap, _Phrase);
-
-  function Tap() {
-    _classCallCheck(this, Tap);
-
-    _get(Object.getPrototypeOf(Tap.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(Tap, [{
-    key: '_handleParse',
-    value: _regeneratorRuntime.mark(function _handleParse(input, options) {
-      return _regeneratorRuntime.wrap(function _handleParse$(context$2$0) {
-        var _this = this;
-
-        while (1) switch (context$2$0.prev = context$2$0.next) {
-          case 0:
-            this.childPhrase = (0, _reconcile.reconcile)({ descriptor: this.props.children[0], phrase: this.childPhrase, options: options });
-
-            if (input.text != null) {
-              options.enqueueCallback(function () {
-                return _this.props['function'](input.text);
-              });
-            }
-
-            return context$2$0.delegateYield((0, _parse.parse)({ phrase: this.childPhrase, input: input, options: options }), 't0', 3);
-
-          case 3:
-          case 'end':
-            return context$2$0.stop();
-        }
-      }, _handleParse, this);
-    })
-  }], [{
-    key: 'defaultProps',
-    value: {
-      'function': function _function() {}
-    },
-    enumerable: true
-  }]);
-
-  return Tap;
-})(_laconaPhrase.Phrase);
-
-exports.Tap = Tap;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../parse":489,"../reconcile":491,"babel-runtime/helpers/class-call-check":507,"babel-runtime/helpers/create-class":508,"babel-runtime/helpers/get":511,"babel-runtime/helpers/inherits":512,"babel-runtime/helpers/interop-require-default":513,"babel-runtime/regenerator":595,"lacona-phrase":597}],487:[function(require,module,exports){
-'use strict';
-
-var _Object$create = require('babel-runtime/core-js/object/create')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-exports.LaconaError = LaconaError;
-
-function LaconaError() {
-  var temp = Error.apply(this, arguments);
-  temp.name = this.name = 'LaconaError';
-  this.stack = temp.stack;
-  this.message = temp.message;
-}
-
-LaconaError.prototype = _Object$create(Error.prototype, {
-  constructor: {
-    value: LaconaError,
-    writable: true,
-    configurable: true
-  }
-});
-},{"babel-runtime/core-js/object/create":501}],488:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _parser = require('./parser');
-
-Object.defineProperty(exports, 'Parser', {
-  enumerable: true,
-  get: function get() {
-    return _parser.Parser;
-  }
-});
-
-var _error = require('./error');
-
-Object.defineProperty(exports, 'LaconaError', {
-  enumerable: true,
-  get: function get() {
-    return _error.LaconaError;
-  }
-});
-},{"./error":487,"./parser":490}],489:[function(require,module,exports){
-(function (global){
-'use strict';
-
-var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
-
-var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-exports.parse = parse;
-var marked0$0 = [parse].map(_regeneratorRuntime.mark);
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-function hasPlaceholder(output) {
-  return _lodash2['default'].any(output.words, 'placeholder');
-}
-
-function modify(phrase, output) {
-  var modifications = {};
-
-  if (phrase.props.ellipsis) {
-    modifications.ellipsis = true;
-  }
-
-  if (phrase.props.value) {
-    modifications.result = phrase.props.value;
-  }
-
-  if (phrase.props.qualifiers) {
-    modifications.qualifiers = phrase.props.qualifiers;
-  }
-
-  if (phrase.props.score != null) {
-    modifications.score = phrase.props.score;
-  }
-
-  return _lodash2['default'].assign({}, output, modifications);
-}
-
-function parse(_ref) {
-  var phrase = _ref.phrase;
-  var input = _ref.input;
-  var options = _ref.options;
-
-  var iterator, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, output, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2;
-
-  return _regeneratorRuntime.wrap(function parse$(context$1$0) {
-    while (1) switch (context$1$0.prev = context$1$0.next) {
-      case 0:
-        options.parses++;
-
-        if (!phrase.__describedPhrase) {
-          context$1$0.next = 32;
-          break;
-        }
-
-        iterator = parse({ phrase: phrase.__describedPhrase, input: input, options: options });
-        _iteratorNormalCompletion = true;
-        _didIteratorError = false;
-        _iteratorError = undefined;
-        context$1$0.prev = 6;
-        _iterator = _getIterator(iterator);
-
-      case 8:
-        if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-          context$1$0.next = 16;
-          break;
-        }
-
-        output = _step.value;
-
-        if (!(!phrase.validate || hasPlaceholder(output) || phrase.validate(output.result))) {
-          context$1$0.next = 13;
-          break;
-        }
-
-        context$1$0.next = 13;
-        return modify(phrase, output);
-
-      case 13:
-        _iteratorNormalCompletion = true;
-        context$1$0.next = 8;
-        break;
-
-      case 16:
-        context$1$0.next = 22;
-        break;
-
-      case 18:
-        context$1$0.prev = 18;
-        context$1$0.t0 = context$1$0['catch'](6);
-        _didIteratorError = true;
-        _iteratorError = context$1$0.t0;
-
-      case 22:
-        context$1$0.prev = 22;
-        context$1$0.prev = 23;
-
-        if (!_iteratorNormalCompletion && _iterator['return']) {
-          _iterator['return']();
-        }
-
-      case 25:
-        context$1$0.prev = 25;
-
-        if (!_didIteratorError) {
-          context$1$0.next = 28;
-          break;
-        }
-
-        throw _iteratorError;
-
-      case 28:
-        return context$1$0.finish(25);
-
-      case 29:
-        return context$1$0.finish(22);
-
-      case 30:
-        context$1$0.next = 61;
-        break;
-
-      case 32:
-        if (!phrase._handleParse) {
-          context$1$0.next = 61;
-          break;
-        }
-
-        _iteratorNormalCompletion2 = true;
-        _didIteratorError2 = false;
-        _iteratorError2 = undefined;
-        context$1$0.prev = 36;
-        _iterator2 = _getIterator(phrase._handleParse(input, options));
-
-      case 38:
-        if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
-          context$1$0.next = 45;
-          break;
-        }
-
-        output = _step2.value;
-        context$1$0.next = 42;
-        return modify(phrase, output);
-
-      case 42:
-        _iteratorNormalCompletion2 = true;
-        context$1$0.next = 38;
-        break;
-
-      case 45:
-        context$1$0.next = 51;
-        break;
-
-      case 47:
-        context$1$0.prev = 47;
-        context$1$0.t1 = context$1$0['catch'](36);
-        _didIteratorError2 = true;
-        _iteratorError2 = context$1$0.t1;
-
-      case 51:
-        context$1$0.prev = 51;
-        context$1$0.prev = 52;
-
-        if (!_iteratorNormalCompletion2 && _iterator2['return']) {
-          _iterator2['return']();
-        }
-
-      case 54:
-        context$1$0.prev = 54;
-
-        if (!_didIteratorError2) {
-          context$1$0.next = 57;
-          break;
-        }
-
-        throw _iteratorError2;
-
-      case 57:
-        return context$1$0.finish(54);
-
-      case 58:
-        return context$1$0.finish(51);
-
-      case 59:
-        context$1$0.next = 61;
-        break;
-
-      case 61:
-        // noop
-
-        options.sourceManager.markSourceUpToDate(phrase);
-
-      case 62:
-      case 'end':
-        return context$1$0.stop();
-    }
-  }, marked0$0[0], this, [[6, 18, 22, 30], [23,, 25, 29], [36, 47, 51, 59], [52,, 54, 58]]);
-}
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/core-js/get-iterator":497,"babel-runtime/helpers/interop-require-default":513,"babel-runtime/regenerator":595}],490:[function(require,module,exports){
-(function (global){
-/** @jsx createElement */
-'use strict';
-
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _getIterator = require('babel-runtime/core-js/get-iterator')['default'];
-
-var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-exports.createOption = createOption;
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _events = require('events');
-
-var _parse2 = require('./parse');
-
-var _reconcile2 = require('./reconcile');
-
-var _error = require('./error');
-
-var _sourceManager = require('./source-manager');
-
-var _sourceManager2 = _interopRequireDefault(_sourceManager);
-
-function from(i) {
-  var a = [];
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
-
-  try {
-    for (var _iterator = _getIterator(i), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var x = _step.value;
-
-      a.push(x);
-    }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator['return']) {
-        _iterator['return']();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
-  }
-
-  return a;
-}
-
-function callEvery(ary) {
-  _lodash2['default'].forEach(ary, function (callback) {
-    return callback();
-  });
-}
-
-var optionDefaults = {
-  text: '',
-  words: [],
-  qualifiers: [],
-  callbacks: []
-};
-
-function createOption(options) {
-  return _lodash2['default'].defaults(options, optionDefaults);
-}
-
-function normalizeOutput(option) {
-  var output = _lodash2['default'].pick(option, ['words', 'score', 'result', 'qualifiers', 'ellipsis']);
-  return output;
-}
-
-var Parser = (function (_EventEmitter) {
-  _inherits(Parser, _EventEmitter);
-
-  function Parser() {
-    var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
-    var _ref$langs = _ref.langs;
-    var langs = _ref$langs === undefined ? ['default'] : _ref$langs;
-    var grammar = _ref.grammar;
-    var _ref$extensions = _ref.extensions;
-    var extensions = _ref$extensions === undefined ? [] : _ref$extensions;
-
-    _classCallCheck(this, Parser);
-
-    _get(Object.getPrototypeOf(Parser.prototype), 'constructor', this).call(this);
-
-    this.langs = langs;
-    this.grammar = grammar;
-    this.extensions = extensions;
-    this._oldExtensions = [];
-    this._finalCallbacks = [];
-    this._sourceManager = new _sourceManager2['default']({
-      update: this._maybeReparse.bind(this)
-    });
-  }
-
-  _createClass(Parser, [{
-    key: '_maybeReparse',
-    value: function _maybeReparse() {
-      this.emit('update');
-    }
-  }, {
-    key: '_getExtensions',
-    value: function _getExtensions(Constructor) {
-      return _lodash2['default'].reduce(this.extensions, function (acc, Extension) {
-        if (_lodash2['default'].includes(Extension['extends'], Constructor)) {
-          acc.push(Extension);
-        }
-        return acc;
-      }, []);
-    }
-  }, {
-    key: '_getSource',
-    value: function _getSource(descriptor) {
-      return this._sourceManager.getSource(descriptor);
-    }
-  }, {
-    key: '_removeSource',
-    value: function _removeSource(descriptor) {
-      this._sourceManager.removeSource(descriptor);
-    }
-  }, {
-    key: '_getReconcileParseOptions',
-    value: function _getReconcileParseOptions() {
-      var _ref2 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
-      var _ref2$extensionsChanged = _ref2.extensionsChanged;
-      var extensionsChanged = _ref2$extensionsChanged === undefined ? false : _ref2$extensionsChanged;
-
-      return {
-        langs: this.langs,
-        getExtensions: this._getExtensions.bind(this),
-        sourceManager: this._sourceManager,
-        enqueueCallback: this._enqueueCallback.bind(this),
-        extensionsChanged: extensionsChanged,
-        parses: 0
-      };
-    }
-  }, {
-    key: '_enqueueCallback',
-    value: function _enqueueCallback(callback) {
-      this._finalCallbacks.push(callback);
-    }
-  }, {
-    key: '_reconcile',
-    value: function _reconcile(options) {
-      this._phrase = (0, _reconcile2.reconcile)({ descriptor: this.grammar, phrase: this._phrase, options: options });
-    }
-  }, {
-    key: 'reconcile',
-    value: function reconcile() {
-      this._reconcile(this._getReconcileParseOptions());
-    }
-  }, {
-    key: 'activate',
-    value: function activate() {
-      this._sourceManager.activate();
-    }
-  }, {
-    key: 'deactivate',
-    value: function deactivate() {
-      this._sourceManager.deactivate();
-    }
-  }, {
-    key: 'parse',
-    value: _regeneratorRuntime.mark(function parse(inputString) {
-      var extensionsChanged, input, options, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, output;
-
-      return _regeneratorRuntime.wrap(function parse$(context$2$0) {
-        while (1) switch (context$2$0.prev = context$2$0.next) {
-          case 0:
-            if (_lodash2['default'].isString(inputString)) {
-              context$2$0.next = 2;
-              break;
-            }
-
-            throw new _error.LaconaError('lacona parse input must be a string');
-
-          case 2:
-            extensionsChanged = !_lodash2['default'].isEqual(this._oldExtensions, this.extensions);
-
-            if (extensionsChanged) {
-              this._oldExtensions = _lodash2['default'].clone(this.extensions);
-            }
-
-            input = createOption({ text: inputString });
-            options = this._getReconcileParseOptions({ extensionsChanged: extensionsChanged });
-
-            this._reconcile(options);
-
-            _iteratorNormalCompletion2 = true;
-            _didIteratorError2 = false;
-            _iteratorError2 = undefined;
-            context$2$0.prev = 10;
-            _iterator2 = _getIterator((0, _parse2.parse)({ phrase: this._phrase, input: input, options: options }));
-
-          case 12:
-            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
-              context$2$0.next = 21;
-              break;
-            }
-
-            output = _step2.value;
-
-            if (output.text) {
-              context$2$0.next = 18;
-              break;
-            }
-
-            callEvery(output.callbacks);
-            context$2$0.next = 18;
-            return normalizeOutput(output);
-
-          case 18:
-            _iteratorNormalCompletion2 = true;
-            context$2$0.next = 12;
-            break;
-
-          case 21:
-            context$2$0.next = 27;
-            break;
-
-          case 23:
-            context$2$0.prev = 23;
-            context$2$0.t0 = context$2$0['catch'](10);
-            _didIteratorError2 = true;
-            _iteratorError2 = context$2$0.t0;
-
-          case 27:
-            context$2$0.prev = 27;
-            context$2$0.prev = 28;
-
-            if (!_iteratorNormalCompletion2 && _iterator2['return']) {
-              _iterator2['return']();
-            }
-
-          case 30:
-            context$2$0.prev = 30;
-
-            if (!_didIteratorError2) {
-              context$2$0.next = 33;
-              break;
-            }
-
-            throw _iteratorError2;
-
-          case 33:
-            return context$2$0.finish(30);
-
-          case 34:
-            return context$2$0.finish(27);
-
-          case 35:
-            if (global.logStatus) global.logStatus({ parses: options.parses });
-
-            callEvery(this._finalCallbacks);
-
-            this._finalCallbacks = [];
-
-          case 38:
-          case 'end':
-            return context$2$0.stop();
-        }
-      }, parse, this, [[10, 23, 27, 35], [28,, 30, 34]]);
-    })
-  }, {
-    key: 'parseArray',
-    value: function parseArray(inputString) {
-      return from(this.parse(inputString));
-    }
-  }]);
-
-  return Parser;
-})(_events.EventEmitter);
-
-exports.Parser = Parser;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./error":487,"./parse":489,"./reconcile":491,"./source-manager":492,"babel-runtime/core-js/get-iterator":497,"babel-runtime/helpers/class-call-check":507,"babel-runtime/helpers/create-class":508,"babel-runtime/helpers/get":511,"babel-runtime/helpers/inherits":512,"babel-runtime/helpers/interop-require-default":513,"babel-runtime/regenerator":595,"events":299}],491:[function(require,module,exports){
-(function (global){
-/** @jsx createElement */
-'use strict';
-
-var _slicedToArray = require('babel-runtime/helpers/sliced-to-array')['default'];
-
-var _extends = require('babel-runtime/helpers/extends')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-exports.reconcile = reconcile;
-exports.destroy = destroy;
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _elements = require('./elements');
-
-var builtins = _interopRequireWildcard(_elements);
-
-var _laconaPhrase = require('lacona-phrase');
-
-var _descriptor = require('./descriptor');
-
-function reconcile(_ref) {
-  var descriptor = _ref.descriptor;
-  var phrase = _ref.phrase;
-  var options = _ref.options;
-
-  var func = _lodash2['default'].isArray(descriptor) ? reconcileArray : reconcileOne;
-  return func({ descriptor: descriptor, phrase: phrase, options: options });
-}
-
-function reconcileArray(_ref2) {
-  var descriptor = _ref2.descriptor;
-  var phrase = _ref2.phrase;
-  var options = _ref2.options;
-
-  return _lodash2['default'].chain(descriptor).reject(function (item) {
-    return item == null;
-  }).reject(_lodash2['default'].isString).zip(phrase).map(function (_ref3) {
-    var _ref32 = _slicedToArray(_ref3, 2);
-
-    var descriptor = _ref32[0];
-    var phrase = _ref32[1];
-    return reconcile({ descriptor: descriptor, phrase: phrase, options: options });
-  }).value();
-}
-
-function reconcileOne(_ref4) {
-  var descriptor = _ref4.descriptor;
-  var phrase = _ref4.phrase;
-  var options = _ref4.options;
-
-  if (descriptor == null && phrase) return destroy({ phrase: phrase, sourceManager: options.sourceManager });
-
-  var Constructor = (0, _descriptor.getConstructor)({ Constructor: descriptor.Constructor, type: 'phrase' });
-  var props = (0, _descriptor.getRealProps)({ descriptor: descriptor, Constructor: Constructor });
-
-  if (phrase && phrase.constructor === Constructor && _lodash2['default'].isEqual(props, phrase.props)) {
-    var needsRedescribe = false;
-
-    var _getExtensions = getExtensions({ Constructor: Constructor, phrase: phrase, options: options });
-
-    var extensionsChanged = _getExtensions.extensionsChanged;
-    var extensions = _getExtensions.extensions;
-
-    if (extensionsChanged) {
-      needsRedescribe = true;
-    }
-
-    if (!needsRedescribe && options.sourceManager.sourceChanged(phrase)) {
-      needsRedescribe = true;
-    }
-
-    if (needsRedescribe) {
-      var describedPhrase = getDescribedPhrase({ Constructor: Constructor, phrase: phrase, extensions: extensions, options: options });
-
-      phrase.__describedPhrase = describedPhrase;
-    }
-
-    return phrase;
-  } else {
-    //reconstruct
-    var extensions = options.getExtensions(Constructor);
-
-    if (phrase) destroy({ phrase: phrase, sourceManager: options.sourceManager });
-
-    var newPhrase = (0, _descriptor.instantiate)({ Constructor: Constructor, props: props });
-
-    options.sourceManager.sourceInstance(newPhrase);
-
-    create({ phrase: newPhrase });
-
-    var describedPhrase = getDescribedPhrase({ Constructor: Constructor, phrase: newPhrase, extensions: extensions, options: options });
-
-    newPhrase.__oldExtensions = extensions;
-    newPhrase.__describedPhrase = describedPhrase;
-
-    return newPhrase;
-  }
-}
-
-function getExtensions(_ref5) {
-  var Constructor = _ref5.Constructor;
-  var phrase = _ref5.phrase;
-  var options = _ref5.options;
-
-  if (options.extensionsChanged) {
-    var extensions = options.getExtensions(Constructor);
-
-    if (!_lodash2['default'].isEqual(extensions, phrase.__oldExtensions)) {
-      phrase.__oldExtensions = extensions;
-      return {
-        extensions: extensions,
-        extensionsChanged: true
-      };
-    }
-  }
-
-  return {
-    extensionsChanged: false,
-    extensions: phrase.__oldExtensions
-  };
-}
-
-function getDescribedPhrase(_ref6) {
-  var phrase = _ref6.phrase;
-  var extensions = _ref6.extensions;
-  var options = _ref6.options;
-
-  var describe = getCall({ prop: 'describe', Constructor: phrase.constructor, langs: options.langs });
-  var description = getDescription({ describe: describe, extensions: extensions, phrase: phrase });
-  return description ? reconcile({ descriptor: description, options: options, phrase: phrase.__describedPhrase }) : null;
-}
-
-function getCall(_ref7) {
-  var Constructor = _ref7.Constructor;
-  var langs = _ref7.langs;
-  var prop = _ref7.prop;
-
-  if (Constructor.prototype[prop]) {
-    return Constructor.prototype[prop];
-  } else if (Constructor.translations) {
-    return getCallFromTranslations({ prop: prop, langs: langs, translations: Constructor.translations });
-  }
-}
-
-function getCallFromTranslations(_ref8) {
-  var prop = _ref8.prop;
-  var langs = _ref8.langs;
-  var translations = _ref8.translations;
-
-  return _lodash2['default'].chain(langs.concat('default')).map(function (lang) {
-    return _lodash2['default'].find(translations, function (obj) {
-      return _lodash2['default'].includes(obj.langs, lang);
-    });
-  }).filter(_lodash2['default'].negate(_lodash2['default'].isUndefined)).first().value()[prop];
-}
-//
-// function setPropsAndState({phrase, props, state, changed}) {
-//   phrase.props = props
-//
-//   if (!phrase.setState) {
-//     phrase.state = state || {}
-//     phrase.setState = function (nextState) {
-//       _.merge(this.state, nextState)
-//       this._stateChanged = true
-//       changed(this)
-//     }
-//   }
-// }
-
-function getDescription(_ref9) {
-  var describe = _ref9.describe;
-  var extensions = _ref9.extensions;
-  var phrase = _ref9.phrase;
-
-  if (describe) {
-    var tempDescription = describe.call(phrase);
-    if (extensions.length) {
-      var extensionElements = _lodash2['default'].map(extensions, function (Extension) {
-        return (0, _laconaPhrase.createElement)(Extension, _extends({}, phrase.props, { id: undefined }));
-      });
-
-      return (0, _laconaPhrase.createElement)(
-        'choice',
-        null,
-        tempDescription,
-        extensionElements
-      );
-    } else {
-      return tempDescription;
-    }
-  }
-}
-
-function destroy(_ref10) {
-  var phrase = _ref10.phrase;
-  var sourceManager = _ref10.sourceManager;
-
-  if ((phrase.constructor === builtins.choice || phrase.constructor === builtins.sequence) && phrase.childPhrases) {
-    phrase.childPhrases.forEach(function (phrase) {
-      return destroy({ phrase: phrase, sourceManager: sourceManager });
-    });
-  }
-
-  sourceManager.unsourceInstance(phrase);
-
-  if (phrase.destroy) phrase.destroy();
-}
-
-function create(_ref11) {
-  var phrase = _ref11.phrase;
-
-  if (phrase.create) phrase.create();
-}
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./descriptor":474,"./elements":478,"babel-runtime/helpers/extends":510,"babel-runtime/helpers/interop-require-default":513,"babel-runtime/helpers/interop-require-wildcard":514,"babel-runtime/helpers/sliced-to-array":515,"lacona-phrase":597}],492:[function(require,module,exports){
-(function (global){
-'use strict';
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _descriptor = require('./descriptor');
-
-var SourceManager = (function () {
-  function SourceManager(_ref) {
-    var _ref$update = _ref.update;
-    var update = _ref$update === undefined ? function () {} : _ref$update;
-
-    _classCallCheck(this, SourceManager);
-
-    this._sources = [];
-    this.update = update;
-  }
-
-  _createClass(SourceManager, [{
-    key: '_triggerSourceUpdate',
-    value: function _triggerSourceUpdate(instance) {
-      _lodash2['default'].forEach(this._sources, function (existingSource) {
-        if (existingSource.instance.source === instance) {
-          if (existingSource.instance.onUpdate) existingSource.instance.onUpdate();
-        }
-      });
-      instance.__dataVersion++;
-      this.update();
-    }
-  }, {
-    key: '_createSource',
-    value: function _createSource(descriptor) {
-      var _this = this;
-
-      var Constructor = (0, _descriptor.getConstructor)({ Constructor: descriptor.Constructor, type: 'source' });
-      var props = (0, _descriptor.getRealProps)({ descriptor: descriptor, Constructor: descriptor.Constructor });
-      var instance = (0, _descriptor.instantiate)({ Constructor: Constructor, props: props });
-
-      instance.__dataVersion = 0;
-      instance.__subscribers = 0;
-      instance.__isCreating = true;
-
-      instance.setData = function (newData) {
-        // setData during onCreate() doesn't trigger source Update
-        instance.data = newData;
-        if (!instance.__isCreating) {
-          _this._triggerSourceUpdate(instance);
-        }
-      };
-
-      this.sourceInstance(instance);
-
-      this._sources.push({ instance: instance, descriptor: descriptor });
-
-      if (instance.onCreate) instance.onCreate();
-
-      instance.__isCreating = false;
-
-      return instance;
-    }
-  }, {
-    key: '_getSource',
-    value: function _getSource(descriptor) {
-      var possibleSource = undefined;
-      if (!descriptor.Constructor.preventSharing) {
-        possibleSource = _lodash2['default'].find(this._sources, function (source) {
-          return _lodash2['default'].isEqual(descriptor, source.descriptor);
-        });
-      }
-
-      if (possibleSource) {
-        return possibleSource.instance;
-      } else {
-        return this._createSource(descriptor);
-      }
-    }
-  }, {
-    key: '_removeSource',
-    value: function _removeSource(descriptor) {
-      var index = _lodash2['default'].findIndex(this._sources, function (source) {
-        return _lodash2['default'].isEqual(descriptor, source.descriptor);
-      });
-      this._sources.splice(index, 1);
-    }
-  }, {
-    key: 'sourceInstance',
-    value: function sourceInstance(object) {
-      object.__sources = {};
-
-      if (object.observe) {
-        var sourceDescriptor = object.observe();
-        if (sourceDescriptor) {
-          var source = this._getSource(sourceDescriptor);
-          source.__subscribers++;
-          object.__lastSourceVersion = 0;
-          object.__descriptor = sourceDescriptor;
-
-          object.source = source;
-        }
-      }
-    }
-  }, {
-    key: 'unsourceInstance',
-    value: function unsourceInstance(object) {
-      if (object.source) {
-        object.source.__subscribers--;
-        if (object.source.__subscribers === 0 && object.source.onDestroy) {
-          object.source.onDestroy();
-          this._removeSource(object.source.__descriptor);
-        }
-        delete object.source;
-      }
-    }
-  }, {
-    key: 'sourceChanged',
-    value: function sourceChanged(object) {
-      if (!object.source) return false;
-      return object.__lastSourceVersion !== object.source.__dataVersion;
-    }
-  }, {
-    key: 'markSourceUpToDate',
-    value: function markSourceUpToDate(object) {
-      if (object.source) {
-        object.__lastSourceVersion = object.source.__dataVersion;
-      }
-    }
-  }, {
-    key: 'activate',
-    value: function activate() {
-      _lodash2['default'].chain(this._sources).filter(function (source) {
-        return source.instance.onActivate;
-      }).forEach(function (source) {
-        return source.instance.onActivate();
-      }).value();
-    }
-  }, {
-    key: 'deactivate',
-    value: function deactivate() {
-      _lodash2['default'].chain(this._sources).filter(function (source) {
-        return source.instance.onDeactivate;
-      }).forEach(function (source) {
-        return source.instance.onDeactivate();
-      }).value();
-    }
-  }]);
-
-  return SourceManager;
-})();
-
-exports['default'] = SourceManager;
-module.exports = exports['default'];
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./descriptor":474,"babel-runtime/helpers/class-call-check":507,"babel-runtime/helpers/create-class":508,"babel-runtime/helpers/interop-require-default":513}],493:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _map = require('./map');
-
-Object.defineProperty(exports, 'map', {
-  enumerable: true,
-  get: function get() {
-    return _map.MapPhrase;
-  }
-});
-},{"./map":494}],494:[function(require,module,exports){
-(function (global){
-'use strict';
-
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _laconaPhrase = require('lacona-phrase');
-
-var MapPhrase = (function (_Source) {
-  _inherits(MapPhrase, _Source);
-
-  function MapPhrase() {
-    _classCallCheck(this, MapPhrase);
-
-    _get(Object.getPrototypeOf(MapPhrase.prototype), 'constructor', this).apply(this, arguments);
-  }
-
-  _createClass(MapPhrase, [{
-    key: 'observe',
-    value: function observe() {
-      return this.props.children[0];
-    }
-  }, {
-    key: 'onCreate',
-    value: function onCreate() {
-      this.onUpdate();
-    }
-  }, {
-    key: 'trigger',
-    value: function trigger() {
-      var _source;
-
-      (_source = this.source).trigger.apply(_source, arguments);
-    }
-  }, {
-    key: 'onUpdate',
-    value: function onUpdate() {
-      var data = this.props['function'](this.source.data);
-      this.setData(data);
-    }
-  }]);
-
-  return MapPhrase;
-})(_laconaPhrase.Source);
-
-exports.MapPhrase = MapPhrase;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/helpers/class-call-check":507,"babel-runtime/helpers/create-class":508,"babel-runtime/helpers/get":511,"babel-runtime/helpers/inherits":512,"babel-runtime/helpers/interop-require-default":513,"lacona-phrase":597}],495:[function(require,module,exports){
-(function (global){
-'use strict';
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-exports.match = match;
-
-var _lodash = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-// returns a `words` object if its a match, else null
-
-function match(_ref) {
-  var input = _ref.input;
-  var text = _ref.text;
-  var _ref$fuzzy = _ref.fuzzy;
-  var fuzzy = _ref$fuzzy === undefined ? false : _ref$fuzzy;
-
-  var nullInput = nullMatch({ input: input, text: text });
-  if (nullInput) return nullInput;
-
-  var inputLower = input.toLowerCase();
-  var textLower = text.toLowerCase();
-
-  var partialBeginning = partialBeginningMatch({ input: input, text: text, inputLower: inputLower, textLower: textLower });
-  if (partialBeginning) return partialBeginning;
-
-  var fullBeginning = fullBeginningMatch({ input: input, text: text, inputLower: inputLower, textLower: textLower });
-  if (fullBeginning) return fullBeginning;
-
-  if (fuzzy) {
-    var anywhere = anywhereMatch({ input: input, text: text, inputLower: inputLower, textLower: textLower });
-    if (anywhere) return anywhere;
-  }
-
-  // const fullFuzzy = fuzzyMatch({input, text})
-  // if (fullFuzzy) return {words: fullFuzzy, score: 0.25}
-
-  return [];
-}
-
-function nullMatch(_ref2) {
-  var input = _ref2.input;
-  var text = _ref2.text;
-
-  if (input == null) {
-    return [{
-      words: [{ text: text, input: false }],
-      remaining: null,
-      score: 1
-    }];
-  }
-}
-
-function partialBeginningMatch(_ref3) {
-  var input = _ref3.input;
-  var text = _ref3.text;
-  var inputLower = _ref3.inputLower;
-  var textLower = _ref3.textLower;
-
-  if (_lodash2['default'].startsWith(inputLower, textLower)) {
-    return [{
-      words: [{ text: text, input: true }],
-      remaining: input.substring(text.length),
-      score: 1
-    }];
-  }
-}
-
-function fullBeginningMatch(_ref4) {
-  var input = _ref4.input;
-  var text = _ref4.text;
-  var inputLower = _ref4.inputLower;
-  var textLower = _ref4.textLower;
-
-  if (_lodash2['default'].startsWith(textLower, inputLower)) {
-    var words = [];
-    if (input.length > 0) {
-      words.push({ text: text.substring(0, input.length), input: true });
-    }
-    if (text.length > input.length) {
-      words.push({ text: text.substring(input.length), input: false });
-    }
-
-    return [{
-      words: words,
-      remaining: null,
-      score: 1
-    }];
-  }
-}
-
-// export function * sort (input, items) {
-//   let itemSet = _.map(items, item => ({item, matched: false}))
-//
-//   for (let [func, score] of [[beginningMatch, 1], [anywhereMatch, 0.5]]) {
-//     yield* sortFunction({input, itemSet, func, score})
-//   }
-// }
-//
-// function * sortFunction ({input, itemSet, func, score}) {
-//   for (let obj of itemSet) {
-//     if (!obj.matched) {
-//       const words = func({input, text: obj.item.text, qualifier: obj.item.qualifier})
-//       if (words) {
-//         obj.matched = true
-//         _.forEach(words, word => word.descriptor = obj.item.descriptor)
-//         yield {words, result: obj.item.value, score}
-//       }
-//     }
-//   }
-// }
-//
-// escape special characters, and wrap in parens (for matching)
-// function regexEscape (str) {
-//   return `(${str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/, '\\$&')})`
-// }
-
-// function beginningMatch ({input, text, qualifier}) {
-//   if (_.startsWith(text.toLowerCase(), input.toLowerCase())) {
-//     const matches = [{text: text.slice(0, input.length), input: true, qualifier}]
-//     if (input.length < text.length) {
-//       matches.push({text: text.slice(input.length), input: false, qualifier})
-//     }
-//     return matches
-//   }
-//   return null
-// }
-
-function anywhereMatch(_ref5) {
-  var input = _ref5.input;
-  var text = _ref5.text;
-  var inputLower = _ref5.inputLower;
-  var textLower = _ref5.textLower;
-
-  var index = textLower.indexOf(inputLower);
-
-  if (index > -1) {
-    var words = [];
-    var endIndex = index + input.length;
-
-    if (index > 0) {
-      words.push({ text: text.slice(0, index), input: false });
-    }
-
-    words.push({ text: text.slice(index, endIndex), input: true });
-
-    if (endIndex <= text.length - 1) {
-      words.push({ text: text.slice(endIndex), input: false });
-    }
-
-    return [{
-      words: words,
-      remaining: null,
-      score: 0.5
-    }];
-  }
-
-  return [];
-}
-
-// function fuzzyMatch({input, text}) {
-//   const chars = regexSplit(input)
-//   const fuzzyString = chars.reduce((a, b) => (`${a}([^${b}]*)${b}`), '^') + '(.*)$'
-//   const fuzzyRegex = new RegExp(fuzzyString, 'i')
-//   const fuzzyMatches = text.match(fuzzyRegex)
-//
-//   if (fuzzyMatches) {
-//     const words = []
-//     for (let i = 1, l = fuzzyMatches.length; i < l; i++) {
-//       if (fuzzyMatches[i].length > 0) {
-//         words.push({
-//           text: fuzzyMatches[i],
-//           input: i % 2 === 0
-//         })
-//       }
-//     }
-//     return words
-//   }
-//   return null
-// }
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"babel-runtime/helpers/interop-require-default":513}],496:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/array/from"), __esModule: true };
-},{"core-js/library/fn/array/from":516}],497:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/get-iterator"), __esModule: true };
-},{"core-js/library/fn/get-iterator":517}],498:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/is-iterable"), __esModule: true };
-},{"core-js/library/fn/is-iterable":518}],499:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/number/max-safe-integer"), __esModule: true };
-},{"core-js/library/fn/number/max-safe-integer":519}],500:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/object/assign"), __esModule: true };
-},{"core-js/library/fn/object/assign":520}],501:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/object/create"), __esModule: true };
-},{"core-js/library/fn/object/create":521}],502:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/object/define-property"), __esModule: true };
-},{"core-js/library/fn/object/define-property":522}],503:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/object/get-own-property-descriptor"), __esModule: true };
-},{"core-js/library/fn/object/get-own-property-descriptor":523}],504:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/object/set-prototype-of"), __esModule: true };
-},{"core-js/library/fn/object/set-prototype-of":524}],505:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/promise"), __esModule: true };
-},{"core-js/library/fn/promise":525}],506:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/symbol"), __esModule: true };
-},{"core-js/library/fn/symbol":526}],507:[function(require,module,exports){
-"use strict";
-
-exports["default"] = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-exports.__esModule = true;
-},{}],508:[function(require,module,exports){
-"use strict";
-
-var _Object$defineProperty = require("babel-runtime/core-js/object/define-property")["default"];
-
-exports["default"] = (function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-
-      _Object$defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-})();
-
-exports.__esModule = true;
-},{"babel-runtime/core-js/object/define-property":502}],509:[function(require,module,exports){
-"use strict";
-
-var _Object$defineProperty = require("babel-runtime/core-js/object/define-property")["default"];
-
-exports["default"] = function (obj, key, value) {
-  if (key in obj) {
-    _Object$defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-};
-
-exports.__esModule = true;
-},{"babel-runtime/core-js/object/define-property":502}],510:[function(require,module,exports){
-"use strict";
-
-var _Object$assign = require("babel-runtime/core-js/object/assign")["default"];
-
-exports["default"] = _Object$assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
-};
-
-exports.__esModule = true;
-},{"babel-runtime/core-js/object/assign":500}],511:[function(require,module,exports){
-"use strict";
-
-var _Object$getOwnPropertyDescriptor = require("babel-runtime/core-js/object/get-own-property-descriptor")["default"];
-
-exports["default"] = function get(_x, _x2, _x3) {
-  var _again = true;
-
-  _function: while (_again) {
-    var object = _x,
-        property = _x2,
-        receiver = _x3;
-    _again = false;
-    if (object === null) object = Function.prototype;
-
-    var desc = _Object$getOwnPropertyDescriptor(object, property);
-
-    if (desc === undefined) {
-      var parent = Object.getPrototypeOf(object);
-
-      if (parent === null) {
-        return undefined;
-      } else {
-        _x = parent;
-        _x2 = property;
-        _x3 = receiver;
-        _again = true;
-        desc = parent = undefined;
-        continue _function;
-      }
-    } else if ("value" in desc) {
-      return desc.value;
-    } else {
-      var getter = desc.get;
-
-      if (getter === undefined) {
-        return undefined;
-      }
-
-      return getter.call(receiver);
-    }
-  }
-};
-
-exports.__esModule = true;
-},{"babel-runtime/core-js/object/get-own-property-descriptor":503}],512:[function(require,module,exports){
-"use strict";
-
-var _Object$create = require("babel-runtime/core-js/object/create")["default"];
-
-var _Object$setPrototypeOf = require("babel-runtime/core-js/object/set-prototype-of")["default"];
-
-exports["default"] = function (subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
-  }
-
-  subClass.prototype = _Object$create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    }
-  });
-  if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-};
-
-exports.__esModule = true;
-},{"babel-runtime/core-js/object/create":501,"babel-runtime/core-js/object/set-prototype-of":504}],513:[function(require,module,exports){
-"use strict";
-
-exports["default"] = function (obj) {
-  return obj && obj.__esModule ? obj : {
-    "default": obj
-  };
-};
-
-exports.__esModule = true;
-},{}],514:[function(require,module,exports){
-"use strict";
-
-exports["default"] = function (obj) {
-  if (obj && obj.__esModule) {
-    return obj;
-  } else {
-    var newObj = {};
-
-    if (obj != null) {
-      for (var key in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
-      }
-    }
-
-    newObj["default"] = obj;
-    return newObj;
-  }
-};
-
-exports.__esModule = true;
-},{}],515:[function(require,module,exports){
-"use strict";
-
-var _getIterator = require("babel-runtime/core-js/get-iterator")["default"];
-
-var _isIterable = require("babel-runtime/core-js/is-iterable")["default"];
-
-exports["default"] = (function () {
-  function sliceIterator(arr, i) {
-    var _arr = [];
-    var _n = true;
-    var _d = false;
-    var _e = undefined;
-
-    try {
-      for (var _i = _getIterator(arr), _s; !(_n = (_s = _i.next()).done); _n = true) {
-        _arr.push(_s.value);
-
-        if (i && _arr.length === i) break;
-      }
-    } catch (err) {
-      _d = true;
-      _e = err;
-    } finally {
-      try {
-        if (!_n && _i["return"]) _i["return"]();
-      } finally {
-        if (_d) throw _e;
-      }
-    }
-
-    return _arr;
-  }
-
-  return function (arr, i) {
-    if (Array.isArray(arr)) {
-      return arr;
-    } else if (_isIterable(Object(arr))) {
-      return sliceIterator(arr, i);
-    } else {
-      throw new TypeError("Invalid attempt to destructure non-iterable instance");
-    }
-  };
-})();
-
-exports.__esModule = true;
-},{"babel-runtime/core-js/get-iterator":497,"babel-runtime/core-js/is-iterable":498}],516:[function(require,module,exports){
-require('../../modules/es6.string.iterator');
-require('../../modules/es6.array.from');
-module.exports = require('../../modules/$.core').Array.from;
-},{"../../modules/$.core":532,"../../modules/es6.array.from":584,"../../modules/es6.string.iterator":592}],517:[function(require,module,exports){
-require('../modules/web.dom.iterable');
-require('../modules/es6.string.iterator');
-module.exports = require('../modules/core.get-iterator');
-},{"../modules/core.get-iterator":582,"../modules/es6.string.iterator":592,"../modules/web.dom.iterable":594}],518:[function(require,module,exports){
-require('../modules/web.dom.iterable');
-require('../modules/es6.string.iterator');
-module.exports = require('../modules/core.is-iterable');
-},{"../modules/core.is-iterable":583,"../modules/es6.string.iterator":592,"../modules/web.dom.iterable":594}],519:[function(require,module,exports){
-require('../../modules/es6.number.max-safe-integer');
-module.exports = 0x1fffffffffffff;
-},{"../../modules/es6.number.max-safe-integer":586}],520:[function(require,module,exports){
-require('../../modules/es6.object.assign');
-module.exports = require('../../modules/$.core').Object.assign;
-},{"../../modules/$.core":532,"../../modules/es6.object.assign":587}],521:[function(require,module,exports){
-var $ = require('../../modules/$');
-module.exports = function create(P, D){
-  return $.create(P, D);
-};
-},{"../../modules/$":557}],522:[function(require,module,exports){
-var $ = require('../../modules/$');
-module.exports = function defineProperty(it, key, desc){
-  return $.setDesc(it, key, desc);
-};
-},{"../../modules/$":557}],523:[function(require,module,exports){
-var $ = require('../../modules/$');
-require('../../modules/es6.object.get-own-property-descriptor');
-module.exports = function getOwnPropertyDescriptor(it, key){
-  return $.getDesc(it, key);
-};
-},{"../../modules/$":557,"../../modules/es6.object.get-own-property-descriptor":588}],524:[function(require,module,exports){
-require('../../modules/es6.object.set-prototype-of');
-module.exports = require('../../modules/$.core').Object.setPrototypeOf;
-},{"../../modules/$.core":532,"../../modules/es6.object.set-prototype-of":589}],525:[function(require,module,exports){
-require('../modules/es6.object.to-string');
-require('../modules/es6.string.iterator');
-require('../modules/web.dom.iterable');
-require('../modules/es6.promise');
-module.exports = require('../modules/$.core').Promise;
-},{"../modules/$.core":532,"../modules/es6.object.to-string":590,"../modules/es6.promise":591,"../modules/es6.string.iterator":592,"../modules/web.dom.iterable":594}],526:[function(require,module,exports){
-require('../../modules/es6.symbol');
-require('../../modules/es6.object.to-string');
-module.exports = require('../../modules/$.core').Symbol;
-},{"../../modules/$.core":532,"../../modules/es6.object.to-string":590,"../../modules/es6.symbol":593}],527:[function(require,module,exports){
-arguments[4][109][0].apply(exports,arguments)
-},{"dup":109}],528:[function(require,module,exports){
-module.exports = function(){ /* empty */ };
-},{}],529:[function(require,module,exports){
-arguments[4][111][0].apply(exports,arguments)
-},{"./$.is-object":550,"dup":111}],530:[function(require,module,exports){
-arguments[4][117][0].apply(exports,arguments)
-},{"./$.cof":531,"./$.wks":580,"dup":117}],531:[function(require,module,exports){
-arguments[4][118][0].apply(exports,arguments)
-},{"dup":118}],532:[function(require,module,exports){
-arguments[4][123][0].apply(exports,arguments)
-},{"dup":123}],533:[function(require,module,exports){
-arguments[4][124][0].apply(exports,arguments)
-},{"./$.a-function":527,"dup":124}],534:[function(require,module,exports){
-arguments[4][125][0].apply(exports,arguments)
-},{"dup":125}],535:[function(require,module,exports){
-arguments[4][126][0].apply(exports,arguments)
-},{"./$.fails":539,"dup":126}],536:[function(require,module,exports){
-arguments[4][127][0].apply(exports,arguments)
-},{"./$.global":542,"./$.is-object":550,"dup":127}],537:[function(require,module,exports){
-arguments[4][128][0].apply(exports,arguments)
-},{"./$":557,"dup":128}],538:[function(require,module,exports){
-var global    = require('./$.global')
-  , core      = require('./$.core')
-  , ctx       = require('./$.ctx')
-  , PROTOTYPE = 'prototype';
-
-var $export = function(type, name, source){
-  var IS_FORCED = type & $export.F
-    , IS_GLOBAL = type & $export.G
-    , IS_STATIC = type & $export.S
-    , IS_PROTO  = type & $export.P
-    , IS_BIND   = type & $export.B
-    , IS_WRAP   = type & $export.W
-    , exports   = IS_GLOBAL ? core : core[name] || (core[name] = {})
-    , target    = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE]
-    , key, own, out;
-  if(IS_GLOBAL)source = name;
-  for(key in source){
-    // contains in native
-    own = !IS_FORCED && target && key in target;
-    if(own && key in exports)continue;
-    // export native or passed
-    out = own ? target[key] : source[key];
-    // prevent global pollution for namespaces
-    exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key]
-    // bind timers to global for call from export context
-    : IS_BIND && own ? ctx(out, global)
-    // wrap global constructors for prevent change them in library
-    : IS_WRAP && target[key] == out ? (function(C){
-      var F = function(param){
-        return this instanceof C ? new C(param) : C(param);
-      };
-      F[PROTOTYPE] = C[PROTOTYPE];
-      return F;
-    // make static versions for prototype methods
-    })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
-    if(IS_PROTO)(exports[PROTOTYPE] || (exports[PROTOTYPE] = {}))[key] = out;
-  }
-};
-// type bitmap
-$export.F = 1;  // forced
-$export.G = 2;  // global
-$export.S = 4;  // static
-$export.P = 8;  // proto
-$export.B = 16; // bind
-$export.W = 32; // wrap
-module.exports = $export;
-},{"./$.core":532,"./$.ctx":533,"./$.global":542}],539:[function(require,module,exports){
-arguments[4][131][0].apply(exports,arguments)
-},{"dup":131}],540:[function(require,module,exports){
-arguments[4][134][0].apply(exports,arguments)
-},{"./$.an-object":529,"./$.ctx":533,"./$.is-array-iter":548,"./$.iter-call":551,"./$.to-length":577,"./core.get-iterator-method":581,"dup":134}],541:[function(require,module,exports){
-arguments[4][135][0].apply(exports,arguments)
-},{"./$":557,"./$.to-iobject":576,"dup":135}],542:[function(require,module,exports){
-arguments[4][136][0].apply(exports,arguments)
-},{"dup":136}],543:[function(require,module,exports){
-arguments[4][137][0].apply(exports,arguments)
-},{"dup":137}],544:[function(require,module,exports){
-arguments[4][138][0].apply(exports,arguments)
-},{"./$":557,"./$.descriptors":535,"./$.property-desc":563,"dup":138}],545:[function(require,module,exports){
-arguments[4][139][0].apply(exports,arguments)
-},{"./$.global":542,"dup":139}],546:[function(require,module,exports){
-arguments[4][140][0].apply(exports,arguments)
-},{"dup":140}],547:[function(require,module,exports){
-arguments[4][141][0].apply(exports,arguments)
-},{"./$.cof":531,"dup":141}],548:[function(require,module,exports){
-arguments[4][142][0].apply(exports,arguments)
-},{"./$.iterators":556,"./$.wks":580,"dup":142}],549:[function(require,module,exports){
-arguments[4][143][0].apply(exports,arguments)
-},{"./$.cof":531,"dup":143}],550:[function(require,module,exports){
-arguments[4][145][0].apply(exports,arguments)
-},{"dup":145}],551:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./$.an-object":529,"dup":147}],552:[function(require,module,exports){
-arguments[4][148][0].apply(exports,arguments)
-},{"./$":557,"./$.hide":544,"./$.property-desc":563,"./$.set-to-string-tag":569,"./$.wks":580,"dup":148}],553:[function(require,module,exports){
-arguments[4][149][0].apply(exports,arguments)
-},{"./$":557,"./$.export":538,"./$.has":543,"./$.hide":544,"./$.iter-create":552,"./$.iterators":556,"./$.library":559,"./$.redefine":565,"./$.set-to-string-tag":569,"./$.wks":580,"dup":149}],554:[function(require,module,exports){
-arguments[4][150][0].apply(exports,arguments)
-},{"./$.wks":580,"dup":150}],555:[function(require,module,exports){
-arguments[4][151][0].apply(exports,arguments)
-},{"dup":151}],556:[function(require,module,exports){
-arguments[4][152][0].apply(exports,arguments)
-},{"dup":152}],557:[function(require,module,exports){
-arguments[4][153][0].apply(exports,arguments)
-},{"dup":153}],558:[function(require,module,exports){
-arguments[4][154][0].apply(exports,arguments)
-},{"./$":557,"./$.to-iobject":576,"dup":154}],559:[function(require,module,exports){
-module.exports = true;
-},{}],560:[function(require,module,exports){
-arguments[4][159][0].apply(exports,arguments)
-},{"./$.cof":531,"./$.global":542,"./$.task":574,"dup":159}],561:[function(require,module,exports){
-arguments[4][160][0].apply(exports,arguments)
-},{"./$":557,"./$.fails":539,"./$.iobject":547,"./$.to-object":578,"dup":160}],562:[function(require,module,exports){
-arguments[4][161][0].apply(exports,arguments)
-},{"./$.core":532,"./$.export":538,"./$.fails":539,"dup":161}],563:[function(require,module,exports){
-arguments[4][166][0].apply(exports,arguments)
-},{"dup":166}],564:[function(require,module,exports){
-arguments[4][167][0].apply(exports,arguments)
-},{"./$.redefine":565,"dup":167}],565:[function(require,module,exports){
-module.exports = require('./$.hide');
-},{"./$.hide":544}],566:[function(require,module,exports){
-arguments[4][170][0].apply(exports,arguments)
-},{"dup":170}],567:[function(require,module,exports){
-arguments[4][171][0].apply(exports,arguments)
-},{"./$":557,"./$.an-object":529,"./$.ctx":533,"./$.is-object":550,"dup":171}],568:[function(require,module,exports){
-'use strict';
-var core        = require('./$.core')
-  , $           = require('./$')
-  , DESCRIPTORS = require('./$.descriptors')
-  , SPECIES     = require('./$.wks')('species');
-
-module.exports = function(KEY){
-  var C = core[KEY];
-  if(DESCRIPTORS && C && !C[SPECIES])$.setDesc(C, SPECIES, {
-    configurable: true,
-    get: function(){ return this; }
-  });
-};
-},{"./$":557,"./$.core":532,"./$.descriptors":535,"./$.wks":580}],569:[function(require,module,exports){
-arguments[4][173][0].apply(exports,arguments)
-},{"./$":557,"./$.has":543,"./$.wks":580,"dup":173}],570:[function(require,module,exports){
-arguments[4][174][0].apply(exports,arguments)
-},{"./$.global":542,"dup":174}],571:[function(require,module,exports){
-arguments[4][175][0].apply(exports,arguments)
-},{"./$.a-function":527,"./$.an-object":529,"./$.wks":580,"dup":175}],572:[function(require,module,exports){
-arguments[4][176][0].apply(exports,arguments)
-},{"dup":176}],573:[function(require,module,exports){
-arguments[4][177][0].apply(exports,arguments)
-},{"./$.defined":534,"./$.to-integer":575,"dup":177}],574:[function(require,module,exports){
-arguments[4][182][0].apply(exports,arguments)
-},{"./$.cof":531,"./$.ctx":533,"./$.dom-create":536,"./$.global":542,"./$.html":545,"./$.invoke":546,"dup":182}],575:[function(require,module,exports){
-arguments[4][184][0].apply(exports,arguments)
-},{"dup":184}],576:[function(require,module,exports){
-arguments[4][185][0].apply(exports,arguments)
-},{"./$.defined":534,"./$.iobject":547,"dup":185}],577:[function(require,module,exports){
-arguments[4][186][0].apply(exports,arguments)
-},{"./$.to-integer":575,"dup":186}],578:[function(require,module,exports){
-arguments[4][187][0].apply(exports,arguments)
-},{"./$.defined":534,"dup":187}],579:[function(require,module,exports){
-arguments[4][189][0].apply(exports,arguments)
-},{"dup":189}],580:[function(require,module,exports){
-arguments[4][190][0].apply(exports,arguments)
-},{"./$.global":542,"./$.shared":570,"./$.uid":579,"dup":190}],581:[function(require,module,exports){
-arguments[4][191][0].apply(exports,arguments)
-},{"./$.classof":530,"./$.core":532,"./$.iterators":556,"./$.wks":580,"dup":191}],582:[function(require,module,exports){
-var anObject = require('./$.an-object')
-  , get      = require('./core.get-iterator-method');
-module.exports = require('./$.core').getIterator = function(it){
-  var iterFn = get(it);
-  if(typeof iterFn != 'function')throw TypeError(it + ' is not iterable!');
-  return anObject(iterFn.call(it));
-};
-},{"./$.an-object":529,"./$.core":532,"./core.get-iterator-method":581}],583:[function(require,module,exports){
-var classof   = require('./$.classof')
-  , ITERATOR  = require('./$.wks')('iterator')
-  , Iterators = require('./$.iterators');
-module.exports = require('./$.core').isIterable = function(it){
-  var O = Object(it);
-  return O[ITERATOR] !== undefined
-    || '@@iterator' in O
-    || Iterators.hasOwnProperty(classof(O));
-};
-},{"./$.classof":530,"./$.core":532,"./$.iterators":556,"./$.wks":580}],584:[function(require,module,exports){
-arguments[4][197][0].apply(exports,arguments)
-},{"./$.ctx":533,"./$.export":538,"./$.is-array-iter":548,"./$.iter-call":551,"./$.iter-detect":554,"./$.to-length":577,"./$.to-object":578,"./core.get-iterator-method":581,"dup":197}],585:[function(require,module,exports){
-arguments[4][198][0].apply(exports,arguments)
-},{"./$.add-to-unscopables":528,"./$.iter-define":553,"./$.iter-step":555,"./$.iterators":556,"./$.to-iobject":576,"dup":198}],586:[function(require,module,exports){
-arguments[4][227][0].apply(exports,arguments)
-},{"./$.export":538,"dup":227}],587:[function(require,module,exports){
-arguments[4][231][0].apply(exports,arguments)
-},{"./$.export":538,"./$.object-assign":561,"dup":231}],588:[function(require,module,exports){
-arguments[4][233][0].apply(exports,arguments)
-},{"./$.object-sap":562,"./$.to-iobject":576,"dup":233}],589:[function(require,module,exports){
-arguments[4][243][0].apply(exports,arguments)
-},{"./$.export":538,"./$.set-proto":567,"dup":243}],590:[function(require,module,exports){
-
-},{}],591:[function(require,module,exports){
-arguments[4][245][0].apply(exports,arguments)
-},{"./$":557,"./$.a-function":527,"./$.an-object":529,"./$.classof":530,"./$.core":532,"./$.ctx":533,"./$.descriptors":535,"./$.export":538,"./$.for-of":540,"./$.global":542,"./$.is-object":550,"./$.iter-detect":554,"./$.library":559,"./$.microtask":560,"./$.redefine-all":564,"./$.same-value":566,"./$.set-proto":567,"./$.set-species":568,"./$.set-to-string-tag":569,"./$.species-constructor":571,"./$.strict-new":572,"./$.wks":580,"dup":245}],592:[function(require,module,exports){
-arguments[4][271][0].apply(exports,arguments)
-},{"./$.iter-define":553,"./$.string-at":573,"dup":271}],593:[function(require,module,exports){
-arguments[4][276][0].apply(exports,arguments)
-},{"./$":557,"./$.an-object":529,"./$.descriptors":535,"./$.enum-keys":537,"./$.export":538,"./$.fails":539,"./$.get-names":541,"./$.global":542,"./$.has":543,"./$.is-array":549,"./$.keyof":558,"./$.library":559,"./$.property-desc":563,"./$.redefine":565,"./$.set-to-string-tag":569,"./$.shared":570,"./$.to-iobject":576,"./$.uid":579,"./$.wks":580,"dup":276}],594:[function(require,module,exports){
-require('./es6.array.iterator');
-var Iterators = require('./$.iterators');
-Iterators.NodeList = Iterators.HTMLCollection = Iterators.Array;
-},{"./$.iterators":556,"./es6.array.iterator":585}],595:[function(require,module,exports){
-(function (global){
-// This method of obtaining a reference to the global object needs to be
-// kept identical to the way it is obtained in runtime.js
-var g =
-  typeof global === "object" ? global :
-  typeof window === "object" ? window :
-  typeof self === "object" ? self : this;
-
-// Use `getOwnPropertyNames` because not all browsers support calling
-// `hasOwnProperty` on the global `self` object in a worker. See #183.
-var hadRuntime = g.regeneratorRuntime &&
-  Object.getOwnPropertyNames(g).indexOf("regeneratorRuntime") >= 0;
-
-// Save the old regeneratorRuntime in case it needs to be restored later.
-var oldRuntime = hadRuntime && g.regeneratorRuntime;
-
-// Force reevalutation of runtime.js.
-g.regeneratorRuntime = undefined;
-
-module.exports = require("./runtime");
-
-if (hadRuntime) {
-  // Restore the original runtime.
-  g.regeneratorRuntime = oldRuntime;
-} else {
-  // Remove the global property added by runtime.js.
-  try {
-    delete g.regeneratorRuntime;
-  } catch(e) {
-    g.regeneratorRuntime = undefined;
-  }
-}
-
-module.exports = { "default": module.exports, __esModule: true };
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./runtime":596}],596:[function(require,module,exports){
-(function (process,global){
-/**
- * Copyright (c) 2014, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * https://raw.github.com/facebook/regenerator/master/LICENSE file. An
- * additional grant of patent rights can be found in the PATENTS file in
- * the same directory.
- */
-
-"use strict";
-
-var _Symbol = require("babel-runtime/core-js/symbol")["default"];
-
-var _Object$create = require("babel-runtime/core-js/object/create")["default"];
-
-var _Object$setPrototypeOf = require("babel-runtime/core-js/object/set-prototype-of")["default"];
-
-var _Promise = require("babel-runtime/core-js/promise")["default"];
-
-!(function (global) {
-  "use strict";
-
-  var hasOwn = Object.prototype.hasOwnProperty;
-  var undefined; // More compressible than void 0.
-  var $Symbol = typeof _Symbol === "function" ? _Symbol : {};
-  var iteratorSymbol = $Symbol.iterator || "@@iterator";
-  var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
-
-  var inModule = typeof module === "object";
-  var runtime = global.regeneratorRuntime;
-  if (runtime) {
-    if (inModule) {
-      // If regeneratorRuntime is defined globally and we're in a module,
-      // make the exports object identical to regeneratorRuntime.
-      module.exports = runtime;
-    }
-    // Don't bother evaluating the rest of this file if the runtime was
-    // already defined globally.
-    return;
-  }
-
-  // Define the runtime globally (as expected by generated code) as either
-  // module.exports (if we're in a module) or a new, empty object.
-  runtime = global.regeneratorRuntime = inModule ? module.exports : {};
-
-  function wrap(innerFn, outerFn, self, tryLocsList) {
-    // If outerFn provided, then outerFn.prototype instanceof Generator.
-    var generator = _Object$create((outerFn || Generator).prototype);
-    var context = new Context(tryLocsList || []);
-
-    // The ._invoke method unifies the implementations of the .next,
-    // .throw, and .return methods.
-    generator._invoke = makeInvokeMethod(innerFn, self, context);
-
-    return generator;
-  }
-  runtime.wrap = wrap;
-
-  // Try/catch helper to minimize deoptimizations. Returns a completion
-  // record like context.tryEntries[i].completion. This interface could
-  // have been (and was previously) designed to take a closure to be
-  // invoked without arguments, but in all the cases we care about we
-  // already have an existing method we want to call, so there's no need
-  // to create a new function object. We can even get away with assuming
-  // the method takes exactly one argument, since that happens to be true
-  // in every case, so we don't have to touch the arguments object. The
-  // only additional allocation required is the completion record, which
-  // has a stable shape and so hopefully should be cheap to allocate.
-  function tryCatch(fn, obj, arg) {
-    try {
-      return { type: "normal", arg: fn.call(obj, arg) };
-    } catch (err) {
-      return { type: "throw", arg: err };
-    }
-  }
-
-  var GenStateSuspendedStart = "suspendedStart";
-  var GenStateSuspendedYield = "suspendedYield";
-  var GenStateExecuting = "executing";
-  var GenStateCompleted = "completed";
-
-  // Returning this object from the innerFn has the same effect as
-  // breaking out of the dispatch switch statement.
-  var ContinueSentinel = {};
-
-  // Dummy constructor functions that we use as the .constructor and
-  // .constructor.prototype properties for functions that return Generator
-  // objects. For full spec compliance, you may wish to configure your
-  // minifier not to mangle the names of these two functions.
-  function Generator() {}
-  function GeneratorFunction() {}
-  function GeneratorFunctionPrototype() {}
-
-  var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype;
-  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
-  GeneratorFunctionPrototype.constructor = GeneratorFunction;
-  GeneratorFunctionPrototype[toStringTagSymbol] = GeneratorFunction.displayName = "GeneratorFunction";
-
-  // Helper for defining the .next, .throw, and .return methods of the
-  // Iterator interface in terms of a single ._invoke method.
-  function defineIteratorMethods(prototype) {
-    ["next", "throw", "return"].forEach(function (method) {
-      prototype[method] = function (arg) {
-        return this._invoke(method, arg);
-      };
-    });
-  }
-
-  runtime.isGeneratorFunction = function (genFun) {
-    var ctor = typeof genFun === "function" && genFun.constructor;
-    return ctor ? ctor === GeneratorFunction ||
-    // For the native GeneratorFunction constructor, the best we can
-    // do is to check its .name property.
-    (ctor.displayName || ctor.name) === "GeneratorFunction" : false;
-  };
-
-  runtime.mark = function (genFun) {
-    if (_Object$setPrototypeOf) {
-      _Object$setPrototypeOf(genFun, GeneratorFunctionPrototype);
-    } else {
-      genFun.__proto__ = GeneratorFunctionPrototype;
-      if (!(toStringTagSymbol in genFun)) {
-        genFun[toStringTagSymbol] = "GeneratorFunction";
-      }
-    }
-    genFun.prototype = _Object$create(Gp);
-    return genFun;
-  };
-
-  // Within the body of any async function, `await x` is transformed to
-  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
-  // `value instanceof AwaitArgument` to determine if the yielded value is
-  // meant to be awaited. Some may consider the name of this method too
-  // cutesy, but they are curmudgeons.
-  runtime.awrap = function (arg) {
-    return new AwaitArgument(arg);
-  };
-
-  function AwaitArgument(arg) {
-    this.arg = arg;
-  }
-
-  function AsyncIterator(generator) {
-    function invoke(method, arg, resolve, reject) {
-      var record = tryCatch(generator[method], generator, arg);
-      if (record.type === "throw") {
-        reject(record.arg);
-      } else {
-        var result = record.arg;
-        var value = result.value;
-        if (value instanceof AwaitArgument) {
-          return _Promise.resolve(value.arg).then(function (value) {
-            invoke("next", value, resolve, reject);
-          }, function (err) {
-            invoke("throw", err, resolve, reject);
-          });
-        }
-
-        return _Promise.resolve(value).then(function (unwrapped) {
-          // When a yielded Promise is resolved, its final value becomes
-          // the .value of the Promise<{value,done}> result for the
-          // current iteration. If the Promise is rejected, however, the
-          // result for this iteration will be rejected with the same
-          // reason. Note that rejections of yielded Promises are not
-          // thrown back into the generator function, as is the case
-          // when an awaited Promise is rejected. This difference in
-          // behavior between yield and await is important, because it
-          // allows the consumer to decide what to do with the yielded
-          // rejection (swallow it and continue, manually .throw it back
-          // into the generator, abandon iteration, whatever). With
-          // await, by contrast, there is no opportunity to examine the
-          // rejection reason outside the generator function, so the
-          // only option is to throw it from the await expression, and
-          // let the generator function handle the exception.
-          result.value = unwrapped;
-          resolve(result);
-        }, reject);
-      }
-    }
-
-    if (typeof process === "object" && process.domain) {
-      invoke = process.domain.bind(invoke);
-    }
-
-    var previousPromise;
-
-    function enqueue(method, arg) {
-      function callInvokeWithMethodAndArg() {
-        return new _Promise(function (resolve, reject) {
-          invoke(method, arg, resolve, reject);
-        });
-      }
-
-      return previousPromise =
-      // If enqueue has been called before, then we want to wait until
-      // all previous Promises have been resolved before calling invoke,
-      // so that results are always delivered in the correct order. If
-      // enqueue has not been called before, then it is important to
-      // call invoke immediately, without waiting on a callback to fire,
-      // so that the async generator function has the opportunity to do
-      // any necessary setup in a predictable way. This predictability
-      // is why the Promise constructor synchronously invokes its
-      // executor callback, and why async functions synchronously
-      // execute code before the first await. Since we implement simple
-      // async functions in terms of async generators, it is especially
-      // important to get this right, even though it requires care.
-      previousPromise ? previousPromise.then(callInvokeWithMethodAndArg,
-      // Avoid propagating failures to Promises returned by later
-      // invocations of the iterator.
-      callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg();
-    }
-
-    // Define the unified helper method that is used to implement .next,
-    // .throw, and .return (see defineIteratorMethods).
-    this._invoke = enqueue;
-  }
-
-  defineIteratorMethods(AsyncIterator.prototype);
-
-  // Note that simple async functions are implemented on top of
-  // AsyncIterator objects; they just return a Promise for the value of
-  // the final result produced by the iterator.
-  runtime.async = function (innerFn, outerFn, self, tryLocsList) {
-    var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList));
-
-    return runtime.isGeneratorFunction(outerFn) ? iter // If outerFn is a generator, return the full iterator.
-    : iter.next().then(function (result) {
-      return result.done ? result.value : iter.next();
-    });
-  };
-
-  function makeInvokeMethod(innerFn, self, context) {
-    var state = GenStateSuspendedStart;
-
-    return function invoke(method, arg) {
-      if (state === GenStateExecuting) {
-        throw new Error("Generator is already running");
-      }
-
-      if (state === GenStateCompleted) {
-        if (method === "throw") {
-          throw arg;
-        }
-
-        // Be forgiving, per 25.3.3.3.3 of the spec:
-        // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
-        return doneResult();
-      }
-
-      while (true) {
-        var delegate = context.delegate;
-        if (delegate) {
-          if (method === "return" || method === "throw" && delegate.iterator[method] === undefined) {
-            // A return or throw (when the delegate iterator has no throw
-            // method) always terminates the yield* loop.
-            context.delegate = null;
-
-            // If the delegate iterator has a return method, give it a
-            // chance to clean up.
-            var returnMethod = delegate.iterator["return"];
-            if (returnMethod) {
-              var record = tryCatch(returnMethod, delegate.iterator, arg);
-              if (record.type === "throw") {
-                // If the return method threw an exception, let that
-                // exception prevail over the original return or throw.
-                method = "throw";
-                arg = record.arg;
-                continue;
-              }
-            }
-
-            if (method === "return") {
-              // Continue with the outer return, now that the delegate
-              // iterator has been terminated.
-              continue;
-            }
-          }
-
-          var record = tryCatch(delegate.iterator[method], delegate.iterator, arg);
-
-          if (record.type === "throw") {
-            context.delegate = null;
-
-            // Like returning generator.throw(uncaught), but without the
-            // overhead of an extra function call.
-            method = "throw";
-            arg = record.arg;
-            continue;
-          }
-
-          // Delegate generator ran and handled its own exceptions so
-          // regardless of what the method was, we continue as if it is
-          // "next" with an undefined arg.
-          method = "next";
-          arg = undefined;
-
-          var info = record.arg;
-          if (info.done) {
-            context[delegate.resultName] = info.value;
-            context.next = delegate.nextLoc;
-          } else {
-            state = GenStateSuspendedYield;
-            return info;
-          }
-
-          context.delegate = null;
-        }
-
-        if (method === "next") {
-          if (state === GenStateSuspendedYield) {
-            context.sent = arg;
-          } else {
-            context.sent = undefined;
-          }
-        } else if (method === "throw") {
-          if (state === GenStateSuspendedStart) {
-            state = GenStateCompleted;
-            throw arg;
-          }
-
-          if (context.dispatchException(arg)) {
-            // If the dispatched exception was caught by a catch block,
-            // then let that catch block handle the exception normally.
-            method = "next";
-            arg = undefined;
-          }
-        } else if (method === "return") {
-          context.abrupt("return", arg);
-        }
-
-        state = GenStateExecuting;
-
-        var record = tryCatch(innerFn, self, context);
-        if (record.type === "normal") {
-          // If an exception is thrown from innerFn, we leave state ===
-          // GenStateExecuting and loop back for another invocation.
-          state = context.done ? GenStateCompleted : GenStateSuspendedYield;
-
-          var info = {
-            value: record.arg,
-            done: context.done
-          };
-
-          if (record.arg === ContinueSentinel) {
-            if (context.delegate && method === "next") {
-              // Deliberately forget the last sent value so that we don't
-              // accidentally pass it on to the delegate.
-              arg = undefined;
-            }
-          } else {
-            return info;
-          }
-        } else if (record.type === "throw") {
-          state = GenStateCompleted;
-          // Dispatch the exception by looping back around to the
-          // context.dispatchException(arg) call above.
-          method = "throw";
-          arg = record.arg;
-        }
-      }
-    };
-  }
-
-  // Define Generator.prototype.{next,throw,return} in terms of the
-  // unified ._invoke helper method.
-  defineIteratorMethods(Gp);
-
-  Gp[iteratorSymbol] = function () {
-    return this;
-  };
-
-  Gp[toStringTagSymbol] = "Generator";
-
-  Gp.toString = function () {
-    return "[object Generator]";
-  };
-
-  function pushTryEntry(locs) {
-    var entry = { tryLoc: locs[0] };
-
-    if (1 in locs) {
-      entry.catchLoc = locs[1];
-    }
-
-    if (2 in locs) {
-      entry.finallyLoc = locs[2];
-      entry.afterLoc = locs[3];
-    }
-
-    this.tryEntries.push(entry);
-  }
-
-  function resetTryEntry(entry) {
-    var record = entry.completion || {};
-    record.type = "normal";
-    delete record.arg;
-    entry.completion = record;
-  }
-
-  function Context(tryLocsList) {
-    // The root entry object (effectively a try statement without a catch
-    // or a finally block) gives us a place to store values thrown from
-    // locations where there is no enclosing try statement.
-    this.tryEntries = [{ tryLoc: "root" }];
-    tryLocsList.forEach(pushTryEntry, this);
-    this.reset(true);
-  }
-
-  runtime.keys = function (object) {
-    var keys = [];
-    for (var key in object) {
-      keys.push(key);
-    }
-    keys.reverse();
-
-    // Rather than returning an object with a next method, we keep
-    // things simple and return the next function itself.
-    return function next() {
-      while (keys.length) {
-        var key = keys.pop();
-        if (key in object) {
-          next.value = key;
-          next.done = false;
-          return next;
-        }
-      }
-
-      // To avoid creating an additional object, we just hang the .value
-      // and .done properties off the next function object itself. This
-      // also ensures that the minifier will not anonymize the function.
-      next.done = true;
-      return next;
-    };
-  };
-
-  function values(iterable) {
-    if (iterable) {
-      var iteratorMethod = iterable[iteratorSymbol];
-      if (iteratorMethod) {
-        return iteratorMethod.call(iterable);
-      }
-
-      if (typeof iterable.next === "function") {
-        return iterable;
-      }
-
-      if (!isNaN(iterable.length)) {
-        var i = -1,
-            next = function next() {
-          while (++i < iterable.length) {
-            if (hasOwn.call(iterable, i)) {
-              next.value = iterable[i];
-              next.done = false;
-              return next;
-            }
-          }
-
-          next.value = undefined;
-          next.done = true;
-
-          return next;
-        };
-
-        return next.next = next;
-      }
-    }
-
-    // Return an iterator with no values.
-    return { next: doneResult };
-  }
-  runtime.values = values;
-
-  function doneResult() {
-    return { value: undefined, done: true };
-  }
-
-  Context.prototype = {
-    constructor: Context,
-
-    reset: function reset(skipTempReset) {
-      this.prev = 0;
-      this.next = 0;
-      this.sent = undefined;
-      this.done = false;
-      this.delegate = null;
-
-      this.tryEntries.forEach(resetTryEntry);
-
-      if (!skipTempReset) {
-        for (var name in this) {
-          // Not sure about the optimal order of these conditions:
-          if (name.charAt(0) === "t" && hasOwn.call(this, name) && !isNaN(+name.slice(1))) {
-            this[name] = undefined;
-          }
-        }
-      }
-    },
-
-    stop: function stop() {
-      this.done = true;
-
-      var rootEntry = this.tryEntries[0];
-      var rootRecord = rootEntry.completion;
-      if (rootRecord.type === "throw") {
-        throw rootRecord.arg;
-      }
-
-      return this.rval;
-    },
-
-    dispatchException: function dispatchException(exception) {
-      if (this.done) {
-        throw exception;
-      }
-
-      var context = this;
-      function handle(loc, caught) {
-        record.type = "throw";
-        record.arg = exception;
-        context.next = loc;
-        return !!caught;
-      }
-
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        var record = entry.completion;
-
-        if (entry.tryLoc === "root") {
-          // Exception thrown outside of any try block that could handle
-          // it, so set the completion value of the entire function to
-          // throw the exception.
-          return handle("end");
-        }
-
-        if (entry.tryLoc <= this.prev) {
-          var hasCatch = hasOwn.call(entry, "catchLoc");
-          var hasFinally = hasOwn.call(entry, "finallyLoc");
-
-          if (hasCatch && hasFinally) {
-            if (this.prev < entry.catchLoc) {
-              return handle(entry.catchLoc, true);
-            } else if (this.prev < entry.finallyLoc) {
-              return handle(entry.finallyLoc);
-            }
-          } else if (hasCatch) {
-            if (this.prev < entry.catchLoc) {
-              return handle(entry.catchLoc, true);
-            }
-          } else if (hasFinally) {
-            if (this.prev < entry.finallyLoc) {
-              return handle(entry.finallyLoc);
-            }
-          } else {
-            throw new Error("try statement without catch or finally");
-          }
-        }
-      }
-    },
-
-    abrupt: function abrupt(type, arg) {
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) {
-          var finallyEntry = entry;
-          break;
-        }
-      }
-
-      if (finallyEntry && (type === "break" || type === "continue") && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc) {
-        // Ignore the finally entry if control is not jumping to a
-        // location outside the try/catch block.
-        finallyEntry = null;
-      }
-
-      var record = finallyEntry ? finallyEntry.completion : {};
-      record.type = type;
-      record.arg = arg;
-
-      if (finallyEntry) {
-        this.next = finallyEntry.finallyLoc;
-      } else {
-        this.complete(record);
-      }
-
-      return ContinueSentinel;
-    },
-
-    complete: function complete(record, afterLoc) {
-      if (record.type === "throw") {
-        throw record.arg;
-      }
-
-      if (record.type === "break" || record.type === "continue") {
-        this.next = record.arg;
-      } else if (record.type === "return") {
-        this.rval = record.arg;
-        this.next = "end";
-      } else if (record.type === "normal" && afterLoc) {
-        this.next = afterLoc;
-      }
-    },
-
-    finish: function finish(finallyLoc) {
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        if (entry.finallyLoc === finallyLoc) {
-          this.complete(entry.completion, entry.afterLoc);
-          resetTryEntry(entry);
-          return ContinueSentinel;
-        }
-      }
-    },
-
-    "catch": function _catch(tryLoc) {
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        if (entry.tryLoc === tryLoc) {
-          var record = entry.completion;
-          if (record.type === "throw") {
-            var thrown = record.arg;
-            resetTryEntry(entry);
-          }
-          return thrown;
-        }
-      }
-
-      // The context.catch method must only be called with a location
-      // argument that corresponds to a known catch block.
-      throw new Error("illegal catch attempt");
-    },
-
-    delegateYield: function delegateYield(iterable, resultName, nextLoc) {
-      this.delegate = {
-        iterator: values(iterable),
-        resultName: resultName,
-        nextLoc: nextLoc
-      };
-
-      return ContinueSentinel;
-    }
-  };
-})(
-// Among the various tricks for obtaining a reference to the global
-// object, this seems to be the most reliable technique that does not
-// use indirect eval (which violates Content Security Policy).
-typeof global === "object" ? global : typeof window === "object" ? window : typeof self === "object" ? self : undefined);
-}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":301,"babel-runtime/core-js/object/create":501,"babel-runtime/core-js/object/set-prototype-of":504,"babel-runtime/core-js/promise":505,"babel-runtime/core-js/symbol":506}],597:[function(require,module,exports){
-arguments[4][2][0].apply(exports,arguments)
-},{"../package":599,"dup":2,"inherits":598}],598:[function(require,module,exports){
-arguments[4][3][0].apply(exports,arguments)
-},{"dup":3}],599:[function(require,module,exports){
-arguments[4][68][0].apply(exports,arguments)
-},{"dup":68}],600:[function(require,module,exports){
-module.exports = function split (input, strOrRegex) {
-  var results = []
-
-  if (strOrRegex instanceof RegExp) {
-    var regex = new RegExp(strOrRegex.toString().slice(1, -1), 'g')
-    var oldIndex = 0
-    var match
-    while ((match = regex.exec(input))) {
-      results.push(input.substring(oldIndex, match.index))
-      results.push(match[0])
-      oldIndex = match.index + match[0].length
-    }
-    results.push(input.substring(oldIndex))
-  } else {
-    var splits = input.split(strOrRegex)
-    var item
-    for (var i = 0, l = splits.length; i < l - 1; i++) {
-      item = splits[i]
-      results.push(item)
-      results.push(strOrRegex)
-    }
-    results.push(splits[splits.length - 1])
-  }
-
-  return results
-}
-
-},{}],601:[function(require,module,exports){
-arguments[4][496][0].apply(exports,arguments)
-},{"core-js/library/fn/array/from":619,"dup":496}],602:[function(require,module,exports){
-arguments[4][497][0].apply(exports,arguments)
-},{"core-js/library/fn/get-iterator":620,"dup":497}],603:[function(require,module,exports){
-arguments[4][498][0].apply(exports,arguments)
-},{"core-js/library/fn/is-iterable":621,"dup":498}],604:[function(require,module,exports){
-arguments[4][501][0].apply(exports,arguments)
-},{"core-js/library/fn/object/create":622,"dup":501}],605:[function(require,module,exports){
-arguments[4][502][0].apply(exports,arguments)
-},{"core-js/library/fn/object/define-property":623,"dup":502}],606:[function(require,module,exports){
-arguments[4][503][0].apply(exports,arguments)
-},{"core-js/library/fn/object/get-own-property-descriptor":624,"dup":503}],607:[function(require,module,exports){
-arguments[4][504][0].apply(exports,arguments)
-},{"core-js/library/fn/object/set-prototype-of":625,"dup":504}],608:[function(require,module,exports){
-arguments[4][505][0].apply(exports,arguments)
-},{"core-js/library/fn/promise":626,"dup":505}],609:[function(require,module,exports){
-arguments[4][506][0].apply(exports,arguments)
-},{"core-js/library/fn/symbol":627,"dup":506}],610:[function(require,module,exports){
+},{"./lib/React":459}],598:[function(require,module,exports){
+arguments[4][327][0].apply(exports,arguments)
+},{"core-js/library/fn/array/from":618,"dup":327}],599:[function(require,module,exports){
+arguments[4][328][0].apply(exports,arguments)
+},{"core-js/library/fn/get-iterator":619,"dup":328}],600:[function(require,module,exports){
+arguments[4][329][0].apply(exports,arguments)
+},{"core-js/library/fn/is-iterable":620,"dup":329}],601:[function(require,module,exports){
+arguments[4][331][0].apply(exports,arguments)
+},{"core-js/library/fn/object/assign":621,"dup":331}],602:[function(require,module,exports){
+arguments[4][332][0].apply(exports,arguments)
+},{"core-js/library/fn/object/create":622,"dup":332}],603:[function(require,module,exports){
+arguments[4][333][0].apply(exports,arguments)
+},{"core-js/library/fn/object/define-property":623,"dup":333}],604:[function(require,module,exports){
+arguments[4][334][0].apply(exports,arguments)
+},{"core-js/library/fn/object/get-own-property-descriptor":624,"dup":334}],605:[function(require,module,exports){
+arguments[4][335][0].apply(exports,arguments)
+},{"core-js/library/fn/object/set-prototype-of":625,"dup":335}],606:[function(require,module,exports){
+arguments[4][336][0].apply(exports,arguments)
+},{"core-js/library/fn/promise":626,"dup":336}],607:[function(require,module,exports){
+arguments[4][337][0].apply(exports,arguments)
+},{"core-js/library/fn/symbol":627,"dup":337}],608:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/symbol/iterator"), __esModule: true };
-},{"core-js/library/fn/symbol/iterator":628}],611:[function(require,module,exports){
-arguments[4][507][0].apply(exports,arguments)
-},{"dup":507}],612:[function(require,module,exports){
-arguments[4][508][0].apply(exports,arguments)
-},{"babel-runtime/core-js/object/define-property":605,"dup":508}],613:[function(require,module,exports){
-arguments[4][509][0].apply(exports,arguments)
-},{"babel-runtime/core-js/object/define-property":605,"dup":509}],614:[function(require,module,exports){
-arguments[4][511][0].apply(exports,arguments)
-},{"babel-runtime/core-js/object/get-own-property-descriptor":606,"dup":511}],615:[function(require,module,exports){
-arguments[4][512][0].apply(exports,arguments)
-},{"babel-runtime/core-js/object/create":604,"babel-runtime/core-js/object/set-prototype-of":607,"dup":512}],616:[function(require,module,exports){
-arguments[4][513][0].apply(exports,arguments)
-},{"dup":513}],617:[function(require,module,exports){
-arguments[4][515][0].apply(exports,arguments)
-},{"babel-runtime/core-js/get-iterator":602,"babel-runtime/core-js/is-iterable":603,"dup":515}],618:[function(require,module,exports){
+},{"core-js/library/fn/symbol/iterator":628}],609:[function(require,module,exports){
+arguments[4][338][0].apply(exports,arguments)
+},{"dup":338}],610:[function(require,module,exports){
+arguments[4][339][0].apply(exports,arguments)
+},{"babel-runtime/core-js/object/define-property":603,"dup":339}],611:[function(require,module,exports){
+arguments[4][340][0].apply(exports,arguments)
+},{"babel-runtime/core-js/object/define-property":603,"dup":340}],612:[function(require,module,exports){
+arguments[4][341][0].apply(exports,arguments)
+},{"babel-runtime/core-js/object/assign":601,"dup":341}],613:[function(require,module,exports){
+arguments[4][342][0].apply(exports,arguments)
+},{"babel-runtime/core-js/object/get-own-property-descriptor":604,"dup":342}],614:[function(require,module,exports){
+arguments[4][343][0].apply(exports,arguments)
+},{"babel-runtime/core-js/object/create":602,"babel-runtime/core-js/object/set-prototype-of":605,"dup":343}],615:[function(require,module,exports){
+arguments[4][344][0].apply(exports,arguments)
+},{"dup":344}],616:[function(require,module,exports){
+arguments[4][346][0].apply(exports,arguments)
+},{"babel-runtime/core-js/get-iterator":599,"babel-runtime/core-js/is-iterable":600,"dup":346}],617:[function(require,module,exports){
 "use strict";
 
 var _Array$from = require("babel-runtime/core-js/array/from")["default"];
@@ -45994,161 +46495,167 @@ exports["default"] = function (arr) {
 };
 
 exports.__esModule = true;
-},{"babel-runtime/core-js/array/from":601}],619:[function(require,module,exports){
-arguments[4][516][0].apply(exports,arguments)
-},{"../../modules/$.core":634,"../../modules/es6.array.from":685,"../../modules/es6.string.iterator":691,"dup":516}],620:[function(require,module,exports){
-arguments[4][517][0].apply(exports,arguments)
-},{"../modules/core.get-iterator":683,"../modules/es6.string.iterator":691,"../modules/web.dom.iterable":693,"dup":517}],621:[function(require,module,exports){
-arguments[4][518][0].apply(exports,arguments)
-},{"../modules/core.is-iterable":684,"../modules/es6.string.iterator":691,"../modules/web.dom.iterable":693,"dup":518}],622:[function(require,module,exports){
-arguments[4][521][0].apply(exports,arguments)
-},{"../../modules/$":659,"dup":521}],623:[function(require,module,exports){
-arguments[4][522][0].apply(exports,arguments)
-},{"../../modules/$":659,"dup":522}],624:[function(require,module,exports){
-arguments[4][523][0].apply(exports,arguments)
-},{"../../modules/$":659,"../../modules/es6.object.get-own-property-descriptor":687,"dup":523}],625:[function(require,module,exports){
-arguments[4][524][0].apply(exports,arguments)
-},{"../../modules/$.core":634,"../../modules/es6.object.set-prototype-of":688,"dup":524}],626:[function(require,module,exports){
-arguments[4][525][0].apply(exports,arguments)
-},{"../modules/$.core":634,"../modules/es6.object.to-string":689,"../modules/es6.promise":690,"../modules/es6.string.iterator":691,"../modules/web.dom.iterable":693,"dup":525}],627:[function(require,module,exports){
-arguments[4][526][0].apply(exports,arguments)
-},{"../../modules/$.core":634,"../../modules/es6.object.to-string":689,"../../modules/es6.symbol":692,"dup":526}],628:[function(require,module,exports){
+},{"babel-runtime/core-js/array/from":598}],618:[function(require,module,exports){
+arguments[4][347][0].apply(exports,arguments)
+},{"../../modules/$.core":634,"../../modules/es6.array.from":686,"../../modules/es6.string.iterator":693,"dup":347}],619:[function(require,module,exports){
+arguments[4][348][0].apply(exports,arguments)
+},{"../modules/core.get-iterator":684,"../modules/es6.string.iterator":693,"../modules/web.dom.iterable":695,"dup":348}],620:[function(require,module,exports){
+arguments[4][349][0].apply(exports,arguments)
+},{"../modules/core.is-iterable":685,"../modules/es6.string.iterator":693,"../modules/web.dom.iterable":695,"dup":349}],621:[function(require,module,exports){
+arguments[4][351][0].apply(exports,arguments)
+},{"../../modules/$.core":634,"../../modules/es6.object.assign":688,"dup":351}],622:[function(require,module,exports){
+arguments[4][352][0].apply(exports,arguments)
+},{"../../modules/$":659,"dup":352}],623:[function(require,module,exports){
+arguments[4][353][0].apply(exports,arguments)
+},{"../../modules/$":659,"dup":353}],624:[function(require,module,exports){
+arguments[4][354][0].apply(exports,arguments)
+},{"../../modules/$":659,"../../modules/es6.object.get-own-property-descriptor":689,"dup":354}],625:[function(require,module,exports){
+arguments[4][355][0].apply(exports,arguments)
+},{"../../modules/$.core":634,"../../modules/es6.object.set-prototype-of":690,"dup":355}],626:[function(require,module,exports){
+arguments[4][356][0].apply(exports,arguments)
+},{"../modules/$.core":634,"../modules/es6.object.to-string":691,"../modules/es6.promise":692,"../modules/es6.string.iterator":693,"../modules/web.dom.iterable":695,"dup":356}],627:[function(require,module,exports){
+arguments[4][357][0].apply(exports,arguments)
+},{"../../modules/$.core":634,"../../modules/es6.object.to-string":691,"../../modules/es6.symbol":694,"dup":357}],628:[function(require,module,exports){
 require('../../modules/es6.string.iterator');
 require('../../modules/web.dom.iterable');
 module.exports = require('../../modules/$.wks')('iterator');
-},{"../../modules/$.wks":681,"../../modules/es6.string.iterator":691,"../../modules/web.dom.iterable":693}],629:[function(require,module,exports){
+},{"../../modules/$.wks":682,"../../modules/es6.string.iterator":693,"../../modules/web.dom.iterable":695}],629:[function(require,module,exports){
+arguments[4][107][0].apply(exports,arguments)
+},{"dup":107}],630:[function(require,module,exports){
+arguments[4][359][0].apply(exports,arguments)
+},{"dup":359}],631:[function(require,module,exports){
 arguments[4][109][0].apply(exports,arguments)
-},{"dup":109}],630:[function(require,module,exports){
-arguments[4][528][0].apply(exports,arguments)
-},{"dup":528}],631:[function(require,module,exports){
-arguments[4][111][0].apply(exports,arguments)
-},{"./$.is-object":652,"dup":111}],632:[function(require,module,exports){
-arguments[4][117][0].apply(exports,arguments)
-},{"./$.cof":633,"./$.wks":681,"dup":117}],633:[function(require,module,exports){
-arguments[4][118][0].apply(exports,arguments)
-},{"dup":118}],634:[function(require,module,exports){
+},{"./$.is-object":652,"dup":109}],632:[function(require,module,exports){
+arguments[4][115][0].apply(exports,arguments)
+},{"./$.cof":633,"./$.wks":682,"dup":115}],633:[function(require,module,exports){
+arguments[4][116][0].apply(exports,arguments)
+},{"dup":116}],634:[function(require,module,exports){
+arguments[4][121][0].apply(exports,arguments)
+},{"dup":121}],635:[function(require,module,exports){
+arguments[4][122][0].apply(exports,arguments)
+},{"./$.a-function":629,"dup":122}],636:[function(require,module,exports){
 arguments[4][123][0].apply(exports,arguments)
-},{"dup":123}],635:[function(require,module,exports){
+},{"dup":123}],637:[function(require,module,exports){
 arguments[4][124][0].apply(exports,arguments)
-},{"./$.a-function":629,"dup":124}],636:[function(require,module,exports){
+},{"./$.fails":641,"dup":124}],638:[function(require,module,exports){
 arguments[4][125][0].apply(exports,arguments)
-},{"dup":125}],637:[function(require,module,exports){
+},{"./$.global":644,"./$.is-object":652,"dup":125}],639:[function(require,module,exports){
 arguments[4][126][0].apply(exports,arguments)
-},{"./$.fails":641,"dup":126}],638:[function(require,module,exports){
-arguments[4][127][0].apply(exports,arguments)
-},{"./$.global":644,"./$.is-object":652,"dup":127}],639:[function(require,module,exports){
-arguments[4][128][0].apply(exports,arguments)
-},{"./$":659,"dup":128}],640:[function(require,module,exports){
-arguments[4][538][0].apply(exports,arguments)
-},{"./$.core":634,"./$.ctx":635,"./$.global":644,"dup":538}],641:[function(require,module,exports){
-arguments[4][131][0].apply(exports,arguments)
-},{"dup":131}],642:[function(require,module,exports){
+},{"./$":659,"dup":126}],640:[function(require,module,exports){
+arguments[4][369][0].apply(exports,arguments)
+},{"./$.core":634,"./$.ctx":635,"./$.global":644,"dup":369}],641:[function(require,module,exports){
+arguments[4][129][0].apply(exports,arguments)
+},{"dup":129}],642:[function(require,module,exports){
+arguments[4][132][0].apply(exports,arguments)
+},{"./$.an-object":631,"./$.ctx":635,"./$.is-array-iter":650,"./$.iter-call":653,"./$.to-length":679,"./core.get-iterator-method":683,"dup":132}],643:[function(require,module,exports){
+arguments[4][133][0].apply(exports,arguments)
+},{"./$":659,"./$.to-iobject":678,"dup":133}],644:[function(require,module,exports){
 arguments[4][134][0].apply(exports,arguments)
-},{"./$.an-object":631,"./$.ctx":635,"./$.is-array-iter":650,"./$.iter-call":653,"./$.to-length":678,"./core.get-iterator-method":682,"dup":134}],643:[function(require,module,exports){
+},{"dup":134}],645:[function(require,module,exports){
 arguments[4][135][0].apply(exports,arguments)
-},{"./$":659,"./$.to-iobject":677,"dup":135}],644:[function(require,module,exports){
+},{"dup":135}],646:[function(require,module,exports){
 arguments[4][136][0].apply(exports,arguments)
-},{"dup":136}],645:[function(require,module,exports){
+},{"./$":659,"./$.descriptors":637,"./$.property-desc":665,"dup":136}],647:[function(require,module,exports){
 arguments[4][137][0].apply(exports,arguments)
-},{"dup":137}],646:[function(require,module,exports){
+},{"./$.global":644,"dup":137}],648:[function(require,module,exports){
 arguments[4][138][0].apply(exports,arguments)
-},{"./$":659,"./$.descriptors":637,"./$.property-desc":664,"dup":138}],647:[function(require,module,exports){
+},{"dup":138}],649:[function(require,module,exports){
 arguments[4][139][0].apply(exports,arguments)
-},{"./$.global":644,"dup":139}],648:[function(require,module,exports){
+},{"./$.cof":633,"dup":139}],650:[function(require,module,exports){
 arguments[4][140][0].apply(exports,arguments)
-},{"dup":140}],649:[function(require,module,exports){
+},{"./$.iterators":658,"./$.wks":682,"dup":140}],651:[function(require,module,exports){
 arguments[4][141][0].apply(exports,arguments)
-},{"./$.cof":633,"dup":141}],650:[function(require,module,exports){
-arguments[4][142][0].apply(exports,arguments)
-},{"./$.iterators":658,"./$.wks":681,"dup":142}],651:[function(require,module,exports){
+},{"./$.cof":633,"dup":141}],652:[function(require,module,exports){
 arguments[4][143][0].apply(exports,arguments)
-},{"./$.cof":633,"dup":143}],652:[function(require,module,exports){
+},{"dup":143}],653:[function(require,module,exports){
 arguments[4][145][0].apply(exports,arguments)
-},{"dup":145}],653:[function(require,module,exports){
+},{"./$.an-object":631,"dup":145}],654:[function(require,module,exports){
+arguments[4][146][0].apply(exports,arguments)
+},{"./$":659,"./$.hide":646,"./$.property-desc":665,"./$.set-to-string-tag":671,"./$.wks":682,"dup":146}],655:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
-},{"./$.an-object":631,"dup":147}],654:[function(require,module,exports){
+},{"./$":659,"./$.export":640,"./$.has":645,"./$.hide":646,"./$.iter-create":654,"./$.iterators":658,"./$.library":661,"./$.redefine":667,"./$.set-to-string-tag":671,"./$.wks":682,"dup":147}],656:[function(require,module,exports){
 arguments[4][148][0].apply(exports,arguments)
-},{"./$":659,"./$.hide":646,"./$.property-desc":664,"./$.set-to-string-tag":670,"./$.wks":681,"dup":148}],655:[function(require,module,exports){
+},{"./$.wks":682,"dup":148}],657:[function(require,module,exports){
 arguments[4][149][0].apply(exports,arguments)
-},{"./$":659,"./$.export":640,"./$.has":645,"./$.hide":646,"./$.iter-create":654,"./$.iterators":658,"./$.library":661,"./$.redefine":666,"./$.set-to-string-tag":670,"./$.wks":681,"dup":149}],656:[function(require,module,exports){
+},{"dup":149}],658:[function(require,module,exports){
 arguments[4][150][0].apply(exports,arguments)
-},{"./$.wks":681,"dup":150}],657:[function(require,module,exports){
+},{"dup":150}],659:[function(require,module,exports){
 arguments[4][151][0].apply(exports,arguments)
-},{"dup":151}],658:[function(require,module,exports){
+},{"dup":151}],660:[function(require,module,exports){
 arguments[4][152][0].apply(exports,arguments)
-},{"dup":152}],659:[function(require,module,exports){
-arguments[4][153][0].apply(exports,arguments)
-},{"dup":153}],660:[function(require,module,exports){
-arguments[4][154][0].apply(exports,arguments)
-},{"./$":659,"./$.to-iobject":677,"dup":154}],661:[function(require,module,exports){
-arguments[4][559][0].apply(exports,arguments)
-},{"dup":559}],662:[function(require,module,exports){
+},{"./$":659,"./$.to-iobject":678,"dup":152}],661:[function(require,module,exports){
+arguments[4][390][0].apply(exports,arguments)
+},{"dup":390}],662:[function(require,module,exports){
+arguments[4][157][0].apply(exports,arguments)
+},{"./$.cof":633,"./$.global":644,"./$.task":676,"dup":157}],663:[function(require,module,exports){
+arguments[4][158][0].apply(exports,arguments)
+},{"./$":659,"./$.fails":641,"./$.iobject":649,"./$.to-object":680,"dup":158}],664:[function(require,module,exports){
 arguments[4][159][0].apply(exports,arguments)
-},{"./$.cof":633,"./$.global":644,"./$.task":675,"dup":159}],663:[function(require,module,exports){
-arguments[4][161][0].apply(exports,arguments)
-},{"./$.core":634,"./$.export":640,"./$.fails":641,"dup":161}],664:[function(require,module,exports){
-arguments[4][166][0].apply(exports,arguments)
-},{"dup":166}],665:[function(require,module,exports){
-arguments[4][167][0].apply(exports,arguments)
-},{"./$.redefine":666,"dup":167}],666:[function(require,module,exports){
-arguments[4][565][0].apply(exports,arguments)
-},{"./$.hide":646,"dup":565}],667:[function(require,module,exports){
-arguments[4][170][0].apply(exports,arguments)
-},{"dup":170}],668:[function(require,module,exports){
+},{"./$.core":634,"./$.export":640,"./$.fails":641,"dup":159}],665:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"dup":164}],666:[function(require,module,exports){
+arguments[4][165][0].apply(exports,arguments)
+},{"./$.redefine":667,"dup":165}],667:[function(require,module,exports){
+arguments[4][396][0].apply(exports,arguments)
+},{"./$.hide":646,"dup":396}],668:[function(require,module,exports){
+arguments[4][168][0].apply(exports,arguments)
+},{"dup":168}],669:[function(require,module,exports){
+arguments[4][169][0].apply(exports,arguments)
+},{"./$":659,"./$.an-object":631,"./$.ctx":635,"./$.is-object":652,"dup":169}],670:[function(require,module,exports){
+arguments[4][399][0].apply(exports,arguments)
+},{"./$":659,"./$.core":634,"./$.descriptors":637,"./$.wks":682,"dup":399}],671:[function(require,module,exports){
 arguments[4][171][0].apply(exports,arguments)
-},{"./$":659,"./$.an-object":631,"./$.ctx":635,"./$.is-object":652,"dup":171}],669:[function(require,module,exports){
-arguments[4][568][0].apply(exports,arguments)
-},{"./$":659,"./$.core":634,"./$.descriptors":637,"./$.wks":681,"dup":568}],670:[function(require,module,exports){
+},{"./$":659,"./$.has":645,"./$.wks":682,"dup":171}],672:[function(require,module,exports){
+arguments[4][172][0].apply(exports,arguments)
+},{"./$.global":644,"dup":172}],673:[function(require,module,exports){
 arguments[4][173][0].apply(exports,arguments)
-},{"./$":659,"./$.has":645,"./$.wks":681,"dup":173}],671:[function(require,module,exports){
+},{"./$.a-function":629,"./$.an-object":631,"./$.wks":682,"dup":173}],674:[function(require,module,exports){
 arguments[4][174][0].apply(exports,arguments)
-},{"./$.global":644,"dup":174}],672:[function(require,module,exports){
+},{"dup":174}],675:[function(require,module,exports){
 arguments[4][175][0].apply(exports,arguments)
-},{"./$.a-function":629,"./$.an-object":631,"./$.wks":681,"dup":175}],673:[function(require,module,exports){
-arguments[4][176][0].apply(exports,arguments)
-},{"dup":176}],674:[function(require,module,exports){
-arguments[4][177][0].apply(exports,arguments)
-},{"./$.defined":636,"./$.to-integer":676,"dup":177}],675:[function(require,module,exports){
+},{"./$.defined":636,"./$.to-integer":677,"dup":175}],676:[function(require,module,exports){
+arguments[4][180][0].apply(exports,arguments)
+},{"./$.cof":633,"./$.ctx":635,"./$.dom-create":638,"./$.global":644,"./$.html":647,"./$.invoke":648,"dup":180}],677:[function(require,module,exports){
 arguments[4][182][0].apply(exports,arguments)
-},{"./$.cof":633,"./$.ctx":635,"./$.dom-create":638,"./$.global":644,"./$.html":647,"./$.invoke":648,"dup":182}],676:[function(require,module,exports){
+},{"dup":182}],678:[function(require,module,exports){
+arguments[4][183][0].apply(exports,arguments)
+},{"./$.defined":636,"./$.iobject":649,"dup":183}],679:[function(require,module,exports){
 arguments[4][184][0].apply(exports,arguments)
-},{"dup":184}],677:[function(require,module,exports){
+},{"./$.to-integer":677,"dup":184}],680:[function(require,module,exports){
 arguments[4][185][0].apply(exports,arguments)
-},{"./$.defined":636,"./$.iobject":649,"dup":185}],678:[function(require,module,exports){
-arguments[4][186][0].apply(exports,arguments)
-},{"./$.to-integer":676,"dup":186}],679:[function(require,module,exports){
+},{"./$.defined":636,"dup":185}],681:[function(require,module,exports){
 arguments[4][187][0].apply(exports,arguments)
-},{"./$.defined":636,"dup":187}],680:[function(require,module,exports){
+},{"dup":187}],682:[function(require,module,exports){
+arguments[4][188][0].apply(exports,arguments)
+},{"./$.global":644,"./$.shared":672,"./$.uid":681,"dup":188}],683:[function(require,module,exports){
 arguments[4][189][0].apply(exports,arguments)
-},{"dup":189}],681:[function(require,module,exports){
-arguments[4][190][0].apply(exports,arguments)
-},{"./$.global":644,"./$.shared":671,"./$.uid":680,"dup":190}],682:[function(require,module,exports){
-arguments[4][191][0].apply(exports,arguments)
-},{"./$.classof":632,"./$.core":634,"./$.iterators":658,"./$.wks":681,"dup":191}],683:[function(require,module,exports){
-arguments[4][582][0].apply(exports,arguments)
-},{"./$.an-object":631,"./$.core":634,"./core.get-iterator-method":682,"dup":582}],684:[function(require,module,exports){
-arguments[4][583][0].apply(exports,arguments)
-},{"./$.classof":632,"./$.core":634,"./$.iterators":658,"./$.wks":681,"dup":583}],685:[function(require,module,exports){
-arguments[4][197][0].apply(exports,arguments)
-},{"./$.ctx":635,"./$.export":640,"./$.is-array-iter":650,"./$.iter-call":653,"./$.iter-detect":656,"./$.to-length":678,"./$.to-object":679,"./core.get-iterator-method":682,"dup":197}],686:[function(require,module,exports){
-arguments[4][198][0].apply(exports,arguments)
-},{"./$.add-to-unscopables":630,"./$.iter-define":655,"./$.iter-step":657,"./$.iterators":658,"./$.to-iobject":677,"dup":198}],687:[function(require,module,exports){
-arguments[4][233][0].apply(exports,arguments)
-},{"./$.object-sap":663,"./$.to-iobject":677,"dup":233}],688:[function(require,module,exports){
+},{"./$.classof":632,"./$.core":634,"./$.iterators":658,"./$.wks":682,"dup":189}],684:[function(require,module,exports){
+arguments[4][413][0].apply(exports,arguments)
+},{"./$.an-object":631,"./$.core":634,"./core.get-iterator-method":683,"dup":413}],685:[function(require,module,exports){
+arguments[4][414][0].apply(exports,arguments)
+},{"./$.classof":632,"./$.core":634,"./$.iterators":658,"./$.wks":682,"dup":414}],686:[function(require,module,exports){
+arguments[4][195][0].apply(exports,arguments)
+},{"./$.ctx":635,"./$.export":640,"./$.is-array-iter":650,"./$.iter-call":653,"./$.iter-detect":656,"./$.to-length":679,"./$.to-object":680,"./core.get-iterator-method":683,"dup":195}],687:[function(require,module,exports){
+arguments[4][196][0].apply(exports,arguments)
+},{"./$.add-to-unscopables":630,"./$.iter-define":655,"./$.iter-step":657,"./$.iterators":658,"./$.to-iobject":678,"dup":196}],688:[function(require,module,exports){
+arguments[4][229][0].apply(exports,arguments)
+},{"./$.export":640,"./$.object-assign":663,"dup":229}],689:[function(require,module,exports){
+arguments[4][231][0].apply(exports,arguments)
+},{"./$.object-sap":664,"./$.to-iobject":678,"dup":231}],690:[function(require,module,exports){
+arguments[4][241][0].apply(exports,arguments)
+},{"./$.export":640,"./$.set-proto":669,"dup":241}],691:[function(require,module,exports){
+arguments[4][421][0].apply(exports,arguments)
+},{"dup":421}],692:[function(require,module,exports){
 arguments[4][243][0].apply(exports,arguments)
-},{"./$.export":640,"./$.set-proto":668,"dup":243}],689:[function(require,module,exports){
-arguments[4][590][0].apply(exports,arguments)
-},{"dup":590}],690:[function(require,module,exports){
-arguments[4][245][0].apply(exports,arguments)
-},{"./$":659,"./$.a-function":629,"./$.an-object":631,"./$.classof":632,"./$.core":634,"./$.ctx":635,"./$.descriptors":637,"./$.export":640,"./$.for-of":642,"./$.global":644,"./$.is-object":652,"./$.iter-detect":656,"./$.library":661,"./$.microtask":662,"./$.redefine-all":665,"./$.same-value":667,"./$.set-proto":668,"./$.set-species":669,"./$.set-to-string-tag":670,"./$.species-constructor":672,"./$.strict-new":673,"./$.wks":681,"dup":245}],691:[function(require,module,exports){
-arguments[4][271][0].apply(exports,arguments)
-},{"./$.iter-define":655,"./$.string-at":674,"dup":271}],692:[function(require,module,exports){
-arguments[4][276][0].apply(exports,arguments)
-},{"./$":659,"./$.an-object":631,"./$.descriptors":637,"./$.enum-keys":639,"./$.export":640,"./$.fails":641,"./$.get-names":643,"./$.global":644,"./$.has":645,"./$.is-array":651,"./$.keyof":660,"./$.library":661,"./$.property-desc":664,"./$.redefine":666,"./$.set-to-string-tag":670,"./$.shared":671,"./$.to-iobject":677,"./$.uid":680,"./$.wks":681,"dup":276}],693:[function(require,module,exports){
-arguments[4][594][0].apply(exports,arguments)
-},{"./$.iterators":658,"./es6.array.iterator":686,"dup":594}],694:[function(require,module,exports){
-arguments[4][595][0].apply(exports,arguments)
-},{"./runtime":695,"dup":595}],695:[function(require,module,exports){
+},{"./$":659,"./$.a-function":629,"./$.an-object":631,"./$.classof":632,"./$.core":634,"./$.ctx":635,"./$.descriptors":637,"./$.export":640,"./$.for-of":642,"./$.global":644,"./$.is-object":652,"./$.iter-detect":656,"./$.library":661,"./$.microtask":662,"./$.redefine-all":666,"./$.same-value":668,"./$.set-proto":669,"./$.set-species":670,"./$.set-to-string-tag":671,"./$.species-constructor":673,"./$.strict-new":674,"./$.wks":682,"dup":243}],693:[function(require,module,exports){
+arguments[4][269][0].apply(exports,arguments)
+},{"./$.iter-define":655,"./$.string-at":675,"dup":269}],694:[function(require,module,exports){
+arguments[4][274][0].apply(exports,arguments)
+},{"./$":659,"./$.an-object":631,"./$.descriptors":637,"./$.enum-keys":639,"./$.export":640,"./$.fails":641,"./$.get-names":643,"./$.global":644,"./$.has":645,"./$.is-array":651,"./$.keyof":660,"./$.library":661,"./$.property-desc":665,"./$.redefine":667,"./$.set-to-string-tag":671,"./$.shared":672,"./$.to-iobject":678,"./$.uid":681,"./$.wks":682,"dup":274}],695:[function(require,module,exports){
+arguments[4][425][0].apply(exports,arguments)
+},{"./$.iterators":658,"./es6.array.iterator":687,"dup":425}],696:[function(require,module,exports){
+arguments[4][426][0].apply(exports,arguments)
+},{"./runtime":697,"dup":426}],697:[function(require,module,exports){
 (function (process,global){
 /**
  * Copyright (c) 2014, Facebook, Inc.
@@ -46777,4 +47284,4 @@ var _Promise = require("babel-runtime/core-js/promise")["default"];
 // use indirect eval (which violates Content Security Policy).
 typeof global === "object" ? global : typeof window === "object" ? window : typeof self === "object" ? self : undefined);
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":301,"babel-runtime/core-js/object/create":604,"babel-runtime/core-js/promise":608,"babel-runtime/core-js/symbol":609,"babel-runtime/core-js/symbol/iterator":610}]},{},[105]);
+},{"_process":299,"babel-runtime/core-js/object/create":602,"babel-runtime/core-js/promise":606,"babel-runtime/core-js/symbol":607,"babel-runtime/core-js/symbol/iterator":608}]},{},[103]);

@@ -11,6 +11,7 @@ function groupPlaceholders (result) {
     .filter(item => item.placeholder || item.text)
     .map(item => item.placeholder ? '\uFFFC' : `\uFFF9${item.text}\uFFFA${item.argument}\uFFFB`)
     .join('')
+    .concat(`\uFFF9${result.qualifiers.join('\uFFFA')}\uFFFB`)
     .value()
 }
 
@@ -23,8 +24,8 @@ function mapPlaceholderGroups (resultGroup) {
         .value()
     })
     .thru(descriptorLists => _.zip(...descriptorLists))
-    .map(x => _.filter(x))
     .map(x => _.unique(x))
+    .map(x => _.filter(x))
     .value()
 
   const result = _.clone(_.first(resultGroup))
@@ -33,36 +34,38 @@ function mapPlaceholderGroups (resultGroup) {
     .filter('placeholder')
     .forEach((item, index) => {
       item.placeholderTexts = placeholders[index]
-      delete item.argument
+      // item.descriptors = [placeholders[index]]
     })
     .value()
 
   return result
 }
 
-// function removeDescriptors (result) {
-//   _.forEach(result.match.concat(result.suggestion, result.completion), item => {
-//     item.topLevelDescriptor = item.ar_.first(item.descriptors)
-//   })
-// }
+function combinePlaceholders(results, limit = 100) {
+  return _.chain(results)
+    .groupBy(groupPlaceholders)
+    .map(mapPlaceholderGroups)
+    .sortBy(option => -option.score)
+    .take(limit)
+    .value()
+}
 
-
-const prefixes = ['open ', 'search '] //, 'open ', 'search ']
+const prefixes = ['open ', 'search ']
 
 class Keys extends React.Component{
   render () {
     return (
       <div className={`keys${this.props.visible ? ' visible' : ''}`}>
         <div className='key'>
-          <div className='keyChar'>↑↓</div>
+          <div className='keyChar'>Arrow Keys</div>
           <div className='keyDesc'>select</div>
         </div>
         <div className='key'>
-          <div className='keyChar'>⇥</div>
+          <div className='keyChar'>Tab</div>
           <div className='keyDesc'>complete</div>
         </div>
         <div className='key'>
-          <div className='keyChar'>↩</div>
+          <div className='keyChar'>Return</div>
           <div className='keyDesc'>do</div>
         </div>
       </div>
@@ -98,60 +101,36 @@ export default class Lacona extends React.Component {
     return this.state.input
   }
 
-  parse (input, checkDone, prefixes = ['']) {
-    if (checkDone()) return []
+  parse (input) {
+    if (input === '') return []
 
-    const inputs = _.map(prefixes, prefix => `${prefix}${input}`)
+    let fullOutput = this.parser.parseArray(input)
 
-    const fullOutput = []
-    for (let prefix of prefixes) {
-      const prefixedInput = `${prefix}${input}`
-      for (let output of this.parser.parse(prefixedInput)) {
-        if (checkDone()) return []
-        if (output.words[0].text === prefix) {
-          output.words[0].fallthrough = true
-        }
-        fullOutput.push(output)
-      }
-    }
-
-    if (checkDone()) return []
-
-    if (!_.isEmpty(fullOutput)) {
-      return _.chain(fullOutput)
-        .groupBy(groupPlaceholders)
-        .map(mapPlaceholderGroups)
-        .sortBy(option => -option.score)
-        .take(20)
+    if (_.isEmpty(fullOutput)) {
+      fullOutput = _.chain(prefixes)
+        .map(prefix => {
+          const prefixedInput = `${prefix}${input}`
+          const outputs = this.parser.parseArray(prefixedInput)
+          return outputs
+        })
+        .flatten()
+        .forEach(output => output.words[0].fallthrough = true)
         .value()
     }
 
-
-    return []
+    return combinePlaceholders(fullOutput, 20)
   }
 
-  update (input) {
+  update (input, parse = true) {
     this.setState({input})
 
-    if (input === '') {
-      this.setState({output: []})
-      return
+    if (parse) {
+      setTimeout(() => {
+        let output = this.parse(input)
+
+        this.setState({output})
+      }, 11)
     }
-
-    const checkDone = () => input !== this.state.input
-
-    setTimeout(() => {
-      let output = this.parse(input, checkDone)
-      if (checkDone()) return
-
-      if (!output.length) {
-        output = this.parse(input, checkDone, prefixes)
-      }
-      if (checkDone()) return
-
-      this.setState({output})
-
-    }, 11)
   }
 
   execute (index) {
@@ -166,11 +145,14 @@ export default class Lacona extends React.Component {
 
   blur (event) {
     this.setState({focused: false})
+    this.cancel()
+    this.props.onBlur()
   }
 
   focus (event) {
     this.setState({focused: true})
-    if (!this.props.tryMe) this.props.userInteracted()
+    // this.props.userInteracted()
+    this.props.onFocus()
   }
 
   clearPrefix (event) {
@@ -179,24 +161,20 @@ export default class Lacona extends React.Component {
 
   render () {
     return (
-      <CSSTransitionGroup component='div' className='lacona' transitionName='lacona' transitionAppear={true} transitionAppearTimeout={0} transitionEnterTimeout={1000} transitionLeaveTimeout={1500}>
-        <Keys visible={this.state.focused} key='keys' />
-        <LaconaView
-          ref='lacona'
-          key='lacona'
-          onFocus={this.focus.bind(this)}
-          onBlur={this.blur.bind(this)}
-          userInput={this.state.input}
-          outputs={this.state.output}
-          prefix={this.state.prefix}
-          update={this.update.bind(this)}
-          execute={this.execute.bind(this)}
-          cancel={this.cancel.bind(this)}
-          clearPrefix={this.clearPrefix.bind(this)}
-          userInteracted={this.props.userInteracted}
-          tabIndex={this.props.tabIndex}
-          placeholder={this.props.placeholder} />
-      </CSSTransitionGroup>
+      <LaconaView
+        ref='lacona'
+        key='lacona'
+        onFocus={this.focus.bind(this)}
+        onBlur={this.blur.bind(this)}
+        userInput={this.state.input}
+        outputs={this.state.output}
+        prefix={this.state.prefix}
+        update={this.update.bind(this)}
+        execute={this.execute.bind(this)}
+        cancel={this.cancel.bind(this)}
+        clearPrefix={this.clearPrefix.bind(this)}
+        tabIndex={this.props.tabIndex}
+        placeholder={this.props.placeholder} />
     )
   }
 }

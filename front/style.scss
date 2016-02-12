@@ -3,633 +3,324 @@
 @import 'theme';
 @import 'bourbon/bourbon';
 
-$page-background: #d8eff5;
+$rainbow: linear-gradient(90deg,
+  map-get($theme-apple-light, argument0) 0%,
+  map-get($theme-apple-light, argument0) 12.5%,
+  map-get($theme-apple-light, argument1) 12.5%,
+  map-get($theme-apple-light, argument1) 25%,
+  map-get($theme-apple-light, argument2) 25%,
+  map-get($theme-apple-light, argument2) 37.5%,
+  map-get($theme-apple-light, argument3) 37.5%,
+  map-get($theme-apple-light, argument3) 50%,
+  map-get($theme-apple-light, argument4) 50%,
+  map-get($theme-apple-light, argument4) 62.5%,
+  map-get($theme-apple-light, argument5) 62.5%,
+  map-get($theme-apple-light, argument5) 75%,
+  map-get($theme-apple-light, argument6) 75%,
+  map-get($theme-apple-light, argument6) 87.5%,
+  map-get($theme-apple-light, argument7) 87.5%,
+  map-get($theme-apple-light, argument7) 100%
+);
 
-/* latin-ext */
-@font-face {
-  font-family: 'Lato-Local';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Lato Regular'), local('Lato-Regular'), url('Lato-Regular.ttf') format('truetype');
-  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
-}
-/* latin */
-@font-face {
-  font-family: 'Lato-Local';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Lato Regular'), local('Lato-Regular'), url('Lato-Regular.ttf') format('truetype');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin-ext */
-@font-face {
-  font-family: 'Lato-Local';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Lato Bold'), local('Lato-Bold'), url('Lato-Bold.ttf') format('truetype');
-  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
-}
-/* latin */
-@font-face {
-  font-family: 'Lato-Local';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Lato Bold'), local('Lato-Bold'), url('Lato-Bold.ttf') format('truetype');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-
-html {
-  font-size: 14pt;
-}
-
-html, input {
-  font-family: -system, Lato, 'Lato-Local', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  text-shadow: rgba(0,0,0,.01) 0 0 1px;
-}
-
-html, a {
-  color: hsl(0, 0%, 34%);
-}
+$rainbow-dim: linear-gradient(90deg,
+  transparentize(map-get($theme-apple-light, argument0), 0.94) 0%,
+  transparentize(map-get($theme-apple-light, argument0), 0.94) 12.5%,
+  transparentize(map-get($theme-apple-light, argument1), 0.94) 12.5%,
+  transparentize(map-get($theme-apple-light, argument1), 0.94) 25%,
+  transparentize(map-get($theme-apple-light, argument2), 0.94) 25%,
+  transparentize(map-get($theme-apple-light, argument2), 0.94) 37.5%,
+  transparentize(map-get($theme-apple-light, argument3), 0.94) 37.5%,
+  transparentize(map-get($theme-apple-light, argument3), 0.94) 50%,
+  transparentize(map-get($theme-apple-light, argument4), 0.94) 50%,
+  transparentize(map-get($theme-apple-light, argument4), 0.94) 62.5%,
+  transparentize(map-get($theme-apple-light, argument5), 0.94) 62.5%,
+  transparentize(map-get($theme-apple-light, argument5), 0.94) 75%,
+  transparentize(map-get($theme-apple-light, argument6), 0.94) 75%,
+  transparentize(map-get($theme-apple-light, argument6), 0.94) 87.5%,
+  transparentize(map-get($theme-apple-light, argument7), 0.94) 87.5%,
+  transparentize(map-get($theme-apple-light, argument7), 0.94) 100%
+);
 
 body {
+  font-size: 14pt;
+  font: $lacona-font;
+
+  background-color: $light-bg;
+  background-image: $rainbow, $rainbow, $rainbow-dim;
+  background-position: center top, center bottom, center top;
+  background-size: 100% 20px, 100% 20px, 100% 100%;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+
+  -webkit-font-smoothing: antialiased;
+  text-shadow: rgba(0,0,0,.01) 0 0 1px;
+  color: $light-fg;
+
+  a, a:link, a:visited {
+    color: $light-fg;
+  }
+
+  a:active {
+    color: darken($light-fg, 20%);
+  }
+
+  a:hover {
+    color: darken($light-fg, 10%);
+  }
+
+  .buttons {
+    display: flex;
+  }
+
+  .buttonContainer {
+    display: inline-block;
+    margin: 0 1.53333333333333%;
+    flex: 1 1 10px;
+
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      display: inline-block;
+      font-size: 1rem;
+      padding: 0 10px 0 0;
+    }
+  }
+
+  a.button {
+    @include user-select(none);
+    margin: 0 0 0.5rem 0;
+    display: inline-block;
+    border-radius: 4px;
+    text-decoration: none;
+    padding: 1rem 0;
+    width: 100%;
+    color: $light-bg;
+    font-weight: 500;
+  }
+
+  a.downloadButton {
+    background-color: map-get($theme-apple-light, argument3);
+
+    &.warn {
+      background-color: map-get($theme-apple-light, argument5);
+    }
+  }
+
+  a.subscribeButton {
+    background-color: map-get($theme-apple-light, argument1);
+  }
+
+  a.followButton {
+    background-color: map-get($theme-apple-light, argument0);
+  }
+
+  h3 {
+    font-weight: 300;
+    font-size: 2.5rem;
+  }
+}
+
+header {
+  max-width: 820px;
+  margin: 3rem auto 3rem auto;
+  padding: 1rem 0 0 0;
+  background-position: right 2rem;
+  text-align: center;
+
+  h1 a {
+    text-decoration: none;
+  }
+
+  h1, p {
+    padding: 0 1rem;
+  }
+
+  h1 {
+    font-weight: 300;
+    font-size: 5rem;
+    text-align: center;
+    margin-bottom: 0.1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+
+  .buttons {
+    margin: 7rem 0 4rem 0;
+  }
+
+  p {
+    text-align: left;
+  }
+
+  @media screen and (min-width: 600px) {
+    & {
+      background-image: url('Icon1024.png');
+      background-repeat: no-repeat;
+      background-size: calc(100% / 2.5);
+    }
+
+    h1, p {
+      padding-right: calc(100% / 2.5 + 10px);
+      padding-right: calc(100% / 2.5 + 10px);
+    }
+  }
+}
+
+footer {
+  max-width: 820px;
+  margin: 3rem auto 3rem auto;
+  padding: 0 1rem;
   text-align: center;
 }
 
-a.anchor {
-  &, &:hover, &:active, &:visited {
-    text-decoration: none;
-    cursor: unset;
+.lacona-demo {
+  text-align: center;
+  width: calc(100% - 2rem);
+  padding: 1rem 1rem 0 1rem;
+  position: absolute;
+  background-color: $light-bg;
+  background-image: $rainbow-dim;
+
+  &.sticky {
+    position: fixed;
+    top: 0;
+  }
+}
+
+.disclaimer {
+  text-align: center;
+  padding: 1rem 1rem 0 1rem;
+  margin-bottom: -3rem;
+
+  p {
+    margin-bottom: 0;
+    padding: 0
   }
 }
 
 content {
-  // max-width: 940px;
-  margin: 0 auto;
   display: block;
+  padding: 5rem 0 0 0;
 }
 
-.btc {
-  text-align: center;
-  
-  img, a {
-    display: block;
-    margin: 0 auto;
+section {
+  padding: 3rem 20px 3rem 20px;
+
+  p, .examples, h3 {
+    max-width: 800px;
+    margin: 3rem auto;
   }
+
+  .examples {
+    list-style-type: none;
+    font-family: $lacona-font;
+    color: $light-fg;
+    @include display(flex);
+    @include flex-wrap(wrap);
+    padding: 20px 0 0 0;
+  }
+
+  .examples li {
+    padding: 0.5rem 1.5rem;
+    margin: 0.1rem 0.1rem 0 0;
+    background-color: $light-bg;
+    border-radius: 4px;
+    border: 1px solid $light-bg-alt;
+    @include flex-grow(1);
+  }
+
+  .examples:not(.inactive) li:hover {
+    background-color: $light-bg-alt;
+  }
+
+  .examples:not(.inactive) li {
+    @include user-select(none);
+    cursor: pointer;
+  }
+}
+
+.mobile .examples li, .mobile .examples li:hover {
+  background-color: $light-bg;
+  cursor: auto;
+  @include user-select(all);
 }
 
 .lightbox-total {
   position: absolute;
   z-index: 10000;
-}
 
-.lightbox-cover {
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  cursor: pointer;
-}
+  &:not(.visible) {
+    pointer-events: none;
 
-.lightbox {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  @include calc(width, '100% - 100px');
-  max-width: 640px;
-  padding: 40px;
-  border-radius: 4px;
-  @include transform(translate(-50%, -50%)) ;
-
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
-
-  h3 {
-    padding-bottom: 10px;
-  }
-
-
-
-  @media screen and (max-width: 736px) {
-    & {
-      padding: 10px;
+    .lightbox-cover {
+      @include transition(height 0.3s ease-in 0.2s);
     }
 
-    .share-sheet img {
-      width: 48px;
-      height: 48px;
-      padding: 2px;
-    }
-
-    h3 {
-      font-size: 1rem;
-      line-height: 1rem;
-    }
-
-    .description, .share-desc {
-      font-size: 70%;
-      line-height: 0.9rem;
-    }
-
-    .closeButton {
-      top: 5px;
-      left: 5px;
+    .lightbox {
+      @include transition(opacity 0.22s ease-in);
     }
   }
 
-}
+  &.visible {
+    pointer-events: auto;
 
-.closeButton {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  cursor: pointer;
-  line-height: 0;
-  padding: 10px;
-}
-
-.lightbox-enter {
-  opacity: 0.01;
-}
-
-.lightbox-enter.lightbox-enter-active {
-  @include transition(opacity .5s ease-out);
-  opacity: 1;
-}
-.lightbox-leave {
-  opacity: 1;
-  pointer-events: none;
-}
-.lightbox-leave.lightbox-leave-active {
-  opacity: 0.01;
-  @include transition(opacity .5s ease-out);
-}
-
-.share-sheet {
-  @include display(flex);
-  @include justify-content(space-around);
-  @include flex-flow(row wrap-reverse);
-
-  img {
-    width: 64px;
-    height: 64px;
+    .lightbox-cover {
+      height: 100%;
+      @include transition(height 0.3s ease-out);
+    }
+    .lightbox {
+      opacity: 1;
+      @include transition(opacity 0.2s ease-out 0.3s);
+    }
   }
 
-  .extend img {
-    width: 78px;
-    height: 165px;
-  }
-
-  a img {
-    padding: 3px;
-    border-radius: 50%;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-    @include transition(box-shadow 0.1s ease-out);
-    margin: 2px;
-  }
-
-  a:hover img {
-    box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
-  }
-
-  a:active img {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  }
-
-  a.share-item {
-    display: block;
-  }
-
-  .share-icons {
-    text-align: center;
-    height: 74px;
-  }
-
-  a, a:hover, a:visited, a:focus, a:active {
-    text-decoration: none;
-    color: inherit;
-  }
-}
-
-.share-item.extend img {
-  margin: -2px;
-  cursor: pointer;
-}
-
-.share-desc {
-  text-align: center;
-  font-weight: bold;
-}
-
-.initial-load {
-  opacity: 0;
-}
-
-.lacona > div {
-  position: relative;
-}
-
-.lacona-appear {
-  opacity: 0;
-  top: 10px;
-}
-
-.lacona-appear.lacona-appear-active {
-  @include transition(all .5s ease-out 1s);
-  opacity: 1;
-  top: 0;
-}
-
-
-a, a:active, a:hover, a:focus, a:visited {
-  text-decoration: none;
-  outline: none;
-  background: none;
-}
-
-body {
-  line-height: 2em;
-  text-align: left;
-  word-wrap: break-word;
-
-  a, a:visited, a:hover, a:active, a:focus {
-    text-decoration: underline;
-
+  .lightbox-cover {
+    width: 100%;
+    height: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-image: $rainbow;
+    background-size: 100% 100%;
     cursor: pointer;
   }
 
-  a:hover {
-    color: hsl(0, 0%, 14%);
-  }
+  .lightbox {
+    opacity: 0;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background-color: $light-bg;
+    max-width: 740px;
+    padding: 40px;
+    border-radius: 4px;
+    text-align: center;
 
-  a:active {
-    color: hsl(0, 0%, 0%);
-  }
+    @include calc(width, '100% - 100px');
+    @include transform(translate(-50%, -50%)) ;
 
-  a.nodifferent {
-    &, &:visited, &:hover, &:active, &:focus {
-      text-decoration: none;
-      color: inherit;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+
+    h3 {
+      margin: 1rem 0;
+      font-weight: 300;
+      font-size: 2rem;
+    }
+    p {
+      margin: 3rem 0;
+      text-align: left;
     }
   }
 
-}
-
-h1, h2, h3, h4, h5, h6 {
-  color: #4A4A4A;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-}
-
-h1 {
-  font-size: 3.096rem;
-  line-height: 5rem;
-}
-
-h2 {
-  font-size: 1.86rem;
-  line-height: 4rem;
-}
-
-h3 {
-  font-size: 1.6rem;
-  line-height: 3rem;
-}
-
-h4 {
-  font-size: 1.36798rem;
-  line-height: 2rem;
-}
-
-h5 {
-  font-size: 1.16961rem;
-  line-height: 2rem;
-}
-
-h6 {
-  font-size: 1rem;
-  line-height: 2rem;
-}
-
-p {
-  // margin-bottom: 2rem;
-  padding: 0;
-  margin: 0 auto 1rem auto;
-}
-
-.well, .description {
-  @include calc(width, '100% - 80px');
-  position: relative;
-  padding: 10px 20px;
-  border-radius: 4px;
-  margin: -4px auto 4px auto;
-
-  li {
-    margin-left: 20px;
+  .closeButton {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+    line-height: 0;
+    padding: 10px;
   }
 }
-
-.well {
-  font-size: 80%;
-}
-
-.download-well {
-  display: block;
-  padding: 10px 20px;
-  border-radius: 4px;
-  margin: -4px auto 10px auto;
-  max-width: 400px;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-  font-size: 120%;
-  p {
-    margin: -25px 0 -4px 0;
-  }
-}
-
-.noline, .noline:hover, .noline:active, .noline:link {
-  text-decoration: none;
-}
-
-.description {
-  margin-top: 20px;
-  font-size: 100%;
-}
-
-.code {
-  font-family: monospace;
-}
-
-section {
-  padding: 40px 20px;
-}
-
-section.green {
-  padding: 20px 20px;
-}
-
-section.green p:not(.well) {
-  margin: 0;
-  padding: 0;
-}
-
-.text {
-  width: 100%;
-}
-
-.textLeft, .textRight, .full {
-  @include calc(width, '100% - 40px');
-  @include display(flex);
-
-  .lacona {
-    width: 100%;
-    height: 425px;
-  }
-}
-
-.full {
-  @include justify-content(center);
-
-  .text, .lacona {
-    max-width: 940px;
-  }
-
-  .lacona {
-    margin-top: -20px;
-  }
-}
-
-.textLeft, .textRight {
-  @include justify-content(space-between);
-  @include flex-flow(row wrap);
-
-  .text, .lacona {
-    @include flex(0 0 48%);
-  }
-}
-
-.textLeft {
-  @include flex-direction(row);
-}
-
-.textRight {
-  @include flex-direction(row-reverse);
-}
-
-@media screen and (max-width: 960px) {
-  .textLeft, .textRight {
-    @include flex-direction(row-column);
-
-
-    .text, .lacona {
-      @include flex(0 0 100%);
-    }
-  }
-}
-
-.examples {
-  list-style-type: none;
-  padding: 0;
-  font-family: $lacona-font;
-  @include display(flex);
-  @include flex-wrap(wrap);
-  border-radius: 4px;
-}
-
-.examples li {
-  // box-shadow: 2px 2px 2px rgba(0,0,0,0.35);
-  // border: 1px solid #000;
-  // border-radius: 4px;
-  padding: 2px 17px;
-  margin: 1px 1px 0 0;
-  @include flex-grow(1);
-}
-
-.examples li:hover {
-  // box-shadow: 1px 1px 1px rgba(0,0,0,0.35);
-}
-
-.examples li:active {
-  // box-shadow: none;
-}
-
-.examples:not(.inactive) li {
-  cursor: pointer;
-}
-
-.keys {
-  @include display(flex);
-  @include justify-content(center);
-  text-align: center;
-  line-height: normal;
-  margin-top: 10px;
-}
-
-.keys:not(.visible) {
-  visibility: hidden;
-}
-
-.key {
-  margin: 0 20px;
-}
-
-.keyDesc {
-  font-weight: 700;
-}
-
-.mobile .desktopOnly {
-  display: none;
-}
-
-.desktop .mobileOnly {
-  display: none;
-}
-
-header {
-  width: 100%;
-  text-align:center;
-
-  h1 {
-    font-size: 3.496rem;
-    display: inline-block;
-    padding: 10px 0 10px 100px;
-    background: url('Icon1024.png') no-repeat left center;
-
-    background-size: 94px 94px;
-
-    a, a:hover, a:active, a:focus, a:visited {
-      text-decoration: none;
-      color: inherit;
-    }
-  }
-
-  h2 {
-    padding-bottom: 1rem;
-    line-height: 2rem;
-  }
-
-  h3 {
-    padding-bottom: 2rem;
-    line-height: 2rem;
-  }
-
-  p {
-    padding: 0 10px 10px 10px;
-    margin: 0 auto;
-    font-size: 80%;
-    line-height: 1.2rem;
-  }
-}
-
-footer {
-  text-align: center;
-  padding: 30px 0;
-}
-
-.popover {
-  display: none;
-}
-
-
-@mixin theme($class, $theme) {
-  .#{$class} {
-    .examples li {
-      background-color: map-get($theme, 'input-bg');
-      border-color: darken(map-get($theme, 'input-bg'), 10%);
-    }
-    .examples:not(.inactive) li:hover {
-      background-color: map-get($theme, 'selection-bg');
-    }
-    .examples:not(.inactive) li:active {
-      background-color: lighten(map-get($theme, 'selection-bg'), 10%);
-    }
-
-    // .well {
-    //   background-color: map-get($theme, 'input-bg');
-    //   color: map-get($theme, 'input-text');
-    // }
-
-    .lightbox {
-      background-color: lighten(map-get($theme, 'argument3'), 20%);
-      border: 1px solid map-get($theme, 'argument3');
-      h3, a, a:visited {
-      }
-      a:hover {
-      }
-      a:active {
-      }
-      .description {
-        background: map-get($theme, 'input-bg');
-        color: map-get($theme, 'input-text');
-      }
-
-    }
-
-    header {
-      background-color: map-get($theme, 'input-bg');
-      border-bottom: 1px solid darken(map-get($theme, 'input-bg'), 20%);
-      h1, h2, p {
-        color: map-get($theme, 'input-text');
-      }
-      a, a:visited {
-        color: map-get($theme, 'input-text');
-      }
-      a:hover {
-        color: lighten(map-get($theme, 'input-text'), 10%);
-      }
-      a:active {
-        color: lighten(map-get($theme, 'input-text'), 20%);
-      }
-    }
-
-    section {
-      border-bottom: 1px solid map-get($theme, 'argument7');
-    }
-
-    section:nth-child(odd) {
-      background-color: lighten(map-get($theme, 'argument7'), 30%);
-    }
-
-    section:nth-child(even) {
-      background-color: lighten(map-get($theme, 'argument7'), 20%);
-    }
-
-    section.green {
-      background-color: lighten(map-get($theme, 'argument3'), 20%);
-      border-bottom: 1px solid map-get($theme, 'argument3');
-    }
-    .well {
-      background-color: lighten(map-get($theme, 'argument2'), 20%);
-      border: 1px solid map-get($theme, 'argument2');
-    }
-    .download-well {
-      background-color: map-get($theme, 'argument3');
-      border: 1px solid darken(map-get($theme, 'argument3'), 30%);
-      p, h3 {
-        color: map-get($theme, 'input-bg');
-      }
-    }
-    .download-well:hover {
-      background-color: darken(map-get($theme, 'argument3'), 10%);
-    }
-    .download-well:active {
-      background-color: darken(map-get($theme, 'argument3'), 20%);
-    }
-
-
-    footer {
-      background-color: lighten(map-get($theme, 'argument7'), 30%);
-
-      .text {
-        max-width: 940px;
-        margin: 0 auto;
-      }
-    }
-
-  }
-}
-
-@include theme('theme-eighties-dark', $theme-eighties-dark);

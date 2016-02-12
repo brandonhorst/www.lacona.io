@@ -9,127 +9,91 @@ import { hashArgument } from 'react-lacona'
 import CSSTransitionGroup from 'react-addons-css-transition-group'
 
 const MS_PER_INPUT = 10
+const DOWNLOAD_LINK = 'http://lacona-download.firebaseapp.com/packages/0.4.2/LaconaBeta.zip'
+const ISSUES_LINK = 'https://github.com/lacona/LaconaApp/issues'
+const CHANGELOG_LINK = 'https://github.com/lacona/LaconaApp/blob/master/CHANGELOG.md'
+const ABOUT_LINK = 'https://github.com/lacona/LaconaApp'
 
-const examples = [
-  'open Calendar',
-  'open Facebook',
-  'open kickstarter.com',
-  // 'open ~/Downloads/Lacona.dmg',
-  'open todo.txt',
-  'open my-document.docx with Pages',
-  'open lacona.io in Safari',
-  'remind me to Pick up the car September 12 at 11:30am',
-  'remind me to Buy a gift 7 days before 12/1',
-  'search Google for pictures of cats',
-  'search Wikipedia for Pluto',
-  'Google stormtroopers',
-  'Amazon Avengers',
-  'play Robot Love',
-  'play Walk the Moon',
-  'play Jason Derulo, Flyte, and Elle King',
-  'play next song',
-  'pause',
-  'call Mom',
-  'email Tony Stark',
-  'email Dinner Plans to Peter Parker',
-  'facetime Bruce Banner',
-  'email app@lacona.io',
-  'call +1 617 867 5309',
-  'turn on do not disturb for 25 minutes',
-  'translate 我爱你 to English'
-]
+const CURRENT_VERSION = 'Beta 5'
+const REQUIRED_VERSION = 'OSX 10.11 El Capitan'
 
-class Lightbox extends React.Component {
-  render () {
-    return (
-      <div className='lightbox-total'>
-        <div className='lightbox-cover' onClick={this.props.hide} />
-        <div className='lightbox'>
-          <div tabIndex='0' className='closeButton' onClick={this.props.hide}>×</div>
-          <h3>Thanks for trying the Lacona demo!</h3>
-          {this.props.detail ? <p className='well'>{this.props.detail}</p> : null}
-          <p className='description'>If this were a real copy of Lacona, it would {this.props.message}.</p>
-          <ShareSheet showBTCLightbox={this.props.showBTCLightbox} />
-        </div>
+const Lightbox = (props) => {
+  return (
+    <div className={`lightbox-total${props.visible ? ' visible' : ''}`}>
+      <div className='lightbox-cover' onClick={props.hide} />
+      <div className='lightbox'>
+        <div tabIndex='0' className='closeButton' onClick={props.hide}>×</div>
+        <h3>Cool, huh?</h3>
+        <p className='description'>If this were a real copy of Lacona, it would {props.message}.</p>
+        <Buttons check={!props.initialLoad} />
       </div>
-    )
-  }
+    </div>
+  )
 }
 
-class BitcoinLightbox extends React.Component {
-  render () {
-    return (
-      <div className='lightbox-total'>
-        <div className='lightbox-cover' onClick={this.props.hide} />
-        <div className='lightbox btc'>
-          <div tabIndex='0' className='closeButton' onClick={this.props.hide}>×</div>
-          <h3>Donate to development with Bitcoin</h3>
-          <img className='qr-code' src='btc-qr.png' />
-          <a className='btc-address' href='bitcoin:1PDi8uvM4ADkes28aJ98pUrVhnxDPWrWnx'>1PDi8uvM4ADkes28aJ98pUrVhnxDPWrWnx</a>
-        </div>
-      </div>
-    )
-  }
+function isOSX (userAgent) {
+  return /Mac OS X 10/.test(userAgent);
 }
 
-class ShareSheet extends React.Component {
-  render () {
-    return (
-      <div className='share-sheet'>
-        {this.props.includeTry ?
-          <div className='share-item extend' onClick={this.props.focusTry}>
-            <div className='share-desc'>
-              Try
-            </div>
-            <div className='share-icons'>
-              <img src='try.png' />
-            </div>
-          </div>
-          : null
-        }
-        <div className='share-item'>
-          <div className='share-desc'>
-            Donate
-          </div>
-          <div className='share-icons'>
-            <a href='https://www.paypal.me/lacona' target='_blank'><img src='paypal.png' /></a>
-            <a onClick={this.props.showBTCLightbox}><img src='bitcoin.png' /></a>
-          </div>
-        </div>
-        <a className='share-item' onClick={e => {window.open('https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458', '_blank', 'menubar=1,resizable=1,width=550,height=420'); e.preventDefault()}} href='https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458' target='_blank'>
-          <div className='share-desc'>
-            Follow
-          </div>
-          <div className='share-icons'>
-            <img src='twitter.png' />
-          </div>
-        </a>
-        <a className='share-item' onClick={e => {window.open('http://eepurl.com/bjPRjD', '_blank', 'menubar=1,resizable=1,width=550,height=420'); e.preventDefault()}} href='http://eepurl.com/bjPRjD' target='_blank'>
-          <div className='share-desc'>
-            Subscribe
-          </div>
-          <div className='share-icons'>
-            <img src='email.png' />
-          </div>
-        </a>
-        <div className='share-item'>
-          <div className='share-desc'>
-            Share
-          </div>
-          <div className='share-icons'>
-            <a onClick={e => {window.open('https://www.facebook.com/sharer/sharer.php?u=http://lacona.io', '_blank', 'width=550,height=231'); e.preventDefault()}} href='https://www.facebook.com/sharer/sharer.php?u=http://lacona.io'><img src='facebook.png' /></a>
-            <a onClick={e => {window.open('https://twitter.com/intent/tweet?text=Check%20out%20Lacona%20-%20Natural%20Language%20Commands%20for%20your%20Mac&url=http%3A%2F%2Flacona.io', '_blank', 'menubar=1,resizable=1,width=550,height=420'); e.preventDefault()}} href='https://twitter.com/intent/tweet?text=Check%20out%20Lacona%20-%20Natural%20Language%20Commands%20for%20your%20Mac&url=https%3A%2F%2Flacona.io'><img src='twitter.png' /></a>
-            <a onClick={e => {window.open('https://plus.google.com/share?url=http://lacona.io', '_blank', 'width=550,height=231'); e.preventDefault()}} href='https://plus.google.com/share?url=http://lacona.io'><img src='googleplus.png' /></a>
-          </div>
-        </div>
-      </div>
-    )
-  }
+function isOSX10_11Plus (userAgent) {
+  return /Mac OS X 10_11/.test(userAgent);
 }
-ShareSheet.defaultProps = {
-  includeTry: false,
-  focusTry: () => {},
-  showBTCLightbox: () => {}
+
+const Buttons = ({check}) => {
+  return (
+    <div className='buttons'>
+      <SubscribeButton />
+      <FollowButton />
+      <DownloadButton check={check} />
+    </div>
+  )
+}
+
+const SubscribeButton = () => {
+  return (
+    <div className='buttonContainer'>
+      <a className='subscribeButton button' onClick={e => {window.open('http://eepurl.com/bjPRjD', '_blank', 'menubar=1,resizable=1,width=550,height=420'); e.preventDefault()}} href='http://eepurl.com/bjPRjD' target='_blank'>Subscribe</a>
+      <ul>
+        <li>~1 Email/Month</li>
+      </ul>
+    </div>
+  )
+}
+
+const FollowButton = () => {
+  return (
+    <div className='buttonContainer'>
+      <a className='followButton button' onClick={e => {window.open('https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458', '_blank', 'menubar=1,resizable=1,width=550,height=420'); e.preventDefault()}} href='https://twitter.com/intent/follow?screen_name=lacona&user_id=1963107458' target='_blank'>Follow</a>
+      <ul>
+        <li>@lacona on Twitter</li>
+      </ul>
+    </div>
+  )
+}
+
+const DownloadButton = ({check = true} = {}) => {
+  let button = <a className='downloadButton button' href={DOWNLOAD_LINK}>Download</a>
+  if (check && global.navigator) {
+    const userAgent = navigator.userAgent
+    if (!isOSX10_11Plus(userAgent)) {
+      if (!isOSX(userAgent)) {
+        button = <a className='downloadButton warn button' href={DOWNLOAD_LINK}>OSX Only</a>
+      } else {
+        button = <a className='downloadButton warn button' href={DOWNLOAD_LINK}>OSX 10.11+</a>
+      }
+    }
+  }
+
+  return (
+    <div className='buttonContainer'>
+      {button}
+      <ul>
+        <li>{CURRENT_VERSION}</li>
+        <li><a href={ISSUES_LINK}>Issues</a></li>
+        <li><a href={CHANGELOG_LINK}>Changelog</a></li>
+      </ul>
+    </div>
+  )
 }
 
 export default class Page extends React.Component {
@@ -137,28 +101,34 @@ export default class Page extends React.Component {
     super()
 
     this.state = {
-      theme: 'theme-eighties-dark',
       initialLoad: true,
-      demoRunning: true
+      sticky: false
     }
 
     this.execute = getExecute(this.showLightbox.bind(this))
   }
 
   showLightbox (text) {
-    this.setState({lightBoxMessage: text})
+    this.setState({lightBoxVisible: true, lightBoxMessage: text})
   }
 
   hideLightBox () {
-    this.setState({lightBoxMessage: null, lightBoxDetail: null})
+    this.setState({lightBoxVisible: false})
   }
 
-  showBTCLightbox() {
-    this.setState({btcLightboxVisible: true})
+  testSticky () {
+    const contentPos = this.content.getBoundingClientRect()
+
+    if (contentPos.top < 0 && !this.state.sticky) {
+      this.setState({sticky: true})
+    } else if (contentPos.top >= 0 && this.state.sticky) {
+      this.setState({sticky: false})
+    }
   }
 
-  hideBTCLightbox() {
-    this.setState({btcLightboxVisible: false})
+  enableSticky () {
+    window.addEventListener('scroll', this.testSticky.bind(this))
+    this.testSticky()
   }
 
   componentDidMount () {
@@ -166,46 +136,18 @@ export default class Page extends React.Component {
     ga('send', 'pageview')
 
     window.addEventListener('keydown', this.checkEscape.bind(this))
+    this.enableSticky()
 
     this.setState({initialLoad: false})
-
-    setTimeout(this.startDemo.bind(this), 2000)
   }
 
-  componentWillUnmount () {
-    window.removeEventListener('keydown', this.checkEscape.bind(this))
-  }
-
-  startDemo () {
-    const shuffledExamples = _.shuffle(examples)
-    this.demoRunning = true
-
-    const shouldStop = () => !this.demoRunning
-
-    eachSeries(shuffledExamples, (item, done) => {
-      this.type('big', shouldStop, item, false)
-      if (!shouldStop()) setTimeout(done, 7000)
-    }, this.startDemo.bind(this))
-  }
-
-  stopDemo () {
-    this.demoRunning = false
-    // this.setState({demoRunning: false})
-  }
-
-  executeDate (date) {
-    this.setState({lightBoxDetail: ["For the purpose of this demo, everyone's birthday is ", <a href='https://www.youtube.com/watch?v=SIQ2MrJImpI' target='_blank' className='nodifferent'>October 11</a>, '.']})
-    this.execute({date})
-  }
-
-  erase (elem, shouldStop, focus = true, done = () => {}) {
-    const input = elem.getInput()
+  erase (done) {
+    const input = this.lacona.getInput()
 
     for (let i = 0; i <= input.length; i++) {
       _.delay(() => {
-        if (shouldStop()) return
-        elem.update(input.substr(0, (input.length - i)))
-        if (focus) elem.focusEnd()
+        this.lacona.update(input.substr(0, (input.length - i)))
+        this.lacona.focusEnd()
       }, i * MS_PER_INPUT / 2)
     }
 
@@ -214,14 +156,12 @@ export default class Page extends React.Component {
     }, input.length * MS_PER_INPUT / 2)
   }
 
-  type (ref, shouldStop, content, focus = true) {
-    const elem = this.refs[ref]
-    this.erase(elem, shouldStop, focus, () => {
+  type (content) {
+    this.erase(() => {
       for (let i = 0; i < content.length; i++) {
-        if (shouldStop()) return
         _.delay(() => {
-          elem.update(content.substr(0, i + 1))
-          if (focus) elem.focusEnd()
+          this.lacona.update(content.substr(0, i + 1), i === content.length - 1)
+          this.lacona.focusEnd()
         }, i * MS_PER_INPUT)
       }
     })
@@ -235,329 +175,299 @@ export default class Page extends React.Component {
     }
   }
 
-  focusTry () {
-    this.stopDemo()
-    this.erase(this.refs.big, () => false)
-  }
-
   render () {
-    return (
-      <div className={`page ${this.props.isMobile ? 'mobile' : 'desktop'} theme-eighties-dark${this.state.initialLoad ? ' initial-load' : ''}`}>
+    const isMobile = this.props.isMobile && !this.state.initialLoad
+    const isDesktop = !this.props.isMobile && !this.state.initialLoad
 
+    return (
+      <div className={`page`}>
         <header>
-          <h1><a href='#' tabIndex='-1'>Lacona</a></h1>
-          <h2 className='category-action highlighted'>Natural Language Commands for your Mac</h2>
-          <a href='http://lacona-download.firebaseapp.com/packages/0.3.1/LaconaBeta.zip' className='noline download-well'>
-            <h3>Download Lacona (Beta) Now</h3>
-            <p>0.3.1 - Requires OSX 10.11 El Capitan</p>
-          </a>
-          <p>Call up Lacona with a keyboard shortcut, and type whatever you want to do. It gives intelligent suggestions as you type and then follows your orders.</p>
-          <p>Lacona Beta is <strong>available for download</strong>. It's awesome, but it's still quite buggy. Report problems <a href="https://github.com/lacona/LaconaApp/issues">here</a>. This page is an in-browser demo.</p>
+          <h1>Lacona</h1>
+          <p>Call up Lacona with a keyboard shortcut and type whatever you want to do. It gives intelligent suggestions as you type and then follows your orders.</p>
+          <Buttons check={!this.state.initialLoad} />
         </header>
 
-        <content>
-          <section className='full green'>
-            <div className='text'>
-              <p className='well mobileOnly'>
-                Lacona is designed for use with a keyboard on a full desktop operating system, not for mobile devices. For the full experience, visit this page on your computer!
-              </p>
-              <ShareSheet includeTry={true} focusTry={this.focusTry.bind(this)} showBTCLightbox={this.showBTCLightbox.bind(this)} />
-            </div>
-          </section>
-          <section className='full'>
+        {isMobile ? (
+          <div className='disclaimer'>
+            <p>Lacona is designed for use with a keyboard on a full desktop operating system. For the full experience, visit this page on your computer!</p>
+          </div>
+        ) : undefined}
+        {isDesktop ? (
+          <div className={`lacona-demo${this.state.sticky ? ' sticky' : ''}`}>
             <Lacona
-              userInteracted={this.stopDemo.bind(this)}
+              onFocus={() => {}}
+              onBlur={() => {}}
               execute={this.execute}
-              ref='big'
+              ref={c => this.lacona = c}
               tryMe={true}
               tabIndex={1} />
+          </div>
+        ) : undefined}
 
-          </section>
-          <section className='textLeft'>
+        <content ref={c => this.content = c}>
+          <section>
             <div className='text'>
               <a name='open' className='anchor'><h3>Ditch the Dock</h3></a>
               <p>With Lacona, your Apps, Bookmarks, Files, System Preferences, and more are only a few keystrokes away. You can also manage your open apps right from your keyboard.</p>
               <ul className='examples'>
-                <li onClick={this.type.bind(this, '0', () => false, 'open Calendar')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'open Calendar') : undefined}>
                   <span className='category-action'>open</span> <span className={`category-argument${hashArgument('application')}`}>Calendar</span>
                 </li>
-                <li onClick={this.type.bind(this, '0', () => false, 'open Parental Controls')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'open Parental Controls') : undefined}>
                   <span className='category-action'>open</span> <span className={`category-argument${hashArgument('preference pane')}`}>Parental Controls</span>
                 </li>
-                <li onClick={this.type.bind(this, '0', () => false, 'open Facebook and Twitter')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'open Facebook and Twitter') : undefined}>
                   <span className='category-action'>open</span> <span className={`category-argument${hashArgument('bookmark')}`}>Facebook</span> <span className='category-conjunction'>and</span> <span className={`category-argument${hashArgument('bookmark')}`}>Twitter</span>
                 </li>
-                <li onClick={this.type.bind(this, '0', () => false, 'iTunes')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'iTunes') : undefined}>
                   <span className={`category-argument${hashArgument('application')}`}>iTunes</span>
                 </li>
-                <li onClick={this.type.bind(this, '0', () => false, 'quit Safari')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'quit Safari') : undefined}>
                   <span className='category-action'>quit</span> <span className={`category-argument${hashArgument('application')}`}>Safari</span>
                 </li>
-                <li onClick={this.type.bind(this, '0', () => false, 'open lacona.io in Safari and Firefox')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'open lacona.io in Safari and Firefox') : undefined}>
                   <span className='category-action'>open</span> <span className={`category-argument${hashArgument('URL')}`}>lacona.io</span> <span className='category-conjunction'>in</span> <span className={`category-argument${hashArgument('application')}`}>Safari</span> <span className='category-conjunction'>and</span> <span className={`category-argument${hashArgument('application')}`}>Firefox</span>
 
                 </li>
-                <li onClick={this.type.bind(this, '0', () => false, 'switch to Messages')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'switch to Messages') : undefined}>
                   <span className='category-action'>switch to</span> <span className={`category-argument${hashArgument('application')}`}>Messages</span>
                 </li>
-                <li onClick={this.type.bind(this, '0', () => false, 'open kickstarter.com')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'open kickstarter.com') : undefined}>
                   <span className='category-action'>open</span> <span className={`category-argument${hashArgument('URL')}`}>kickstarter.com</span>
                 </li>
-{/*                <li onClick={this.type.bind(this, '0', () => false, 'open ~/Downloads/Lacona.dmg')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'open ~/Downloads/Lacona.dmg') : undefined}>
                   <span className='category-action'>open</span> <span className={`category-argument${hashArgument('path')}`}>~/Downloads/Lacona.dmg</span>
                 </li>
-*/}                <li onClick={this.type.bind(this, '0', () => false, 'open Gmail and Reminders and calendar.google.com')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'open Gmail and Reminders and calendar.google.com') : undefined}>
                   <span className='category-action'>open</span> <span className={`category-argument${hashArgument('bookmark')}`}>Gmail</span><span className='category-conjunction'> and </span><span className={`category-argument${hashArgument('application')}`}>Reminders</span><span className='category-conjunction'> and </span><span className={`category-argument${hashArgument('URL')}`}>calendar.google.com</span>
                 </li>
-                <li onClick={this.type.bind(this, '0', () => false, 'lifehacker.com')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'lifehacker.com') : undefined}>
                   <span className={`category-argument${hashArgument('URL')}`}>lifehacker.com</span>
                 </li>
-                <li onClick={this.type.bind(this, '0', () => false, 'close Reminders')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'close Reminders') : undefined}>
                   <span className='category-action'>close</span> <span className={`category-argument${hashArgument('application')}`}>Reminders</span>
                 </li>
-                <li onClick={this.type.bind(this, '0', () => false, 'open todo.txt')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'open todo.txt') : undefined}>
                   <span className='category-action'>open</span> <span className={`category-argument${hashArgument('file')}`}>todo.txt</span>
                 </li>
-                <li onClick={this.type.bind(this, '0', () => false, 'open my-document.docx with Pages')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'open my-document.docx with Pages') : undefined}>
                   <span className='category-action'>open</span> <span className={`category-argument${hashArgument('file')}`}>my-document.docx</span> <span className='category-conjunction'>with</span> <span className={`category-argument${hashArgument('application')}`}>Pages</span>
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='0' execute={this.execute} />
           </section>
-          <section className='textRight'>
+          <section>
             <div className='text'>
               <a name='date' className='anchor'><h3>Organize your Life, not your Calendar</h3></a>
-              <p>Create reminders as though you were talking to a person. Lacona understands. Event scheduling is coming soon.</p>
-              <ul className='well'>
-                <li>Due to browser limitations, this may sometimes be choppy.</li>
-                <li>This demo US assumes date formats.</li>
-              </ul>
+              <p>Create reminders and schedule events as though you were talking to a person. Lacona understands. You can even use birthdays and anniversarys in your commands. It's natural!</p>
               <ul className='examples'>
-{/*                <li onClick={this.type.bind(this, '1', () => false, "schedule Dinner with Vicky for 7pm tomorrow")}>
-                  <span className='category-action'>schedule</span> <span className={`category-argument${hashArgument('calendar event')}`}>Dinner with Vicky</span>{/* <span className='category-conjunction'>at</span> <span className='descriptor-location'>Sacco's Flatbread</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('time')}`}>7pm</span> <span className={`category-argument${hashArgument('date')}`}>tomorrow</span>
+                <li onClick={!isMobile ? this.type.bind(this, 'schedule Party at 7pm Friday') : undefined}>
+                  schedule <span className={`category-argument${hashArgument('calendar event')}`}>Party</span> at <span className={`category-argument${hashArgument('time')}`}>7pm</span> <span className={`category-argument${hashArgument('date')}`}>Friday</span>
                 </li>
-*/}                <li onClick={this.type.bind(this, '1', () => false, 'remind me to Pick up the car September 12 at 11:30am')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'remind me to Pick up the car September 12 at 11:30am') : undefined}>
                   <span className='category-action'>remind me to</span> <span className={`category-argument${hashArgument('reminder title')}`}>Pick up the car</span> <span className={`category-argument${hashArgument('date')}`}>September 12</span> <span className='category-conjunction'>at</span> <span className={`category-argument${hashArgument('time')}`}>11:30am</span>
                 </li>
-                <li onClick={this.type.bind(this, '1', () => false, "remind me to Buy a gift 2 weeks before my wife's birthday")}>
+                <li onClick={!isMobile ? this.type.bind(this, "remind me to Buy a gift 2 weeks before my wife's birthday") : undefined}>
                   <span className='category-action'>remind me to</span> <span className={`category-argument${hashArgument('reminder title')}`}>Buy a gift</span> <span className={`category-argument${hashArgument('date')}`}>2 weeks before my wife's birthday</span>
                 </li>
-{/*                <li onClick={this.type.bind(this, '1', () => false, 'schedule Vacation 10a Monday to 6:30p Thursday')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'schedule Vacation 10a Monday to 6:30p Thursday') : undefined}>
                   <span className='category-action'>schedule</span> <span className={`category-argument${hashArgument('calendar event')}`}>Vacation</span> <span className={`category-argument${hashArgument('time')}`}>10a</span> <span className={`category-argument${hashArgument('date')}`}>Monday</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('time')}`}>6:30p</span> <span className={`category-argument${hashArgument('date')}`}>Thursday</span>
                 </li>
-                <li onClick={this.type.bind(this, '1', () => false, 'schedule China trip from Native American Day to Veterans Day')}>
-                  <span className='category-action'>schedule</span> <span className={`category-argument${hashArgument('calendar event')}`}>China trip</span> <span className='category-conjunction'>from</span> <span className={`category-argument${hashArgument('holiday')}`}>Native American Day</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('holiday')}`}>Veterans Day</span>
-                </li>
-*/}                <li onClick={this.type.bind(this, '1', () => false, 'remind me to Buy a gift 7 days before 12/1')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'remind me to Buy a gift 7 days before 12/1') : undefined}>
                   <span className='category-action'>remind me to</span> <span className={`category-argument${hashArgument('reminder title')}`}>Buy a gift</span> <span className={`category-argument${hashArgument('date')}`}>7 days before 12/1</span>
                 </li>
-                <li onClick={this.type.bind(this, '1', () => false, 'remind me to Call Jenny')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'remind me to Call Jenny') : undefined}>
                   <span className='category-action'>remind me to</span> <span className={`category-argument${hashArgument('reminder title')}`}>Call Jenny</span>
                 </li>
-                <li onClick={this.type.bind(this, '1', () => false, 'remind me to Charge my phone at 9pm')}>
+                <li onClick={!isMobile ? this.type.bind(this, 'schedule Ski Trip next Friday to Sunday') : undefined}>
+                  <span className='category-action'>schedule</span> <span className={`category-argument${hashArgument('calendar event')}`}>Ski Trip</span> <span className={`category-argument${hashArgument('date')}`}>Next Friday</span> to <span className={`category-argument${hashArgument('date')}`}>Sunday</span>
+                </li>
+                <li onClick={!isMobile ? this.type.bind(this, 'remind me to Charge my phone at 9pm') : undefined}>
                   <span className='category-action'>remind me to</span> <span className={`category-argument${hashArgument('reminder title')}`}>Charge my phone</span> <span className='category-conjunction'>at</span> <span className={`category-argument${hashArgument('time')}`}>9pm</span>
                 </li>
               </ul>
             </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='1' execute={this.execute} />
           </section>
-          <section className='textLeft'>
-            <div className='text'>
-              <a name='settings' className='anchor'><h3>Setting settings, settled</h3></a>
-              <p>With Lacona, there is no need to fiddle with menus and forms to change your basic settings. Turn off your Wifi, turn on Do Not Disturb, or eject drives with just a few keystrokes. Set time limits on settings, so you don't forget to change them back.</p>
-              <ul className='examples'>
-                <li onClick={this.type.bind(this, '2', () => false, 'turn on wifi')}>
-                  <span className='category-action'>turn on</span> <span className={`category-argument${hashArgument('setting')}`}>wifi</span>
-                </li>
-                <li onClick={this.type.bind(this, '2', () => false, 'toggle Do Not Disturb')}>
-                  <span className='category-action'>toggle</span> <span className={`category-argument${hashArgument('setting')}`}>Do Not Disturb</span>
-                </li>
-                <li onClick={this.type.bind(this, '2', () => false, 'shutdown')}>
-                  <span className='category-action'>shutdown</span>
-                </li>
-                <li onClick={this.type.bind(this, '2', () => false, 'eject Lacona.dmg')}>
-                  <span className='category-action'>eject</span> <span className={`category-argument${hashArgument('volume')}`}>Lacona.dmg</span>
-                </li>
-                <li onClick={this.type.bind(this, '2', () => false, 'turn off display')}>
-                  <span className='category-action'>turn off display</span>
-                </li>
-                <li onClick={this.type.bind(this, '2', () => false, 'empty Trash')}>
-                  <span className='category-action'>empty Trash</span>
-                </li>
-                <li onClick={this.type.bind(this, '2', () => false, 'enable bluetooth')}>
-                  <span className='category-action'>enable</span> <span className={`category-argument${hashArgument('setting')}`}>bluetooth</span>
-                </li>
-                <li onClick={this.type.bind(this, '2', () => false, 'turn on do not disturb for 25 minutes')}>
-                  <span className='category-action'>turn on</span> <span className={`category-argument${hashArgument('setting')}`}>do not disturb</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('time duration')}`}>25 minutes</span>
-                </li>
-                <li onClick={this.type.bind(this, '2', () => false, 'turn on the screensaver')}>
-                  <span className='category-action'>turn on the screensaver</span>
-                </li>
-              </ul>
-            </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='2' execute={this.execute} />
+          <section>
+            <a name='settings' className='anchor'><h3>Setting Settings, Settled</h3></a>
+            <p>With Lacona, there is no need to fiddle with menus and forms to change your basic settings. Turn off your Wifi, turn on Do Not Disturb, eject drives, or even restart your computer with just a few keystrokes. You can set time limits on settings, so you won't forget to change them back.</p>
+            <ul className='examples'>
+              <li onClick={!isMobile ? this.type.bind(this, 'turn on wifi') : undefined}>
+                <span className='category-action'>turn on</span> <span className={`category-argument${hashArgument('setting')}`}>wifi</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'toggle Do Not Disturb') : undefined}>
+                <span className='category-action'>toggle</span> <span className={`category-argument${hashArgument('setting')}`}>bluetooth</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'shutdown') : undefined}>
+                <span className='category-action'>shutdown</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'eject Lacona.dmg') : undefined}>
+                <span className='category-action'>eject</span> <span className={`category-argument${hashArgument('volume')}`}>Lacona.dmg</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'turn off display') : undefined}>
+                <span className='category-action'>turn off display</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'empty Trash') : undefined}>
+                <span className='category-action'>empty Trash</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'enable bluetooth') : undefined}>
+                <span className='category-action'>enable</span> <span className={`category-argument${hashArgument('setting')}`}>bluetooth</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'turn on do not disturb for 25 minutes') : undefined}>
+                <span className='category-action'>turn on</span> <span className={`category-argument${hashArgument('setting')}`}>do not disturb</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('time duration')}`}>25 minutes</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'turn on the screensaver') : undefined}>
+                <span className='category-action'>turn on the screensaver</span>
+              </li>
+            </ul>
           </section>
-          <section className='textRight'>
-            <div className='text'>
-              <a name='search' className='anchor'><h3>Seek and Ye Shall Find</h3></a>
-              <p>Search the web like a boss. Utilize powerful fallthrough functionality to save even more keystrokes.</p>
-              <ul className='examples'>
-                <li onClick={this.type.bind(this, '3', () => false, 'search Google for pictures of cats')}>
-                  <span className='category-action'>search</span> <span className={`category-argument${hashArgument('search engine')}`}>Google</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('query')}`}>pictures of cats</span>
-                </li>
-                <li onClick={this.type.bind(this, '3', () => false, 'Google stormtroopers')}>
-                  <span className={`category-argument${hashArgument('search engine')}`}>Google</span> <span className={`category-argument${hashArgument('query')}`}>stormtroopers</span>
-                </li>
-                <li onClick={this.type.bind(this, '3', () => false, 'Amazon Avengers')}>
-                  <span className={`category-argument${hashArgument('search engine')}`}>Amazon</span> <span className={`category-argument${hashArgument('query')}`}>Avengers</span>
-                </li>
-                <li onClick={this.type.bind(this, '3', () => false, 'search Wikipedia for Pluto')}>
-                  <span className='category-action'>search</span> <span className={`category-argument${hashArgument('search engine')}`}>Wikipedia</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('query')}`}>Pluto</span>
-                </li>
-                <li onClick={this.type.bind(this, '3', () => false, 'search eBay and Amazon for iPhone 6')}>
-                  <span className='category-action'>search</span> <span className={`category-argument${hashArgument('search engine')}`}>eBay</span> <span className='category-conjunction'>and</span> <span className={`category-argument${hashArgument('search engine')}`}>Amazon</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('query')}`}>iPhone 6</span>
-                </li>
-              </ul>
-            </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='3' execute={this.execute} />
+          <section>
+            <a name='search' className='anchor'><h3>Seek and Ye Shall Find</h3></a>
+            <p>Search the web like a boss. Use powerful fallthrough functionality to save even more keystrokes. You can even search multiple sites with a single command.</p>
+            <ul className='examples'>
+              <li onClick={!isMobile ? this.type.bind(this, 'search Google for pictures of cats') : undefined}>
+                <span className='category-action'>search</span> <span className={`category-argument${hashArgument('search engine')}`}>Google</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('query')}`}>pictures of cats</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'Google stormtroopers') : undefined}>
+                <span className={`category-argument${hashArgument('search engine')}`}>Google</span> <span className={`category-argument${hashArgument('query')}`}>stormtroopers</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'Amazon Avengers') : undefined}>
+                <span className={`category-argument${hashArgument('search engine')}`}>Amazon</span> <span className={`category-argument${hashArgument('query')}`}>Avengers</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'search Wikipedia for Pluto') : undefined}>
+                <span className='category-action'>search</span> <span className={`category-argument${hashArgument('search engine')}`}>Wikipedia</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('query')}`}>Pluto</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'search eBay and Amazon for iPhone 6') : undefined}>
+                <span className='category-action'>search</span> <span className={`category-argument${hashArgument('search engine')}`}>eBay</span> <span className='category-conjunction'>and</span> <span className={`category-argument${hashArgument('search engine')}`}>Amazon</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('query')}`}>iPhone 6</span>
+              </li>
+            </ul>
           </section>
-          <section className='textLeft'>
-            <div className='text'>
-              <a name='play' className='anchor'><h3>Your Work Needs a DJ</h3></a>
-              <p>Instantly play anything in your iTunes library, without ever touching the mouse.</p>
-              <ul className='examples'>
-                <li onClick={this.type.bind(this, '4', () => false, 'play Robot Love')}>
-                  <span className='category-action'>play</span> <span className={`category-argument${hashArgument('song')}`}>Robot Love</span>
-                </li>
-                <li onClick={this.type.bind(this, '4', () => false, 'play Walk the Moon')}>
-                  <span className='category-action'>play</span> <span className={`category-argument${hashArgument('artist')}`}>Walk the Moon</span>
-                </li>
-                <li onClick={this.type.bind(this, '4', () => false, 'play Jason Derulo, Flyte, and Elle King')}>
-                  <span className='category-action'>play</span> <span className={`category-argument${hashArgument('artist')}`}>Jason Derulo</span><span className='category-conjunction'>, </span><span className={`category-argument${hashArgument('artist')}`}>Flyte</span><span className='category-conjunction'>, and </span><span className={`category-argument${hashArgument('artist')}`}>Elle King</span>
-                </li>
-
-                <li onClick={this.type.bind(this, '4', () => false, 'play next song')}>
-                  <span className='category-action'>play next song</span>
-                </li>
-                <li onClick={this.type.bind(this, '4', () => false, 'pause')}>
-                  <span className='category-action'>pause</span>
-                </li>
-              </ul>
-            </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='4' execute={this.execute} />
+          <section>
+            <a name='play' className='anchor'><h3>Your Personal DJ</h3></a>
+            <p>Instantly play anything in your iTunes library, without ever touching the mouse. Choose a bunch of songs or artists together to build an impromptu playlist. You can also control playback effortlessly.</p>
+            <ul className='examples'>
+              <li onClick={!isMobile ? this.type.bind(this, 'play Couch Potato') : undefined}>
+                <span className='category-action'>play</span> <span className={`category-argument${hashArgument('song')}`}>Couch Potato</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'play Wild Life') : undefined}>
+                <span className='category-action'>play</span> <span className={`category-argument${hashArgument('album')}`}>Wild Life</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'play next song') : undefined}>
+                <span className='category-action'>play next song</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'play Walk the Moon') : undefined}>
+                <span className='category-action'>play</span> <span className={`category-argument${hashArgument('artist')}`}>Walk the Moon</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'play Forever and I Bet My Life and Nicki Minaj') : undefined}>
+                <span className='category-action'>play</span> <span className={`category-argument${hashArgument('album')}`}>Forever</span> and <span className={`category-argument${hashArgument('song')}`}>I Bet My Life</span> and <span className={`category-argument${hashArgument('artist')}`}>Nicki Minaj</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'play next song') : undefined}>
+                <span className='category-action'>play next song</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'play Pop and Jazz') : undefined}>
+                <span className='category-action'>play</span> <span className={`category-argument${hashArgument('genre')}`}>Pop</span> and <span className={`category-argument${hashArgument('genre')}`}>Jazz</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'pause') : undefined}>
+                <span className='category-action'>pause</span>
+              </li>
+            </ul>
           </section>
-          <section className='textRight'>
-            <div className='text'>
-              <a name='contact' className='anchor'><h3>Keep in Touch</h3></a>
-              <p>Easily communicate with all of your contacts over Email, FaceTime, iMessage. Make calls and send texts through your iPhone. Smoke signals not yet supported.</p>
-              <ul className='examples'>
-                <li onClick={this.type.bind(this, '5', () => false, 'call Mom')}>
-                  <span className='category-action'>call</span> <span className={`category-argument${hashArgument('relationship')}`}>Mom</span>
-                </li>
-                <li onClick={this.type.bind(this, '5', () => false, 'email Tony Stark')}>
-                  <span className='category-action'>email</span> <span className={`category-argument${hashArgument('contact')}`}>Tony Stark</span>
-                </li>
-                <li onClick={this.type.bind(this, '5', () => false, 'email Dinner Plans to Clinton and Natalia')}>
-                  <span className='category-action'>email</span> <span className={`category-argument${hashArgument('subject')}`}>Dinner Plans</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('contact')}`}>Clinton</span> <span className='category-conjunction'>and</span> <span className={`category-argument${hashArgument('contact')}`}>Natalia</span>
-                </li>
-                <li onClick={this.type.bind(this, '5', () => false, 'facetime my boss')}>
-                  <span className='category-action'>facetime</span> <span className={`category-argument${hashArgument('relationship')}`}>my boss</span>
-                </li>
-                <li onClick={this.type.bind(this, '5', () => false, 'facetime Bruce Banner')}>
-                  <span className='category-action'>facetime</span> <span className={`category-argument${hashArgument('contact')}`}>Bruce Banner</span>
-                </li>
-                <li onClick={this.type.bind(this, '5', () => false, 'call my Husband')}>
-                  <span className='category-action'>call</span> <span className={`category-argument${hashArgument('relationship')}`}>my Husband</span>
-                </li>
-                <li onClick={this.type.bind(this, '5', () => false, 'email app@lacona.io')}>
-                  <span className='category-action'>email</span> <span className={`category-argument${hashArgument('email address')}`}>app@lacona.io</span>
-                </li>
-                <li onClick={this.type.bind(this, '5', () => false, 'call +1 617 867 5309')}>
-                  <span className='category-action'>call</span> <span className={`category-argument${hashArgument('phone number')}`}>+1 617 867 5309</span>
-                </li>
-              </ul>
-            </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} ref='5' execute={this.execute} />
+          <section>
+            <a name='contact' className='anchor'><h3>Keep in Touch</h3></a>
+            <p>Easily communicate with all of your contacts over Email, FaceTime, and iMessage. Make calls and send texts through your iPhone. Smoke signals not yet supported.</p>
+            <ul className='examples'>
+              <li onClick={!isMobile ? this.type.bind(this, 'call Mom') : undefined}>
+                <span className='category-action'>call</span> <span className={`category-argument${hashArgument('relationship')}`}>Mom</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'email Tony Stark') : undefined}>
+                <span className='category-action'>email</span> <span className={`category-argument${hashArgument('contact')}`}>Tony Stark</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'email Dinner Plans to Clinton and Natalia') : undefined}>
+                <span className='category-action'>email</span> <span className={`category-argument${hashArgument('subject')}`}>Dinner Plans</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('contact')}`}>Clinton</span> <span className='category-conjunction'>and</span> <span className={`category-argument${hashArgument('contact')}`}>Natalia</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'facetime my boss') : undefined}>
+                <span className='category-action'>facetime</span> <span className={`category-argument${hashArgument('relationship')}`}>my boss</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'facetime Bruce Banner') : undefined}>
+                <span className='category-action'>facetime</span> <span className={`category-argument${hashArgument('contact')}`}>Bruce Banner</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'call my Husband') : undefined}>
+                <span className='category-action'>call</span> <span className={`category-argument${hashArgument('relationship')}`}>my Husband</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'email app@lacona.io') : undefined}>
+                <span className='category-action'>email</span> <span className={`category-argument${hashArgument('email address')}`}>app@lacona.io</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'call +1 617 867 5309') : undefined}>
+                <span className='category-action'>call</span> <span className={`category-argument${hashArgument('phone number')}`}>+1 617 867 5309</span>
+              </li>
+            </ul>
           </section>
-          <section className='textLeft'>
-            <div className='text'>
-              <a name='translate' className='anchor'><h3>Become a Global Citizen</h3></a>
-              <p>Quickly translate words, phrases, and websites between languages. A more natural interface for Google Translate.</p>
-              <ul className='examples'>
-                <li onClick={this.type.bind(this, '6', () => false, 'translate мороженное')}>
-                  <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>мороженное</span>
+          <section>
+            <a name='translate' className='anchor'><h3>Become a Global Citizen</h3></a>
+            <p>Quickly translate words, phrases, and websites between languages. It's the quickest, most natural interface for Google Translate.</p>
+            <ul className='examples'>
+              <li onClick={!isMobile ? this.type.bind(this, 'translate мороженное') : undefined}>
+                <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>мороженное</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'translate univision.com/') : undefined}>
+                <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('URL')}`}>univision.com</span>
                 </li>
-                <li onClick={this.type.bind(this, '6', () => false, 'translate univision.com/')}>
-                  <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('URL')}`}>univision.com</span>
-                  </li>
-                <li onClick={this.type.bind(this, '6', () => false, 'translate 我爱你 to Korean')}>
-                  <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>我爱你</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('language')}`}>Korean</span>
-                </li>
-                <li onClick={this.type.bind(this, '6', () => false, 'translate ¿cómo estás? from Spanish to Japanese')}>
-                  <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>como estas?</span> <span className='category-conjunction'>from</span> <span className={`category-argument${hashArgument('language')}`}>Spanish</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('language')}`}>Japanese</span>
-                </li>
-                <li onClick={this.type.bind(this, '6', () => false, 'translate hujambo from Swahili')}>
-                  <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>hujambo</span> <span className='category-conjunction'>from</span> <span className={`category-argument${hashArgument('language')}`}>Swahili</span>
-                </li>
-                <li onClick={this.type.bind(this, '6', () => false, "translate I don't know to Arabic, Chinese, French, Russian, and Spanish")}>
-                  <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>I don't know</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('language')}`}>Arabic</span><span className='category-conjunction'>,</span> <span className={`category-argument${hashArgument('language')}`}>Chinese</span><span className='category-conjunction'>,</span> <span className={`category-argument${hashArgument('language')}`}>French</span><span className='category-conjunction'>,</span> <span className={`category-argument${hashArgument('language')}`}>Russian</span><span className='category-conjunction'>, and</span> <span className={`category-argument${hashArgument('language')}`}>Spanish</span>
-                </li>
-              </ul>
-            </div>
-            <Lacona userInteracted={this.stopDemo.bind(this)} execute={this.execute} ref='6' />
+              <li onClick={!isMobile ? this.type.bind(this, 'translate 我爱你 to Korean') : undefined}>
+                <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>我爱你</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('language')}`}>Korean</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'translate ¿cómo estás? from Spanish to Japanese') : undefined}>
+                <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>como estas?</span> <span className='category-conjunction'>from</span> <span className={`category-argument${hashArgument('language')}`}>Spanish</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('language')}`}>Japanese</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, 'translate hujambo from Swahili') : undefined}>
+                <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>hujambo</span> <span className='category-conjunction'>from</span> <span className={`category-argument${hashArgument('language')}`}>Swahili</span>
+              </li>
+              <li onClick={!isMobile ? this.type.bind(this, "translate I don't know to Arabic, Chinese, French, Russian, and Spanish") : undefined}>
+                <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>I don't know</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('language')}`}>Arabic</span><span className='category-conjunction'>,</span> <span className={`category-argument${hashArgument('language')}`}>Chinese</span><span className='category-conjunction'>,</span> <span className={`category-argument${hashArgument('language')}`}>French</span><span className='category-conjunction'>,</span> <span className={`category-argument${hashArgument('language')}`}>Russian</span><span className='category-conjunction'>, and</span> <span className={`category-argument${hashArgument('language')}`}>Spanish</span>
+              </li>
+            </ul>
           </section>
           <section className='full'>
-            <div className='text'>
-              <h3><a name='extensibility'>The Sky's the Limit</a></h3>
-              <p>Lacona is built to be extended. An open Developer API gives it the power it do anything you need it to do, quickly and easily.</p>
-              <ul className='examples inactive'>
-                <li><span className='category-action'>tweet</span> <span className='category-argument2'>just setting up my twttr #blessed</span></li>
-                <li><span className='category-action'>skype</span> <span className={`category-argument${hashArgument('contact')}`}>Aaron</span></li>
-                <li><span className='category-action'>email</span> <span className='category-argument0'>my last instagram picture</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('relationship')}`}>Mom</span></li>
-                <li><span className='category-action'>calculate</span> <span className='category-argument3'>sqrt(5)</span></li>
-                <li><span className='category-action'>turn off</span> <span className='category-argument5'>the kitchen lights</span></li>
-                <li><span className='category-action'>pronounce</span> <span className='category-argument4'>indefatigable</span></li>
-                <li><span className='category-action'>check</span> <span className='category-argument6'>APPL</span></li>
-                <li><span className='category-action'>set</span> <span className='category-argument0'>default browser</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('application')}`}>Firefox</span></li>
-                <li><span className='category-action'>set a timer</span> <span className='category-conjunction'>for</span> <span className='category-argument2'>25 minutes</span></li>
-                <li><span className='category-action'>execute</span> <span className='category-argument5'>ps -ef | grep -i lacona</span></li>
-                <li><span className='category-action'>email walking directions</span> <span className='category-conjunction'>from</span> <span className='category-argument6'>Penn Station NY</span> <span className='category-conjunction'>to</span> <span className='category-argument6'>my house</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('contact')}`}>Pepper Potts</span></li>
-                <li><span className='category-action'>block</span> <span className={`category-argument${hashArgument('URL')}`}>reddit.com</span></li>
-                <li><span className='category-action'>subscribe</span> <span className='category-conjunction'>to</span> <span className='category-argument0'>lifehacker</span></li>
-                <li><span className='category-action'>paste</span> <span className='category-argument2'>my last tweet</span></li>
-                <li><span className='category-action'>fork</span> <span className='category-argument1'>lacona/lacona</span></li>
-                <li><span className='category-action'>define</span> <span className='category-argument4'>antediluvian</span></li>
-                <li><span className='category-action'>roll</span> <span className='category-argument0'>d12</span></li>
-                <li><span className='category-action'>find flights</span> <span className='category-conjunction'>from</span> <span className='category-argument6'>SFO</span> <span className='category-conjunction'>to</span> <span className='category-argument6'>BOS</span> <span className='category-conjunction'>on</span> <span className={`category-argument${hashArgument('date')}`}>8/6/2015</span></li>
-                <li><span className='category-action'>yo</span> <span className={`category-argument${hashArgument('contact')}`}>THEDUDE</span></li>
-                <li><span className='category-action'>set an alarm</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('time')}`}>6am</span> <span className='category-conjunction'>on</span> <span className={`category-argument${hashArgument('date')}`}>Christmas</span></li>
-                <li><span className='category-action'>check the weather</span> <span className='category-conjunction'>in</span> <span className='category-argument2'>Boston</span></li>
-              </ul>
-            </div>
+            <h3><a name='extensibility'>The Sky's the Limit</a></h3>
+            <p>Lacona is built to be extended. An open Developer API gives it the power it do anything you need it to do, quickly and easily. Here are some ideas. <strong>Coming in March.</strong></p>
+            <ul className='examples inactive'>
+              <li><span className='category-action'>tweet</span> <span className='category-argument2'>just setting up my twttr #blessed</span></li>
+              <li><span className='category-action'>skype</span> <span className={`category-argument${hashArgument('contact')}`}>Aaron</span></li>
+              <li><span className='category-action'>email</span> <span className='category-argument0'>my last instagram picture</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('relationship')}`}>Mom</span></li>
+              <li><span className='category-action'>calculate</span> <span className='category-argument3'>sqrt(5)</span></li>
+              <li><span className='category-action'>turn off</span> <span className='category-argument5'>the kitchen lights</span></li>
+              <li><span className='category-action'>pronounce</span> <span className='category-argument4'>indefatigable</span></li>
+              <li><span className='category-action'>check</span> <span className='category-argument6'>APPL</span></li>
+              <li><span className='category-action'>set</span> <span className='category-argument0'>default browser</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('application')}`}>Firefox</span></li>
+              <li><span className='category-action'>set a timer</span> <span className='category-conjunction'>for</span> <span className='category-argument2'>25 minutes</span></li>
+              <li><span className='category-action'>execute</span> <span className='category-argument5'>ps -ef | grep -i lacona</span></li>
+              <li><span className='category-action'>email walking directions</span> <span className='category-conjunction'>from</span> <span className='category-argument6'>Penn Station NY</span> <span className='category-conjunction'>to</span> <span className='category-argument6'>my house</span> <span className='category-conjunction'>to</span> <span className={`category-argument${hashArgument('contact')}`}>Pepper Potts</span></li>
+              <li><span className='category-action'>block</span> <span className={`category-argument${hashArgument('URL')}`}>reddit.com</span></li>
+              <li><span className='category-action'>subscribe</span> <span className='category-conjunction'>to</span> <span className='category-argument0'>lifehacker</span></li>
+              <li><span className='category-action'>paste</span> <span className='category-argument2'>my last tweet</span></li>
+              <li><span className='category-action'>fork</span> <span className='category-argument1'>lacona/lacona</span></li>
+              <li><span className='category-action'>define</span> <span className='category-argument4'>antediluvian</span></li>
+              <li><span className='category-action'>roll</span> <span className='category-argument0'>d12</span></li>
+              <li><span className='category-action'>find flights</span> <span className='category-conjunction'>from</span> <span className='category-argument6'>SFO</span> <span className='category-conjunction'>to</span> <span className='category-argument6'>BOS</span> <span className='category-conjunction'>on</span> <span className={`category-argument${hashArgument('date')}`}>8/6/2015</span></li>
+              <li><span className='category-action'>yo</span> <span className={`category-argument${hashArgument('contact')}`}>THEDUDE</span></li>
+              <li><span className='category-action'>set an alarm</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('time')}`}>6am</span> <span className='category-conjunction'>on</span> <span className={`category-argument${hashArgument('date')}`}>Christmas</span></li>
+              <li><span className='category-action'>check the weather</span> <span className='category-conjunction'>in</span> <span className='category-argument2'>Boston</span></li>
+            </ul>
           </section>
         </content>
         <footer>
-          <div className='text'>
-            <p className='well'>
-              This page is only a demonstration of Lacona's interface. It cannot access your files, apps, calendar, or anything else on your computer.
-            </p>
-            ©2015 Lacona Labs
-          </div>
+          <p>
+            This page is only a demonstration of Lacona's interface. It cannot access your files, apps, calendar, or anything else on your computer.
+          </p>
+          <p>
+            ©2016 Lacona Labs &mdash; <a href='mailto:app@lacona.io'>Email</a> // <a href='http://twitter.com/lacona' target='_blank'>Twitter</a> // <a href='http://github.com/lacona' target='_blank'>Github</a>
+          </p>
         </footer>
-        <CSSTransitionGroup transitionName='lightbox' element='div' style={{position: 'absolute', zIndex: 2000}} transitionEnterTimeout={0} transitionLeaveTimeout={500}>
-          {this.state.lightBoxMessage ? <Lightbox
-            key='1'
-            message={this.state.lightBoxMessage}
-            hide={this.hideLightBox.bind(this)}
-            showBTCLightbox={this.showBTCLightbox.bind(this)}
-            detail={this.state.lightBoxDetail} /> : null}
-        </CSSTransitionGroup>
-        <CSSTransitionGroup transitionName='lightbox' element='div' style={{position: 'absolute', zIndex: 2000}} transitionEnterTimeout={0} transitionLeaveTimeout={500}>
-          {this.state.btcLightboxVisible ? <BitcoinLightbox
-            key='1'
-            hide={this.hideBTCLightbox.bind(this)} /> : null}
-        </CSSTransitionGroup>
+
+        <Lightbox
+          visible={this.state.lightBoxVisible}
+          initialLoad={this.state.initialLoad}
+          message={this.state.lightBoxMessage}
+          hide={this.hideLightBox.bind(this)} />
         <Initializer />
       </div>
     )
