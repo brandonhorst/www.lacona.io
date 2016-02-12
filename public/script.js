@@ -836,17 +836,20 @@ var DataEmitter = (function (_EventEmitter) {
   _inherits(DataEmitter, _EventEmitter);
 
   function DataEmitter(data) {
-    var _this = this;
-
     _classCallCheck(this, DataEmitter);
 
     _get(Object.getPrototypeOf(DataEmitter.prototype), 'constructor', this).call(this);
-    process.nextTick(function () {
-      _this.emit('data', data);
-    });
+    this.data = data;
   }
 
   _createClass(DataEmitter, [{
+    key: 'on',
+    value: function on(event, handler) {
+      _get(Object.getPrototypeOf(DataEmitter.prototype), 'on', this).call(this, event, handler);
+      this.emit('data', this.data);
+      return this;
+    }
+  }, {
     key: 'cancel',
     value: function cancel() {}
   }]);
@@ -858,7 +861,7 @@ var SpotlightQuery = (function (_EventEmitter2) {
   _inherits(SpotlightQuery, _EventEmitter2);
 
   function SpotlightQuery(_ref30) {
-    var _this2 = this;
+    var _this = this;
 
     var _ref30$query = _ref30.query;
     var query = _ref30$query === undefined ? '' : _ref30$query;
@@ -879,9 +882,9 @@ var SpotlightQuery = (function (_EventEmitter2) {
 
     this.queryId = global.spotlight(query, attributes, directories, limit, liveUpdate, function (err, data) {
       if (err) {
-        _this2.emit('error', err);
+        _this.emit('error', err);
       } else {
-        _this2.emit('data', dataMap(data));
+        _this.emit('data', dataMap(data));
       }
     });
   }
