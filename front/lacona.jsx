@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import { Parser } from 'lacona'
 import React from 'react'
-import CSSTransitionGroup from 'react-addons-css-transition-group'
 import { LaconaView } from 'react-lacona'
 
 import { grammar, extensions } from './sentence.jsx'

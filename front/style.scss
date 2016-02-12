@@ -42,8 +42,10 @@ $rainbow-dim: linear-gradient(90deg,
 );
 
 body {
-  font-size: 14pt;
   font: $lacona-font;
+  @media screen and (max-width: 400px) {
+    font: $lacona-font-small;
+  }
 
   background-color: $light-bg;
   background-image: $rainbow, $rainbow, $rainbow-dim;
@@ -84,7 +86,7 @@ body {
 
     li {
       display: inline-block;
-      font-size: 1rem;
+      font-size: 75%;
       padding: 0 10px 0 0;
     }
   }
@@ -119,7 +121,7 @@ body {
 
   h3 {
     font-weight: 300;
-    font-size: 2.5rem;
+    font-size: 200%;
   }
 }
 
@@ -140,7 +142,7 @@ header {
 
   h1 {
     font-weight: 300;
-    font-size: 5rem;
+    font-size: 400%;
     text-align: center;
     margin-bottom: 0.1rem;
     margin-top: 1rem;
@@ -191,9 +193,10 @@ footer {
 }
 
 .disclaimer {
-  text-align: center;
+  text-align: left;
   padding: 1rem 1rem 0 1rem;
-  margin-bottom: -3rem;
+  margin: 0 auto -3rem auto;
+  max-width: 800px;
 
   p {
     margin-bottom: 0;
@@ -307,7 +310,7 @@ section {
     h3 {
       margin: 1rem 0;
       font-weight: 300;
-      font-size: 2rem;
+      font-size: 200%;
     }
     p {
       margin: 3rem 0;

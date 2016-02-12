@@ -1,12 +1,10 @@
 import _ from 'lodash'
 import {all, open, date, settings, search, play, contact, translate} from './sentence.jsx'
-import eachSeries from 'async-each-series'
 import ga, {Initializer} from 'react-google-analytics'
 import getExecute from './execute.jsx'
 import Lacona from './lacona.jsx'
 import React from 'react'
 import { hashArgument } from 'react-lacona'
-import CSSTransitionGroup from 'react-addons-css-transition-group'
 
 const MS_PER_INPUT = 10
 const DOWNLOAD_LINK = 'http://lacona-download.firebaseapp.com/packages/0.4.2/LaconaBeta.zip'
@@ -455,9 +453,10 @@ export default class Page extends React.Component {
           </section>
         </content>
         <footer>
-          <p>
-            This page is only a demonstration of Lacona's interface. It cannot access your files, apps, calendar, or anything else on your computer.
-          </p>
+          {isDesktop ? (
+            <p>This page is only a demonstration of Lacona's interface. It cannot access your files, apps, calendar, or anything else on your computer.</p>
+            )
+          : null}
           <p>
             ©2016 Lacona Labs &mdash; <a href='mailto:app@lacona.io'>Email</a> // <a href='http://twitter.com/lacona' target='_blank'>Twitter</a> // <a href='http://github.com/lacona' target='_blank'>Github</a>
           </p>
