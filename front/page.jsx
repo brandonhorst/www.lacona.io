@@ -89,8 +89,8 @@ const DownloadButton = ({check = true} = {}) => {
       {button}
       <ul>
         <li>{CURRENT_VERSION}</li>
-        <li><a href={ISSUES_LINK}>Issues</a></li>
-        <li><a href={CHANGELOG_LINK}>Changelog</a></li>
+        <li><a href={ISSUES_LINK} target='_blank'>Issues</a></li>
+        <li><a href={CHANGELOG_LINK} target='_blank'>Changelog</a></li>
       </ul>
     </div>
   )

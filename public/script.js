@@ -11479,7 +11479,7 @@ var DownloadButton = function DownloadButton() {
         null,
         _react2['default'].createElement(
           'a',
-          { href: ISSUES_LINK },
+          { href: ISSUES_LINK, target: '_blank' },
           'Issues'
         )
       ),
@@ -11488,7 +11488,7 @@ var DownloadButton = function DownloadButton() {
         null,
         _react2['default'].createElement(
           'a',
-          { href: CHANGELOG_LINK },
+          { href: CHANGELOG_LINK, target: '_blank' },
           'Changelog'
         )
       )
