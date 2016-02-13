@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import {all, open, date, settings, search, play, contact, translate} from './sentence.jsx'
-import ga, {Initializer} from 'react-google-analytics'
 import getExecute from './execute.jsx'
 import Lacona from './lacona.jsx'
 import React from 'react'
@@ -130,9 +129,6 @@ export default class Page extends React.Component {
   }
 
   componentDidMount () {
-    ga('create', 'UA-61643321-1', 'auto')
-    ga('send', 'pageview')
-
     window.addEventListener('keydown', this.checkEscape.bind(this))
     this.enableSticky()
 
@@ -467,7 +463,6 @@ export default class Page extends React.Component {
           initialLoad={this.state.initialLoad}
           message={this.state.lightBoxMessage}
           hide={this.hideLightBox.bind(this)} />
-        <Initializer />
       </div>
     )
   }
