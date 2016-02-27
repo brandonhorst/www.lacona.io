@@ -6,12 +6,12 @@ import React from 'react'
 import { hashArgument } from 'react-lacona'
 
 const MS_PER_INPUT = 10
-const DOWNLOAD_LINK = 'http://lacona-download.firebaseapp.com/packages/0.4.2/LaconaBeta.zip'
+const DOWNLOAD_LINK = 'http://lacona-download.firebaseapp.com/packages/0.5.0/LaconaBeta.zip'
 const ISSUES_LINK = 'https://github.com/lacona/LaconaApp/issues'
 const CHANGELOG_LINK = 'https://github.com/lacona/LaconaApp/blob/master/CHANGELOG.md'
 const ABOUT_LINK = 'https://github.com/lacona/LaconaApp'
 
-const CURRENT_VERSION = 'Beta 5'
+const CURRENT_VERSION = 'Beta 6'
 const REQUIRED_VERSION = 'OSX 10.11 El Capitan'
 
 const Lightbox = (props) => {
