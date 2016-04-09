@@ -2,25 +2,24 @@
 
 process.env.LACONA_ENV = 'demo'
 
-import { demoConfig, demoData } from './demo-config'
-global.demoConfig = demoConfig
+import { demoData } from './demo-config'
 global.demoData = demoData
 
-import { createElement } from 'lacona-phrase'
+import { createElement } from 'elliptical'
 
-import { extensions as communicate } from 'lacona-command-communicate'
-import { extensions as events } from 'lacona-command-events'
-import { extensions as itunes } from 'lacona-command-itunes'
-import { extensions as searchInternet } from 'lacona-command-search-internet'
-import { extensions as open } from 'lacona-command-open'
-import { extensions as osx } from 'lacona-command-osx'
-import { extensions as settings } from 'lacona-command-settings'
-import { extensions as translate } from 'lacona-command-translate'
+import { extensions as communicate } from 'lacona-communicate'
+import { extensions as events } from 'lacona-events'
+import { extensions as itunes } from 'lacona-itunes'
+import { extensions as searchInternet } from 'lacona-search-internet'
+import { extensions as finder } from 'lacona-finder'
+import { extensions as osx } from 'lacona-osx'
+import { extensions as settings } from 'lacona-settings'
+import { extensions as translate } from 'lacona-translate'
 import { extensions as command, Command } from 'lacona-command'
 
 export const grammar = <Command />
 
-export const extensions = [].concat(communicate, events, itunes, searchInternet, open, osx, settings, translate, command)
+export const extensions = [].concat(communicate, events, itunes, searchInternet, finder, osx, settings, translate, command)
 
 /*
 

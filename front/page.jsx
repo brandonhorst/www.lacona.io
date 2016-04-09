@@ -3,13 +3,14 @@ import {all, open, date, settings, search, play, contact, translate} from './sen
 import getExecute from './execute.jsx'
 import Lacona from './lacona.jsx'
 import React from 'react'
-import { hashArgument } from 'react-lacona'
+import {render} from 'react-dom'
+import {hashArgument} from 'react-lacona'
 
 const MS_PER_INPUT = 10
 const DOWNLOAD_LINK = 'http://lacona-download.firebaseapp.com/packages/0.5.0/LaconaBeta.zip'
-const ISSUES_LINK = 'https://github.com/lacona/LaconaApp/issues'
-const CHANGELOG_LINK = 'https://github.com/lacona/LaconaApp/blob/master/CHANGELOG.md'
-const ABOUT_LINK = 'https://github.com/lacona/LaconaApp'
+const ISSUES_LINK = 'https://github.com/laconalabs/LaconaApp/issues'
+const CHANGELOG_LINK = 'https://github.com/laconalabs/LaconaApp/blob/master/CHANGELOG.md'
+const ABOUT_LINK = 'https://github.com/laconalabs/LaconaApp'
 
 const CURRENT_VERSION = 'Beta 6'
 const REQUIRED_VERSION = 'OSX 10.11 El Capitan'
@@ -289,7 +290,7 @@ export default class Page extends React.Component {
               <li onClick={!isMobile ? this.type.bind(this, 'turn on wifi') : undefined}>
                 <span className='category-action'>turn on</span> <span className={`category-argument${hashArgument('setting')}`}>wifi</span>
               </li>
-              <li onClick={!isMobile ? this.type.bind(this, 'toggle Do Not Disturb') : undefined}>
+              <li onClick={!isMobile ? this.type.bind(this, 'toggle bluetooth') : undefined}>
                 <span className='category-action'>toggle</span> <span className={`category-argument${hashArgument('setting')}`}>bluetooth</span>
               </li>
               <li onClick={!isMobile ? this.type.bind(this, 'shutdown') : undefined}>
@@ -422,7 +423,7 @@ export default class Page extends React.Component {
           </section>
           <section className='full'>
             <h3><a name='extensibility'>The Sky's the Limit</a></h3>
-            <p>Lacona is built to be extended. An open Developer API gives it the power it do anything you need it to do, quickly and easily. Here are some ideas. <strong>Coming in March.</strong></p>
+            <p>Lacona is built to be extended. An open Developer API gives it the power it do anything you need it to do, quickly and easily. Here are some ideas. <strong>Coming Soon.</strong></p>
             <ul className='examples inactive'>
               <li><span className='category-action'>tweet</span> <span className='category-argument2'>just setting up my twttr #blessed</span></li>
               <li><span className='category-action'>skype</span> <span className={`category-argument${hashArgument('contact')}`}>Aaron</span></li>

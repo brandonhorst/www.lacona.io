@@ -1,4 +1,3 @@
-require('babel/polyfill')
 import Page from './front/page.jsx'
 import {renderToString} from 'react-dom/server'
 import React from 'react'

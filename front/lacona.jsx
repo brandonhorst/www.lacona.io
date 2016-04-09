@@ -1,9 +1,15 @@
 import _ from 'lodash'
-import { Parser } from 'lacona'
+import {createElement, combineProcessors, compile} from 'elliptical'
+import {createProcessor as createObserver, createStore} from 'elliptical-observe'
+import {createProcessor as createExtender} from 'elliptical-extend'
+import {createProcessor as createWormhole}  from 'elliptical-wormhole'
 import React from 'react'
-import { LaconaView } from 'react-lacona'
+import {LaconaView} from 'react-lacona'
+import {Observable} from 'rxjs/Observable'
+import {demoConfig} from './demo-config'
+global.demoConfig = demoConfig
 
-import { grammar, extensions } from './sentence.jsx'
+import {grammar, extensions} from './sentence.jsx'
 
 function groupPlaceholders (result) {
   return _.chain(result.words)
@@ -82,10 +88,30 @@ export default class Lacona extends React.Component {
       prefix: '',
       focused: false
     }
+    let activateObserver, deactivateObserver
 
-    this.parser = new Parser()
-    this.parser.grammar = grammar
-    this.parser.extensions = extensions
+    const activates = new Observable(observer => {
+      activateObserver = observer
+    })
+
+    const deactivates = new Observable(observer => {
+      deactivateObserver = observer
+    })
+
+    this.store = createStore()
+
+    const extender = createExtender(extensions)
+    const contexter = createWormhole(demoConfig, 'context')
+
+    const activator = createWormhole(activates, 'activate')
+    const deactivator = createWormhole(deactivates, 'deactivate')
+    const observerProcessor = combineProcessors(activator, deactivator)
+    const observer = createObserver(this.store.register, observerProcessor)
+
+    const processor = combineProcessors(contexter, extender, observer)
+
+    this.parse = compile(grammar, processor)
+    activateObserver.next()
   }
 
   componentDidMount () {
@@ -100,16 +126,16 @@ export default class Lacona extends React.Component {
     return this.state.input
   }
 
-  parse (input) {
+  doParse (input) {
     if (input === '') return []
 
-    let fullOutput = this.parser.parseArray(input)
+    let fullOutput = this.parse(input)
 
     if (_.isEmpty(fullOutput)) {
       fullOutput = _.chain(prefixes)
         .map(prefix => {
           const prefixedInput = `${prefix}${input}`
-          const outputs = this.parser.parseArray(prefixedInput)
+          const outputs = this.parse(prefixedInput)
           return outputs
         })
         .flatten()
@@ -125,7 +151,7 @@ export default class Lacona extends React.Component {
 
     if (parse) {
       setTimeout(() => {
-        let output = this.parse(input)
+        let output = this.doParse(input)
 
         this.setState({output})
       }, 11)
@@ -135,7 +161,9 @@ export default class Lacona extends React.Component {
   execute (index) {
     this.refs.lacona.blur()
     const result = this.state.output[index].result
-    this.props.execute(result)
+
+    const stuff = result.element.type.demoExecute(result.result, result.element)
+    this.props.execute(stuff)
   }
 
   cancel () {

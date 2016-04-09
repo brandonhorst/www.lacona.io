@@ -4,9 +4,7 @@ import { hashArgument } from 'react-lacona'
 export default function getExecute (showNotification) {
   if (global.location && global.location.hash === '#videodemo') return
 
-  return function (result) {
-    const words = result._demoExecute()
-
+  return function (words) {
     const message = _.map(words, ({text, category, argument}, index) => {
       if (argument) {
         category = `argument${hashArgument(argument)}`
