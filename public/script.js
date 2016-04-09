@@ -3218,7 +3218,7 @@ var Page = function (_React$Component) {
           isDesktop ? _react2.default.createElement(
             'p',
             null,
-            'This page is only a demonstration of Lacona\'s interface. It cannot access your files, apps, calendar, or anything else on your computer.'
+            'This webpage is only a demonstration of Lacona\'s interface, and the information is static. Unlike the App, this page cannot access your files, apps, calendar, or anything else on your computer.'
           ) : null,
           _react2.default.createElement(
             'p',
