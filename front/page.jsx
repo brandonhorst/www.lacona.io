@@ -442,7 +442,7 @@ export default class Page extends React.Component {
           </section>
           <section className='full'>
             <h3><a name='extensibility'>The Sky's the Limit</a></h3>
-            <p>Lacona is built to be extended. An open Developer API gives it the power it do anything you need it to do, quickly and easily. Here are some ideas. <strong>Coming Soon.</strong></p>
+            <p>Lacona is built to be extended. An open Developer API gives it the power do anything you need, quickly and easily. Here are some ideas. <strong>Coming Soon.</strong></p>
             <ul className='examples inactive'>
               <li><span className='category-action'>tweet</span> <span className='category-argument2'>just setting up my twttr #blessed</span></li>
               <li><span className='category-action'>skype</span> <span className={`category-argument${hashArgument('contact')}`}>Aaron</span></li>
