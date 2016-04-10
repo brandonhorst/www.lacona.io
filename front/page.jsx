@@ -273,7 +273,7 @@ export default class Page extends React.Component {
           <section>
             <div className='text'>
               <a name='date' className='anchor'><h3>Organize your Life, not your Calendar</h3></a>
-              <p>Create reminders and schedule events as though you were talking to a person. Lacona understands. You can even use birthdays and anniversarys in your commands. It's natural!</p>
+              <p>Create reminders and schedule events as though you were talking to a person. Lacona understands. You can even use birthdays and anniversaries in your commands. It's natural!</p>
               <ul className='examples'>
                 <li onClick={!isMobile ? this.type.bind(this, 'schedule Party at 7pm Friday') : undefined}>
                   schedule <span className={`category-argument${hashArgument('calendar event')}`}>Party</span> at <span className={`category-argument${hashArgument('time')}`}>7pm</span> <span className={`category-argument${hashArgument('date')}`}>Friday</span>
