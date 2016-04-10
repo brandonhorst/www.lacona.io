@@ -5,7 +5,6 @@ import {createProcessor as createExtender} from 'elliptical-extend'
 import {createProcessor as createWormhole}  from 'elliptical-wormhole'
 import React from 'react'
 import {LaconaView} from 'react-lacona'
-import {Observable} from 'rxjs/Observable'
 import {demoConfig} from './demo-config'
 global.demoConfig = demoConfig
 
@@ -29,7 +28,7 @@ function mapPlaceholderGroups (resultGroup) {
         .value()
     })
     .thru(descriptorLists => _.zip(...descriptorLists))
-    .map(x => _.unique(x))
+    .map(x => _.uniq(x))
     .map(x => _.filter(x))
     .value()
 
@@ -88,30 +87,20 @@ export default class Lacona extends React.Component {
       prefix: '',
       focused: false
     }
-    let activateObserver, deactivateObserver
-
-    const activates = new Observable(observer => {
-      activateObserver = observer
-    })
-
-    const deactivates = new Observable(observer => {
-      deactivateObserver = observer
-    })
 
     this.store = createStore()
 
     const extender = createExtender(extensions)
     const contexter = createWormhole(demoConfig, 'context')
 
-    const activator = createWormhole(activates, 'activate')
-    const deactivator = createWormhole(deactivates, 'deactivate')
+    const activator = createWormhole({}, 'activate')
+    const deactivator = createWormhole({}, 'deactivate')
     const observerProcessor = combineProcessors(activator, deactivator)
     const observer = createObserver(this.store.register, observerProcessor)
 
     const processor = combineProcessors(contexter, extender, observer)
 
     this.parse = compile(grammar, processor)
-    activateObserver.next()
   }
 
   componentDidMount () {

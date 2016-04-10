@@ -15,14 +15,29 @@ const ABOUT_LINK = 'https://github.com/laconalabs/LaconaApp'
 const CURRENT_VERSION = 'Beta 6'
 const REQUIRED_VERSION = 'OSX 10.11 El Capitan'
 
+const coolMessages = [
+  'Cool, huh?',
+  'What do you think?',
+  'Not bad, huh?',
+  'Pretty cool, huh?',
+  'Like it?',
+  'Do you like it?',
+  'Waddaya think?',
+  'How did that feel?',
+  "Didn't that feel good?",
+  "Felt good, didn't it?",
+  'How was it?',
+  'How did it go?'
+]
+
 const Lightbox = (props) => {
   return (
     <div className={`lightbox-total${props.visible ? ' visible' : ''}`}>
       <div className='lightbox-cover' onClick={props.hide} />
       <div className='lightbox'>
         <div tabIndex='0' className='closeButton' onClick={props.hide}>×</div>
-        <h3>Cool, huh?</h3>
-        <p className='description'>If this were a real copy of Lacona, it would {props.message}.</p>
+        <h3>{props.exclamation}</h3>
+        <p className='description'>This is just a demo. The real app would {props.message}.</p>
         <Buttons check={!props.initialLoad} />
       </div>
     </div>
@@ -107,7 +122,11 @@ export default class Page extends React.Component {
   }
 
   showLightbox (text) {
-    this.setState({lightBoxVisible: true, lightBoxMessage: text})
+    this.setState({
+      lightBoxVisible: true,
+      lightBoxMessage: text,
+      lightBoxExclamation: _.sample(coolMessages)
+    })
   }
 
   hideLightBox () {
@@ -463,6 +482,7 @@ export default class Page extends React.Component {
           visible={this.state.lightBoxVisible}
           initialLoad={this.state.initialLoad}
           message={this.state.lightBoxMessage}
+          exclamation={this.state.lightBoxExclamation}
           hide={this.hideLightBox.bind(this)} />
       </div>
     )
