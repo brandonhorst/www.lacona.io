@@ -24,7 +24,7 @@
     "lacona-osx": "0.0.3",
     "lacona-phrases": "0.0.2",
     "lacona-search-internet": "^0.1.3",
-    "lacona-settings": "0.0.3",
+    "lacona-settings": "^0.1.0",
     "lacona-translate": "^0.1.0",
     "lodash": "^4.11.1",
     "moment": "^2.13.0",
