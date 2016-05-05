@@ -6,53 +6,54 @@ import {createProcessor as createWormhole}  from 'elliptical-wormhole'
 import React from 'react'
 import {LaconaView} from 'react-lacona'
 import {demoConfig} from './demo-config'
+import {combinePlaceholders} from 'lacona-utils'
 global.demoConfig = demoConfig
 
 import {grammar, extensions} from './sentence.jsx'
 
-function groupPlaceholders (result) {
-  return _.chain(result.words)
-    .filter(item => item.placeholder || item.text)
-    .map(item => item.placeholder ? '\uFFFC' : `\uFFF9${item.text}\uFFFA${item.argument}\uFFFB`)
-    .join('')
-    .concat(`\uFFF9${result.qualifiers.join('\uFFFA')}\uFFFB`)
-    .value()
-}
+// function groupPlaceholders (result) {
+//   return _.chain(result.words)
+//     .filter(item => item.placeholder || item.text)
+//     .map(item => item.placeholder ? '\uFFFC' : `\uFFF9${item.text}\uFFFA${item.argument}\uFFFB`)
+//     .join('')
+//     .concat(`\uFFF9${result.qualifiers.join('\uFFFA')}\uFFFB`)
+//     .value()
+// }
 
-function mapPlaceholderGroups (resultGroup) {
-  const placeholders = _.chain(resultGroup)
-    .map(result => {
-      return _.chain(result.words)
-        .filter('placeholder')
-        .map('text')
-        .value()
-    })
-    .thru(descriptorLists => _.zip(...descriptorLists))
-    .map(x => _.uniq(x))
-    .map(x => _.filter(x))
-    .value()
+// function mapPlaceholderGroups (resultGroup) {
+//   const placeholders = _.chain(resultGroup)
+//     .map(result => {
+//       return _.chain(result.words)
+//         .filter('placeholder')
+//         .map('text')
+//         .value()
+//     })
+//     .thru(descriptorLists => _.zip(...descriptorLists))
+//     .map(x => _.uniq(x))
+//     .map(x => _.filter(x))
+//     .value()
 
-  const result = _.clone(_.first(resultGroup))
+//   const result = _.clone(_.first(resultGroup))
 
-  _.chain(result.words)
-    .filter('placeholder')
-    .forEach((item, index) => {
-      item.placeholderTexts = placeholders[index]
-      // item.descriptors = [placeholders[index]]
-    })
-    .value()
+//   _.chain(result.words)
+//     .filter('placeholder')
+//     .forEach((item, index) => {
+//       item.placeholderTexts = placeholders[index]
+//       // item.descriptors = [placeholders[index]]
+//     })
+//     .value()
 
-  return result
-}
+//   return result
+// }
 
-function combinePlaceholders(results, limit = 100) {
-  return _.chain(results)
-    .groupBy(groupPlaceholders)
-    .map(mapPlaceholderGroups)
-    .sortBy(option => -option.score)
-    .take(limit)
-    .value()
-}
+// function combinePlaceholders(results, limit = 100) {
+//   return _.chain(results)
+//     .groupBy(groupPlaceholders)
+//     .map(mapPlaceholderGroups)
+//     .sortBy(option => -option.score)
+//     .take(limit)
+//     .value()
+// }
 
 const prefixes = ['open ', 'search ']
 

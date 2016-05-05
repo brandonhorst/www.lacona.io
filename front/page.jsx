@@ -222,7 +222,7 @@ export default class Page extends React.Component {
           <section>
             <div className='text'>
               <a name='open' className='anchor'><h3>Ditch the Dock</h3></a>
-              <p>With Lacona, your Apps, Bookmarks, Files, System Preferences, and more are only a few keystrokes away. You can also manage your open apps right from your keyboard.</p>
+              <p>With Lacona, your Apps, Bookmarks, Files, System Preferences, Contacts, and more are only a few keystrokes away. You can also manage your open apps right from your keyboard.</p>
               <ul className='examples'>
                 <li onClick={!isMobile ? this.type.bind(this, 'open Calendar') : undefined}>
                   <span className='category-action'>open</span> <span className={`category-argument${hashArgument('application')}`}>Calendar</span>
@@ -232,6 +232,9 @@ export default class Page extends React.Component {
                 </li>
                 <li onClick={!isMobile ? this.type.bind(this, 'open Facebook and Twitter') : undefined}>
                   <span className='category-action'>open</span> <span className={`category-argument${hashArgument('bookmark')}`}>Facebook</span> <span className='category-conjunction'>and</span> <span className={`category-argument${hashArgument('bookmark')}`}>Twitter</span>
+                </li>
+                <li onClick={!isMobile ? this.type.bind(this, 'open Bruce Banner') : undefined}>
+                  <span className='category-action'>open</span> <span className={`category-argument${hashArgument('contact')}`}>Bruce Banner</span>
                 </li>
                 <li onClick={!isMobile ? this.type.bind(this, 'iTunes') : undefined}>
                   <span className={`category-argument${hashArgument('application')}`}>iTunes</span>
