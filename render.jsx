@@ -1,4 +1,4 @@
-import Page from './front/page.jsx'
+import Page from './front/page'
 import {renderToString} from 'react-dom/server'
 import React from 'react'
 import {readFileSync, writeFileSync} from 'fs'

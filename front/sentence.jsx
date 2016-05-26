@@ -15,7 +15,8 @@ import { extensions as finder } from 'lacona-finder'
 import { extensions as osx } from 'lacona-osx'
 import { extensions as settings } from 'lacona-settings'
 import { extensions as translate } from 'lacona-translate'
-import { extensions as command, Command } from 'lacona-command'
+import { extensions as command } from 'lacona-command'
+import { Command } from 'lacona-phrases'
 
 export const grammar = <Command />
 

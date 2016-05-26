@@ -9,7 +9,7 @@ import {demoConfig} from './demo-config'
 import {combinePlaceholders} from 'lacona-utils'
 global.demoConfig = demoConfig
 
-import {grammar, extensions} from './sentence.jsx'
+import {grammar, extensions} from './sentence'
 
 // function groupPlaceholders (result) {
 //   return _.chain(result.words)

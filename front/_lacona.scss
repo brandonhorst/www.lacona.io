@@ -126,6 +126,27 @@
     font-size: 50%;
   }
 
+  .qualifiers {
+    display: inline-block;
+    padding-left: 10px;
+    opacity: 0.5;
+  }
+
+  .qualifier {
+    display: inline;
+  }
+
+  .qualifier:not(:first-child)::before {
+    content: ', ';
+  }
+
+  .qualifier:first-child::before {
+    content: '(';
+  }
+  .qualifier:last-child::after {
+    content: ')';
+  }
+
   .words {
     position: relative;
     line-height: 42px;
