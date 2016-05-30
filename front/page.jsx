@@ -85,7 +85,7 @@ const FollowButton = () => {
 }
 
 const DownloadButton = ({check = true} = {}) => {
-  let button = <a className='downloadButton button' href={DOWNLOAD_LINK}>Download</a>
+  let button = <a className='downloadButton button' href={DOWNLOAD_LINK} onClick={() => window.ga('send', 'event', 'Lacona Installer', 'download', CURRENT_VERSION)}>Download</a>
   if (check && global.navigator) {
     const userAgent = navigator.userAgent
     if (!isOSX10_11Plus(userAgent)) {
