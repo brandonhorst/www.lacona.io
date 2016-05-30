@@ -1,37 +1,35 @@
 export const demoConfig = {
-  config: {
-    webSearch: {
-      searchEngines: [
-        {name: 'Google', url: ''},
-        {name: 'Google Images', url: ''},
-        {name: 'Google Maps', url: ''},
-        {name: 'Gmail', url: ''},
-        {name: 'Google Mail', url: ''},
-        {name: 'Google Inbox', url: ''},
-        {name: 'Google Drive', url: ''},
-        {name: 'Maps', url: ''},
-        {name: 'Twitter', url: ''},
-        {name: 'Facebook', url: ''},
-        {name: 'LinkedIn', url: ''},
-        {name: 'Youtube', url: ''},
-        {name: 'Wikipedia', url: ''},
-        {name: 'Amazon', url: ''},
-        {name: 'eBay', url: ''},
-        {name: 'IMDb', url: ''},
-        {name: 'Rotten Tomatoes', url: ''},
-        {name: 'Bing', url: ''},
-        {name: 'Yahoo', url: ''},
-        {name: 'Ask', url: ''},
-        {name: 'Flickr', url: ''},
-        {name: 'Wolfram|Alpha', url: ''},
-        {name: 'Yubnub', url: ''},
-        {name: 'DuckDuckGo', url: ''}
-      ]
-    },
-    applications: {
-      searchDirectories: [],
-      applications: []
-    }
+  webSearch: {
+    searchEngines: [
+      {name: 'Google', url: ''},
+      {name: 'Google Images', url: ''},
+      {name: 'Google Maps', url: ''},
+      {name: 'Gmail', url: ''},
+      {name: 'Google Mail', url: ''},
+      {name: 'Google Inbox', url: ''},
+      {name: 'Google Drive', url: ''},
+      {name: 'Maps', url: ''},
+      {name: 'Twitter', url: ''},
+      {name: 'Facebook', url: ''},
+      {name: 'LinkedIn', url: ''},
+      {name: 'Youtube', url: ''},
+      {name: 'Wikipedia', url: ''},
+      {name: 'Amazon', url: ''},
+      {name: 'eBay', url: ''},
+      {name: 'IMDb', url: ''},
+      {name: 'Rotten Tomatoes', url: ''},
+      {name: 'Bing', url: ''},
+      {name: 'Yahoo', url: ''},
+      {name: 'Ask', url: ''},
+      {name: 'Flickr', url: ''},
+      {name: 'Wolfram|Alpha', url: ''},
+      {name: 'Yubnub', url: ''},
+      {name: 'DuckDuckGo', url: ''}
+    ]
+  },
+  applications: {
+    searchDirectories: [],
+    applications: []
   }
 }
 

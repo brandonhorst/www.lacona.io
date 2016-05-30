@@ -12,7 +12,7 @@
     "open": "open public/index.html"
   },
   "dependencies": {
-    "elliptical": "^1.0.0-rc13",
+    "elliptical": "^1.0.0-rc14",
     "elliptical-extend": "^1.0.0-rc7",
     "elliptical-observe": "^1.0.0-rc7",
     "elliptical-wormhole": "^1.0.0-rc3",
@@ -22,9 +22,9 @@
     "lacona-events": "^0.3.0",
     "lacona-finder": "^0.3.0",
     "lacona-itunes": "0.1.0",
-    "lacona-osx": "^0.2.0",
+    "lacona-osx": "^0.2.1",
     "lacona-phrases": "0.6.0",
-    "lacona-search-internet": "^0.2.0",
+    "lacona-search-internet": "^0.2.1",
     "lacona-settings": "^0.2.0",
     "lacona-translate": "^0.3.0",
     "lacona-utils": "^0.2.0",

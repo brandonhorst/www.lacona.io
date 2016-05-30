@@ -92,14 +92,15 @@ export default class Lacona extends React.Component {
     this.store = createStore()
 
     const extender = createExtender(extensions)
-    const contexter = createWormhole(demoConfig, 'context')
+    const contexter = createWormhole({}, 'context')
+    const configer = createWormhole(demoConfig, 'config')
 
     const activator = createWormhole({}, 'activate')
     const deactivator = createWormhole({}, 'deactivate')
     const observerProcessor = combineProcessors(activator, deactivator)
     const observer = createObserver(this.store.register, observerProcessor)
 
-    const processor = combineProcessors(contexter, extender, observer)
+    const processor = combineProcessors(contexter, configer, extender, observer)
 
     this.parse = compile(grammar, processor)
   }

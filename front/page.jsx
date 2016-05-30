@@ -7,12 +7,12 @@ import {render} from 'react-dom'
 import {hashArgument} from 'react-lacona'
 
 const MS_PER_INPUT = 10
-const DOWNLOAD_LINK = 'http://lacona-download.firebaseapp.com/packages/0.7.0/LaconaBeta.zip'
+const DOWNLOAD_LINK = 'http://lacona-download.firebaseapp.com/packages/0.8.0/LaconaBeta.zip'
 const ISSUES_LINK = 'https://github.com/laconalabs/LaconaApp/issues'
 const CHANGELOG_LINK = 'https://github.com/laconalabs/LaconaApp/blob/master/CHANGELOG.md'
 const ABOUT_LINK = 'https://github.com/laconalabs/LaconaApp'
 
-const CURRENT_VERSION = 'Beta 8'
+const CURRENT_VERSION = 'Beta 9'
 const REQUIRED_VERSION = 'OSX 10.11 El Capitan'
 
 const coolMessages = [
@@ -445,7 +445,7 @@ export default class Page extends React.Component {
           </section>
           <section className='full'>
             <h3><a name='extensibility'>The Sky's the Limit</a></h3>
-            <p>Lacona is built to be extended. An open Developer API gives it the power do anything you need, quickly and easily. Here are some ideas. <strong>Coming Soon.</strong></p>
+            <p>Lacona is built to be extended. An open Developer API gives it the power do anything you need, quickly and easily. Here are some ideas. <b><a href='http://docs.lacona.io/'>Currently Available to Developers!</a></b></p>
             <ul className='examples inactive'>
               <li><span className='category-action'>tweet</span> <span className='category-argument2'>just setting up my twttr #blessed</span></li>
               <li><span className='category-action'>skype</span> <span className={`category-argument${hashArgument('contact')}`}>Aaron</span></li>
