@@ -330,8 +330,8 @@ export default class Page extends React.Component {
               <li onClick={!isMobile ? this.type.bind(this, 'enable bluetooth') : undefined}>
                 <span className='category-action'>enable</span> <span className={`category-argument${hashArgument('setting')}`}>bluetooth</span>
               </li>
-              <li onClick={!isMobile ? this.type.bind(this, 'turn on do not disturb for 25 minutes') : undefined}>
-                <span className='category-action'>turn on</span> <span className={`category-argument${hashArgument('setting')}`}>do not disturb</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('time duration')}`}>25 minutes</span>
+              <li onClick={!isMobile ? this.type.bind(this, 'toggle wifi and do not disturb for 25 minutes') : undefined}>
+                <span className='category-action'>toggle</span> <span className={`category-argument${hashArgument('setting')}`}>wifi</span> <span className='category-conjunction'>and</span> <span className={`category-argument${hashArgument('setting')}`}>do not disturb</span> <span className='category-conjunction'>for</span> <span className={`category-argument${hashArgument('time duration')}`}>25 minutes</span>
               </li>
               <li onClick={!isMobile ? this.type.bind(this, 'turn on the screensaver') : undefined}>
                 <span className='category-action'>turn on the screensaver</span>
