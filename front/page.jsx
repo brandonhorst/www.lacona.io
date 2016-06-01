@@ -7,12 +7,12 @@ import {render} from 'react-dom'
 import {hashArgument} from 'react-lacona'
 
 const MS_PER_INPUT = 10
-const DOWNLOAD_LINK = 'http://lacona-download.firebaseapp.com/packages/0.8.1/LaconaBeta.zip'
+const DOWNLOAD_LINK = 'http://lacona-download.firebaseapp.com/packages/0.9.0/LaconaBeta.zip'
 const ISSUES_LINK = 'https://github.com/laconalabs/LaconaApp/issues'
 const CHANGELOG_LINK = 'https://github.com/laconalabs/LaconaApp/blob/master/CHANGELOG.md'
 const ABOUT_LINK = 'https://github.com/laconalabs/LaconaApp'
 
-const CURRENT_VERSION = 'Beta 10'
+const CURRENT_VERSION = 'Beta 11'
 const REQUIRED_VERSION = 'OSX 10.11 El Capitan'
 
 const coolMessages = [
