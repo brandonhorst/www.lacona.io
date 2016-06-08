@@ -423,7 +423,7 @@ export default class Page extends React.Component {
             <a name='translate' className='anchor'><h3>Become a Global Citizen</h3></a>
             <p>Quickly translate words, phrases, and websites between languages. It's the quickest, most natural interface for Google Translate.</p>
             <ul className='examples'>
-              <li onClick={!isMobile ? this.type.bind(this, 'translate мороженное') : undefined}>
+              <li onClick={!isMobile ? this.type.bind(this, 'translate мороженое') : undefined}>
                 <span className='category-action'>translate</span> <span className={`category-argument${hashArgument('phrase')}`}>мороженное</span>
               </li>
               <li onClick={!isMobile ? this.type.bind(this, 'translate univision.com/') : undefined}>
