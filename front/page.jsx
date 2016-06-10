@@ -477,7 +477,10 @@ export default class Page extends React.Component {
             )
           : null}
           <p>
-            ©2016 Lacona Labs &mdash; <a href='mailto:app@lacona.io'>Email</a> // <a href='http://twitter.com/lacona' target='_blank'>Twitter</a> // <a href='http://github.com/laconalabs' target='_blank'>Github</a>
+            ©2016 Lacona Labs &mdash; <a href='/privacy'>Privacy Policy</a> // <a href='/terms'>Terms of Use</a>
+          </p>
+          <p>
+             <a href='mailto:app@lacona.io'>Email</a> // <a href='http://twitter.com/lacona' target='_blank'>Twitter</a> // <a href='http://github.com/laconalabs' target='_blank'>Github</a>
           </p>
         </footer>
 
