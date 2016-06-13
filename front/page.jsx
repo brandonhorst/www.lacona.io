@@ -13,7 +13,7 @@ const CHANGELOG_LINK = 'https://github.com/laconalabs/LaconaApp/blob/master/CHAN
 const ABOUT_LINK = 'https://github.com/laconalabs/LaconaApp'
 
 const CURRENT_VERSION = 'Beta 11'
-const REQUIRED_VERSION = 'OSX 10.11 El Capitan'
+const REQUIRED_VERSION = 'macOS 10.11 El Capitan'
 
 const coolMessages = [
   'Cool, huh?',
@@ -90,9 +90,9 @@ const DownloadButton = ({check = true} = {}) => {
     const userAgent = navigator.userAgent
     if (!isOSX10_11Plus(userAgent)) {
       if (!isOSX(userAgent)) {
-        button = <a className='downloadButton warn button' href={DOWNLOAD_LINK}>OSX Only</a>
+        button = <a className='downloadButton warn button' href={DOWNLOAD_LINK}>macOS Only</a>
       } else {
-        button = <a className='downloadButton warn button' href={DOWNLOAD_LINK}>OSX 10.11+</a>
+        button = <a className='downloadButton warn button' href={DOWNLOAD_LINK}>macOS 10.11+</a>
       }
     }
   }
