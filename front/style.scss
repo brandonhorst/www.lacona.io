@@ -327,3 +327,13 @@ section {
     padding: 10px;
   }
 }
+
+body.static {
+  margin: 0 auto;
+  max-width: 680px;
+  font: 500 12pt -apple-system,"HelveticaNeue","Helvetica Neue","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+}
+
+body.static p, body.static li {
+  line-height: 18pt;
+}
