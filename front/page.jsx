@@ -49,7 +49,7 @@ function isOSX (userAgent) {
 }
 
 function isOSX10_11Plus (userAgent) {
-  return /Mac OS X 10_11/.test(userAgent);
+  return /Mac OS X 10_11/.test(userAgent) || /Mac OS X 10_12/.test(userAgent) || /Mac OS X 10_13/.test(userAgent);
 }
 
 const Buttons = ({check}) => {
