@@ -337,3 +337,30 @@ body.static {
 body.static p, body.static li {
   line-height: 18pt;
 }
+
+ul.pinterest {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+}
+
+.pinterest li {
+  list-style: none;
+  display: block;
+}
+
+.pinterest img {
+  width: 200px;
+}
+
+.pinterest figure {
+  display: block;
+  width: 200px;
+  padding: 10px;
+}
+
+.pinterest figcaption {
+  text-align: center;
+  display: block;
+}

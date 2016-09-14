@@ -4,7 +4,7 @@
   "description": "Lacona App",
   "main": "index.js",
   "scripts": {
-    "build:html": "babel-node render.jsx && mkdir -p public/terms && cp front/terms.html public/terms/index.html && mkdir -p public/privacy && cp front/privacy.html public/privacy/index.html && mkdir -p public/scholarships && cp front/scholarships.html public/scholarships/index.html",
+    "build:html": "babel-node render.jsx && mkdir -p public/terms && cp front/terms.html public/terms/index.html && mkdir -p public/privacy && cp front/privacy.html public/privacy/index.html && mkdir -p public/scholarships && cp front/scholarships.html public/scholarships/index.html && mkdir -p public/press && cp front/press.html public/press/index.html",
     "build:style": "sass front/style.scss public/style.css -t compressed --sourcemap=none",
     "build:script": "browserify front/script.jsx -t babelify -g browserify-shim -r lacona-api -r lacona-phrases -r elliptical --extension=jsx | uglifyjs -o public/script.min.js",
     "build:vendor": "cp node_modules/moment/min/moment.min.js public & cp node_modules/react/dist/react.min.js public",
