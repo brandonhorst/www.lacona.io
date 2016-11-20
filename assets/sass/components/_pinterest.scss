@@ -1,0 +1,29 @@
+ul.pinterest {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  align-items: flex-end;
+
+  li {
+    list-style: none;
+    display: block;
+    margin: 3em;
+  }
+
+  img {
+    width: 200px;
+  }
+
+  figure {
+    display: block;
+    width: 200px;
+    padding: 10px;
+  }
+
+  figcaption {
+    text-align: center;
+    display: block;
+  }
+}
+
