@@ -2397,7 +2397,7 @@ table.alt tbody tr td {
     display: block;
     width: 16em;
     height: 16em;
-    background-position: top left;
+    background-position: top-left;
     background-repeat: no-repeat; }
   .spotlight.alt {
     -moz-flex-direction: row-reverse;
