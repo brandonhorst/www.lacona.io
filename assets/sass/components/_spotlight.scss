@@ -69,8 +69,11 @@
 			display: block;
 			width: 16em;
 			height: 16em;
-			background-position: top-left;
+			background-position: top left;
 			background-repeat: no-repeat;
+			background-size: 300px 300px;
+			max-width: 300px;
+			max-height: 300px;
 		}
 
 		&.alt {
