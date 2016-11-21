@@ -1,0 +1,58 @@
+.image-list {
+  counter-reset: section;
+
+  > li {
+    @include vendor('display', 'flex');
+    @include vendor('align-items', 'center');
+    padding: 1em 0;
+    border-bottom: 1px solid _palette(invert, border);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .description {
+    width: 50%;
+
+    &:before {
+      counter-increment: section;
+      content: counter(section) ".";
+      position: absolute;
+      margin-left: -2em;
+      font-weight: bold;
+    }
+  }
+
+  .image-link {
+    width: 50%;
+    display: block;
+    border-bottom: none;
+  }
+
+  .image {
+    width: 100%;
+    background-size: contain;
+    background-position: center;
+    height: 15em;
+    background-repeat: no-repeat;
+    border-radius: 0;
+    margin-left: 1em;
+  }
+
+  @include breakpoint(small) {
+    > li {
+      @include vendor('flex-wrap', 'wrap');
+    }
+
+    .description {
+      width: 100%;
+    }
+
+    .image {
+      width: 100%;
+      margin-left: 0;
+    }
+  }
+
+}

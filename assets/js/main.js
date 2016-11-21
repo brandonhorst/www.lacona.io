@@ -52,8 +52,14 @@
 			$(this).removeClass('alt')
 		})
 
+
 		// Nav.
 			var $nav = $('#nav');
+
+			$(":not(nav) a[href]:not([href=''])").scrolly({
+				speed: 1000,
+				offset: function() { return $nav.height() + 100; }
+			})
 
 			if ($nav.length > 0) {
 
@@ -70,7 +76,7 @@
 						});
 
 				// Links.
-					var $nav_a = $('a');
+					var $nav_a = $('nav a');
 
 					$nav_a
 						.scrolly({
@@ -103,8 +109,7 @@
 								$section = $(id);
 
 							// No section for this link? Bail.
-								if ($section.length < 1)
-									return;
+								if ($section.length < 1) return;
 
 							// Scrollex.
 								$section.scrollex({
