@@ -8,10 +8,10 @@
 
 	.icon {
 		@include icon;
-		@include vendor('transition', (
-			'background-color #{_duration(transition)} ease-in-out',
-			'color #{_duration(transition)} ease-in-out'
-		));
+		// @include vendor('transition', (
+		// 	'background-color #{_duration(transition)} ease-in-out',
+		// 	'color #{_duration(transition)} ease-in-out'
+		// ));
 		border-bottom: none;
 		position: relative;
 
