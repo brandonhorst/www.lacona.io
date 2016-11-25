@@ -1777,10 +1777,6 @@ input[type="radio"]:focus + label:before {
 /* Icon */
 .icon {
   text-decoration: none;
-  -moz-transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-  -webkit-transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-  -ms-transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
   border-bottom: none;
   position: relative; }
   .icon:before {
@@ -2559,24 +2555,8 @@ table.alt tbody tr td {
     #header.alt h1 {
       font-size: 3.25em; }
     #header.alt > * {
-      -moz-transition: opacity 3s ease;
-      -webkit-transition: opacity 3s ease;
-      -ms-transition: opacity 3s ease;
-      transition: opacity 3s ease;
-      -moz-transition-delay: 0.5s;
-      -webkit-transition-delay: 0.5s;
-      -ms-transition-delay: 0.5s;
-      transition-delay: 0.5s;
       opacity: 1; }
     #header.alt .logo {
-      -moz-transition: opacity 1.25s ease, -moz-transform 0.5s ease;
-      -webkit-transition: opacity 1.25s ease, -webkit-transform 0.5s ease;
-      -ms-transition: opacity 1.25s ease, -ms-transform 0.5s ease;
-      transition: opacity 1.25s ease, transform 0.5s ease;
-      -moz-transition-delay: 0s;
-      -webkit-transition-delay: 0s;
-      -ms-transition-delay: 0s;
-      transition-delay: 0s;
       display: block;
       margin: 0 0 1.5em 0; }
       #header.alt .logo img {
