@@ -1450,6 +1450,15 @@ hr {
   border-color: rgba(255, 255, 255, 0.35); }
 
 /* Button */
+.setapp a {
+  border: 0; }
+
+.setapp img {
+  display: none !important; }
+
+.setapp span {
+  position: relative !important; }
+
 input[type="submit"],
 input[type="reset"],
 input[type="button"],
