@@ -69,7 +69,7 @@
 
 			li {
 				display: inline-block;
-				padding: 0 (_size(element-margin) * 0.5) 0 0;
+				padding: 0 (_size(element-margin) * 0) 0 0;
 				vertical-align: middle;
 
 				&:last-child {
@@ -134,16 +134,21 @@
 				}
 			}
 
-			@include breakpoint(large) {
+			@include breakpoint(medium) {
 				display: block;
 				li {
 					padding: (_size(element-margin) * 0.5) 0 0 0;
 					width: 100%;
 					display: block;
+					text-align: center;
+
+					.setapp img {
+						display: inline-block !important;
+					}
 
 					> * {
-						width: 100%;
-						margin: 0 !important;
+						// width: 100%;
+						margin: 0 auto !important;
 					}
 				}
 			}
