@@ -9,12 +9,9 @@
 	.setapp a {
 		border: 0;
 	}
-	.setapp img {
-		display: none !important;
-	}
-	.setapp span {
-		position: relative !important;
-	}
+	// .setapp span {
+	// 	position: relative !important;
+	// }
 
 	input[type="submit"],
 	input[type="reset"],
@@ -26,18 +23,29 @@
 			'background-color #{_duration(transition)} ease-in-out',
 			'color #{_duration(transition)} ease-in-out'
 		));
-		border-radius: _size(border-radius);
-		border: 0;
-		cursor: pointer;
-		display: inline-block;
-		font-weight: _font(weight);
-		height: 2.75em;
-		line-height: 2.75em;
-		min-width: 9.25em;
-		padding: 0 1.5em;
-		text-align: center;
-		text-decoration: none;
-		white-space: nowrap;
+		// border-radius: _size(border-radius);
+		// border: 0;
+		// cursor: pointer;
+		// display: inline-block;
+		// font-weight: _font(weight);
+		// height: 2.75em;
+		// line-height: 2.75em;
+		// min-width: 9.25em;
+		// padding: 0 1.5em;
+		// text-align: center;
+		// text-decoration: none;
+		// white-space: nowrap;
+
+
+    padding: 5px;
+    font-size: 14px;
+    text-align: center;
+    // border: 1px solid #A6A6A6 !important;
+    height: 40px;
+    @include vendor('border-radius', '4px');
+    display: block;
+    width: 122px;
+    line-height: 1.1 !important;
 
 		&.icon {
 			padding-left: 1.35em;
@@ -78,16 +86,18 @@
 		input[type="button"],
 		button,
 		.button {
-			background-color: transparent;
-			box-shadow: inset 0 0 0 1px _palette($p, border);
-			color: _palette($p, fg-bold) !important;
+			background-color: darken(_palette(accent3), 20%);
+			border: 1px solid darken(_palette(accent3), 30%) !important;
+			color: #FFF !important;
+			// box-shadow: inset 0 0 0 1px _palette($p, border);
+			// color: _palette($p, fg-bold);
 
 			&:hover {
-				background-color: _palette($p, border-bg);
+				background-color: darken(_palette(accent3), 25%);
 			}
 
 			&:active {
-				background-color: _palette($p, border2-bg);
+				background-color: darken(_palette(accent3), 25%);
 			}
 
 			&.icon {
@@ -97,16 +107,16 @@
 			}
 
 			&.special {
-				background-color: _palette(accent);
-				color: _palette(invert, bg) !important;
-				box-shadow: none;
+				background-color: darken(_palette(accent), 20%);
+				border: 1px solid darken(_palette(accent), 30%) !important;
+				// box-shadow: none;
 
 				&:hover {
-					background-color: lighten(_palette(accent), 3);
+					background-color: darken(_palette(accent), 25%);
 				}
 
 				&:active {
-					background-color: darken(_palette(accent), 3);
+					background-color: darken(_palette(accent), 25%);
 				}
 
 				&.icon {
