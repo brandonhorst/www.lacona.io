@@ -1802,8 +1802,21 @@ body.is-loading *:after {
 }
 
 body.two {
-  background-color: #00c8f3;
-  background-image: none;
+  background-color: #6768e5;
+  background-image: url("images/overlay.png"),
+    -moz-linear-gradient(0deg, #41a6ca 15%, #6768e5 85%);
+  background-image: url("images/overlay.png"),
+    -webkit-linear-gradient(0deg, #41a6ca 15%, #6768e5 85%);
+  background-image: url("images/overlay.png"),
+    -ms-linear-gradient(0deg, #41a6ca 15%, #6768e5 85%);
+  background-image: url("images/overlay.png"),
+    linear-gradient(0deg, #41a6ca 15%, #6768e5 85%);
+}
+
+.beta {
+  font-size: 50%;
+  vertical-align: super;
+  opacity: 0.75;
 }
 
 .lb-disable-scrolling #nav {
@@ -2085,8 +2098,9 @@ button,
   border-radius: 4px;
   display: block;
   width: 122px;
-  line-height: 1.1 !important;
+  line-height: 1.1;
 }
+
 input[type="submit"].icon,
 input[type="reset"].icon,
 input[type="button"].icon,
