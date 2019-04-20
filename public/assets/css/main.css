@@ -1804,13 +1804,34 @@ body.is-loading *:after {
 body.two {
   background-color: #6768e5;
   background-image: url("images/overlay.png"),
-    -moz-linear-gradient(0deg, #41a6ca 15%, #6768e5 85%);
+    -moz-linear-gradient(to bottom, #41a6ca 15%, #6768e5 85%);
   background-image: url("images/overlay.png"),
-    -webkit-linear-gradient(0deg, #41a6ca 15%, #6768e5 85%);
+    -webkit-linear-gradient(to bottom, #41a6ca 15%, #6768e5 85%);
   background-image: url("images/overlay.png"),
-    -ms-linear-gradient(0deg, #41a6ca 15%, #6768e5 85%);
+    -ms-linear-gradient(to bottom, #41a6ca 15%, #6768e5 85%);
   background-image: url("images/overlay.png"),
-    linear-gradient(0deg, #41a6ca 15%, #6768e5 85%);
+    linear-gradient(to bottom, #41a6ca 15%, #6768e5 85%);
+}
+
+.two button,
+.two .button {
+  background-color: #1288cc;
+  border: 1px solid #1256bb !important;
+  color: #fff !important;
+}
+.two input[type="submit"]:hover,
+.two input[type="reset"]:hover,
+.two input[type="button"]:hover,
+.two button:hover,
+.two .button:hover {
+  background-color: #1f6acc;
+}
+.two input[type="submit"]:active,
+.two input[type="reset"]:active,
+.two input[type="button"]:active,
+.two button:active,
+.two .button:active {
+  background-color: #1f6acc;
 }
 
 .beta {
@@ -2170,7 +2191,7 @@ input[type="button"],
 button,
 .button {
   background-color: #1e8273;
-  border: 1px solid #15584e !important;
+  border: 1px solid #1d724b !important;
   color: #fff !important;
 }
 input[type="submit"]:hover,
@@ -3479,12 +3500,12 @@ table.alt tbody tr td {
 }
 #header.alt .logo {
   display: block;
-  margin: 0 0 1.5em 0;
+  margin: 0 2em 1.5em 2em;
 }
 #header.alt .logo img {
   display: block;
   margin: 0 auto;
-  max-width: 75%;
+  max-width: 20em;
 }
 @media screen and (max-width: 1280px) {
   #header {
@@ -3711,36 +3732,6 @@ body.is-loading #header.alt .logo {
 }
 #main .box {
   border-color: #dddddd;
-}
-#main input[type="submit"],
-#main input[type="reset"],
-#main input[type="button"],
-#main button,
-#main .button {
-  background-color: #1e8273;
-  border: 1px solid #15584e !important;
-  color: #fff !important;
-}
-#main input[type="submit"]:hover,
-#main input[type="reset"]:hover,
-#main input[type="button"]:hover,
-#main button:hover,
-#main .button:hover {
-  background-color: #196d61;
-}
-#main input[type="submit"]:active,
-#main input[type="reset"]:active,
-#main input[type="button"]:active,
-#main button:active,
-#main .button:active {
-  background-color: #196d61;
-}
-#main input[type="submit"].icon:before,
-#main input[type="reset"].icon:before,
-#main input[type="button"].icon:before,
-#main button.icon:before,
-#main .button.icon:before {
-  color: rgba(99, 99, 99, 0.25);
 }
 #main input[type="submit"].special,
 #main input[type="reset"].special,
